@@ -21,16 +21,17 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active. Actual Game Over now shares elapsed IRQ timing,
-input waits and fade4 with the scene owners, keeping MAIN paused through
-Continue/Quit and returning unused time to fresh MAINE. Cold 544/4a62eb34 GNU
-and optimized UBSan each pass 84 programs/82 CTests,432 original controls,
-24 actual Game Over scenes/386 complete displays and 24 score-route checks.
-Eight default Demo profiles preserve129 prior hashes each. See the
-[handoff](docs/RE_HANDOFF.md) for the bounded evidence and replay.
+Native development is active. Registration now shares elapsed IRQ, input and
+fade waits through Normal Ending, Score and Extra. Cold545/b4519b50 GNU and
+optimized UBSan each pass84 programs/82 CTests,544 original controls,
+30 seeded saves/restarts,24 score and24 complete Ending registration routes,
+plus8 Extra routes. Failed writes freeze without retries. Independent
+component images and eight default Demo profiles also pass; see the
+[handoff](docs/RE_HANDOFF.md) for the verified scope and recovery.
 
-Registration/other waits, real active-PMD paired timing, physical scanout,
-broader gameplay and Windows remain open. Historical exact is separate.
+Other waits, malformed-score unsafe graphics, real active-PMD paired timing,
+physical scanout, broader gameplay and Windows remain open. Historical exact
+is separate.
 
 ## Build and run
 

@@ -261,3 +261,6 @@ original exit/counter controls, same-admission input failure and archive recover
 
 The VSync note routes v1427 full Game Over elapsed E/K/counter controls,
 Continue/Quit suspension/host writes, full displays and lossless trace recovery.
+
+The VSync note routes v1428 registration elapsed loops, all three callers,
+file failure freeze, unsafe short-read boundary and lossless evidence recovery.

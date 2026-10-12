@@ -1666,9 +1666,12 @@ public:
             }
             if(continue_verdict_ && ending_->phase()==maine::Phase::verdict_pending)ending_->start_verdict();
             if(continue_congratulations_ && ending_->phase()==maine::Phase::congratulations_pending)ending_->start_congratulations();
+            if(continue_registration_ && ending_->phase()==maine::Phase::registration_pending && !registration_)
+                begin_registration(held_input,ending_->registration_text_weight());
         }
         const bool elapsed_wait=(ending_ && ending_->timed_wait()) ||
             (score_route_ && score_route_->timed_wait()) || (extra_route_ && extra_route_->timed_wait()) ||
+            (registration_ && registration_->timed()) ||
             (main_ && main_->game_over() && main_->game_over()->timed());
         const auto sound_owner=sound_;
         const auto refresh_ns=std::uint64_t(frame_period.count())*slowdown();
@@ -1745,14 +1748,8 @@ public:
             return;
         }
         if(registration_) {
-            registration_->advance(registration::input_from_main_actions(held_input));
-            if(registration_->finished()) {
-                // All writer closes and blackout completed successfully.
-                // Enter fresh OP with retained resident config and a new LCG.
-                sound_timeline_->handle({sound::ActionKind::command,0x204});
-                application_.finish_maine();
-                registration_.reset();ending_.reset();restore_fresh_op();
-            }
+            const auto remaining=advance_registration(refresh_ns,held_input);
+            advance_tail(remaining,held_input);
             if(repaint)frame_=render();
             return;
         }
@@ -1769,7 +1766,11 @@ public:
             if(continue_verdict_ && ending_->phase()==maine::Phase::verdict_pending)ending_->start_verdict();
             if(continue_congratulations_ && ending_->phase()==maine::Phase::congratulations_pending)ending_->start_congratulations();
             if(elapsed_wait) {
-                const auto remaining=ending_->advance_elapsed(refresh_ns,[held_input]{return maine::input_from_main_actions(held_input);},ending_observer_);
+                auto remaining=ending_->advance_elapsed(refresh_ns,[held_input]{return maine::input_from_main_actions(held_input);},ending_observer_);
+                if(continue_registration_ && ending_->phase()==maine::Phase::registration_pending) {
+                    begin_registration(held_input,ending_->registration_text_weight());
+                    remaining=advance_registration(remaining,held_input);
+                }
                 advance_tail(remaining,held_input);
             } else ending_->advance(maine::input_from_main_actions(held_input),ending_observer_);
             if(repaint) frame_=render();
@@ -2242,8 +2243,21 @@ private:
             score_store_->file(),[this] {return application_.next_process_random();},
             registration::input_from_main_actions(held),
             [this](const score_file::Operation& operation) {score_store_->apply(operation);},
-            [this](const registration::Event& e){sound_timeline_->registration(e);});
+            [this](const registration::Event& e){sound_timeline_->registration(e);},&startup_clock_);
         screen_=Screen::maine;
+    }
+    std::uint64_t advance_registration(std::uint64_t ns,std::uint16_t held) {
+        auto remaining=std::uint64_t(0);
+        if(registration_->timed())remaining=registration_->advance_elapsed(ns,
+            [held]{return registration::input_from_main_actions(held);},
+            [this](std::uint64_t step){sound_timeline_->advance_elapsed(step);});
+        else registration_->advance(registration::input_from_main_actions(held));
+        if(registration_->finished()) {
+            sound_timeline_->handle({sound::ActionKind::command,0x204});
+            application_.finish_maine();
+            registration_.reset();ending_.reset();restore_fresh_op();
+        }
+        return remaining;
     }
     void read_op_scores(bool reload_configuration=true) {
         require_view(application_.program()==application::Program::op && score_store_,"OP score reading requires its fresh process/storage");
@@ -3003,7 +3017,7 @@ void run_title(
         run_gameover_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,gameover_checks);
         return;
     }
-    if(!registration_checks.empty()) {
+    if(!registration_checks.empty() && ending_screenshots.empty()) {
         namespace fs=std::filesystem;
         const fs::path directory(registration_checks);
         require_view(!fs::exists(directory),"registration checks need a fresh output directory");
@@ -3242,6 +3256,37 @@ void run_title(
         std::cout<<"MAINE Congratulations route="<<prefix<<" picture="<<congratulations.picture_name()
             <<" ticks="<<congratulations.animation().ticks()<<" delay=100 generation="<<scene.generation()
             <<" progression=registration_pending\n";
+
+        if(!registration_checks.empty()) {
+            require_view(scene.registration_scene() && scene.registration_scene()->timed(),
+                "normal Ending did not construct registration on its completion admission");
+            unsigned admissions=0;
+            while(scene.registration_scene()->status()==registration::Status::fade_in && ++admissions<1000)
+                scene.advance(0,false,false);
+            const auto press=[&](std::uint16_t held) {
+                scene.advance(0,false,false);scene.advance(0,false,false);scene.advance(held,false,false);
+            };
+            if(scene.registration_scene()->menu().editable()) {
+                const bool full=prefix.find("shot-")!=std::string::npos;
+                for(unsigned i=0;i<(full ? 8u : 1u);++i)press(shot::input_shot);
+                press(full ? shot::input_shot : 0x2000);
+            } else press(shot::input_shot);
+            while(scene.registration_scene() && ++admissions<1000)scene.advance(0,false,false);
+            require_view(admissions<1000 && scene.program()==application::Program::op &&
+                scene.generation()==generation+2 && !scene.main_resources_alive(),
+                "normal Ending registration failed writer-close/blackout/fresh OP");
+            score_file::HostStore reopened(std::filesystem::path(registration_checks)/prefix);
+            require_view(reopened.file().bytes().size()==1960,"normal Ending did not close complete score file");
+            for(unsigned section=0;section<10;++section) {
+                score_file::Section row{};
+                require_view(!score_file::load_for(row,reopened.file(),std::uint8_t(section/5),std::uint8_t(section%5),[]{return std::uint16_t(0);}),
+                    "normal Ending score failed independent checksum/reopen");
+            }
+            scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);scene.input(menu::Input::confirm);
+            require_view(scene.live_main() && scene.generation()==generation+3 && scene.main_state().frames()==0 &&
+                scene.resident().miss_count==0,"normal Ending fresh OP failed second MAIN");
+            std::cout<<"REGISTRATION_JOIN route="<<prefix<<" save_bytes=1960 fresh_op=1 second_main=1 muted=1\n";
+        }
 
     };
     if (!screenshot.empty()) {
@@ -4073,7 +4118,16 @@ void run_title(
         // No seeded boss phase, forced HP, synthetic score or stage skip.
         for(unsigned character=0;character<2;++character) for(unsigned difficulty:{0u,1u,3u}) for(unsigned shot_type=0;shot_type<2;++shot_type) for(bool shooting:{false,true}) {
             if(difficulty==0 && ending_screenshots.empty() && (sixth_route || shot_type || !shooting)) continue;
-            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&main_assets,gameplay::Mode::actor_control);scene.enable_yuuka5();if(sixth_route)scene.enable_stage6();
+            const auto prefix=std::string(difficulty==0 ? "easy-" : (difficulty==3 ? "lunatic-" : "normal-"))+(character ? "marisa-" : "reimu-")+(shot_type ? "b-" : "a-")+(shooting ? "shot-" : "idle-");
+            std::optional<MainAssets> registration_assets;
+            if(!registration_checks.empty() && !ending_screenshots.empty()) {
+                registration_assets=main_assets;
+                registration_assets->save_directory=(std::filesystem::path(registration_checks)/prefix).string();
+            }
+            FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,
+                registration_assets ? &*registration_assets : &main_assets,gameplay::Mode::actor_control);
+            if(registration_assets)scene.enable_registration();
+            scene.enable_yuuka5();if(sixth_route)scene.enable_stage6();
             if(difficulty!=1) {
                 for(unsigned i=0;i<3;++i)scene.input(menu::Input::down);
                 scene.input(menu::Input::confirm);
@@ -4086,7 +4140,6 @@ void run_title(
             scene.input(menu::Input::confirm);
             require_view(unsigned(scene.resident().playchar)==character && unsigned(scene.resident().shot_type)==shot_type,"route menu did not select its declared character/shot");
             const auto generation=scene.generation();std::vector<std::string> seen;
-            const auto prefix=std::string(difficulty==0 ? "easy-" : (difficulty==3 ? "lunatic-" : "normal-"))+(character ? "marisa-" : "reimu-")+(shot_type ? "b-" : "a-")+(shooting ? "shot-" : "idle-");
             unsigned battle=0,frozen=0,hits=0,hit_clears=0,laser_frames=0,bonuses=0,fades=0,next=0;bool last_hit=false;
             const auto captured=[&](const std::string& name) {return std::find(seen.begin(),seen.end(),name)!=seen.end();};
             const auto capture=[&](const std::string& tag) {

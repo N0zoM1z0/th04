@@ -1,5 +1,6 @@
 #pragma once
 #include "registration_render.hpp"
+#include "maine_animation.hpp"
 #include <functional>
 
 namespace th04::portable::registration {
@@ -13,10 +14,14 @@ using FileSink=std::function<void(const score_file::Operation&)>;
 class Scene {
 public:
     Scene(const GraphicsAssets&,Run,score_file::File&,const score_file::Random&,
-          std::uint16_t inherited_keys=0,FileSink={},Sink={});
+          std::uint16_t inherited_keys=0,FileSink={},Sink={},vsync::RasterClock* clock=nullptr);
     void advance(std::uint16_t held);
+    std::uint64_t advance_elapsed(std::uint64_t,const maine::KeySource&,
+        const maine::ElapsedSink& service={},const std::function<void()>& loop={},const maine::PaletteSink& palette={});
+    bool timed() const {return clock_!=nullptr;}
     Status status() const { return status_; }
     bool finished() const { return status_==Status::stopped; }
+    bool failed() const {return failed_;}
     int tone() const { return tone_; }
     unsigned ticks() const { return ticks_; }
     const Menu& menu() const { return menu_; }
@@ -25,6 +30,10 @@ public:
     std::size_t event_count() const { return at_; }
 private:
     void drain(std::uint16_t held);
+    vsync::RasterClock* clock_;
+    std::optional<maine::Animation> animation_;
+    std::optional<vsync::Delay> count_wait_;
+    bool editing_reset_=false,editing_iteration_=false;
     Menu menu_;
     Renderer renderer_;
     FileSink file_sink_;
@@ -36,6 +45,7 @@ private:
     int tone_=0,left_=0,step_=0,goal_=0,speed_=0;
     std::uint16_t previous_keys_=0;
     bool startup_pending_=true;
+    bool failed_=false;
 };
 
 // MAIN host actions deliberately have different masks from MAINE key_det.

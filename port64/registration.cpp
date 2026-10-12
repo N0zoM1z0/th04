@@ -84,9 +84,15 @@ void Menu::finish(bool acknowledgement) {
     event(Kind::free_sprites);event(Kind::clear_text);event(Kind::fade,0,1);finished_=true;
 }
 void Menu::advance(std::uint16_t held) {
+    advance_sensed(held);
+    if(!finished_)previous_keys_=held;
+}
+void Menu::advance_sensed(std::uint16_t held) {
     if(startup_pending_)throw std::logic_error("registration input precedes black-in");
     if(finished_)return;
-    const auto keys=std::uint16_t(previous_keys_|held);
+    sense(std::uint16_t(previous_keys_|held));
+}
+void Menu::sense(std::uint16_t keys) {
     if(!lock_) {
         if(keys&15) {
             alphabet_cursor(0xe1);
@@ -128,6 +134,6 @@ void Menu::advance(std::uint16_t held) {
         if(!keys)lock_=0;
         repeat_=0;
     }
-    previous_keys_=held;++ticks_;
+    ++ticks_;
 }
 } // namespace th04::portable::registration

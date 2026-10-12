@@ -22,7 +22,7 @@ public:
                score_file::HostStore&,std::function<void()> release_main={},sound::Timeline* audio=nullptr,vsync::RasterClock* clock=nullptr);
     void advance(std::uint16_t host_keys);
     std::uint64_t advance_elapsed(std::uint64_t,std::uint16_t host_keys,const PaletteSink& main_palette={});
-    bool timed_wait() const {return clock_ && (phase_==ExtraPhase::main_fade || phase_==ExtraPhase::registration_delay || phase_==ExtraPhase::congratulations || phase_==ExtraPhase::verdict);}
+    bool timed_wait() const {return clock_ && (phase_==ExtraPhase::main_fade || phase_==ExtraPhase::registration_delay || phase_==ExtraPhase::registration || phase_==ExtraPhase::congratulations || phase_==ExtraPhase::verdict);}
     ExtraPhase phase() const {return phase_;}
     bool finished() const {return phase_==ExtraPhase::stopped;}
     bool failed() const {return failed_;}
@@ -38,6 +38,7 @@ public:
     void set_verdict_observer(verdict::Sink sink) {observer_=std::move(sink);}
 private:
     void finish_main_fade();
+    void finish_registration();
     std::optional<Animation> main_fade_;
     void verdict_event(const verdict::Event&);
     vsync::RasterClock* clock_;

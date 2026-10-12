@@ -35,6 +35,8 @@ public:
     // The immediate mode remains the original command-sequence Oracle.
     void complete_startup(std::uint16_t initial_keys);
     void advance(std::uint16_t held);
+    void advance_sensed(std::uint16_t held);
+    void reset_sample(std::uint16_t held) {previous_keys_=held;}
     bool finished() const { return finished_; }
     bool editable() const { return place_!=score_file::no_entry; }
     Byte rank() const { return rank_; }
@@ -49,6 +51,7 @@ public:
     const score_file::Section& section() const { return section_; }
     const std::vector<Event>& events() const { return events_; }
 private:
+    void sense(std::uint16_t keys);
     void event(Kind,int a=0,int b=0,int c=0,int d=0,std::string text={});
     void flush_io();
     void table(Byte);

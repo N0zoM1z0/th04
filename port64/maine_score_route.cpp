@@ -30,9 +30,18 @@ void ScoreRoute::start_registration(std::uint16_t held) {
         [this]{return application_->next_process_random();},
         registration::input_from_main_actions(held),
         [this](const score_file::Operation& operation){store_->apply(operation);},
-        [this](const registration::Event& e){if(audio_)audio_->registration(e);});
+        [this](const registration::Event& e){if(audio_)audio_->registration(e);},clock_);
     boundaries_.push_back({ScoreFlow::registration,ticks_});
     phase_=ScorePhase::registration;
+}
+void ScoreRoute::finish_registration() {
+    const auto& r=application_->resident();
+    verdict::Input input;input.resident=r;input.misses=r.miss_count;input.bombs_used=r.bombs_used;
+    const auto& canvas=registration_->renderer().canvas();
+    verdict_=std::make_unique<verdict::Scene>(*assets_,input,
+        std::array<cutscene::Bytes,2>{canvas.page(0),canvas.page(1)},canvas.shown_page(),clock_);
+    registration_.reset();phase_=ScorePhase::verdict;
+    boundaries_.push_back({ScoreFlow::verdict,ticks_});
 }
 void ScoreRoute::advance(std::uint16_t held) {
     if(finished() || failed_)return;
@@ -44,15 +53,7 @@ void ScoreRoute::advance(std::uint16_t held) {
         }
         if(phase_==ScorePhase::registration) {
             registration_->advance(registration::input_from_main_actions(held));
-            if(registration_->finished()) {
-                const auto& r=application_->resident();
-                verdict::Input input;input.resident=r;input.misses=r.miss_count;input.bombs_used=r.bombs_used;
-                const auto& canvas=registration_->renderer().canvas();
-                verdict_=std::make_unique<verdict::Scene>(*assets_,input,
-                    std::array<cutscene::Bytes,2>{canvas.page(0),canvas.page(1)},canvas.shown_page(),clock_);
-                registration_.reset();phase_=ScorePhase::verdict;
-                boundaries_.push_back({ScoreFlow::verdict,ticks_});
-            }
+            if(registration_->finished())finish_registration();
             return;
         }
         verdict_->advance(input_from_main_actions(held),[this](const verdict::Event& e){verdict_event(e);});
@@ -87,18 +88,25 @@ void ScoreRoute::verdict_event(const verdict::Event& e) {
 }
 
 std::uint64_t ScoreRoute::advance_elapsed(std::uint64_t ns,std::uint16_t held) {
-    if(!timed_wait() || failed_)throw std::logic_error("route phase has no elapsed owner");
+    if(failed_)return ns;
+    if(!timed_wait())throw std::logic_error("route phase has no elapsed owner");
     const auto keys=[held]{return input_from_main_actions(held);};
     const auto service=[this](std::uint64_t step){if(audio_)audio_->advance_elapsed(step);};
     try {
       for(;;) {
         if(phase_==ScorePhase::registration_delay) {
-            if(initial_wait_->ready()){initial_wait_.reset();start_registration(held);return ns;}
+            if(initial_wait_->ready()){initial_wait_.reset();start_registration(held);continue;}
             if(!ns)return 0;
             auto step=ns;if(clock_->counter().active())step=std::min(step,initial_wait_->until_ready());
             const auto before=clock_->counter().two();
             clock_->advance(step);service(step);ns-=step;
             ticks_+=static_cast<std::uint16_t>(clock_->counter().two()-before);continue;
+        } else if(phase_==ScorePhase::registration) {
+            const auto before=registration_->ticks();
+            ns=registration_->advance_elapsed(ns,[held]{return registration::input_from_main_actions(held);},service);
+            ticks_+=registration_->ticks()-before;
+            if(!registration_->finished())return 0;
+            finish_registration();continue;
         } else {
             const auto before=verdict_->ticks();
             ns=verdict_->advance_elapsed(ns,keys,[this](const verdict::Event& e){verdict_event(e);},service);

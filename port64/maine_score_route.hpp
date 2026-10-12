@@ -21,7 +21,7 @@ public:
                score_file::HostStore&,std::function<void()> release_main={},sound::Timeline* audio=nullptr,vsync::RasterClock* clock=nullptr);
     void advance(std::uint16_t host_keys);
     std::uint64_t advance_elapsed(std::uint64_t,std::uint16_t host_keys);
-    bool timed_wait() const {return clock_ && (phase_==ScorePhase::registration_delay || phase_==ScorePhase::verdict);}
+    bool timed_wait() const {return clock_ && (phase_==ScorePhase::registration_delay || phase_==ScorePhase::registration || phase_==ScorePhase::verdict);}
     ScorePhase phase() const {return phase_;}
     bool finished() const {return phase_==ScorePhase::stopped;}
     bool failed() const {return failed_;}
@@ -36,6 +36,7 @@ private:
     vsync::RasterClock* clock_;
     std::optional<vsync::Delay> initial_wait_;
     void start_registration(std::uint16_t);
+    void finish_registration();
     sound::Timeline* audio_;
     application::State* application_;
     score_file::HostStore* store_;

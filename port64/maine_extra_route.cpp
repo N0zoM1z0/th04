@@ -37,8 +37,16 @@ void ExtraRoute::start_registration(std::uint16_t held) {
     registration_=std::make_unique<registration::Scene>(registration_assets_,run,store_->file(),
         [this]{return application_->next_process_random();},registration::input_from_main_actions(held),
         [this](const score_file::Operation& operation){store_->apply(operation);},
-        [this](const registration::Event& e){if(audio_)audio_->registration(e);});
+        [this](const registration::Event& e){if(audio_)audio_->registration(e);},clock_);
     phase_=ExtraPhase::registration;boundaries_.push_back({ExtraFlow::registration,ticks_});
+}
+void ExtraRoute::finish_registration() {
+    const auto& canvas=registration_->renderer().canvas();
+    congratulations_=std::make_unique<Congratulations>(*assets_,unsigned(application_->resident().playchar),4,
+        std::array<cutscene::Bytes,2>{canvas.page(0),canvas.page(1)},canvas.shown_page(),clock_);
+    registration_.reset();phase_=ExtraPhase::congratulations;
+    boundaries_.push_back({ExtraFlow::tone0,ticks_});
+    boundaries_.push_back({ExtraFlow::congratulations,ticks_});
 }
 void ExtraRoute::start_verdict() {
     const auto& r=application_->resident();
@@ -67,14 +75,7 @@ void ExtraRoute::advance(std::uint16_t held) {
         }
         if(phase_==ExtraPhase::registration) {
             registration_->advance(registration::input_from_main_actions(held));
-            if(registration_->finished()) {
-                const auto& canvas=registration_->renderer().canvas();
-                congratulations_=std::make_unique<Congratulations>(*assets_,unsigned(application_->resident().playchar),4,
-                    std::array<cutscene::Bytes,2>{canvas.page(0),canvas.page(1)},canvas.shown_page(),clock_);
-                registration_.reset();phase_=ExtraPhase::congratulations;
-                boundaries_.push_back({ExtraFlow::tone0,ticks_});
-                boundaries_.push_back({ExtraFlow::congratulations,ticks_});
-            }
+            if(registration_->finished())finish_registration();
             return;
         }
         if(phase_==ExtraPhase::congratulations) {
@@ -109,7 +110,8 @@ void ExtraRoute::verdict_event(const verdict::Event& e) {
 }
 
 std::uint64_t ExtraRoute::advance_elapsed(std::uint64_t ns,std::uint16_t held,const PaletteSink& main_palette) {
-    if(!timed_wait() || failed_)throw std::logic_error("route phase has no elapsed owner");
+    if(failed_)return ns;
+    if(!timed_wait())throw std::logic_error("route phase has no elapsed owner");
     ++ticks_;
     const auto keys=[held]{return input_from_main_actions(held);};
     const auto service=[this](std::uint64_t step){if(audio_)audio_->advance_elapsed(step);};
@@ -122,10 +124,14 @@ std::uint64_t ExtraRoute::advance_elapsed(std::uint64_t ns,std::uint16_t held,co
             if(main_fade_->status()!=AnimationStatus::stopped)return 0;
             main_fade_.reset();finish_main_fade();continue;
         } else if(phase_==ExtraPhase::registration_delay) {
-            if(initial_wait_->ready()){initial_wait_.reset();start_registration(held);return ns;}
+            if(initial_wait_->ready()){initial_wait_.reset();start_registration(held);continue;}
             if(!ns)return 0;
             auto step=ns;if(clock_->counter().active())step=std::min(step,initial_wait_->until_ready());
             clock_->advance(step);service(step);ns-=step;continue;
+        } else if(phase_==ExtraPhase::registration) {
+            ns=registration_->advance_elapsed(ns,[held]{return registration::input_from_main_actions(held);},service);
+            if(!registration_->finished())return 0;
+            finish_registration();continue;
         } else if(phase_==ExtraPhase::congratulations) {
             ns=congratulations_->advance_elapsed(ns,keys,{},service);
             if(congratulations_->animation().status()!=AnimationStatus::stopped)return 0;

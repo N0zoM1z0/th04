@@ -379,9 +379,58 @@ void contracts(const r::GraphicsAssets& assets,const fs::path& root) {
     std::cout<<"Registration scene/save/restart controls PASS cases="<<cases<<" muted=1\n";
 }
 }
+std::string registration_hex(const sf::Bytes& data) {
+    if(data.empty())return "-";
+    const char* digits="0123456789abcdef";std::string result;
+    for(auto b:data){result+=digits[b>>4];result+=digits[b&15];}return result;
+}
+sf::Bytes registration_unhex(const std::string& text) {
+    sf::Bytes out;if(text=="-")return out;
+    require(text.size()%2==0,"odd registration hex");
+    for(unsigned i=0;i<text.size();i+=2)out.push_back(std::uint8_t(std::stoul(text.substr(i,2),nullptr,16)));return out;
+}
+void registration_elapsed(const r::GraphicsAssets& assets,const char* path) {
+    using namespace th04::portable;
+    std::ifstream in(path);require(bool(in),"registration elapsed vectors missing");
+    unsigned seed,stage,rank,character,shot,turbo,end,present,inc,profile,index=0;
+    std::uint64_t counter_seed,phase,horizon,chunk;std::string digits,encoded;
+    while(in>>seed>>stage>>rank>>character>>shot>>turbo>>end>>present>>digits>>encoded>>inc>>counter_seed>>phase>>profile>>horizon>>chunk) {
+        const auto values=registration_unhex(digits);require(values.size()==8,"registration score width");
+        vsync::RasterClock clock;clock.counter().start(static_cast<std::uint16_t>(inc));clock.counter().interrupts(counter_seed);clock.advance(phase);
+        rng::Lcg32 random(seed);unsigned draws=0;sf::File file(present!=0,registration_unhex(encoded));
+        r::Run run{std::uint8_t(stage),std::uint8_t(rank),std::uint8_t(character),std::uint8_t(shot),std::uint8_t(turbo),std::uint8_t(end),{}};
+        std::copy(values.begin(),values.end(),run.digits.begin());
+        const auto prefix=[&](const char* tag){std::cout<<tag<<' '<<clock.now()<<' '<<clock.counter().one()<<' '<<clock.counter().two()<<' '<<clock.counter().accumulator()<<' ';};
+        std::cout<<"CASE "<<index++<<'\n';
+        const char* names[]{"tone","access","pi_load","pi_palette","pi_put","pi_free","copy","bfnt","file","table","text","sound","song","fade","gaiji","name","wait","free_sprites","clear_text"};
+        const char* io[]{"exists","open","seek","read","write","close"};
+        r::Scene scene(assets,run,file,[&]{++draws;return random.next15();},0,{},[&](const r::Event& e) {
+            prefix("E");
+            if(e.kind==r::Kind::file)std::cout<<io[unsigned(e.io.kind)]<<' '<<e.io.a<<' '<<e.io.b<<' '<<registration_hex(e.io.data)<<'\n';
+            else std::cout<<names[unsigned(e.kind)]<<' '<<e.a<<' '<<e.b<<' '<<e.c<<' '<<e.d<<' '<<registration_hex(e.bytes)<<' '<<(e.text.empty()?"-":e.text)<<'\n';
+            if(e.kind==r::Kind::tone)std::cout<<"P "<<clock.now()<<' '<<e.a<<'\n';
+        },&clock);
+        const auto keys=[&] {
+            constexpr std::uint64_t hz=2631575,h=106,v=440,b=407;
+            const auto t=clock.now()*hz;const auto n=t<b*h*1000000000 ? 0 : (t-b*h*1000000000)/(v*h*1000000000)+1;
+            const bool on=n%12<3;
+            const std::uint16_t value=profile==2 ? 0 : profile==1 ? (n>=50 && n<390 ? r::right : n>=410 && on ? r::cancel : 0) :
+                profile==3 ? (n>=50 && n<160 && on ? r::shot|r::bomb : n>=180 && on ? r::cancel : 0) :
+                profile==4 ? (n>=60 && on ? r::shot|r::cancel : 0) : n>=50 && on ? r::shot : 0;
+            std::cout<<"K "<<clock.now()<<' '<<value<<'\n';return value;
+        };
+        const auto loop=[&] {const auto& m=scene.menu();prefix("F");std::cout<<m.name_cursor()<<' '<<m.alphabet_column()<<' '<<m.alphabet_row()<<' '<<m.input_lock()<<' '<<+m.repeat_frames()<<' '<<registration_hex(sf::Bytes(m.section().begin(),m.section().end()))<<'\n';};
+        const auto palette=[&](int tone){std::cout<<"P "<<clock.now()<<' '<<tone<<'\n';};
+        auto left=horizon;
+        do {const auto step=chunk ? std::min(left,chunk) : left;const auto unused=scene.advance_elapsed(step,keys,{},loop,palette);left-=step-unused;if(scene.finished() || !left)break;}while(true);
+        const auto& m=scene.menu();prefix("STOP");std::cout<<left<<' '<<scene.finished()<<' '<<scene.tone()<<' '<<+m.rank()<<' '<<+m.character()<<' '<<+m.place()<<' '<<random.state()<<' '<<draws<<' '<<file.present()<<' '<<registration_hex(sf::Bytes(m.section().begin(),m.section().end()))<<' '<<registration_hex(file.bytes())<<'\n';
+    }
+    require(in.eof(),"malformed registration elapsed vector");
+}
 int main(int argc,char** argv) {
     try {
         auto assets=synthetic();
+        if(argc==3 && std::string(argv[1])=="--registration-elapsed") {registration_elapsed(assets,argv[2]);return 0;}
         if(argc==2 && std::string(argv[1])=="--fade-clock") {
             sf::File file;rng::Lcg32 random;r::Run run;run.digits[6]=1;
             r::Scene scene(assets,run,file,[&] {return random.next15();});
