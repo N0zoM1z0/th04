@@ -20,6 +20,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/compare_th04_dos_demos.py](../probes/compare_th04_dos_demos.py) | command | Reject incomplete/reset-mismatched demo traces and report the first logical divergence. |
 | [probes/compare_th04_dos_ordinary_prefix.py](../probes/compare_th04_dos_ordinary_prefix.py) | command | Admit ordinary DOS prefixes by input and entry RNG before reporting state differences. |
 | [probes/compare_th04_ordinary_pools.py](../probes/compare_th04_ordinary_pools.py) | command | Compare complete ordinary actor pools against pinned scalar controls and target/MAP owners. |
+| [probes/compare_th04_ordinary_video.py](../probes/compare_th04_ordinary_video.py) | command | Compare complete ordinary VRAM/palettes/display state with independent scalar controls. |
 | [probes/inspect_th04_cpu_fault_trace.py](../probes/inspect_th04_cpu_fault_trace.py) | command | Decode private MAIN exception frames without claiming normal gameplay. |
 | [probes/inspect_th04_demo_snapshots.py](../probes/inspect_th04_demo_snapshots.py) | command | Read back DGROUP snapshots against complete ordinary demos and diagnose actor differences. |
 | [probes/inspect_th04_emulator_cpu_fault.py](../probes/inspect_th04_emulator_cpu_fault.py) | command | Locate emulator-side CPU faults in attested, unmodified native MAIN code. |
@@ -58,6 +59,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_ordinary_dgroup.py](../probes/th04_ordinary_dgroup.py) | support | Decode every ordinary DGROUP record with strict framing, stage and gzip integrity. |
 | [probes/th04_ordinary_dgroup_gdb.py](../probes/th04_ordinary_dgroup_gdb.py) | support | Observe full ordinary DGROUP after actor updates through read-only mapped host RAM. |
 | [probes/th04_ordinary_keyboard.gdb](../probes/th04_ordinary_keyboard.gdb) | fixture | Queue keyboard device events after observed original OP menu ticks with guest-state preservation checks. |
+| [probes/th04_ordinary_video.py](../probes/th04_ordinary_video.py) | support | Decode full ordinary video blocks with strict frame/load/stage and gzip checks. |
 | [probes/th04_primary_cpu_fault.gdb](../probes/th04_primary_cpu_fault.gdb) | fixture | Run the primary-emulator fault observer with configured symbols/event inputs. |
 | [runtime/fixtures/good_ending.asm](../runtime/fixtures/good_ending.asm) | fixture | Private resident seed for real MAINE Ending tests; bypasses OP/gameplay initialization. |
 | [runtime/verify_dos_gaiji.py](../runtime/verify_dos_gaiji.py) | command | Compare original and linked DOS Gaiji writes, port order and far-call return state across WORD address boundaries. |

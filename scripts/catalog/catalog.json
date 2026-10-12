@@ -546,6 +546,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/compare_th04_ordinary_video.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Compare complete ordinary VRAM/palettes/display state with independent scalar controls.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/inspect_dialog_fixup_order.py",
     "category": "matching",
     "role": "command",
@@ -3469,6 +3476,13 @@
     "category": "runtime",
     "role": "fixture",
     "purpose": "Queue keyboard device events after observed original OP menu ticks with guest-state preservation checks.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_ordinary_video.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Decode full ordinary video blocks with strict frame/load/stage and gzip checks.",
     "purpose_source": "maintained-description"
   },
   {

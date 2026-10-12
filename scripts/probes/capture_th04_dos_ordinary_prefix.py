@@ -36,7 +36,13 @@ def main() -> int:
     parser.add_argument('--output-dir', required=True, type=Path)
     parser.add_argument('--timeout', type=int, default=600)
     parser.add_argument('--dgroup-stream', action='store_true')
+    parser.add_argument('--video-stream', action='store_true')
+    parser.add_argument('--video-layout', type=Path)
     args = parser.parse_args()
+    if args.video_stream:
+        if args.video_layout is None:
+            parser.error('video stream requires an attested --video-layout')
+        args.dgroup_stream = True
     output = args.output_dir.resolve()
     if output.exists() or not output.is_relative_to(ROOT / '.analysis/runtime/candidates'):
         parser.error('use a fresh private capture directory')
@@ -126,6 +132,17 @@ def main() -> int:
         env['TH04_ORDINARY_DGROUP'] = '1'
         stream_sources = [adapter.with_name(name) for name in
                           ('th04_ordinary_dgroup.py', 'th04_ordinary_dgroup_gdb.py', 'th04_demo_dgroup.py')]
+    if args.video_stream:
+        from th04_demo_video import LAYOUT, SYMBOL_SIZES
+        layout = json.loads(args.video_layout.read_text())
+        if (not layout['passed'] or layout['layout'] != LAYOUT or
+                layout['emulator_sha256'] != emulator['binary_sha256'] or
+                layout['emulator_receipt_sha256'] != sha(emulator_path.read_bytes()) or
+                {name: row['size'] for name, row in layout['symbols'].items()} != SYMBOL_SIZES or
+                any(sha(Path(path).read_bytes()) != digest for path, digest in layout['source_inputs'].items())):
+            raise ValueError('ordinary video ABI/source/binary drift')
+        env.update(TH04_ORDINARY_VIDEO='1', TH04_ORDINARY_VIDEO_LAYOUT=str(args.video_layout.resolve()))
+        stream_sources += [adapter.with_name(name) for name in ('th04_demo_video.py', 'th04_ordinary_video.py')]
     started = time.monotonic()
     timeout = False
     with (output / 'boot.log').open('wb') as stream:
@@ -147,6 +164,9 @@ def main() -> int:
     if args.dgroup_stream:
         complete = complete and b'TH04_ORDINARY_DGROUP_COMPLETE\n' in (output / 'boot.log').read_bytes()
         names += ['ordinary-dgroup.bin.gz', 'ordinary-dgroup.json']
+    if args.video_stream:
+        complete = complete and b'TH04_ORDINARY_VIDEO_COMPLETE\n' in (output / 'boot.log').read_bytes()
+        names += ['ordinary-video.bin.gz', 'ordinary-video.json']
     receipt = dict(schema_version=1, complete=complete, timeout=timeout, exit=code,
                    role='original' if args.original else 'candidate', elapsed=time.monotonic() - started,
                    command=command, main_path=str(main_path.resolve()), main_sha256=sha(main_bytes),
@@ -163,6 +183,9 @@ def main() -> int:
                    resource_budget=dict(cpu_affinity=sorted(os.sched_getaffinity(0)), nice=os.nice(0),
                                         address_space_bytes=1536 * 1024 * 1024),
                    scope=__doc__)
+    if args.video_stream:
+        receipt['video_layout'] = dict(path=str(args.video_layout.resolve()),
+                                       sha256=sha(args.video_layout.read_bytes()))
     (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
     print(json.dumps(dict(complete=complete, output=str(output))))
     return 0 if complete else 1

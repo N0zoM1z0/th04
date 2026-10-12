@@ -5,6 +5,43 @@ using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
 remains open. Updated 2026-10-12.
 
+## Ordinary complete video at deaths/respawns (v1436)
+
+Complete ordinary Normal ReimuA Stage1 video now passes all38 configured raw
+regions over3,996 updates per program: both pages/all four262144B planes,
+16384B text, complete analog/digital/text palettes, modes and programmed GDC
+fields. Blocks are279809B each; no screenshot/pixel/unused-tail mask. The
+original and frozen MAIN1426/f21a5c7c each use original OP/MAINE/ZUN/assets and
+legal rank1/lives6/bombs0. Full input/36-field/RNG controls agree with independent
+v1434 baselines. Nine pools/22 states also remain equal in the same captures.
+
+This covers the ordinary fragment's two natural deaths/respawns and Midboss,
+not Boss combat or a complete stage/campaign. Video equality is its own bounded
+claim: raw GDC state differs atall3996frames, and companion post-reset key_det
+still differs at155samples. The companion aggregate remainsfalse. Raw clocks/
+FIFO/raster and input differences are preserved, not normalized into equality;
+physical scanout, general input timing and Windows remain unaccepted.
+
+Fresh compiler/source/ELF video ABI replay pins12 inputs/15 symbols and the
+retained observer binary. Read-only host video backing RAM is captured at the
+same actual frame-write boundary as DGROUP, through a separate TH04OV1 format.
+15 real-pixel/text/palette/mode/GDC counterexamples use three actual original
+frames; the full3996-frame acceptance is separate. Six public protocol tests
+check magic/order/stage/body/tail/CRC. Root CI480 tests, tracking, catalog,
+private target/database and Oracle mutations pass; diff check passes. Target provenance remains
+candidate-local-attested; no product C++/ASM or historical exact state changed.
+
+Replay: `.analysis/reconstruction/probes/dos-ordinary-video-v1436/`.
+Public capture uses `--video-stream --video-layout RECEIPT`; video comparison
+binds source/ABI/symbol/runtime mappings and independent scalar baselines.
+Owned8-path chunk retirement releases90.18MiB net with0.90MiB archive; full
+reconstruction/SHA/CRC/temp mode/nsmtime/protected checks pass. Both complete
+video/DGROUP streams stay compressed and live. `recover.py --restore` restores
+images/raw traces. The91.07MiB temporary v1434 baseline expansion was separately
+returned to archived state, not counted as new savings.
+Next extend ordinary Boss/lifecycle capture and native full-picture pairing;
+keep raw timing/input requirements separate from the accepted video extent.
+
 ## Ordinary full pools and retained input-sample difference (v1435)
 
 Normal ReimuA Stage1 now has complete after-update DGROUP streams at3,996

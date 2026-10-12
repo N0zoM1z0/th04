@@ -5,6 +5,84 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Ordinary complete video and retained timing differences (v1436)
+
+Root CI480 tests, catalog, tracking, private target/database and Oracle mutations
+pass; final diff check passes.
+
+The ordinary Normal ReimuA Stage1 fragment now has complete paired video
+capture for3,996 actor updates, including both natural deaths/respawns.
+All38 configured video regions are byte-identical: complete two-page/four-plane
+VRAM262144B, TRAM16384B, analog768B/digital8B/text32B palettes, all modes and
+configured GDC parameter/display fields. No game-area/tail/attribute mask.
+Each raw279809B block also retains the full464B GDC structures. Those raw
+structures differ onall3996frames: clock/raster/FIFO/drawing internals remain
+outside accepted programmed display-state equality and physical scanout stays
+open. This does not accept Boss combat/full stage/campaign/process transitions.
+
+Video capture reuses the unchanged pinned read-only observer and the existing
+ordinary keyboard adapter. It automatically includes DGROUP capture on the
+same mapped actual frame increment. Its independent TH04OV1 gzip/XOR stream
+records each frame/load/data/CPU identity and complete block, separately from
+Demo contracts. First stage remains0. Initial/final extent, order, full bodies,
+gzip EOF/CRC and all runtime video backing/page mappings are checked.
+
+Fresh small compiler probe verifies535896B VGA_Type and232B PC98_GDC_state,
+all configured offsets and15 ELF symbol widths, against12 archive/config
+inputs and the retained observer's pinned compiler/binary. A single runtime ELF
+bias and backing-memory page selectors are required. Source changes cannot
+silently reuse that ABI receipt. No emulator/game rebuild, guest VRAM accessor
+or register/clock/game-state write is performed by the memory observer.
+
+Both original MAIN077440a3 and frozen normal MAINf21a5c7c start from identical
+physical config/scores, original supporting products and all pinned archives.
+They consume Shot20h/Shift0 and match all36 scalar fields and1,369 ordered RNG
+calls, independently against frozen v1434 plain baselines. The full9-pool/22-state
+companion also passes its component fields. Its aggregate is stillfalse for155
+post-reset input samples; this new count belongs only to this producer, while
+v1435's156 remains retained. The causes/timing interpretation remain inferred.
+Video passed=true does not erase that companion failure.
+
+All plane/page sequences vary: distinct-frame counts are1999/1998,1999/1998,
+1999/1998,1999/1994 across B/R/G/E pages0/1. TRAM has1471 distinct blocks.
+The three empty custom/circle/gather pools retain no active-path coverage;
+Boss state remains setup-only. These coverage limits cannot become whole-game
+acceptance through a full-frame count.
+
+The full original3996-record video stream is read through CRC/EOF. Separate
+bounded reducer controls use its first three actual frames:15 independent
+last-byte plane/page, text, palette, mode and display-pitch flips reject at
+frame2 in the intended region. A raw scan-address flip remains a counted raw
+GDC difference without falsely changing programmed-state acceptance. Six public
+protocol tests reject Demo magic, missing/duplicate/order, truncated body,
+wrong stage, trailing data and CRC corruption. Existing pixel/region tests
+continue to exercise every plane/page including unused tail bytes.
+
+Replay namespace `.analysis/reconstruction/probes/dos-ordinary-video-v1436/`
+binds `comparison.json`, companion `pools.json`, controls, fresh ABI receipt,
+source snapshot and retention. Captures are `dos-ordinary-video-v1436-{original,
+candidate}` under `.analysis/runtime/candidates/`. Public capture adds:
+
+```sh
+--video-stream --video-layout .analysis/reconstruction/probes/dos-ordinary-video-v1436/video-layout/receipt.json
+```
+
+`compare_th04_ordinary_video.py` uses the same original/candidate plus
+`--original-baseline`, `--candidate-baseline`, `--baseline-sources`,
+`--original-main` and `--output` arguments as the pool comparator. Video exits0;
+companion pool comparison exits1 because its input-sample mismatch is retained.
+All complete video/DGROUP records remain compressed and live (~30.52MiB video
+and2.53MiB DGROUP per program), preserving raw diagnostics and further owners.
+Owned8-path/20-block HDI/font/raw-trace retirement releases90.18MiB net with
+0.90MiB anchor archive; original HDI is unchanged. SHA/CRC/full temporary
+size/mode/nsmtime recovery and protected proofs pass before deleting aliases.
+`recover.py --restore` restores captured images/raw traces. Eight explicitly
+restored v1434 baseline aliases were checked and returned to archived state,
+removing91.07MiB temporary expansion (not additional new net reclamation).
+
+Next: longer ordinary Boss/process capture, then paired original/native full
+pictures. Full hardware timing, cross-emulator and Windows remain separate.
+
 ## Ordinary complete pools and input phase frontier (v1435)
 
 Root CI474 tests, catalog, tracking, private target/database checks and Oracle

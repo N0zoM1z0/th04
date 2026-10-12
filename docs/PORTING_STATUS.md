@@ -18,7 +18,11 @@ not accept complete actor pools/pictures, Boss combat, campaigns or Windows.
 New v1435 full DGROUP captures additionally agree on nine complete pools and22
 state blocks, with three pools empty. Aggregate acceptance stays rejected for156
 post-reset input differences despite equal consumed inputs and scalar controls.
-Native host agreement remains separate; see [current handoff](RE_HANDOFF.md).
+Current v1436 additionally passes all configured full VRAM/text/palette/display
+regions for the ordinary fragment including deaths/respawns. Raw GDC timing
+still differs every frame; companion post-reset input differs at155samples.
+Boss/full lifecycle/physical/Windows stay open. Native full-picture acceptance
+remains separate; see [current handoff](RE_HANDOFF.md).
 
 ## Current native natural routes and strict clear gate (v1432)
 

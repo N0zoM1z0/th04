@@ -42,9 +42,12 @@ input, 36 state fields and 1,369 ordered RNG calls, including two natural deaths
 and respawns. Keyboard device events begin at the original OP's observed menu
 counter; no RNG or gameplay state is assigned. New after-update captures also
 agree on nine whole object/effect pools and 22 state blocks; three pools stay
-empty. The aggregate remains rejected because 156 end-of-update keyboard
-samples differ, despite equal consumed inputs and independent scalar/RNG
-controls. Complete ordinary pictures and Boss combat remain open.
+empty. The latest companion aggregate retains 155 differing end-of-update
+keyboard samples despite equal consumed inputs and independent scalar/RNG
+controls. Complete video captures now agree on both pages of all four VRAM
+planes, the text plane, palettes and configured GDC display fields across this
+ordinary fragment. Raw GDC timing differs on every frame and is retained.
+Boss combat, full process transitions and physical scanout remain open.
 
 Native x64 source lives on `port/modern-64`. Scoped Linux Reimu A runs cover
 Normal, Lunatic and Extra clears with registration, physical saves and fresh
