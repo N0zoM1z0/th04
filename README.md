@@ -54,16 +54,16 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. `origin/port/modern-64` is at `e8b0a2c`
-(producer 545/b4519b50). Actual registration shares elapsed IRQ/input/fade
-waits through Normal Ending, Score and Extra, with failed writes frozen
-without retries. Both GNU and optimized UBSan build 84 programs and pass
-82 CTests, 544 original controls, 30 seeded saves/restarts, 24 score and
-24 complete Ending registration routes plus 8 Extra routes per compiler.
-Independent component images and eight default Demo profiles also pass.
-Other waits, malformed-score unsafe graphics, real active-PMD paired timing,
-physical scanout, broader gameplay and Windows remain open; see the
-[handoff](docs/RE_HANDOFF.md) for the bounded evidence and recovery.
+Native development is active. Producer548/fc9b02eb restores registration's
+signed numeral remainder and wrapped16-bit sprite lookup. GNU and optimized
+UBSan each pass84 programs/82 CTests, all65,536 slots,8,192 row requests,
+64 complete drawing captures and30 seeded save/restart routes. Original controls
+run at two relocated loads. Earlier elapsed registration/all-caller evidence
+retains its own frozen producer. Unowned malformed-score RAM, other waits,
+physical timing/scanout, broader gameplay and Windows remain open; see the
+[handoff](docs/RE_HANDOFF.md) for evidence and archive recovery.
+
+Native branch head: `7db5699`.
 
 Current shared DOS restores upward SMEM and descending HMEM ownership and
 the graph page-copy workspace (producer 1,426/e60c079f). All 1,242 allocator and

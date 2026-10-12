@@ -239,3 +239,6 @@ Continue/Quit real saves and complete displays, failures and archive recovery.
 
 The VSync note routes v1428 elapsed registration/all callers, original loops/files,
 failed writer freeze, unresolved short-input graphics and verified archive recovery.
+
+The VSync note routes v1429 registration signed numeral requests and WORD slots,
+exhaustive original controls, actual drawings and unowned-memory limits.
