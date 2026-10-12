@@ -224,3 +224,6 @@ parent source, original cases, full compiler graphs and recovery.
 
 The VSync note routes v1423 actual elapsed MAINE consumers and phase handoff,
 original controls, whole-route pages/current DAC projection and owned archives.
+
+The VSync note routes v1424 Staff elapsed waits and inherited Count1,
+original time/request and actual-page controls, failures and archive restore.
