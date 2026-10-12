@@ -236,3 +236,6 @@ original time/request and actual-page controls, failures and archive restore.
 
 The VSync note routes v1427 whole Game Over elapsed counters/input,
 Continue/Quit real saves and complete displays, failures and archive recovery.
+
+The VSync note routes v1428 elapsed registration/all callers, original loops/files,
+failed writer freeze, unresolved short-input graphics and verified archive recovery.
