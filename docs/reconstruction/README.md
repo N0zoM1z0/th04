@@ -230,3 +230,6 @@ original time/request and actual-page controls, failures and archive restore.
 
 The VSync note routes v1425 Cutscene elapsed requests and high-byte Escape projection,
 original time/request and actual-page controls, failures and archive restore.
+
+The VSync note routes v1426 MAIN good/bad/Extra elapsed fade16 and same-admission input,
+original time/request and actual-page controls, failures and archive restore.

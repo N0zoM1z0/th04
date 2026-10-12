@@ -54,20 +54,22 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. `origin/port/modern-64` is at `9caa2db`
-(producer542/59d19121). Actual Ending/Cutscene now shares elapsed IRQ, input,
-black/white fade and measure waits with Staff and later MAINE owners. Both
-complete GNU and optimized UBSan graphs pass84 programs/82 CTests, ten whole
-script comparisons (960 original/480 coarse+fine), and24 actual inactive
-Ending routes with independent component pages/RGB. MAIN fade, registration
-and other waits, real active-PMD paired timing, physical scanout, broader
-gameplay and Windows remain open; see the [handoff](docs/RE_HANDOFF.md).
+Native development is active. `origin/port/modern-64` is at `a255917`
+(producer 543/70986a2b). MAIN good/bad/Extra exit fade16 now shares elapsed IRQ
+timing and hands remaining time to fresh MAINE after publishing statistics and
+releasing MAIN. Both complete GNU and optimized UBSan graphs pass 84 programs/
+82 CTests, 144 original fade controls, 24 actual inactive Ending routes and 8
+Extra routes with independent component pages/RGB. Game Over fade4,
+registration/other waits, real active-PMD paired timing, physical scanout,
+broader gameplay and Windows remain open; see the [handoff](docs/RE_HANDOFF.md).
 
-Current shared DOS also restores analog/LCD palette output, with text and
-installed-owner VSync recovery (producer 1,425/491e4afa). Three cold products
-pass 20,832 original/compiled palette controls, 528 wait and 324 lifecycle
-controls. Prior complete Demo/pool/video acceptance retains its own producer.
-These comparisons do not establish byte exactness or physical CPU/IRQ timing.
+Current shared DOS restores upward SMEM and descending HMEM ownership and
+the graph page-copy workspace (producer 1,426/e60c079f). All 1,242 allocator and
+160 page-copy controls agree with original instructions at loads1000/3333;
+ABI/link/MZ/IRQ checks also pass. Analog/LCD palette, text and installed-owner
+VSync recovery remain accepted with their own frozen producers. Prior complete
+Demo/pool/video acceptance retains its source identity. These comparisons do
+not establish byte exactness or physical CPU/IRQ timing.
 
 CI passes 451 DOS tests; retained native CI passes 345.
 

@@ -5,103 +5,58 @@ using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
 remains open. Updated 2026-10-12.
 
-## Native elapsed Cutscene/Ending script (v1425)
+## Native elapsed MAIN good/bad/Extra exit fade (v1426)
 
-Actual Ending scripts now share the raster/IRQ owner through Script, Canvas
-and Ending. Parsing and queued graphics requests remain shared with the
-logical helper. Zero frame_delay clears Count1 and resumes on the same
-admission; input_wait preserves release-first, pre/post OR and signed WORD
-budgets. Shared Animation now handles both white fades as well as black,
-including initial VSync, signed WORD speed and eighteen palette updates.
-MAINE white bodies0000:222C..22AB are pinned alongside black00622/0666,
-frame_delay0CC7:0033..0047, input_wait020A..025F and measure03D6..0407.
-The two complete original parser/helper bodies0A05:07F7..0D6B and0DAC..0E7F
-execute unchanged. File/font/graphics, palette I/O and keyboard consumers
-remain explicit adapters, with ideal IRQ and one-second measure stimuli.
+The actual normal good/bad and Extra callers now consume black-out16 through
+shared elapsed Animation. Initial VSync retains inherited Count1; all eighteen
+palette publications and273 nominal counted waits remain. Completion publishes
+statistics and releases MAIN before resetting fresh MAINE counter BSS. Raster
+phase and unused elapsed time cross the handoff; clock/audio service occurs once.
+Extra's delay100 starts at the actual fade completion. Host admissions need not
+number273. The legacy no-clock helper remains a separate logical model.
 
-Original cutscene checks high-byte key_det bit0x10 (word0x1000); portable
-cutscene bit0x10 is a projection. The Oracle maps this explicitly. Escape is
-sampled only at the next outer iteration; releasing it during a queued mask
-cannot change that command. A completed owner returns unused elapsed time;
-actual Ending forwards audio once and retains the Staff/verdict lifecycle.
-Active measures query after load/start and use supplied service deadlines;
-inactive measures use live WORD frame_delay. This is not physical timing.
+Observed MAIN relative CS:IP0000:B7B9/B7E4/B80F complete three exits (124 bytes),
+0000:0622..06A3 black fades and0000:2462..2487 IRQ-owned wait execute unchanged
+at loads1000/3333. DGROUP2134 counters2AB2/2AB4/2ABA, increment0772 and active
+owner0774 are explicit. Sound0204 and nonreturning execl are guarded seams;
+ideal IRQ stimuli do not measure CPU/I/O, sound or DOS-loader latency.
+The targets remain candidate-local-attested; historical exact stays661/663.
 
-Cold producer542/59d19121 builds all84 programs and passes82 CTests under
-GNU Release and optimized UBSan/bounds. Each passes ten complete scripts
-(eight original Ending plus two mixed/measure controls),960 original cases
-at loads1000/3333,480 coarse and480 one-ms partitions. Same-source Staff
-48 original/24 partitions and MAINE576 original/288 partitions also pass.
-Each actual muted inactive-BGM frontend passes24 Ending/Staff/verdict/
-Congratulations routes and independent component images:576 Ending pages,
-288 original-DAC-projected RGB frames and48 pages each for the later owners.
-The retained PI/font/kernel galleries keep their independent source identity.
+Cold producer543/70986a2b builds all84 programs and passes82 CTests under GNU
+Release and optimized UBSan/bounds. Each compiler agrees with144 original
+controls and72 coarse plus72 one-ms partitions across all three callers,
+WORD wrap, carry skips and inherited raster phase. The actual release callback
+also checks statistics publication and old generation/RNG before fresh MAINE.
+Same-source MAINE576/288 and Staff48/24 controls pass. Each actual muted
+inactive-BGM frontend completes24 Ending/Staff/verdict/Congratulations routes
+and8 Extra actor-control routes, including fresh OP and a second MAIN.
+Independent images retain576 Ending pages/288 original-DAC-projected RGB frames
+and48 pages each for Staff, verdict and Congratulations. These are component
+controls, not a complete physical scanout or general gameplay acceptance.
 
-Compiled zero-to-one delay rejects36 mixed cases; discarded completion time
-rejects28 mixed and24 real-script cases; wrong full-word Escape rejects12 in
-each subject. Unmodified compiled control passes. Native CI345 and tracking
-pass. The initial malformed vector schema/configuration attempts are retained;
-they were setup failures, not source/runtime acceptance.
+Compiled actual Ending/Extra clear-at-entry, clear-before-publication and
+double-consume-remainder mutations reject original counter/time streams;
+the separately compiled unchanged control passes. Native CI345 passes.
+The first frozen producer f055b102 passed both84/82 graphs and fade controls,
+but its ordinary Ending gallery rejected held Escape crossing the newly
+same-admission MAINE handoff. That failed source/program/capture is retained.
+The final input releases Escape before the last fade group; product remainder
+forwarding is unchanged. All acceptance uses the new543/70986a2b cold producer.
 
-Remaining MAIN fade, registration and other wait owners, real active-PMD
-paired scene timing, physical CPU/I/O/scanout, broader gameplay and Windows
-remain open. Historical exact stays661/663; targets are candidate-local-attested.
-Replay: `.analysis/reconstruction/probes/native-cutscene-elapsed-v1425/`;
-producer: `.analysis/worktrees/native-cutscene-elapsed-v1425/.analysis/port64/native-cutscene-elapsed-v1425/`.
-`verify_cutscene_elapsed.py` records full original/native time/request/key/
-counter streams; `focused.py` records actual routes and image comparisons.
-Verified path/hash/size/mode/nsmtime/content/CRC/temp-restore retirement saves
-1619.52 MiB net. Full transcript aliases and captures are recoverable via
-`verify_retention.py --restore --prefix`; source, programs, vectors and summaries
-remain live. The goal stays active.
+Replay: `.analysis/reconstruction/probes/native-main-exit-fade-v1426/`;
+producer: `.analysis/worktrees/native-main-exit-fade-v1426/.analysis/port64/native-main-exit-fade-v1426-v2/`.
+`verify_main_exit_fade.py` records complete original/native palette/time/counter
+streams; `focused_v2.py` records actual callers and independent image checks.
+Path/hash/size/mode/nsmtime/content/CRC/temp-restore retirement releases
+1365.12 MiB net; first-producer retirement releases another469.25 MiB.
+Both archive readers support `--restore --prefix`. Frozen sources, all programs,
+full original controls, failed attempts and acceptance receipts remain retained.
 
-Published native head: `9caa2dbb633fa48e130bb92bbbf060a39a7c10a9`.
+Game Over fade4, registration proper and other wait owners, real active-PMD
+paired timing, physical CPU/I/O/scanout, broader gameplay and Windows remain
+open. Continue source recovery and migration; the full goal stays active.
 
-## Native elapsed Staff Roll (v1424)
-
-Staff's actual scene and Ending caller now use the shared raster/IRQ owner.
-The three dissolve loops poll the inherited unsigned Count1 against2, then
-clear only Count1 after success. They do not use frame_delay's entry reset.
-MAINE 0A05:1298,1325,13C6 each has CMP/JB then MOV Count1,0; the complete
-0A05:0E80..1736 Staff extent remains pinned. Shared black fades align once,
-preserve Count1 and publish all eighteen palette updates. Inactive measure
-waits execute a live WORD frame_delay; active waits query after load/start,
-preserve counters and service supplied measure deadlines. The actual audio
-bridge uses the resident PMD timer deadline. Keys do not skip Staff.
-
-Whole original Staff, black fades, wait and snd_delay_until_measure
-0CC7:03D6..0407 instructions execute at loads1000/3333. Graphics/files and
-measure replies are guarded adapters; ideal IRQ and one-second measure
-stimuli remain separate from physical CPU/I/O/audio costs. Both cold GNU and
-optimized UBSan/bounds producer541/83933826 build84 programs and pass82 CTests.
-Each passes48 original controls,24 coarse and24 one-ms partitions, covering
-inactive BGM, progressing measure and no measure progress. Existing576
-MAINE controls/288 partitions also pass on the same frozen producer.
-
-Each actual muted no-driver frontend completes24 Ending/Staff/verdict/
-Congratulations routes. Independent checks cover576 Ending pages/288 RGB
-frames,48 Staff pages,48 verdict pages and48 Congratulations pages. Current
-RGB uses complete original palette I/O with the retained DAC projection.
-These are component images and route invariants, not physical full scanout.
-Real active-PMD paired scene timing, other scene wait owners, broader gameplay
-and Windows remain open. Historical exact stays661/663.
-
-Compiled whole-scene clear-before and clear-both mutations reject complete
-original traces. A relative-threshold mutant passes coarse input but fails
-one-ms input. The first development build had that same API misuse; its
-program, source, failed partial trace and corrected replay remain separately
-identified. until_count requires the absolute threshold2. Native CI345 passes.
-
-Replay: `.analysis/reconstruction/probes/native-staff-elapsed-v1424/`;
-producer: `.analysis/worktrees/native-staff-elapsed-v1424/.analysis/port64/native-staff-elapsed-v1424/`.
-`verify_staff_elapsed.py` supplies original controls and full time/counter/
-request comparisons; `focused.py` records actual route/page commands.
-Verified content/SHA/CRC/metadata/temp-restore retirement releases908.95 MiB
-net. Sourcefreeze, all programs, full control transcripts and failures remain.
-`verify_retention.py --restore --prefix` restores owned archived paths. The
-source target remains candidate-local-attested; this is scoped runtime agreement.
-
-Published native head: `bd67182a844a4c6c5a8d6c23954d240ce3b05e25`.
+Published native head: `a25591759592837971901699e9a3342aeca73071`.
 
 ## DOS shared SMEM and graph page copy (v1423)
 
@@ -129,492 +84,21 @@ See [SMEM ownership](reconstruction/product/TH04_NATIVE_HEAP_V863.md) and
 [page copy](reconstruction/product/TH04_NATIVE_GRAPH_COPY_V862.md).
 Continue remaining function recovery and native scene integration.
 
-## Native elapsed MAINE consumers (v1423)
-
-Development remains active. Verdict and Congratulations in normal Ending,
-Score and Extra now share the live raster/IRQ counter owner. Their black
-fades, WORD frame delays and signed input waits consume elapsed time rather
-than host repaint counts. Initial fade alignment keeps Count1; delay clears
-only Count1. Input release combines samples before and after the wait;
-negative timeouts still release first, while zero and 9999 repeat the press
-wait. A completed child returns unused time to its parent. The registration
-entry delay 100 starts at the actual child completion. New MAINE/OP processes
-reset counter BSS while retaining raster phase; clock and audio advance once.
-
-Final union retains analog/LCD palette output, indexed Demo entry and the
-original WORD Demo blackout with all18 palette publications and19 tone stores.
-Cold producer 540/bc9bb404 builds all 84 programs and passes all 82 CTests
-under GNU Release and optimized UBSan/bounds. Each compiler agrees with 576
-complete original MAINE fade/delay/input controls at loads 1000/3333 and 288
-coarse plus 288 one-millisecond partition vectors. The original key and
-palette calls use guarded adapters, with independent ideal IRQ stimuli;
-physical CPU/I/O/ISR latency is not measured.
-
-The attested original entries are MAINE 0000:0622/0666 (black fades),
-0CC7:0033..0047 (frame_delay), 0CC7:020A..025F (input_wait), and
-0000:2206..222B (the full wait inside each fade). These are runtime-observed
-instruction controls; the pinned targets remain candidate-local-attested.
-`run.py` records the serial cold commands and `focused.py` the exact original
-and actual-route commands. New replay needs a fresh producer directory.
-
-Actual Score (24 routes plus four write failures), Extra (16 actor-control
-routes with hit consumption disabled), and 24 Ending routes exercise the new
-consumers and phase publication. Ending/Staff/verdict/Congratulations keep complete page
-and palette checks; display RGB is projected from original MAINE palette I/O
-through the retained analog DAC model. The historical RGB8 formula remains
-separate. Shared palette and actual eighteen-frame Demo-entry controls are
-replayed against the final producer. Compiled one-variable mutations cover
-fade counter clearing, post-only key samples, the 9999 sentinel and discarded
-handoff time. The first stopped-entry mutation rejects no configured vectors
-and remains an inconclusive wrong-site probe; the completion-site mutation
-is independently compiled and rejects160 complete traces. Eight muted default
-routes retain all129 prior hashes, selected original states and GNU/UBSan
-parity. This regression does not promote complete original pictures.
-
-Registration proper, Cutscene/Ending script, Staff and MAIN fade still have
-legacy wait owners. Their full elapsed counter history, physical timing,
-broader Boss/death/process routes and Windows acceptance remain open.
-Historical exact remains 661/663. This is scoped runtime agreement.
-
-Replay: `.analysis/reconstruction/probes/native-maine-demo-word-join-v1423/`;
-producer: `.analysis/worktrees/native-maine-demo-word-join-v1423/.analysis/port64/native-maine-demo-word-join-v1423/`.
-The preliminary v1418/v1420/v1422 cold producers and failed recipes retain their
-own identities. Stage retirement saves 1,254.54 MiB net and keeps all 8,420
-paths in a fully verified content archive. The superseded539 producer keeps
-both complete build graphs and its completed GNU route/image proof; its UBSan
-Extra job was deliberately stopped after remote WORD Demo source advanced. The stage retention reader accepts
-`--restore --prefix` for owned original paths. Final retirement and publication
-receipts record the remaining checks and current commit.
-
-Stage archive readers are under `.analysis/reconstruction/probes/native-maine-stage-retention-v1422/`
-and `.analysis/reconstruction/probes/native-maine-indexed-stage-retention-v1423/`.
-The latter saves another 984.19 MiB net across 4,538 owned paths, including
-the deliberately interrupted UBSan campaign; its logs and source identity remain.
-
-Final verified retirement releases 1961.42 MiB net. Both complete program graphs, source freeze and original controls remain.
-
-Published native head: `c97cced9e61cb5d32998da13996cfd11faebc2b4`.
-
-## Complete native Demo blackout WORD behavior (v1421)
-
-Published `port/modern-64`: `b5fa7d8`.
-`demo::Fade` now truncates speed to WORD, applies the original signed condition,
-and waits once before every blackout. Zero and negative WORD speeds then
-publish all eighteen tones on the same admission. Positive speed keeps
-`1 + 17*speed` refreshes. All nineteen tone writes remain, including the
-transient -2 immediately before final zero. The actual entry caller consumes
-the palette publication sink and paints its retained indices.
-
-Cold GNU and optimized UBSan producer 538/07b8ebd6 each build the complete
-core/frontend and two selected contracts. All 48 retained OP/MAINE
-0000:0666..06A4 original blackout controls agree with twelve native vectors:
-216 publications, 228 tone stores and complete waits per compiler. The actual
-6307e8d Demo owner rejects seven vectors under a bounded clock. Both actual
-entry captures retain all eighteen frames/4,608,000 DAC-projected pixels,
-with no MAIN update. Native CI 345 passes; historical exact remains 661/663.
-
-Replay: `.analysis/worktrees/native-demo-fade-word-v1421/.analysis/port64/native-demo-fade-word-v1421/`.
-Full wait carriers, source/programs, current images and 7,854 parent pins are
-retained. Verified compiler/cache cleanup releases 35.46 MiB net. Continue
-remaining actual scene-wait integration and function recovery; this is a
-logical refresh/publication model, not physical IRQ/CPU timing acceptance.
-
-## Native indexed demo-entry fade (v1420)
-
-Published `port/modern-64`: `6307e8d48adc58b7073699e9d93549c37c03898b`.
-Demo entry now keeps the raw menu palette and pixel indices. Each fade step
-uses the original four-bit DAC tone conversion before expanding colors to
-RGB8. It replaces the old scaling of cached RGB8 pixels.
-
-GNU and optimized UBSan each capture eighteen actual pending OP frames,
-stopping before MAIN updates. All 4,608,000 pixels agree with the projection
-of 36 complete original OP 0000:1DE0..1EEA palette instruction controls at
-loads 1000/3333. Pixel indices, process generation and RNG stay fixed through
-the fade. The old RGB8 formula projection differs in sixteen frames; this is
-an explicit formula diagnostic, not a compiled predecessor or full original
-OP scanout comparison.
-
-Cold source 537/08ff3fc2 builds the complete core/frontend and two related
-contracts per compiler. Final 537/6175165a fixes only the reader and capture
-include; both frontends recompile while their original core hashes stay
-identical. Initial reset-schema/storage-setup failures, old frontends and both
-source freezes remain. Native CI 345 passes; historical exact stays 661/663.
-
-Replay: `.analysis/worktrees/native-demo-palette-v1420/.analysis/port64/native-demo-palette-v1420/`.
-`verify_closure.py` reads all original I/O and full images, both source archives
-and 6,893 parent pins. Verified compiler/cache retirement releases 35.92 MiB
-net. Continue remaining function/caller recovery and actual scene waits;
-physical scanout and broader gameplay remain open.
-
-## Joined native palette output and counter delays (v1419)
-
-Published `port/modern-64`: `85fe1f30af27a1aee1a8822f2e950c95cafa2a11`.
-Shared `pc98_palette::show()` restores the three complete 266-byte originals:
-MAIN 0000:1F04, OP 0000:1DE0 and MAINE 0000:19EC. It keeps signed WORD
-truncation, tone clamping, analog output and the notebook LCD branch with its
-original masks, weighting, query polarity and port order. Startup's actual
-DAC consumer and six other display consumers use this source.
-
-Fresh joined producer 536/3ba0ba42 retains the published live WORD delay and
-bulk IRQ owner. GNU Release and optimized UBSan/bounds each cold-build the
-complete core/frontend and nine related programs, pass nine selected CTests,
-and agree on 20,832 retained original palette I/O/DAC controls. Each also
-passes 144 original delay consumers, 36 real ISR controls and 2,008 independent
-integer/raster vectors. Native CI passes 345 tests. The actual prior startup
-source rejects 288 of 1,368 analog controls. Historical exact stays 661/663.
-
-Replay is under each owned tree's `.analysis/port64/`, in
-`native-palette-show-v1418` and `native-palette-show-join-v1419`.
-The original v1415/v1417 captures keep their own source identities. Current
-source freezes, selected programs and 5,945 parent pins remain; verified
-compiler/cache retirement releases 101.02 MiB net across both producers.
-Continue shared elapsed scene-wait ownership. Physical LCD scanout, broader
-paired routes and Windows remain open; this recovery ran no game campaign.
-
-## Native IRQ counter and frame_delay primitive (v1417)
-
-Producer 534/8a83575e adds live `vsync::Delay`: construction clears only
-Count1 and truncates the argument to WORD; readiness polls the current
-unsigned word. A different consumer can reset Count1 and extend the wait.
-Positive delays remain pending without an IRQ owner, with no GDC fallback;
-zero clears Count1 and returns immediately even when uninstalled.
-
-Counter bulk advancement preserves the original carry-skip recurrence and
-both wrapped words with full-width UINT64 arithmetic. It returns the full counted-IRQ
-total without intermediate multiplication overflow. RasterClock's path with
-no observers uses this recurrence and integer edge search; the callback
-overload still emits every IRQ. Actual startup uses the path with no observer.
-This enables large WORD delays/cadence inputs without billions of host loops.
-Elapsed MAINE/registration Scene integration and physical CPU/IRQ latency
-remain open; a new primitive is not full-scene acceptance.
-
-Both cold GNU and optimized UBSan/bounds build all 82 programs and pass all
-80 CTests. Complete original frame_delay bodies MAIN 130E:00D7,
-OP 0DA1:002B and MAINE 0CC7:0033 (21 bytes each) pass 144 consumer controls
-at loads 1000/3333. Separate 36 actual original ISR/IRET injections gate the
-counter recurrence. Consumer word changes are explicit stimuli. Independent
-Python big integers check 280 bulk and 1,728 delay/raster vectors, including
-UINT64_MAX and the 4,294,901,760-IRQ wait boundary. No physical timing claim.
-
-Three compiled mutations reject 25 overflow, 1,428 Count2-reset and 576
-signed-threshold cases. Existing wait consumers retain 32 original controls,
-432 native vectors and 1,296 waits per compiler. Eight muted actual
-startup/four-Demo/fresh-OP routes retain all 129 prior hashes per profile and
-15,988 original selected-state boundaries each; GNU/UBSan outputs agree.
-
-Replay: `.analysis/reconstruction/probes/native-counter-delay-v1417/`;
-producer: `.analysis/worktrees/native-counter-delay-v1417/.analysis/port64/native-counter-delay-v1417/`.
-`focused.json`, build receipts and `verify_counter_delay.py` record the gates.
-`verify_retention.py --restore --prefix` restores owned archived paths.
-Verified retirement reclaims 506.12 MiB net. Source freeze, full original/
-integer projections, selected programs and compiled mutations remain.
-Historical exact remains 661/663; actual elapsed consumers, complete pictures,
-broader Boss/death/process, physical LCD scanout and Windows remain open.
-
-Published native head: `dcbe8f73c0a5e36b93fc2117252ffe71055e7c71`.
-
-## DOS analog and LCD palette output (v1415)
-
-`palette_show.cpp` now restores the original `PaletteNote` branch in
-MAIN, OP and MAINE. Nonzero selects eight LCD shades, with the original
-component masks, weighted conversion, polarity query and port order.
-Default zero keeps analog RGB output. Each complete original function is
-266 bytes: MAIN 0000:1F04, OP 0000:1DE0, MAINE 0000:19EC.
-
-Three cold DOS products from producer 1425/491e4afa link and pass IRQ audits;
-MAIN also passes its bullet tables. All 20,832 original/compiled instruction
-controls agree at loads 1000/3333. The actual old MAIN rejects 6,488 LCD
-controls and retains 456 analog matches. The added state WORD also passes
-528 VSync wait and 324 lifecycle controls across the three rebuilt products.
-These results establish ordered I/O and far-return state; historical exact
-counts stay unchanged.
-
-Replay: `.analysis/worktrees/dos-palette-note-v1415/.analysis/reconstruction/probes/dos-palette-note-v1415/`.
-Full original functions/transcripts, fresh EXEs/MAPs, six palette/state OMFs,
-complete source freeze and 1,744 parent proof files remain. Verified archive
-retirement and source-backed cache cleanup release 22.07 MiB net.
-CI passes all 451 tests and tracking gates. See the palette section in
-[build readiness](reconstruction/product/TH04_NATIVE_BUILD_READINESS_V1.md)
-and [retention instructions](ANALYSIS_RETENTION.md). Continue hardware/caller
-recovery; no game campaign was run for this change.
-
-## Joined native MAINE wait consumers (v1416)
-
-Joined native producer 532/037b0f2e restores shared Animation's logical
-WORD parameter boundaries. A zero frame_delay continues on the same call;
-negative arguments become unsigned WORD waits. Black fades align once, then
-use signed WORD speed: nonpositive values skip all per-group waits. The
-optional PaletteSink reports every fade-generated palette_show, including
-all 18 updates on one admission for zero speed. Explicit tone requests stay
-in RequestSink. This is a logical refresh projection, with no shared Count1
-owner, CPU execution cost or elapsed raster/IRQ timing claim.
-
-Both cold GNU and optimized UBSan/bounds build all 81 programs and pass all
-79 CTests. Complete original MAINE 0CC7:0033..0047 frame_delay and
-0000:0622..06A3 black fades pass 72 cases at loads 1000/3333; the actual
-0000:2206..222B wait executes inside each fade. Count1 pulses are explicit
-stimuli and palette_show is a guarded tone observer. All 36 native vectors
-match, including WORD truncation, zero and 7FFFh/8000h boundaries.
-
-Both compilers also retain 96 OP/MAINE original fade controls and 24 native
-timelines from the independent palette producer. Both target identities,
-complete fade extents and all 96 retained wait streams are re-attested.
-
-The actual latest 6b0e1ba Animation predecessor differs in three complete
-delay traces; its four fade traces already agree. Current Congratulations retains 32 original branches,
-50 original fade/key clocks and 20 complete PI-page comparisons per compiler;
-verdict retains 916 state/request cases and 10 clock/key controls. Their
-pixel references retain their earlier native decoder producer. Eight muted
-startup/four-Demo/fresh-OP routes retain all 129 prior hashes per profile and
-15,988 original selected-state boundaries each. No exact/full-game promotion.
-
-Replay: `.analysis/reconstruction/probes/native-maine-wait-join-v1416/`;
-producer: `.analysis/worktrees/native-maine-wait-join-v1416/.analysis/port64/native-maine-wait-join-v1416/`.
-`focused-gnu.json`, `focused-ubsan.json` and `focused.json` record commands.
-Use `th04-port64-cutscene-contracts` for Congratulations/verdict helpers;
-frozen port readers need read-only `PYTHONPATH=ROOT` for the HDI parser.
-Failed missing-parser/wrong-program recipes remain. Verified retirement
-reclaims 505.93 MiB net; full source/projections, selected programs and
-predecessor remain. Continue actual elapsed scene wait ownership; physical
-timing, complete pictures, broader Boss/death/process and Windows stay open.
-
-Published native head: `c2d8363606d73090f2ad47062788a5b497622647`.
-
-## Native signed WORD palette fades (v1414)
-
-Published `port/modern-64` is at `6b0e1ba`, combining the recovered palette
-fade with the native wait/text owners. `maine::Animation` now truncates speed
-to the original WORD and uses its signed condition. Zero and negative WORD
-speeds finish after one initial refresh; positive speeds keep `1 + 17 * speed`
-waits. Original OP/MAINE 0000:0622 and 0000:0666 pass 96 instruction controls
-at loads 1000/3333. Both fresh compilers agree on 24 native timelines; the
-actual old source rejects 14 boundary vectors.
-
-Joined producer 530/4dc27bde freshly builds the complete core, actual frontend
-and four selected contract programs in GNU Release and optimized UBSan/bounds.
-Each passes four related CTests; native CI passes 345 tests. The prior v1412
-79-program/77-CTest graph keeps its own frozen producer and receipts.
-
-Complete evidence is in `native-palette-zero-v1413` and
-`native-palette-join-v1414`, under each tree's `.analysis/port64/` directory.
-The join's `verify_closure.py` checks its source archive, programs, comparisons
-and 1,635 frozen parent files. Retirement and source-backed cache cleanup
-release 41.48 MiB net across this recovery; complete originals and programs
-remain. `verify_retention.py --restore --prefix build-gnu/` restores one
-compiler's archived caches. Continue native hardware and scene-owner recovery
-before longer game validation. Historical authored exact stays 661/663.
-
-## Joined native palette waits and text writers (v1412)
-
-The native merge retains both parents: ordinary WORD/Shift-JIS and Gaiji text
-producer `328585f`, and palette wait producer `f2a51e2`. Cold producer
-528/768091dc builds all 79 programs and passes all 77 CTests under both GNU
-Release and optimized UBSan/bounds. The earlier selected UBSan subset is
-historical evidence; this producer checks the complete graph.
-
-Both compilers pass 32 original OP 0000:2648 wait controls at loads 1000/3333,
-432 raster/cadence vectors (1,296 waits), 2,656 MAIN/MAINE Gaiji comparisons,
-all 65,536 WORD characters and 65,536 two-byte inputs, and 1,680 complete
-ordinary-text memory controls. Original Gaiji entries are MAIN 0000:1B0C/1B50
-and MAINE 0000:0FC4/1008; ordinary entries are MAIN 0000:229E/22F6.
-Retained original transcripts keep their target/helper pins and are read in
-full; their receipts are not reassigned to the new native source.
-
-Actual old `328585f` startup source fails the Count1-clear check (expected
-exit 1). Eight muted SDL dummy routes (GNU/UBSan × none/pmd/pmdb2/pmd86)
-complete startup, four demos and fresh OP. Each retains all 129 prior output
-hashes and passes 15,988 original selected-state boundaries. GNU/UBSan output
-sets agree. This remains scoped runtime agreement, with no exact, complete
-picture, physical CPU/IRQ timing or Windows acceptance claim.
-
-Private replay: `.analysis/reconstruction/probes/native-wait-text-v1412/`;
-producer: `.analysis/worktrees/native-wait-text-v1412/.analysis/port64/native-wait-text-v1412/`.
-`focused.json` records commands. `verify_retention.py --restore --prefix`
-restores owned archived paths; retirement reclaims 508.31 MiB net.
-Source, selected programs, full comparison streams, receipts and the real
-predecessor remain. Continue bounded native scene wait/hardware recovery;
-broader Boss/death/process routes, complete pictures and Windows remain open.
-
-Published native head: `9a7f380a2ef7d947dec2207f0552effcf01d032b`.
-
-## Combined DOS text and VSync recovery (v1411)
-
-Current MAIN/OP/MAINE include both mutable `TextVramSeg` reads and the
-installed-owner VSync wait. Serial rebuilding compiles changed source freshly
-and validates reused objects; links, IRQ audits and MAIN bullet tables pass.
-Producer 1,425/82ade790 passes 3,156 ordinary-text, 2,656 Gaiji, 528 VSync wait
-and 324 lifecycle comparisons. All four complete ordinary-text bodies retain
-the original MAIN match after mapping the text-variable data operand.
-
-The isolated `dos-text-vsync-join-v1411` tree retains source, products/MAPs,
-wait OMFs, full transcripts and replay/retention readers. Its closure also
-checks 776 frozen text-only and 858 frozen wait-only files independently.
-See [text recovery](reconstruction/product/TH04_NATIVE_TEXT_CHARACTER_V1409.md)
-and [VSync recovery](reconstruction/product/TH04_NATIVE_VSYNC_V864.md).
-Historical authored exact remains 661/663; its prior native text producer is frozen at 328585f.
-Verified retirement reclaims 33.45 MiB from the combined compiler/cache
-copies; temporary v1410 restores return to their existing archive.
-Continue native scene waits and hardware owners before long game campaigns.
-
-## Frozen DOS installed-owner VSync wait (v1408)
-
-Shared `vsync_wait.cpp` now chooses the original branch once at entry:
-installed IRQ waits for any unsigned Count1 change; otherwise it waits for
-the next GDC blank. Neither path clears Count1/Count2. The owner is a public
-byte alias of START/END's existing saved PIC mask, with no additional storage.
-
-Cold all-four-product producer 1425/d9383fa5 passes links, MZ/IRQ audits and
-MAIN bullet tables. Complete original MAIN 0000:2462, decoded OP 0000:2648
-and decoded MAINE 0000:2206 each have 38-byte waits; compiled contributions
-are 49 bytes. Three-artifact comparisons pass 528 controls at loads 1000/3333,
-including 72 real ISR/IRET injections and 24 midwait owner changes. Existing
-START/IRQ/END retains 324 controls. The real polling-only predecessors each
-reject 136 installed-owner cases while their 40 unowned cases still agree.
-
-Fresh muted four-Demo runs pass all 15,988 original consumed-input/score/RNG
-boundaries. This is a selected-state regression; earlier whole-pool/video
-acceptance retains its own frozen producer. Raw register differences are
-recorded, including different artifact DS layouts and incidental AX/DX/FLAGS;
-no complete register, byte-exact or physical latency claim is made.
-
-Replay index/products: `.analysis/reconstruction/probes/dos-vsync-wait-v1408/`.
-`focused.json`, `negative-final.json` and `demo-regression.json` record commands;
-`verify_retention.py --restore --prefix <owned path>` restores archived inputs.
-Verified retirement reclaims 52.39 MiB from 3,584 owned paths/1,450 blobs.
-Stopped observer diagnostic logs separately reclaim 346.77 MiB losslessly.
-Final products/MAPs, wait OMFs, original/compiled transcripts and failure
-readers remain. See [VSync recovery](reconstruction/product/TH04_NATIVE_VSYNC_V864.md).
-
-Both isolated and published-main CI pass 451 tests, targets/calibration,
-ledgers and catalog. Live-main Ghidra/JDK, MAIN database and mutation gates
-also pass; all three original databases were attested before work.
-Source-backed own/main caches reclaim another 8.49/8.52 MiB, bringing this
-batch to 416.18 MiB net. Frozen DOS 30-file and native 1,235-file parent
-closures retain their hashes. All 1,425 live-main input files match the cold
-producer byte for byte after four pre-existing EOL representations are journaled and
-normalized to Git/attributes LF; logical Git source is unchanged by that step.
-
-Historical exact remains 661/663. The text-variable gap is closed in v1411
-above; native scene waits, physical timing, broader routes and Windows
-acceptance remain open.
-
-## Frozen DOS ordinary text writers (v1410)
-
-Both text ASM owners now read the maintained `TextVramSeg` instead of adding
-a fixed A000h. The character writer keeps its full WORD ANK/JIS/Shift-JIS
-conversion; the string writer keeps its lead-byte handling, store order,
-wrapped attribute count and far Pascal ABI.
-
-Cold MAIN/OP/MAINE builds pass links, IRQ audits and MAIN bullet tables.
-The complete 87-byte character body in all three products and the 114-byte
-MAIN string body agree with original MAIN after mapping only the text
-variable's data offset. MAIN passes 1,680 full memory/write/ABI comparisons
-at loads 1000/3333; OP/MAINE each pass 738 against the shared MAIN character
-contract. The prior Gaiji owners retain 2,656 original comparisons.
-The compiled v1407 MAIN predecessor differs in all 80 alternate-base controls,
-including return ES. Far strings use independent RAM outside the loaded image.
-
-Producer 1,425/451a46f7 and selected products are in the isolated
-`dos-text-character-v1410` tree. Complete records and readers are under
-`.analysis/reconstruction/probes/dos-text-character-v1410/` there. See
-[text writer recovery](reconstruction/product/TH04_NATIVE_TEXT_CHARACTER_V1409.md).
-Historical authored exact remains 661/663; native remains at 328585f.
-CI passes 451 tests. Verified retirement reclaims 21.14 MiB net; complete
-current records and 30 frozen DOS parent files retain their hashes.
-Join these writers with the recovered DOS VSync owner above and verify
-the combined producer before long game campaigns. The full goal stays active.
-
-## Native ordinary text writers (v1409)
-
-`TextPlane` now recovers the complete WORD character input and the original
-Shift-JIS byte-stream conversion. It preserves mutable text bases, WORD
-addresses, NUL handling, malformed pairs and glyph/attribute aliases. HUD,
-Game Over and the real frontend use the recovered character writer.
-
-All 65,536 WORD characters and 65,536 two-byte strings agree with original
-MAIN 0000:229E/22F6 on both visible banks. A separate 840-case corpus agrees
-on complete 80000h..DFFFFh memory at loads 1000/3333: 1,680 comparisons.
-Cold GNU and optimized UBSan/bounds reproduce the results; prior Gaiji retains
-all 2,656 comparisons. The frontend builds, six component contracts and
-native CI 345 pass. No game campaign was needed for this function recovery.
-
-Native `port/modern-64` is at 328585f, producer 526/3e7d5e33. Complete evidence
-is in `port-motion-v1402/.analysis/port64/native-sjis-text-v1409/`.
-Verified cache retirement reclaims 14.50 MiB net; the closure reader checks
-all current proofs and 780 frozen parent files. See
-[ordinary text recovery](reconstruction/product/TH04_NATIVE_TEXT_CHARACTER_V1409.md).
-
-Original instructions read `TextVramSeg` at DGROUP 2134:0768. The DOS ASM
-references are recovered by v1410 above. Historical authored exact acceptance
-remains 661/663. The full reconstruction/native goal stays active.
-The palette VSync review remains a separate frozen producer.
-Root CI passes 451 tests and the updated ledgers; target preflight passes.
-
-## Native text Gaiji migration (v1408)
-
-Native `TextPlane` now follows the original WORD coordinates, mutable text
-base and glyph/attribute store sequence. Sparse pages retain spill and alias
-writes while the existing visible arrays serve HUD, Game Over and registration.
-Ordinary frame copies stay near 8 KiB.
-
-All 664 native fixtures match original MAIN 0000:1B0C/1B50 and MAINE
-0000:0FC4/1008 at loads 1000/3333: 2,656 full memory comparisons. Optimized
-UBSan/bounds reproduces them. Cold core/five programs, five related contracts
-and native CI345 pass. The compiled predecessor rejects both edge and long
-string inputs; the string's partial visible banks agree despite its failure.
-
-Retained native v1408 commit 8f7f7d5 has producer 524/6f214e8c. Proofs are in
-`port-motion-v1402/.analysis/port64/native-text-address-v1408/`. Verified
-archiving and source-backed cache cleanup reclaim 13.04 MiB net; current
-source/program/transcript closure and frozen native/DOS parents pass.
-See [text writer recovery](reconstruction/product/TH04_NATIVE_GAIJI_TEXT_V860.md).
-The v1409 ordinary-text recovery above extends these address semantics.
-Historical exact remains 661/663 and the full goal stays active.
-
-The palette VSync recovery below remains a separate frozen review producer;
-it has not been merged into the text-writer producer.
-
-## Retained native OP palette VSync wait (v1407)
-
-`review/native-gdc-poll-v1407` remains frozen at f2a51e2, producer524/d9edcdf5.
-Palette waits preserve both counts and choose installed Count1 inequality or
-the next GDC blank; frame_delay and Logo retain their distinct clear orders.
-GNU77 programs/75 CTests and optimized UBSan13 programs/10 contracts pass.
-Each compiler passes32 original controls and432 ideal vectors/1296 waits;
-eight muted routes retain129 prior outputs and15988 selected-state boundaries.
-The real48e05da startup predecessor rejects counter retention. This review
-has not been integrated into the newer ordinary-text native producer.
-
-Evidence and lossless recovery: `.analysis/reconstruction/probes/native-gdc-poll-v1407/`.
-Its frozen source/program/transcript proofs and prior cleanup remain intact;
-v1408 above is the separate DOS wait recovery. Other scene adapters and
-CPU/loading/ISR costs remain open. See [VSync ownership](reconstruction/product/TH04_NATIVE_VSYNC_V864.md).
-
-## Retained DOS text Gaiji recovery (v1407)
-
-`gaiji_text.cpp` now restores the mutable text base, original store order,
-wrapped attribute count and return ES for `GAIJI_PUTCA/PUTSA`. Original
-MAIN and MAINE match all 2,656 complete memory/write/state controls at
-load 1000/3333, including long strings whose glyphs alias attributes.
-The compiled predecessor has 40 final memory differences and 426 ES differences.
-The previous graphics Gaiji functions retain all 4,800 controls with the new
-OP/MAINE products.
-
-Three affected products were rebuilt with freshly compiled changed source
-and verified unchanged-object reuse. Links, IRQ audits and MAIN bullet tables
-pass. Product inputs are 1,425 files / fb50205b; ZUN keeps its prior product.
-Historical exact remains 661/663. The full goal stays active.
-
-Replay index: `.analysis/reconstruction/probes/dos-text-gaiji-v1407/`;
-products: `.analysis/build/th04-text-gaiji-v1407/`. See
-[text Gaiji recovery](reconstruction/product/TH04_NATIVE_GAIJI_TEXT_V860.md).
-The native `TextPlane` migration is indexed in v1408 above.
-Continue function recovery before long game campaigns.
-
-Root CI passes 451 tests, ledgers, catalog and private target/database checks.
-Verified archiving retires 7,143 owned cache paths; source-backed Python
-caches bring cleanup to 38.00 MiB net. Complete original/compiled memory
-transcripts, selected products and frozen parent proofs remain.
+## Retained producer routing
+
+| Subject | Retained producer | Evidence and recovery |
+| --- | --- | --- |
+| Cutscene/Ending elapsed requests | v1425,542/59d19121 | [VSync note](reconstruction/product/TH04_NATIVE_VSYNC_V864.md), `native-cutscene-elapsed-v1425` receipts |
+| Staff elapsed dissolve/measure | v1424,541/83933826 | VSync note, `native-staff-elapsed-v1424` receipts |
+| Verdict/Congratulations and MAINE waits | v1423,540/bc9bb404 | VSync note, `native-maine-demo-word-join-v1423` receipts |
+| Demo WORD blackout/indexed DAC entry | v1421/v1420 | [Porting status](PORTING_STATUS.md), scoped original fade/palette controls |
+| Palette, IRQ and ordinary/Gaiji text owners | v1407–v1419 | Porting status and VSync note; each original/DOS/native producer retains its own identity |
+| DOS SMEM/HMEM and page-copy workspace | v1423,1426/e60c079f | [Heap](reconstruction/product/TH04_NATIVE_HEAP_V863.md), [page copy](reconstruction/product/TH04_NATIVE_GRAPH_COPY_V862.md) |
+
+Prior phase descriptions are historical producer scope. They do not override
+current remaining work above. Full receipts live under ignored `.analysis/`;
+[retention recovery](ANALYSIS_RETENTION.md) routes verified archives. Earlier
+handoff detail remains in Git and the focused subject notes.
 
 ## Retained acceptance and next work
 
@@ -631,19 +115,17 @@ Native selected-state/pool/shake/splash and sampled game-area results retain
 their original frozen producers; default route hash equality here is scoped
 regression, not new complete-picture acceptance.
 
-Frozen v1404 combined 520/774cc800 already passes original motion/GRCG/font
-corpora plus eight routes; v1407 starts from newer Gaiji native base48e05da.
-Older review/native-integrated-v1404 and review/startup-motion-join-v1403
-remain immutable. Earlier GNU Reimu A Normal/Lunatic/Extra/save/restart
-routes retain v1356 Linux scope; the previous UBSan Normal clear claim
-remains revoked (mask0x19 is a sentinel; require mask<4 plus selected shot bit).
+Older native original instruction/pixel/font corpora and Linux
+Normal/Lunatic/Extra/save/restart routes retain their frozen producers. The
+previous UBSan Normal-clear claim remains revoked: mask0x19 is a sentinel;
+require mask<4 plus the selected shot bit. Current component route acceptance
+above does not restore that full-route claim.
 
-Shared DOS installed-owner VSYNC_WAIT now has the v1408 cold replay above.
-DOS ordinary-text mutable bases are recovered above. Preserve the separate
-native VSync review; other native scene adapters
-and default elapsed-work models still need source recovery. Serialize actual
-builds. Preserve the active Windows host, shared writer worktrees, private
-original inputs, saves and frozen evidence. TH08 stays read-only.
+Continue bounded function recovery and native scene integration, then paired
+original DOS/reconstructed DOS/native behavior checks. Preserve Windows host
+focus, original inputs, saves, shared writer worktrees and frozen evidence.
+TH08 stays read-only. Serialize actual builds and clean owned intermediates
+only after their journals and recovery checks pass.
 
 ## Commands and navigation
 
