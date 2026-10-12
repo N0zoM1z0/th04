@@ -5,61 +5,50 @@ using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
 remains open. Updated 2026-10-12.
 
-## Native MAIN pause, resume and Quit (v1431)
+## Current native natural routes and strict clear gate (v1432)
 
-Ordinary MAIN Esc now enters its pause menu. Actors, stage, player resources,
-score and RNG remain suspended while IRQ/audio/text blink service continues.
-The original three gaiji labels at26:12/14/15 and their C1/E9 attributes are
-retained. Up/Down toggles once per release/press; Esc selects Resume, Z/Enter
-confirms, and Q returns Quit immediately without the three space erasures.
-Other confirmations wait for final release and erase four ANK cells per row.
-The completed pause returns latched keys and unused time. The caller resumes
-its suspended frame once; Quit publishes run state and returns to fresh OP,
-with released MAIN resources and a clean second MAIN. Pause Esc is consumed
-by that menu and is not requeued as a new pause after Resume.
+The route reader now requires the requested character/rank/shot partition's
+actual physical clear mask below4 plus its shot bit, all ten full16-bit score
+checksums, complete stage coverage, correct Ending and registration/fresh OP
+without Continue.0x19 and high-bit masks remain unplayed even when bit0 is set.
+Easy's five-stage Bad Ending and Extra's separate stage6 process are checked
+against their own extents; Normal requires six stages and Good Ending.
 
-Original MAIN DEMO_TEXT0AAF:07DF..08FD (load0B2CF..0B3ED,287 bytes), full
-input_wait130E:0133..0186, frame_delay130E:00D7..00EB and VSYNC_WAIT0000:2462..
-2487 execute with legal MZ relocations/DGROUP2134 at loads1000/3333.
-Initial/final busy reset-sense loops sample immediately then at explicitly
-chosen counted-edge observation points, without clearing Count1. Those points
-are keyboard/CPU cadence adapters, not measured polling costs. Menu waits
-preserve actual Count1-only clearing and pre/post OR. Physical CPU, keyboard,
-active-PMD timing and full-game paired acceptance remain open.
+Current unchanged cold554/31e6b3d7 GNU and optimized UBSan each pass
+Easy ReimuA, Normal ReimuA, Normal MarisaA and earned Extra ReimuA. All use
+ordinary key-only advice in Mode::ordinary, legal six-life/two-bomb setup,
+physical configuration/scores and no actor/hit/life/score/stage/clock writes.
+Extra starts from the same-run Normal-earned file in a new process. Each route
+has clear mask1 and returns to fresh OP, with no Continue. GNU/UBSan complete
+key/19-field MAIN-state/startup/menu/capture and save files agree for all four routes:
+72434, 88914, 79214, 29611 admissions, 270,173 per compiler.
+These are logical headless routes with render_every0 and retained checkpoints,
+not complete pictures, original full-game parity, OS delivery or timing claims.
 
-Cold554/31e6b3d7 GNU Release and optimized UBSan/bounds each build84 programs
-and pass82 CTests. Each agrees with768 original controls and
-384 coarse plus384 one-ms partitions on complete events/keys/
-counters/time/selection/result/latch streams. Eight actual frontend routes per
-compiler cover both characters and Esc/Z/menu-Quit/Q, actor/score/RNG freeze,
-raw menu TRAM, resource release/fresh OP/second MAIN.16 original putsa/putca
-controls at loads1000/2000 validate all12 occupied menu cells' code/attribute
-words per compiler; other cells and full graphics are outside that check.
-Each ordinary SDL/private TCP-disabled Linux Xvfb run additionally exercises
-Esc/Z Resume, Q Quit and second MAIN, with read-only traces and zero audio
-opens. No actor/hit/score/clock writes or Windows focus/input are used.
-Four compiled mutations reject cancel-as-Quit, Q erasure, skipped release and
-stale live key_det; unchanged compiled control passes.
+The executed consumer is554/a79f199f. All553 other maintained inputs,
+including every compiled source/header/CMake input and the C++ route helper,
+match the frozen producer. Only verify_natural_routes.py changed; no C++ build
+or parent producer restamp. The reader explicitly records both identities and
+rejects compiled-input differences. Nine public tests and a real complete
+Normal trace/file control plus six full-checksum-valid counterexamples reject
+missing/wrong-shot/sentinel/high masks, Bad Ending and omitted stages.
 
-Retained dev384-control failure differed only in live key_det during waits;
-reset-sense and OR-sense now update that observable field before STOP. The
-first actual fixture wrongly started from missing/setup CFG; a valid encoded
-configuration fixes its own entry. A dummy-video window probe and later real
-SDL Esc requeue failure remain distinct. Compiler namespace failures and all
-source/program/trace evidence are retained. Prior UBSan Normal-clear acceptance
-stays revoked:0x19 is an unplayed sentinel after a failed survival route; this
-batch does not retry or promote that full-route claim.
+Prior failed UBSan/window Normal acceptance stays revoked in its own producer
+scope. Current headless GNU/UBSan clear evidence is new and separate. Broader
+shots/ranks/death/Continue, original/reconstructed DOS/native campaign parity,
+full pictures, physical CPU/I/O/scanout, active-PMD timing and Windows remain
+open. Historical exact stays661/663; full reconstruction/migration is active.
 
-Replay: `.analysis/reconstruction/probes/native-main-pause-v1431/`;
-producer: `.analysis/worktrees/native-main-pause-v1431/.analysis/port64/native-main-pause-v1431-v5/`.
-`verify_main_pause.py` owns original controls; `window.py` owns private SDL keys.
-Content/CRC/mode/nsmtime/temp-restore retirement saves256.67 MiB net.
-Source/all programs/fixtures/receipts/failures remain live or losslessly recover
-with `verify_retention.py --restore --prefix`. Full goal stays active; broader
-Boss/death/process parity, unowned score RAM, other waits, physical scanout and
-Windows remain open. Historical exact stays661/663.
+Replay: `.analysis/reconstruction/probes/native-natural-clear-v1432/`;
+results: `.analysis/worktrees/native-natural-clear-v1432/.analysis/port64/native-natural-clear-v1432/`.
+The frozen programs remain under `native-main-pause-v1431-v5`. `comparison.py`
+verifies all complete captures and saves; `mutations.py` owns actual-file
+counterexamples. Verified content/CRC/mode/nsmtime/temp-restore retirement
+saves81.78 MiB net; route/state/input captures recover with
+`verify_retention.py --restore --prefix`. All source, programs, saves, plans,
+receipts and archive remain retained. Continue paired ordinary-game behavior.
 
-Published native head: `853e012509849ae2f218972594e67eb6fd591ceb`.
+Published native head: `c0a1060371c5f8ba758ca8b10f6cbc99063ba3d6`.
 
 ## Native elapsed registration and all three callers (v1428)
 
@@ -159,6 +148,7 @@ Continue remaining function recovery and native scene integration.
 | --- | --- | --- |
 | Registration numeral requests/WORD slots | v1429,548/fc9b02eb | VSync note, `native-numeral-slot-v1429` full controls/recovery |
 | SUPER byte kernel/registration | v1430,551/e9fa254c | SUPER sprite note, `native-super-kernel-v1430` controls/recovery |
+| MAIN pause/resume/Quit | v1431,554/31e6b3d7 | Native pause note, `native-main-pause-v1431` controls/recovery |
 | Full Game Over/Continue/Quit | v1427,544/4a62eb34 | VSync note, `native-gameover-elapsed-v1427` receipts |
 | MAIN good/bad/Extra elapsed fade16 | v1426,543/70986a2b | VSync note, `native-main-exit-fade-v1426` receipts |
 | Cutscene/Ending elapsed requests | v1425,542/59d19121 | [VSync note](reconstruction/product/TH04_NATIVE_VSYNC_V864.md), `native-cutscene-elapsed-v1425` receipts |

@@ -54,15 +54,17 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. Producer554/31e6b3d7 restores MAIN pause:
-Esc opens the original menu, Resume continues the same frame, and Quit returns
-to fresh OP. GNU and optimized UBSan each pass84 programs/82 CTests,
-768 original controls,8 actual frontend routes and ordinary private Linux
-SDL input checks. Prior full Normal-clear failure remains revoked. Broader
-gameplay parity, other waits, unowned score RAM, physical timing/scanout and
-Windows remain open; see the [handoff](docs/RE_HANDOFF.md).
+Native development is active. Current frozen554/31e6b3d7 GNU and optimized
+UBSan now pass four strict natural headless routes: Easy ReimuA, Normal ReimuA,
+Normal MarisaA and Extra ReimuA earned by the same-run Normal save. All four
+complete captures/saves agree across compilers, with real clear mask1 and no
+Continue. The new554/a79f199f reader rejects sentinel/high masks, wrong
+partitions, Bad Ending, incomplete stages and full-checksum failures. Previous
+failed window Normal acceptance stays revoked. Original full-game parity,
+complete pictures, physical timing and Windows remain open; see the
+[handoff](docs/RE_HANDOFF.md) for scope and recovery.
 
-Native branch head: `853e012`.
+Native branch head: `c0a1060`.
 
 Current shared DOS restores upward SMEM and descending HMEM ownership and
 the graph page-copy workspace (producer 1,426/e60c079f). All 1,242 allocator and
