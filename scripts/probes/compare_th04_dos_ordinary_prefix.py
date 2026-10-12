@@ -82,7 +82,7 @@ def ordinary_profile(main: bytes, original: bytes, map_path: Path | None) -> dic
     return result
 
 
-def load(directory: Path, original: bytes) -> dict:
+def load(directory: Path, original: bytes, source_snapshot: Path | None = None) -> dict:
     receipt = json.loads((directory / 'receipt.json').read_text())
     require(receipt['complete'] and receipt['exit'] == 0, 'capture incomplete')
     for path, digest in receipt['files'].items():
@@ -178,7 +178,12 @@ def load(directory: Path, original: bytes) -> dict:
         validate_keyboard_capture(json.loads((directory / 'clock-input.json').read_text()),
                                   rows[0], resident_rows[0])
         for path, digest in receipt['source_files'].items():
-            require(sha(Path(path).read_bytes()) == digest, 'keyboard source identity drift: ' + path)
+            live = Path(path)
+            observed = sha(live.read_bytes()) if live.is_file() else None
+            if observed != digest and source_snapshot is not None and live.is_relative_to(ROOT):
+                frozen = source_snapshot / live.relative_to(ROOT)
+                observed = sha(frozen.read_bytes()) if frozen.is_file() else None
+            require(observed == digest, 'keyboard source identity drift: ' + path)
     return dict(receipt=receipt, fields=names, rows=rows, resident=resident_rows, events=events,
                 starting_files=starting_files)
 

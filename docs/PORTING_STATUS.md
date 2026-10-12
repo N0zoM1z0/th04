@@ -15,6 +15,9 @@ Original/reconstructed DOS ordinary Stage1 now passes two repeated pairs at
 (v1434). The keyboard adapter observes original OP menu count64; prior startup
 seed mismatches remain rejected. This headless hardware-keyboard fixture does
 not accept complete actor pools/pictures, Boss combat, campaigns or Windows.
+New v1435 full DGROUP captures additionally agree on nine complete pools and22
+state blocks, with three pools empty. Aggregate acceptance stays rejected for156
+post-reset input differences despite equal consumed inputs and scalar controls.
 Native host agreement remains separate; see [current handoff](RE_HANDOFF.md).
 
 ## Current native natural routes and strict clear gate (v1432)

@@ -5,6 +5,46 @@ using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
 remains open. Updated 2026-10-12.
 
+## Ordinary full pools and retained input-sample difference (v1435)
+
+Normal ReimuA Stage1 now has complete after-update DGROUP streams at3,996
+updates per program. Nine complete object/effect pools and22 guarded state
+blocks compare byte-for-byte, including inactive records and padding. Stage
+graze and post-reset Shift also agree. Both consumed-input/36-field/ordered-RNG
+traces agree with independent v1434 baselines. Original/candidate images,
+starting files, emulator/MAP/owner opcodes and mapped-RAM framing are pinned.
+
+The **aggregate remains rejected**:156 post-reset key_det samples differ;
+first at frame5/after update4 is Shot20h original versus0 candidate. The next
+loop's original MAIN0AAF:00AE calls OR-sense130E:06C4 before the consumed-input
+seam; its Shot OR at130E:075D is target-observed. Refreshing later yields equal
+consumed input. CPU/IRQ/autorepeat phase as the cause remains inferred, not
+accepted timing parity. Raw mismatches stay in the report; no masked equality.
+
+The first stream attempt also lost Shot at consumed frame1 only in original,
+so that pair was inadmissible. Current adapter queues Shot after the last menu
+confirmation release, before MAIN loading; both final independent controls
+pass. Input device events preserve guest RAM/registers/PIC time at each call.
+This is still headless keyboard-API input, not Windows or physical timing.
+
+Shots/enemies/sparks/bullets/items/pointnums vary. custom_entities/circles/
+gather_circles remain zero; their active branches are untested. Boss setup
+stays constant. Original self-control plus nine last-byte pool counterexamples
+pass, and six strict stream protocol tests pass. Root CI474 tests, tracking,
+catalog, private target/database and Oracle mutations pass; diff check passes. Full pictures, Boss combat,
+process lifecycle, cross-emulator/Windows and campaigns remain open.
+Next extend complete ordinary video/Boss capture, retaining intermediate input
+and timing differences as separate requirements.
+
+Replay: `.analysis/reconstruction/probes/dos-ordinary-pools-v1435/`.
+Public capture adds `--dgroup-stream`; `compare_th04_ordinary_pools.py` binds
+independent baselines and frozen source snapshots without restamping receipts.
+Current result has actor_pools_passed/global_states_passed=true but passed=false.
+Owned16-path chunk retirement releases181.04MiB net with1.10MiB archive; all
+content/CRC/temp size/mode/nsmtime/protected checks pass. Compressed DGROUP
+streams stay live. `recover.py --restore` restores images/raw traces; temporary
+v1434 baseline aliases were separately removed (not counted as new savings).
+
 ## Ordinary original/reconstructed DOS state prefix (v1434)
 
 Two independently captured Normal ReimuA Stage1 pairs now pass3,996 updates:
@@ -33,7 +73,7 @@ terminal cannot mutate Demo's global hooks. Repeated profiles/complete captures,
 seven state/input/RNG counterexamples and five keyboard-context counterexamples
 pass. Seventeen focused tests and root CI468 tests, catalog, tracking, private target/
 database checks and Oracle mutations pass; diff check passes. No DOS/native C++ source or exact state
-changes. Boss bytes remain constant setup; full ordinary actor pools/pictures,
+changes. This scalar producer itself has no full actor/picture acceptance;
 Boss combat, process transitions, cross-emulator/Windows and campaign parity
 remain open. Next add complete ordinary actor/effect capture and a longer
 terminal for Boss combat.

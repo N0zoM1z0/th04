@@ -96,14 +96,22 @@ class Clock(gdb.Breakpoint):
             return True
         if not loaded and schedule and (now >= schedule[0][0]):
             todo = ('key', *schedule.pop(0))
+            if todo[2] == 'KBD_z':
+                held = True
             return True
         return False
 clock = Clock()
+monitor = None
+if os.environ.get('TH04_ORDINARY_DGROUP') == '1':
+    from th04_ordinary_dgroup_gdb import Monitor
+    monitor = Monitor(out, ram)
 save()
 while gdb.selected_inferior().pid:
     gdb.execute('continue')
     if not gdb.selected_inferior().pid:
         break
+    if monitor is not None and monitor.error:
+        raise ValueError(monitor.error)
     try:
         clock.enabled = False
         if seedwatch is not None:
@@ -122,8 +130,9 @@ while gdb.selected_inferior().pid:
             save()
             if len(actions) == 1:
                 schedule = [(before + 120, 'KBD_enter', False)]
-                for delta in range(1000, 7001, 1000):
+                for delta in (1000, 2000):
                     schedule.extend([(before + delta, 'KBD_enter', True), (before + delta + 120, 'KBD_enter', False)])
+                schedule.append((before + 2200, 'KBD_z', True))
                 seedwatch.delete()
                 seedwatch = None
         todo = None
@@ -135,4 +144,6 @@ while gdb.selected_inferior().pid:
         (out / 'clock-input-error.txt').write_text(repr(e) + '\n')
         gdb.execute('quit 91')
         break
+if monitor is not None:
+    monitor.finish()
 end

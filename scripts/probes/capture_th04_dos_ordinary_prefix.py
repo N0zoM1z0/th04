@@ -35,6 +35,7 @@ def main() -> int:
     parser.add_argument('--font-bmp', required=True, type=Path)
     parser.add_argument('--output-dir', required=True, type=Path)
     parser.add_argument('--timeout', type=int, default=600)
+    parser.add_argument('--dgroup-stream', action='store_true')
     args = parser.parse_args()
     output = args.output_dir.resolve()
     if output.exists() or not output.is_relative_to(ROOT / '.analysis/runtime/candidates'):
@@ -120,6 +121,11 @@ def main() -> int:
     command = [str(debugger), '-nx', '-batch', '-x', str(adapter), '--args', str(binary),
                '-defaultconf', '-defaultmapper', '-conf', str(config), '-fastlaunch', '-nogui',
                '-nomenu', '-exit', '-c', f'imgmount 2 "{image}" -t hdd -fs none', '-c', 'boot -l c']
+    stream_sources = []
+    if args.dgroup_stream:
+        env['TH04_ORDINARY_DGROUP'] = '1'
+        stream_sources = [adapter.with_name(name) for name in
+                          ('th04_ordinary_dgroup.py', 'th04_ordinary_dgroup_gdb.py', 'th04_demo_dgroup.py')]
     started = time.monotonic()
     timeout = False
     with (output / 'boot.log').open('wb') as stream:
@@ -138,6 +144,9 @@ def main() -> int:
     complete = (not timeout and code == 0 and b'TH04_DEMO_OBSERVER_COMPLETE 1\n'
                 in (output / 'boot.log').read_bytes() and not (output / 'clock-input-error.txt').exists())
     names = ['profile.json', 'observer-profile.txt', 'dosbox-x.conf', 'boot.log', 'raw.txt', 'clock-input.json']
+    if args.dgroup_stream:
+        complete = complete and b'TH04_ORDINARY_DGROUP_COMPLETE\n' in (output / 'boot.log').read_bytes()
+        names += ['ordinary-dgroup.bin.gz', 'ordinary-dgroup.json']
     receipt = dict(schema_version=1, complete=complete, timeout=timeout, exit=code,
                    role='original' if args.original else 'candidate', elapsed=time.monotonic() - started,
                    command=command, main_path=str(main_path.resolve()), main_sha256=sha(main_bytes),
@@ -149,7 +158,7 @@ def main() -> int:
                    adapter_sha256=sha(adapter.read_bytes()), walker_sha256=sha(walker.read_bytes()),
                    source_files={str(path): sha(path.read_bytes()) for path in
                                  (Path(__file__), adapter, walker, source / 'include/keyboard.h',
-                                  source / 'include/regs.h', source / 'src/hardware/keyboard.cpp')},
+                                  source / 'include/regs.h', source / 'src/hardware/keyboard.cpp', *stream_sources)},
                    files={name: sha((output / name).read_bytes()) for name in names if (output / name).exists()},
                    resource_budget=dict(cpu_affinity=sorted(os.sched_getaffinity(0)), nice=os.nice(0),
                                         address_space_bytes=1536 * 1024 * 1024),

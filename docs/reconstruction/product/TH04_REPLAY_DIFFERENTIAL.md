@@ -5,6 +5,89 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Ordinary complete pools and input phase frontier (v1435)
+
+Root CI474 tests, catalog, tracking, private target/database checks and Oracle
+mutations pass; final diff check passes. Aggregate runtime rejection below
+remains independent of those control-plane gates.
+
+The new `--dgroup-stream` capture composes an independent read-only memory
+monitor with the ordinary keyboard adapter. A watch on the attested observer's
+MAIN process counter arms a mapped stage_frame watch. Every actual increment
+1..3996 captures all65536 DGROUP bytes, CPU load/data segments, paging state
+and complete logical/physical page mappings. Frames are XOR-delta gzip encoded
+under a separate ordinary TH04OG1 contract. No Demo rotation/replay assumption
+is used. BSS zeroing, contiguous increments, exact extent, full bodies and
+footer/CRC are checked; full uninterpreted bytes remain recoverable.
+
+The frame write follows actors/render, reset-sense, slowdown wait, scroll,
+page flip and sound update, before modulo counters and score update. Target-derived
+nine clear-call extents and candidate MAP/clear-helper guards attest the pools;
+22 state extents retain their separate target/candidate instruction witnesses.
+Every byte, including inactive records/padding and enemy ES-relative script
+offsets, is compared. Callback/code pointers outside those owners are excluded
+from claimed state; complete DGROUP bytes are kept without normalization.
+
+Nine pools and22 states agree at all3996 frames. Whole extents are shots1224B,
+enemies2048B, sparks1536B, bullets11440B, custom_entities832B, circles160B,
+items640B, pointnums6400B and gather_circles672B. Raw changing-frame counts are
+3895/3023/1400/1619/0/0/1451/421/0 respectively. These counts show byte changes,
+not active entity counts. The three zero pools have no active-branch coverage.
+Both natural deaths/respawns are covered; Boss remains setup-only.
+
+**Aggregate passed=false remains authoritative.** Post-reset Shift and stage
+graze match, but key_det differs at156 frame-write samples. First is frame5,
+after update4, original20h/candidate0. The ordinary next loop calls input_sense
+at MAIN0AAF:00AE→130E:06C4 before the pre-update input seam; target Shot OR
+is130E:075D `83 0E 74 39 20`. Consumed inputs and all36 scalar/RNG fields still
+match each other and their independent v1434 no-DGROUP baselines. Later OR-sense
+is observed; CPU/IRQ/autorepeat phase as the cause of intermediate differences
+remains inferred. Physical timing and general input equivalence stay open.
+Do not drop the post-reset field to turn the aggregate green.
+
+The initial stream pair was also inadmissible: original consumed frame1 had0
+instead of Shot20h, candidate and independent baseline had20h. Final transport
+queues Shot at the observed menu trigger's+2200 virtual milliseconds, after the
+last Return release and before MAIN loads. Only keyboard device API calls are
+used; guest RAM/CPU/segment/PIC guards remain. Both final scalar controls pass.
+First source/receipts/streams and explicit rejection remain retained.
+
+Historical baselines bind their actual frozen controller source bytes through
+an explicit source snapshot. Changed current controller text cannot silently
+restamp an older execution. Live unchanged emulator/header sources retain their
+original pins. Baseline images/trace aliases are temporarily restored from the
+v1434 anchor archive, checked, then returned to their archived state.
+
+Original complete self-control and nine single tail-byte pool counterexamples
+fail exactly at frame1000 in the intended pool; inactive record bytes are also
+covered. Six public protocol tests reject missing/duplicate frames, truncated
+final body, wrong stage, trailing records and gzip CRC failure. Full pictures,
+Boss combat, process transitions, cross-emulator/Windows and complete campaigns
+remain outside acceptance. No product C++/ASM source or exact ledger changed.
+
+Replay namespace `.analysis/reconstruction/probes/dos-ordinary-pools-v1435/`
+contains final `comparison.json`, `controls.json`, first failure, source snapshot
+and retention. Final captures are `dos-ordinary-pools-v1435-v2-{original,candidate}`
+in `.analysis/runtime/candidates/`. Public pool command:
+
+```sh
+python3 scripts/probes/compare_th04_ordinary_pools.py ORIGINAL_STREAM CANDIDATE_STREAM \
+  --original-baseline ORIGINAL_PLAIN --candidate-baseline CANDIDATE_PLAIN \
+  --baseline-sources FROZEN_SOURCE_TREE --original-main .analysis/targets/th04/main.exe \
+  --output /tmp/ordinary-pools.json
+```
+
+Expected exit1 reflects the retained post-reset input mismatch. The report
+separately binds actor_pools_passed=true/global_states_passed=true and
+post_reset_input_passed=false. Original/candidate scalar controls pass.
+Owned16-path/25-block anchor retirement releases181.04MiB net with1.10MiB
+archive after full SHA/CRC/temp metadata restores and protected readback.
+Already-compressed full DGROUP streams remain live. `recover.py --restore`
+restores images/raw traces. Eight explicitly restored v1434 aliases were
+re-deleted after SHA/mode/nsmtime checks, removing91.07MiB temporary expansion;
+this is not additional net reclamation. Original targets, HDI anchor, compiler/
+emulator, frozen programs, source and all receipts remain protected.
+
 ## Ordinary keyboard boundary and repeated state pairing (v1434)
 
 Root CI passes468 tests, tracking, catalog, private target/database checks and

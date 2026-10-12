@@ -539,6 +539,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/compare_th04_ordinary_pools.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Compare complete ordinary actor pools against pinned scalar controls and target/MAP owners.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/inspect_dialog_fixup_order.py",
     "category": "matching",
     "role": "command",
@@ -3442,6 +3449,20 @@
     "role": "support",
     "purpose": "Private MAIN gameplay-call and decimal DIV checkpoints to Bochs port E9.",
     "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/th04_ordinary_dgroup.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Decode every ordinary DGROUP record with strict framing, stage and gzip integrity.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_ordinary_dgroup_gdb.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Observe full ordinary DGROUP after actor updates through read-only mapped host RAM.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/probes/th04_ordinary_keyboard.gdb",
