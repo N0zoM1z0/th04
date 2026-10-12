@@ -1,5 +1,39 @@
 # Recorded demo and idle OP integration
 
+## Complete signed WORD blackout publications (v1421)
+
+`demo::Fade` now truncates speed to WORD and interprets its signed condition.
+It waits one initial refresh even for zero or negative WORD speed. Those
+speeds publish all eighteen tones on that admission; positive speed keeps
+`1 + 17*speed` refreshes. Every tone write is retained, including the transient
+-2 followed by final zero. Palette and tone observers expose the original
+sequence; they do not change the raw palette.
+
+The actual Demo entry caller consumes palette publications to update its
+sixteen cached colors. Rendering uses those colors with the saved indices.
+Both native compilers retain all eighteen current entry frames and agree on
+all 4,608,000 pixels with the original DAC projection. No MAIN update runs.
+
+Cold producer 538/07b8ebd6 builds the complete core/frontend plus palette/demo
+contracts in GNU Release and optimized UBSan/bounds. The maintained verifier
+reads 48 retained complete OP/MAINE 0000:0666..06A4 blackout controls, their
+full wait streams and complete function bytes. All twelve native WORD vectors
+agree on 216 palette publications, 228 tone writes and total waits per compiler.
+The actual 6307e8d Demo source rejects seven vectors under a bounded clock;
+zero constructor rejection and pending nonpositive/truncated WORD cases are
+recorded without running billions of old refreshes.
+
+Replay: `.analysis/port64/native-demo-fade-word-v1421/`.
+`source-profile.json`, `focused.json` and `verify_closure.py` keep source,
+programs, original waits/publications/stores, old-source inputs and actual
+entry images bound to their producers. Original ideal-refresh controls keep
+their v1413 identity; this does not measure physical IRQ/CPU latency.
+Native CI passes 345 tests. Verified compiler/cache cleanup releases 35.46
+MiB net. Current programs, both core libraries, source and full comparison
+streams plus 7,854 parent pins remain. `verify_retention.py --restore --prefix
+.analysis/port64/native-demo-fade-word-v1421/build-gnu/` restores one cache.
+
+
 ## Indexed entry-fade palette recovery (v1420)
 
 Demo entry now retains the raw menu palette together with its indexed frame.

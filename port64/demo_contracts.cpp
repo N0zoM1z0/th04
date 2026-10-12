@@ -58,6 +58,17 @@ int main(int argc,char** argv) {
                     const auto& r=app.resident();std::cout<<+r.stage<<' '<<+r.credit_lives<<' '<<+r.credit_bombs<<' '<<+r.demo_number
                         <<' '<<('0'+unsigned(r.playchar))<<' '<<+r.stage_ascii<<' '<<unsigned(r.shot_type)<<' '<<+r.demo_stage<<'\n';
                 }
+            } else if(mode=="--fade-shows" && argc==3) {
+                while(input>>a) {
+                    std::cout<<"CASE "<<index++<<'\n';
+                    demo::Fade fade(a,[](unsigned tick,int tone){std::cout<<"SHOW "<<tick<<' '<<tone<<'\n';},
+                        [](unsigned tick,std::int16_t tone){std::cout<<"STORE "<<tick<<' '<<std::uint16_t(tone)<<'\n';});
+                    while(!fade.finished()) {
+                        const int old=fade.published() ? fade.tone() : -1;
+                        fade.advance();if(fade.tone()!=old)std::cout<<"TONE "<<fade.ticks()<<' '<<fade.tone()<<'\n';
+                    }
+                    std::cout<<"END "<<fade.ticks()<<'\n';
+                }
             } else if(mode=="--fade" && argc==3) {
                 while(input>>a) {
                     demo::Fade fade(a);while(!fade.finished()) {

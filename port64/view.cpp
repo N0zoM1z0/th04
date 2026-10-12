@@ -1955,7 +1955,9 @@ public:
                 demo_frozen_=render();
                 demo_palette_=title_resources_ ? title_resources_->background.palette : title_background_.palette;
                 require_view(demo_frozen_.indices.size()==demo_frozen_.pixels.size(),"demo entry needs complete menu indices");
-                demo_fade_.emplace(1);screen_=Screen::demo_start;
+                demo_fade_.emplace(1,[this](unsigned,int tone) {
+                    demo_colors_=th04::portable::pc98_palette::argb(demo_palette_,tone);
+                });screen_=Screen::demo_start;
                 if(repaint)frame_=render();
             } else application_.advance_op_menu_frame();
         }
@@ -2240,7 +2242,7 @@ private:
         // MAINE owners have already been released. Configuration loading can
         // repaint, so publish the OP screen before reloading its host file.
         screen_=Screen::menu;
-        demo_idle_=demo::Idle{};menu_frame_options_.reset();demo_frozen_={};demo_palette_={};
+        demo_idle_=demo::Idle{};menu_frame_options_.reset();demo_frozen_={};demo_palette_={};demo_colors_={};
         startup_initial_palette_={};
         sprites_.reset();extra_selection_control_=false;
         if(assets_->full_startup) {
@@ -2320,8 +2322,7 @@ private:
         case Screen::demo_start: {
             auto frame=demo_frozen_;
             if(demo_fade_->published()) {
-                const auto colors=th04::portable::pc98_palette::argb(demo_palette_,demo_fade_->tone());
-                for(unsigned at=0;at<frame.pixels.size();++at)frame.pixels[at]=colors.at(frame.indices[at]);
+                for(unsigned at=0;at<frame.pixels.size();++at)frame.pixels[at]=demo_colors_.at(frame.indices[at]);
             }
             return frame;
         }
@@ -2459,6 +2460,7 @@ private:
     std::optional<demo::Fade> demo_fade_;
     Frame demo_frozen_;
     th04::portable::pc98_palette::Palette demo_palette_{};
+    std::array<std::uint32_t,16> demo_colors_{};
     gameplay::Mode mode_=gameplay::Mode::ordinary;
     bool continue_ending_=false,continue_staff_=false,continue_verdict_=false,continue_congratulations_=false,host_timing_=false;
     // Display initialization invokes the first GDC refresh immediately,
