@@ -112,6 +112,7 @@ add_library(
   registration.cpp
   registration_render.cpp
   registration_numerals.cpp
+  super_kernel.cpp
   registration_scene.cpp
   host_score.cpp
   run_statistics.cpp

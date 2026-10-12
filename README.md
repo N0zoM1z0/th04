@@ -21,14 +21,13 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active. Producer548/fc9b02eb restores registration's
-signed numeral remainder and wrapped16-bit sprite lookup. GNU and optimized
-UBSan each pass84 programs/82 CTests, all65,536 slots,8,192 row requests,
-64 complete drawing captures and30 seeded save/restart routes. Original controls
-run at two relocated loads. Earlier elapsed registration/all-caller evidence
-retains its own frozen producer. Unowned malformed-score RAM, other waits,
-physical timing/scanout, broader gameplay and Windows remain open; see the
-[handoff](docs/RE_HANDOFF.md) for evidence and archive recovery.
+Native development is active. Producer551/e9fa254c restores the original
+SUPER byte kernel and integrates it into actual registration drawing. Both GNU
+and optimized UBSan pass84 programs/82 CTests,492 original controls,
+155 complete drawing captures and30 physical save/restart routes each.
+Explicit providers preserve zero counts, source/destination wrap and hardware
+write ordering. Natural unowned score RAM, physical timing/scanout, other waits,
+broader gameplay and Windows remain open; see the [handoff](docs/RE_HANDOFF.md).
 
 
 ## Build and run

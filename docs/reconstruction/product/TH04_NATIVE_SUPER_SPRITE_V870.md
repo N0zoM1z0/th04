@@ -250,3 +250,48 @@ MIKO.CFG byte hashes. Publication control:
 `.analysis/render-corner-20261003/windows-fast-control.json`. The commands build
 through the existing Windows-to-WSL toolchain bridge; a native Windows compiler
 migration is not claimed.
+
+## Native SUPER byte kernel and registration consumer (v1430)
+
+The actual registration Renderer now uses recovered mask/B/R/G/E byte passes,
+including the four X-byte/width alignment branches and original GRCG ports.
+Owned SCNUM2 pixels generate planar storage once; release clears that owner.
+The kernel accepts explicit source-read and hardware-write callbacks, preserving
+WORD SI/DI wrap, cross-boundary WORD reads, signed patched row strides and
+ordered byte/WORD writes. It does not manufacture process or low-memory bytes.
+
+Original MAINE 0000:275E..290F executes its self-modifying body with DF clear,
+controlled geometry and a seeded source at9000:0000, at loads1000/3333.
+A zero height means256 rows. Even-aligned zero width enters the CH loop256
+times; odd-aligned zero width decrements the WORD count to255, with first/last
+byte reads. Both read512 bytes per row per pass, including source wrap.
+These are provider controls, not observations of natural malformed-file RAM.
+SUPER_ENTRY_AT 0000:2610..2683 also shows initial dimension-table clearing
+without pointer-table clearing; actual process startup ownership remains open.
+
+Cold551/e9fa254c GNU Release and optimized UBSan/bounds each build84 programs
+and pass82 CTests. Both agree with492 original controls /
+246 native vectors on all1,489,840 ordered read/port/write
+events. All shifts, both byte alignments, odd/even/zero/large widths, zero
+height and wrapped source/destination coordinates are covered. Each compiler
+passes155 complete drawing captures (the entire prior drawing fixture corpus
+plus64 signed-high-digit captures) and30 actual registration/save/fresh OP/
+second MAIN routes. Pixel controls retain BFNT/CGROM/GRCG/scanout adapters.
+Five compiled mutations reject zero-height/width returns, source reset per
+plane, wrong source wrap and unsigned stride; unchanged control passes.
+
+Initial551/425fc58e reached the original final RETF6 with all preceding drawing
+events, but Unicorn's mixed return lost the target IP. The current Oracle
+checks actual CA0600 and the original return stack, then adapts only that
+return boundary. Failed source/programs/trace remain distinct. CPU timing,
+physical GRCG/scanout, unowned malformed-score RAM, other waits, broader gameplay
+and Windows remain open. Historical exact stays661/663; the full goal is active.
+
+Replay: `.analysis/reconstruction/probes/native-super-kernel-v1430/`;
+producer: `.analysis/worktrees/native-super-kernel-v1430/.analysis/port64/native-super-kernel-v1430-v2/`.
+`verify_super_kernel.py` owns original streams; `pixels.py` owns full drawings.
+Archive/content/CRC/mode/nsmtime/temp-restore retirement saves
+835.30 MiB net. Source/all programs/fixtures/receipts remain
+live; cache, captures and original/native aliases recover with
+`verify_retention.py --restore --prefix`. Continue actual RAM-provider ownership
+and remaining source recovery/migration.

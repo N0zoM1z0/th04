@@ -1,6 +1,7 @@
 #include "pc98_palette.hpp"
 #include "registration_render.hpp"
 #include "registration_numerals.hpp"
+#include "super_kernel.hpp"
 #include <algorithm>
 #include <stdexcept>
 
@@ -231,12 +232,33 @@ void Renderer::put_numeral(int left,int top,unsigned pattern) {
     const auto scaled=std::uint16_t(std::uint16_t(pattern)*2u);
     const auto owned_pattern=unsigned(scaled/2u);
     require(bool(numerals_) && owned_pattern<numerals_->count(),"unowned registration numeral memory");
-    auto& page=canvas_.drawing_page();
-    for(unsigned y=0;y<16;++y)for(unsigned x=0;x<16;++x) {
-        const auto color=numerals_->pixel(owned_pattern,x,y);
-        const int px=left+int(x),py=top+int(y);
-        if(color && px>=0 && px<640 && py>=0 && py<400)page[unsigned(py)*640+unsigned(px)]=color;
-    }
+    require(owned_pattern<numeral_planes_.size(),"registration planar slot missing");
+    const auto& planes=numeral_planes_[owned_pattern];
+    auto& page=canvas_.drawing_page();unsigned mode=0,tile=0;std::array<Byte,4> tiles{};
+    const auto read=[&](std::uint16_t offset,unsigned count) {
+        require(unsigned(offset)+count<=planes.size(),"unowned registration pattern read");
+        unsigned value=planes[offset];if(count==2)value|=unsigned(planes[unsigned(offset)+1])<<8;
+        return std::uint16_t(value);
+    };
+    const auto port=[&](unsigned address,Byte value) {
+        if(address==0x7c){mode=value;tile=0;}
+        else {require(address==0x7e,"unknown registration sprite port");tiles[tile]=value;tile=(tile+1)%4;}
+    };
+    const auto write=[&](std::uint16_t offset,unsigned count,std::uint16_t value) {
+        require((mode&0x80)!=0,"registration sprite outside GRCG mode");
+        const unsigned enabled=(~mode)&15u;
+        for(unsigned byte=0;byte<count;++byte) {
+            const unsigned at=unsigned(offset)+byte;if(at>=32000)continue;
+            const unsigned mask=(value>>(byte*8u))&255u;
+            for(unsigned bit=0;bit<8;++bit) {
+                if((mode&0x40) && !(mask&(128u>>bit)))continue;
+                unsigned color=0;for(unsigned plane=0;plane<4;++plane)if(tiles[plane]&(128u>>bit))color|=1u<<plane;
+                auto& pixel=page[at*8+bit];pixel=Byte((pixel&~enabled)|(color&enabled));
+            }
+        }
+    };
+    sprite::super::put(std::uint16_t(left),std::uint16_t(top),0x0210,read,write,port);
+
 }
 void Renderer::restore_name_background(int left,int top,unsigned width,unsigned height) {
     require(left>=0,"negative registration background column");
@@ -275,6 +297,11 @@ void Renderer::apply(const Event& e) {
     case Kind::bfnt:
         numerals_=std::make_unique<sprite::Sheet>(assets_->numerals);
         require(numerals_->width()==16 && numerals_->height()==16 && numerals_->count()==20,"SCNUM2 geometry differs");
+        numeral_planes_.assign(20,score_file::Bytes(160));
+        for(unsigned pattern=0;pattern<20;++pattern)for(unsigned y=0;y<16;++y)for(unsigned x=0;x<16;++x) {
+            const auto color=numerals_->pixel(pattern,x,y);const unsigned at=y*2+x/8,bit=128u>>(x&7u);
+            if(color){numeral_planes_[pattern][at]|=Byte(bit);for(unsigned plane=0;plane<4;++plane)if(color&(1u<<plane))numeral_planes_[pattern][(plane+1)*32+at]|=Byte(bit);}
+        }
         // Both private assets have the same RGB palette. Preserve the BFNT
         // palette load as a checked invariant instead of silently ignoring it.
         require(!numerals_->has_palette() || numerals_->palette()==canvas_.palette(),"registration PI/BFNT palettes differ");
@@ -294,7 +321,7 @@ void Renderer::apply(const Event& e) {
     case Kind::text:
         require(!assets_->non_turbo_message.empty(),"registration non-Turbo message is absent");
         canvas_.put_text(e.a,e.b,assets_->non_turbo_message,unsigned(e.c),assets_->text_weight);break;
-    case Kind::free_sprites:numerals_.reset();break;
+    case Kind::free_sprites:numerals_.reset();numeral_planes_.clear();break;
     case Kind::clear_text:text_.clear();break;
     default:break; // Timing, sound, file commands and fades are scene-owned.
     }

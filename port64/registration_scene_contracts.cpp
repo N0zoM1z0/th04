@@ -1,5 +1,6 @@
 #include "registration_scene.hpp"
 #include "registration_numerals.hpp"
+#include "super_kernel.hpp"
 #include "host_score.hpp"
 #include "random_lcg.hpp"
 #include "application_state.hpp"
@@ -431,6 +432,28 @@ void registration_elapsed(const r::GraphicsAssets& assets,const char* path) {
 int main(int argc,char** argv) {
     try {
         auto assets=synthetic();
+        if(argc==4 && std::string(argv[1])=="--super-kernel") {
+            std::ifstream input(argv[2]);std::ofstream output(argv[3],std::ios::binary);
+            require(bool(input) && bool(output),"super kernel fixture open failed");
+            const auto event=[&](unsigned kind,unsigned address,unsigned size,unsigned value) {
+                const unsigned char bytes[]={static_cast<unsigned char>(kind),static_cast<unsigned char>(address),static_cast<unsigned char>(address>>8),static_cast<unsigned char>(size),static_cast<unsigned char>(size>>8),static_cast<unsigned char>(value),static_cast<unsigned char>(value>>8)};
+                output.write(reinterpret_cast<const char*>(bytes),sizeof(bytes));
+            };
+            unsigned left,top,size,seed,index=0;
+            while(input>>left>>top>>size>>seed) {
+                require(left<65536 && top<65536 && size<65536 && seed<256,"invalid SUPER vector");
+                event('C',index++,0,0);
+                const auto read=[&](std::uint16_t offset,unsigned count) {
+                    unsigned value=0;
+                    for(unsigned i=0;i<count;++i) {const unsigned at=unsigned(offset)+i;value|=((at*73u+(at>>8)*11u+seed)&255u)<<(i*8u);}
+                    event('R',offset,count,value);return std::uint16_t(value);
+                };
+                const auto write=[&](std::uint16_t offset,unsigned count,std::uint16_t value){event('W',offset,count,value);};
+                const auto port=[&](unsigned address,std::uint8_t value){event('P',address,1,value);};
+                th04::portable::sprite::super::put(std::uint16_t(left),std::uint16_t(top),std::uint16_t(size),read,write,port);
+            }
+            require(input.eof() && bool(output),"invalid SUPER input/output");return 0;
+        }
         if(argc==2 && std::string(argv[1])=="--slot-addresses") {
             for(unsigned p=0;p<65536;++p) {
                 const auto slot=r::numerals::address(std::uint16_t(p));

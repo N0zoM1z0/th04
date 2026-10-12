@@ -61,6 +61,7 @@ private:
     TextPlane text_;
     dialog::Font font_;
     std::unique_ptr<sprite::Sheet> numerals_;
+    std::vector<score_file::Bytes> numeral_planes_;
     Byte selected_character_,entered_place_;
 };
 } // namespace th04::portable::registration
