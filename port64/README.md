@@ -1034,7 +1034,7 @@ title movement, release/press, Continue menu and final black-out4. Every
 frame_delay clears only Count1. Keyboard reset follows the five menu drawing
 requests; subsequent menu loops retain pre/post OR and a new press. Shared
 Animation handles input_wait(0) and all eighteen fade4 palette publications.
-MAIN actor/STD/player/RNG work remains paused. Continue saves before resetting
+During Game Over, MAIN actor/STD/player/RNG updates stay suspended. Continue saves before resetting
 resources and resumes the suspended frame once. Quit publishes ES_SCORE and
 song fade0204 before black-out4, then passes unused time to fresh MAINE delay100.
 MAIN now initializes its own counter BSS while retaining raster phase.
@@ -1149,3 +1149,45 @@ with `verify_retention.py --restore --prefix`. Stage reader is under
 Other wait owners, malformed-score unsafe graphics, real active-PMD paired
 timing, physical CPU/I/O/scanout, broader gameplay and Windows remain open.
 Continue source recovery and migration; the full goal stays active.
+
+## Native registration numeral requests and WORD slots (v1429)
+
+The actual Renderer now consumes recovered numeral requests. Original MAINE
+0A05:24B6..2599 uses signed IDIV/remainder after zero-extending the highest
+byte and subtracting A0; high bytes0,10,...150 therefore have legal remainder0.
+The former negative-high guard incorrectly rejected these rows. Lower seven
+bytes still pass raw WORD patterns. SUPER0000:275E..290F doubles that WORD
+with16-bit wrap before reading DGROUP0E53 pointer0F0C and dimensions130C.
+Pattern8000 aliases0; FF60 reads pointer0DCC and dimensions11CC. The original
+has no zero-size early return and can read low memory. The portable renderer
+accepts only slots owned by loaded SCNUM2; unowned RAM remains an explicit
+boundary. No blank pixels, invented memory, or malformed-file acceptance.
+
+Cold548/fc9b02eb GNU Release and optimized UBSan/bounds each build84 programs
+and pass82 CTests. Original instructions agree at loads1000/3333 for131,072
+slot controls and16,384 complete row controls. Each native compiler agrees
+on65,536 slots and8,192 rows (every byte value at each digit position, both
+characters/banks, alternating row0/9).64 new complete graphics captures agree
+on both pages, raw palette/TRAM and composed RGB against original drawing/
+SUPER at loads1000/2000. BFNT/CGROM/GRCG and RGB scanout remain explicit
+adapters. Both actual frontends pass30 seeded registration/save/restart routes.
+Four compiled mutations reject signed remainder, byte clamping, incorrect WORD
+wrap and the old high-byte guard; unchanged compiled control passes.
+Historical exact remains661/663; physical video/CPU timing remains open.
+Initial producer548/e1668317 passed the first load but its callback compared
+Unicorn memory-hook linear EIP as segment IP at load3333 and rejected its own
+control. Failed source/programs/logs remain distinct; current Oracle normalizes
+EIP against the recorded load segment and traps callback errors explicitly.
+
+Replay: `.analysis/reconstruction/probes/native-numeral-slot-v1429/`;
+producer: `.analysis/worktrees/native-numeral-slot-v1429/.analysis/port64/native-numeral-slot-v1429-v2/`.
+`verify_numeral_slots.py` executes original row/SUPER lookups; `pixels.py`
+owns the new actual Renderer image controls. Verified archive/content/CRC/
+mode/nsmtime/temp-restore retirement saves525.26 MiB net;
+all source/programs/receipts/fixtures remain live, retired cache/captures and
+stream aliases restore with `verify_retention.py --restore --prefix`.
+The reader also verifies/restores `supplement-retention` registration captures
+against their original protected hashes.
+Continue source recovery and migration. Unsafe unowned score RAM, other waits,
+active-PMD paired timing, physical scanout, broader gameplay and Windows remain
+open. The full goal stays active.

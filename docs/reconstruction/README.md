@@ -264,3 +264,6 @@ Continue/Quit suspension/host writes, full displays and lossless trace recovery.
 
 The VSync note routes v1428 registration elapsed loops, all three callers,
 file failure freeze, unsafe short-read boundary and lossless evidence recovery.
+
+The VSync note routes v1429 registration signed numeral requests and WORD slots,
+exhaustive original controls, actual drawings and unowned-memory limits.

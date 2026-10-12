@@ -1,5 +1,6 @@
 #include "pc98_palette.hpp"
 #include "registration_render.hpp"
+#include "registration_numerals.hpp"
 #include <algorithm>
 #include <stdexcept>
 
@@ -227,10 +228,12 @@ std::string Renderer::name(const score_file::Bytes& section,unsigned place) cons
     return std::string(begin,end);
 }
 void Renderer::put_numeral(int left,int top,unsigned pattern) {
-    require(bool(numerals_) && pattern<numerals_->count(),"undefined registration numeral pattern");
+    const auto scaled=std::uint16_t(std::uint16_t(pattern)*2u);
+    const auto owned_pattern=unsigned(scaled/2u);
+    require(bool(numerals_) && owned_pattern<numerals_->count(),"unowned registration numeral memory");
     auto& page=canvas_.drawing_page();
     for(unsigned y=0;y<16;++y)for(unsigned x=0;x<16;++x) {
-        const auto color=numerals_->pixel(pattern,x,y);
+        const auto color=numerals_->pixel(owned_pattern,x,y);
         const int px=left+int(x),py=top+int(y);
         if(color && px>=0 && px<640 && py>=0 && py<400)page[unsigned(py)*640+unsigned(px)]=color;
     }
@@ -250,20 +253,10 @@ void Renderer::row(const score_file::Bytes& section,unsigned place,Byte characte
     canvas_.put_gaiji(x+2,y+2,letters,16,14);
     if(selected)text_.put_string(x/8,y/16,letters,0x41);
     else canvas_.put_gaiji(x,y,letters,16,12);
-    // The highest score byte can hold two decimal digits (dream score).
-    // Remaining bytes select a sprite directly; invalid indices are original
-    // undefined pattern-table reads, not a license to manufacture pixels.
-    int digit_x=character==0 ? 172 : 480;
-    const unsigned bank=selected ? 10 : 0;
-    const int high=int(section[score_file::digits_offset+place*8+7])-0xa0;
-    if(high>=10)put_numeral(digit_x-32,y,unsigned(high/10)+bank);
-    require(high>=0,"undefined negative registration numeral");
-    put_numeral(digit_x-16,y,unsigned(high%10)+bank);
-    for(int digit=6;digit>=0;--digit,digit_x+=16) {
-        const int value=int(section[score_file::digits_offset+place*8+unsigned(digit)])-0xa0;
-        require(value>=0,"undefined negative registration numeral");
-        put_numeral(digit_x,y,unsigned(value)+bank);
-    }
+    score::Digits digits{};
+    std::copy_n(section.begin()+score_file::digits_offset+place*8,8,digits.begin());
+    for(const auto& request:numerals::row(digits,place,selected,character))
+        put_numeral(request.left,request.top,request.slot.pattern);
     const auto stage=std::string(1,char(section[score_file::stages_offset+place]));
     const int stage_x=character==0 ? 292 : 600;
     // putc draws glyph0 as well; Canvas string helpers stop at NUL.

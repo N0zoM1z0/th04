@@ -21,17 +21,15 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active. Registration now shares elapsed IRQ, input and
-fade waits through Normal Ending, Score and Extra. Cold545/b4519b50 GNU and
-optimized UBSan each pass84 programs/82 CTests,544 original controls,
-30 seeded saves/restarts,24 score and24 complete Ending registration routes,
-plus8 Extra routes. Failed writes freeze without retries. Independent
-component images and eight default Demo profiles also pass; see the
-[handoff](docs/RE_HANDOFF.md) for the verified scope and recovery.
+Native development is active. Producer548/fc9b02eb restores registration's
+signed numeral remainder and wrapped16-bit sprite lookup. GNU and optimized
+UBSan each pass84 programs/82 CTests, all65,536 slots,8,192 row requests,
+64 complete drawing captures and30 seeded save/restart routes. Original controls
+run at two relocated loads. Earlier elapsed registration/all-caller evidence
+retains its own frozen producer. Unowned malformed-score RAM, other waits,
+physical timing/scanout, broader gameplay and Windows remain open; see the
+[handoff](docs/RE_HANDOFF.md) for evidence and archive recovery.
 
-Other waits, malformed-score unsafe graphics, real active-PMD paired timing,
-physical scanout, broader gameplay and Windows remain open. Historical exact
-is separate.
 
 ## Build and run
 

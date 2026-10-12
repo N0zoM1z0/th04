@@ -111,6 +111,7 @@ add_library(
   score_file.cpp
   registration.cpp
   registration_render.cpp
+  registration_numerals.cpp
   registration_scene.cpp
   host_score.cpp
   run_statistics.cpp

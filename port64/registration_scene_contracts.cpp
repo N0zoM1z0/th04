@@ -1,4 +1,5 @@
 #include "registration_scene.hpp"
+#include "registration_numerals.hpp"
 #include "host_score.hpp"
 #include "random_lcg.hpp"
 #include "application_state.hpp"
@@ -430,6 +431,24 @@ void registration_elapsed(const r::GraphicsAssets& assets,const char* path) {
 int main(int argc,char** argv) {
     try {
         auto assets=synthetic();
+        if(argc==2 && std::string(argv[1])=="--slot-addresses") {
+            for(unsigned p=0;p<65536;++p) {
+                const auto slot=r::numerals::address(std::uint16_t(p));
+                std::cout<<p<<' '<<slot.pointer_offset<<' '<<slot.dimensions_offset<<'\n';
+            }
+            return 0;
+        }
+        if(argc==3 && std::string(argv[1])=="--numeral-requests") {
+            std::ifstream in(argv[2]);unsigned place,character,selected,value,index=0;
+            while(in>>place>>character>>selected) {
+                th04::portable::score::Digits digits{};
+                for(auto& d:digits){require(bool(in>>value) && value<256,"invalid numeral byte");d=std::uint8_t(value);}
+                std::cout<<"CASE "<<index++<<'\n';
+                for(const auto& q:r::numerals::row(digits,place,selected!=0,std::uint8_t(character)))
+                    std::cout<<q.left<<' '<<q.top<<' '<<q.slot.pattern<<' '<<q.slot.pointer_offset<<' '<<q.slot.dimensions_offset<<'\n';
+            }
+            require(in.eof(),"invalid numeral row vector");return 0;
+        }
         if(argc==3 && std::string(argv[1])=="--registration-elapsed") {registration_elapsed(assets,argv[2]);return 0;}
         if(argc==2 && std::string(argv[1])=="--fade-clock") {
             sf::File file;rng::Lcg32 random;r::Run run;run.digits[6]=1;
