@@ -54,14 +54,14 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. `origin/port/modern-64` is at `bd67182`
-(producer541/83933826). Staff Roll now shares elapsed IRQ/fade/measure ownership
-with Ending's other MAINE consumers. Its three dissolves inherit Count1 and
-clear it only after threshold release. Both complete GNU and optimized UBSan
-graphs pass84 programs/82 CTests,48 full original controls and24 coarse/fine
-vectors.24 actual inactive-BGM Ending routes and independent page checks pass.
-Real active-PMD paired scene timing, other waits and broader acceptance remain
-open; see the [handoff](docs/RE_HANDOFF.md) for source and replay scope.
+Native development is active. `origin/port/modern-64` is at `9caa2db`
+(producer542/59d19121). Actual Ending/Cutscene now shares elapsed IRQ, input,
+black/white fade and measure waits with Staff and later MAINE owners. Both
+complete GNU and optimized UBSan graphs pass84 programs/82 CTests, ten whole
+script comparisons (960 original/480 coarse+fine), and24 actual inactive
+Ending routes with independent component pages/RGB. MAIN fade, registration
+and other waits, real active-PMD paired timing, physical scanout, broader
+gameplay and Windows remain open; see the [handoff](docs/RE_HANDOFF.md).
 
 Current shared DOS also restores analog/LCD palette output, with text and
 installed-owner VSync recovery (producer 1,425/491e4afa). Three cold products

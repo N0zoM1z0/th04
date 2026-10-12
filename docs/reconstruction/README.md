@@ -227,3 +227,6 @@ original controls, whole-route pages/current DAC projection and owned archives.
 
 The VSync note routes v1424 Staff elapsed waits and inherited Count1,
 original time/request and actual-page controls, failures and archive restore.
+
+The VSync note routes v1425 Cutscene elapsed requests and high-byte Escape projection,
+original time/request and actual-page controls, failures and archive restore.
