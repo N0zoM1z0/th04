@@ -1819,3 +1819,26 @@ binds terminal CI and the separate cache cleanup journal.
 Root index CI passes all 451 tests. Its separate source-backed cache journal
 reclaims 8.57 MiB from 549 owned files; this batch totals
 44.50 MiB net across native and root worktrees.
+
+### Native Demo WORD blackout (v1421)
+
+Owned compiler retirement and source-backed caches release 35.46 MiB net.
+The original 48 controls and complete wait streams retain their v1413 producer;
+current publications/stores, actual bounded predecessor, full entry frames,
+538-file source archive and 7,854 independent parent pins remain live.
+
+Run from `.analysis/worktrees/native-demo-fade-word-v1421/`:
+
+```sh
+python3 -B .analysis/port64/native-demo-fade-word-v1421/verify_retention.py
+```
+
+Add `--restore --prefix .analysis/port64/native-demo-fade-word-v1421/build-gnu/`
+for one compiler. Full gzip/member SHA and actual temporary restored
+size/mode/nsmtime are checked before deletion; protected hashes pass again
+after deletion. `verify_closure.py` reads the publication/store comparisons
+and input archive. `finish.json` binds terminal CI and cache cleanup.
+
+Root status CI passes 451 tests. Its 549 source-backed caches reclaim
+8.57 MiB separately; total owned cleanup is 44.03 MiB
+across native/root for this function recovery.

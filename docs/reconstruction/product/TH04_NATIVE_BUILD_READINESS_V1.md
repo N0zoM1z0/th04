@@ -678,6 +678,31 @@ PC-98 ports `0xA8`, `0xAC`, `0xAA`, and `0xAE`; tone 0..100 scales each
 component's high nibble toward black and 100..200 toward white. That first owner followed only the analog branch of the bounded ReC98
 reference. The complete LCD branch is recovered below under v1415; physical display timing remains open.
 
+### Complete native Demo blackout parameters and publications (v1421)
+
+The remaining Demo fade wrapper treated speed as a host unsigned value and
+rejected zero. It now uses the original signed WORD condition, retains the
+initial refresh and publishes all eighteen updates for nonpositive speeds on
+that admission. Positive speeds retain 1+17*speed waits. Nineteen original tone
+stores are observable, including -2 followed by 0 at the final transition.
+The actual entry consumer caches colors on each palette publication.
+
+Both cold compilers agree on twelve vectors with 48 complete original OP/MAINE
+blackout controls and all full wait carriers. Each has 216 palette shows and
+228 tone stores. The actual prior Demo source, compiled unchanged with a
+read-only bounded driver, rejects seven vectors: constructor rejection or a
+pending old wait where the original has already finished. The driver stops
+after the original's expected refresh count plus two; it does not wait billions
+of old refreshes. Earlier entry captures retain all 4,608,000 projected pixels
+per compiler with no MAIN update. Native CI 345 passes.
+
+Producer 538/07b8ebd6 and its original/input/program proofs are under
+`.analysis/worktrees/native-demo-fade-word-v1421/.analysis/port64/native-demo-fade-word-v1421/`.
+The full source, original wait streams, current shows/stores, actual prior
+source/program and independent parent pins remain. The model counts explicit
+logical refreshes; physical IRQ/CPU costs and whole-scene integration remain
+separate. Historical exact status is unchanged.
+
 ### Indexed native Demo entry palette (v1420)
 
 The remaining `FrontEnd::render(demo_start)` path scaled expanded RGB8 pixels.

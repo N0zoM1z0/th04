@@ -54,15 +54,18 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. `origin/port/modern-64` is at `6307e8d`.
+Native development is active. `origin/port/modern-64` is at `b5fa7d8`.
 Demo entry now fades the saved indexed menu through the original four-bit
 palette conversion. Both native compilers agree on all 4,608,000 pixels in
 eighteen pending OP frames with the original palette instruction projection;
 MAIN receives no gameplay update in this check. The old RGB8 scaling formula
 differs in sixteen frames. See the
 [current handoff](docs/RE_HANDOFF.md) for source identities and replay scope.
-The shared palette and live WORD counter recoveries retain their independent
-original comparisons and compiler proofs.
+The Demo blackout now preserves signed WORD speed, its initial refresh and
+all palette/tone publications, including zero and negative speeds. Both
+compilers match all 48 retained original blackout controls; the actual old
+source rejects seven parameter vectors. Shared palette and live WORD counter
+recoveries retain their independent original comparisons and compiler proofs.
 
 Current shared DOS also restores analog/LCD palette output, with text and
 installed-owner VSync recovery (producer 1,425/491e4afa). Three cold products

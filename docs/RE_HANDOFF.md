@@ -5,6 +5,30 @@ using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
 remains open. Updated 2026-10-12.
 
+## Complete native Demo blackout WORD behavior (v1421)
+
+Published `port/modern-64`: `b5fa7d8`.
+`demo::Fade` now truncates speed to WORD, applies the original signed condition,
+and waits once before every blackout. Zero and negative WORD speeds then
+publish all eighteen tones on the same admission. Positive speed keeps
+`1 + 17*speed` refreshes. All nineteen tone writes remain, including the
+transient -2 immediately before final zero. The actual entry caller consumes
+the palette publication sink and paints its retained indices.
+
+Cold GNU and optimized UBSan producer 538/07b8ebd6 each build the complete
+core/frontend and two selected contracts. All 48 retained OP/MAINE
+0000:0666..06A4 original blackout controls agree with twelve native vectors:
+216 publications, 228 tone stores and complete waits per compiler. The actual
+6307e8d Demo owner rejects seven vectors under a bounded clock. Both actual
+entry captures retain all eighteen frames/4,608,000 DAC-projected pixels,
+with no MAIN update. Native CI 345 passes; historical exact remains 661/663.
+
+Replay: `.analysis/worktrees/native-demo-fade-word-v1421/.analysis/port64/native-demo-fade-word-v1421/`.
+Full wait carriers, source/programs, current images and 7,854 parent pins are
+retained. Verified compiler/cache cleanup releases 35.46 MiB net. Continue
+remaining actual scene-wait integration and function recovery; this is a
+logical refresh/publication model, not physical IRQ/CPU timing acceptance.
+
 ## Native indexed demo-entry fade (v1420)
 
 Published `port/modern-64`: `6307e8d48adc58b7073699e9d93549c37c03898b`.
