@@ -5,6 +5,96 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Ordinary keyboard boundary and repeated state pairing (v1434)
+
+Root CI passes468 tests, tracking, catalog, private target/database checks and
+Oracle mutations; final diff check passes.
+
+Two independent original/reconstructed DOS Stage1 pairs now pass3,996 completed
+updates each. Original MAIN077440a3 and frozen ordinary MAINf21a5c7c consume
+Shot0020/Shift00 in3,997 pre-update samples (0..3996) plus one terminal. All36
+configured state fields and1,369 ordered RNG calls agree per pair. Original
+v7→v8 and candidate v7→v8 repeated comparisons also pass. Both have resident
+miss_count0→1→2, two hit samples,142 respawn samples and896 Midboss-active
+samples. Boss24-byte state remains constant setup. Whole ordinary actor/effect
+pools, pixels, Boss fights and full campaign/process parity remain unaccepted.
+
+The input trigger is an **observation** of original OP's own menu counter
+increment, not assignment of a seed. Fresh attested original stub replay at
+loads1000/2000 gives69028 normalized payload bytes/804 observed relocations,
+SHA13222cb6. OP main0A74:0C37..0D5E body SHA is c61aada7; its0D2F instruction
+`66 26 FF 47 14` increments DWORD ES:[BX+14], the resident.rand field.
+DGROUP is0F34 and the preceding LES reads its far pointer at1A64. These are
+payload observations; no packed-file exactness or pristine provenance claim.
+
+GDB hardware-watches mapped RAM after locating a unique aligned HUMAConfig
+resident with legal rank/configuration. Before MAIN initializes credits, use
+cfg_lives/cfg_bombs at3A/3B, not remaining/credit life fields. VM86 paging is
+walked through host RAM; a raw physical MemBase scan does not locate this
+logical resident reliably. Counter reaching64 queues Enter through the unchanged
+`KEYBOARD_AddKey(KBD_KEYS,bool)` API. Runtime first-key snapshots independently
+bind CS:IP=1B70:0D2F (OP load10FC), DS2030, ES:BX=9FEF:0000 and resident9FEF0.
+
+Subsequent Enter press/release events use virtual PIC deadlines relative to
+that observed boundary. After MAIN's attested full-module entry record, the
+adapter queues held Shot and disables its watches. Mapped conventional640KiB,
+48-byte guest CPU registers,136-byte segment state and PIC time are unchanged
+before/after every API call. Keyboard device queue/IRQ changes are intended
+input. This is a headless emulator API adapter; no OS/Windows input or physical
+CPU/scanout/timing acceptance follows. Actual keyboard/PIC/ABI source agrees
+with the pinned emulator archive. Observer binary/core/config are unchanged.
+
+Absolute PIC millisecond scheduling alone is disproved for this fixture:
+repeated original runs enter MAIN with seeds1C/1D. The older v1433 wall-clock
+pair's3F/33 rejection remains. Batch GDB post-event delivery, C-language bool
+parsing, raw physical resident scan and pre-MAIN credit-field detection failures
+are retained separately. Their zero/partial/Demo captures are not ordinary
+acceptance. All four accepted v7/v8 captures observe and enter with seed40h.
+
+`ordinary_profile()` previously aliased Demo's global hook list. A second
+original profile within one interpreter then failed its Demo terminal guard.
+It now copies hooks before changing the terminal. Full repeated readbacks pass;
+a private target-backed test also preserves the original Demo profile.
+Seventeen focused tests and actual original self/repeat controls pass. Six
+input/initial-RNG mutations reject before state verdict; an admitted hit
+mutation at1600 fails at that field. Five actual-record keyboard trigger/owner/
+IP/register-extent/time counterexamples reject. Runtime pointers and resident
+performance counters remain raw evidence outside the compared state scope.
+
+Public replay uses a fresh output directory for each run:
+
+```sh
+python3 scripts/probes/capture_th04_dos_ordinary_prefix.py --original \
+  --emulator-receipt .analysis/runtime/emulators/demo-observer-build-v1365/receipt.json \
+  --font-bmp PRIVATE_FONT --output-dir .analysis/runtime/candidates/NEW_ORIGINAL
+python3 scripts/probes/capture_th04_dos_ordinary_prefix.py \
+  --build-dir FROZEN_NORMAL_BUILD --map ITS_ATTESTED_MAP \
+  --emulator-receipt .analysis/runtime/emulators/demo-observer-build-v1365/receipt.json \
+  --font-bmp PRIVATE_FONT --output-dir .analysis/runtime/candidates/NEW_CANDIDATE
+python3 scripts/probes/compare_th04_dos_ordinary_prefix.py \
+  .analysis/runtime/candidates/NEW_ORIGINAL .analysis/runtime/candidates/NEW_CANDIDATE \
+  --original-main .analysis/targets/th04/main.exe --output /tmp/ordinary-prefix.json
+```
+
+Replay namespace `.analysis/reconstruction/probes/dos-clock-input-v1434/` binds
+source/API attestation, fresh OP payload, v7/v8 pairs, full repeat/mutation controls
+and failures. Accepted captures are `dos-clock-input-v1434-v8-{original,candidate}`
+in `.analysis/runtime/candidates/`. Only MAIN is replaced; original OP/MAINE/ZUN,
+all archives and starting physical config/scores are checked by the comparator.
+No C++/ASM build or historical exact promotion is part of this batch.
+
+Owned40-path/19-content retirement initially reclaimed349.96MiB with89.17MiB
+archive. A fully verified second compaction reuses unchanged pinned HDI
+SHA0d5ea773 as an anchor and stores only differing64KiB chunks plus other blobs.
+All40 reconstructed contents, sizes, modes/nsmtime and protected inputs pass
+before deleting the superseded full archive. The final1.51MiB archive reclaims
+another87.66MiB, about437.6MiB total. `recover.py --restore --prefix PREFIX` in
+the replay namespace restores images/traces losslessly; `compaction.json` binds
+the original retention journal and anchor. The original HDI is never written.
+`verify_retention.py` is the historical first-format reader; use `recover.py`
+for current recovery. Sources/programs/receipts remain live. Next: complete
+ordinary actor/effect capture, longer Boss combat and process lifecycle.
+
 ## Ordinary Stage 1 prefix and rejected admission (v1433)
 
 Original MAIN077440a3 and frozen ordinary producer1426 MAINf21a5c7c each

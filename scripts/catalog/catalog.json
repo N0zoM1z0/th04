@@ -420,6 +420,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/capture_th04_dos_ordinary_prefix.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Capture ordinary DOS through original OP using observed menu-count keyboard API input.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/check_th04_bullet_default_objects.py",
     "category": "source-review",
     "role": "command",
@@ -3435,6 +3442,13 @@
     "role": "support",
     "purpose": "Private MAIN gameplay-call and decimal DIV checkpoints to Bochs port E9.",
     "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/th04_ordinary_keyboard.gdb",
+    "category": "runtime",
+    "role": "fixture",
+    "purpose": "Queue keyboard device events after observed original OP menu ticks with guest-state preservation checks.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/probes/th04_primary_cpu_fault.gdb",

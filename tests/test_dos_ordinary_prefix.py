@@ -4,7 +4,7 @@ import sys
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts/probes'))
-from compare_th04_dos_ordinary_prefix import compare
+from compare_th04_dos_ordinary_prefix import compare, ordinary_profile, validate_keyboard_capture
 
 
 class OrdinaryPrefixAdmissionTests(unittest.TestCase):
@@ -71,6 +71,79 @@ class OrdinaryPrefixAdmissionTests(unittest.TestCase):
         value[64:72] = bytes(range(8))
         self.right['resident'][0] = value.hex()
         self.assertTrue(compare(self.left, self.right)['passed'])
+
+
+class KeyboardAdapterAdmissionTests(unittest.TestCase):
+    def setUp(self):
+        registers = bytearray(48)
+        registers[32:36] = (0x0d2f).to_bytes(4, 'little')
+        segments = bytearray(136)
+        segments[:8] = (0x1000).to_bytes(8, 'little')
+        segments[8:16] = (0x1b70).to_bytes(8, 'little')
+        segments[24:32] = (0x2030).to_bytes(8, 'little')
+        guard = dict(conventional_sha256='a' * 64, cpu_regs=registers.hex(), segments=segments.hex())
+        self.clock = dict(requested_seed=64, resident_linear=0x10000, actions=[
+            dict(tick=5000, due=5000, key='KBD_enter', pressed=True, resident_seed=64,
+                 unchanged_guest=guard.copy()),
+            dict(tick=7000, due=7000, key='KBD_z', pressed=True, resident_seed=64,
+                 unchanged_guest=guard.copy()),
+        ])
+        resident = bytearray(80)
+        resident[20:24] = (64).to_bytes(4, 'little')
+        self.resident = resident.hex()
+        self.first = dict(resident_pointer='00000010')
+
+    def test_observed_seed_and_owner_pass(self):
+        validate_keyboard_capture(self.clock, self.first, self.resident)
+
+    def test_different_observed_seed_rejects(self):
+        self.clock['actions'][0]['resident_seed'] = 63
+        with self.assertRaisesRegex(ValueError, 'observed menu seed'):
+            validate_keyboard_capture(self.clock, self.first, self.resident)
+
+    def test_different_main_owner_rejects(self):
+        self.first['resident_pointer'] = '00000020'
+        with self.assertRaisesRegex(ValueError, 'resident ownership'):
+            validate_keyboard_capture(self.clock, self.first, self.resident)
+
+    def test_entry_seed_must_be_observed_trigger_seed(self):
+        resident = bytearray.fromhex(self.resident)
+        resident[20] = 65
+        with self.assertRaisesRegex(ValueError, 'entry seed'):
+            validate_keyboard_capture(self.clock, self.first, resident.hex())
+
+    def test_clock_order_cannot_reverse(self):
+        self.clock['actions'][-1]['tick'] = 4000
+        with self.assertRaisesRegex(ValueError, 'virtual ordering'):
+            validate_keyboard_capture(self.clock, self.first, self.resident)
+
+    def test_missing_register_extent_rejects(self):
+        self.clock['actions'][0]['unchanged_guest']['cpu_regs'] = '00' * 47
+        with self.assertRaisesRegex(ValueError, 'snapshot extent'):
+            validate_keyboard_capture(self.clock, self.first, self.resident)
+
+    def test_wrong_op_instruction_rejects(self):
+        registers = bytearray.fromhex(self.clock['actions'][0]['unchanged_guest']['cpu_regs'])
+        registers[32] ^= 1
+        self.clock['actions'][0]['unchanged_guest']['cpu_regs'] = registers.hex()
+        with self.assertRaisesRegex(ValueError, 'counter instruction'):
+            validate_keyboard_capture(self.clock, self.first, self.resident)
+
+
+class PrivateProfileIsolationTests(unittest.TestCase):
+    def test_repeated_ordinary_profiles_preserve_demo_profile(self):
+        target = Path(__file__).resolve().parents[1] / '.analysis/targets/th04/main.exe'
+        if not target.is_file():
+            self.skipTest('private MAIN unavailable')
+        from capture_th04_dos_demos import profile, sha
+        data = target.read_bytes()
+        self.assertEqual(sha(data), '077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b')
+        before = profile(data, None)
+        first = ordinary_profile(data, data, None)
+        second = ordinary_profile(data, data, None)
+        self.assertEqual(first, second)
+        self.assertEqual(profile(data, None), before)
+        self.assertNotEqual(first['hooks'][1], before['hooks'][1])
 
 
 if __name__ == '__main__':

@@ -12,6 +12,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/build_th04_demo_emulator.py](../probes/build_th04_demo_emulator.py) | command | Build a resource-limited pinned read-only normal-core demo observer. |
 | [probes/calibrate_th04_cpu_fault_emulator.py](../probes/calibrate_th04_cpu_fault_emulator.py) | command | Falsify a private emulator observer using an independent DIV-zero COM. |
 | [probes/capture_th04_dos_demos.py](../probes/capture_th04_dos_demos.py) | command | Capture ordinary bundled DOS demos after replay input and at the terminal decision. |
+| [probes/capture_th04_dos_ordinary_prefix.py](../probes/capture_th04_dos_ordinary_prefix.py) | command | Capture ordinary DOS through original OP using observed menu-count keyboard API input. |
 | [probes/check_th04_carpet_image_table.py](../probes/check_th04_carpet_image_table.py) | command | Check the complete initialized Stage4 carpet table against pinned MAIN instructions and data. |
 | [probes/check_th04_midboss4_initial_state.py](../probes/check_th04_midboss4_initial_state.py) | command | Check the Stage4 midboss toggle initializer and DATA ownership against pinned MAIN. |
 | [probes/compare_th04_demo_dgroup.py](../probes/compare_th04_demo_dgroup.py) | command | Compare complete demo pools and optional attested global states against ordinary trace controls. |
@@ -53,6 +54,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_demo_host_ram.py](../probes/th04_demo_host_ram.py) | support | Read conventional emulator host RAM with an independent read-only VM86 page walk. |
 | [probes/th04_demo_snapshot.gdb](../probes/th04_demo_snapshot.gdb) | fixture | Observe stage-frame writes in host RAM and take read-only DGROUP diagnostic snapshots. |
 | [probes/th04_demo_video.py](../probes/th04_demo_video.py) | support | Read/decode complete two-page PC-98 VRAM, palettes and GDC without guest memory accessors. |
+| [probes/th04_ordinary_keyboard.gdb](../probes/th04_ordinary_keyboard.gdb) | fixture | Queue keyboard device events after observed original OP menu ticks with guest-state preservation checks. |
 | [probes/th04_primary_cpu_fault.gdb](../probes/th04_primary_cpu_fault.gdb) | fixture | Run the primary-emulator fault observer with configured symbols/event inputs. |
 | [runtime/fixtures/good_ending.asm](../runtime/fixtures/good_ending.asm) | fixture | Private resident seed for real MAINE Ending tests; bypasses OP/gameplay initialization. |
 | [runtime/verify_dos_gaiji.py](../runtime/verify_dos_gaiji.py) | command | Compare original and linked DOS Gaiji writes, port order and far-call return state across WORD address boundaries. |

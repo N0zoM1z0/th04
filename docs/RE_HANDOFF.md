@@ -5,35 +5,45 @@ using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
 remains open. Updated 2026-10-12.
 
-## Ordinary original/reconstructed DOS admission (v1433)
+## Ordinary original/reconstructed DOS state prefix (v1434)
 
-A new read-only MAIN profile captures ordinary Normal Reimu A Stage 1 with
-six lives, zero bombs and held Shot through 3,996 updates. Only MAIN is replaced;
-OP/MAINE/ZUN and all game archives remain pinned originals. Both executions
-complete, with 3,997 pre-update samples plus a terminal sample, two natural
-hits/misses and 142 respawn samples. Consumed input is identical. Full relocated
-MAIN images, MAP/instruction guards, files, counters and RNG caller logs pass.
-Boss bytes remain constant setup; no Boss-combat acceptance.
+Two independently captured Normal ReimuA Stage1 pairs now pass3,996 updates:
+3,997 pre-update samples plus one terminal, all36 compared fields and1,369
+ordered RNG calls each. Both contain two natural hits/misses and142 respawn
+samples; original and candidate repeat comparisons also pass. Only MAIN is
+replaced with frozen producer1426/f21a5c7c. OP/MAINE/ZUN, all game archives,
+starting saves and legal rank1/lives6/bombs0 options stay pinned originals.
 
-The pair is **rejected**, not a source-state failure: original entry resident
-seed is0000003F, candidate00000033, with different initial LCG/randring.
-Wall-clock private-Xvfb startup keys are not a deterministic OP input boundary.
-Next: drive the actual original OP start selection at a guarded virtual-time
-boundary; never patch resident RNG, actor state or the clock to create equality.
-Then extend the terminal beyond3996 for ordinary Boss combat.
+The new input adapter observes actual original OP0A74:0D2F's `INC DWORD
+ES:[BX+14]` reaching64, then queues Enter through DOSBox-X's keyboard API.
+Character/shot selection uses subsequent virtual PIC edges; MAIN entry admits
+held Shot. Initial resident/LCG/randring and consumed input now agree. Each API
+call preserves mapped conventional RAM, guest registers/segments and PIC time;
+keyboard device queues intentionally change. This is headless emulator keyboard
+input, not OS/Windows input or physical timing acceptance.
 
-`compare_th04_dos_ordinary_prefix.py` checks complete trace/module/instruction
-identity and admits only matching consumed input and entry RNG/settings before
-reporting state differences. Actual original self-control and seven counterexamples
-pass; nine public admission tests pass. Root CI passes460 tests, catalog, tracking,
-private target/database checks and Oracle mutations; diff check passes. Runtime pointers and resident performance
-counters remain raw evidence outside the compared state scope.
+Fresh original DIET stub replay at1000/2000 yields69028 bytes/804 relocations;
+OP main0A74:0C37..0D5E guards the increment and DGROUP0F34. Runtime first-key
+CS:IP=1B70:0D2F (load10FC), ES:BX=9FEF:0000 owns the actual resident field.
+Absolute PIC-only input still fails: repeated original seeds1C/1D differ.
+The older v1433 wall-clock pair remains correctly rejected with seeds3F/33.
 
-Replay: `.analysis/reconstruction/probes/dos-ordinary-prefix-v1433/`.
-The v4 original/candidate captures live under `.analysis/runtime/candidates/`.
-Lossless owned retirement releases181.84MiB net with a37.42MiB archive; restore
-captured images/traces with the replay directory's `verify_retention.py --restore`.
-See [DOS differential handoff](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
+A shared-hook alias in ordinary profile construction is fixed: the ordinary
+terminal cannot mutate Demo's global hooks. Repeated profiles/complete captures,
+seven state/input/RNG counterexamples and five keyboard-context counterexamples
+pass. Seventeen focused tests and root CI468 tests, catalog, tracking, private target/
+database checks and Oracle mutations pass; diff check passes. No DOS/native C++ source or exact state
+changes. Boss bytes remain constant setup; full ordinary actor pools/pictures,
+Boss combat, process transitions, cross-emulator/Windows and campaign parity
+remain open. Next add complete ordinary actor/effect capture and a longer
+terminal for Boss combat.
+
+Replay: `.analysis/reconstruction/probes/dos-clock-input-v1434/`.
+Public capture/compare commands are in the [DOS differential handoff](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
+Lossless owned retirement and anchored64KiB chunk compaction reclaim about
+437.6MiB with a1.51MiB archive. All40 paths restore exact hashes/sizes/modes/
+nsmtime; original HDI remains protected and unchanged. Use `recover.py --restore`
+from that replay directory; the first89MiB full archive is superseded.
 
 ## Current native natural routes and strict clear gate (v1432)
 

@@ -11,6 +11,7 @@ import argparse
 from collections import Counter
 import json
 from pathlib import Path
+import re
 import tomllib
 
 from capture_th04_dos_demos import ARCHIVES, Fat12, ROOT, map_symbols, profile, sha, u16, u32
@@ -18,9 +19,44 @@ from compare_th04_dos_demos import relocated_module, require
 from th04_demo_globals import attest_fields
 
 
+def validate_keyboard_capture(clock: dict, first: dict, resident: str) -> None:
+    actions = clock['actions']
+    require(clock['requested_seed'] == 64 and actions, 'keyboard scenario/extent')
+    require(actions[0]['key'] == 'KBD_enter' and actions[0]['pressed'] is True,
+            'keyboard start selection')
+    require(actions[-1]['key'] == 'KBD_z' and actions[-1]['pressed'] is True,
+            'keyboard gameplay Shot')
+    previous = -1
+    for action in actions:
+        require(action['tick'] >= previous and action['due'] <= action['tick'], 'keyboard virtual ordering')
+        require(action['key'] in ('KBD_enter', 'KBD_z') and isinstance(action['pressed'], bool),
+                'keyboard event ownership')
+        require(action['resident_seed'] == 64, 'keyboard observed menu seed')
+        guard = action['unchanged_guest']
+        require(re.fullmatch('[0-9a-f]{64}', guard['conventional_sha256']) is not None and
+                len(bytes.fromhex(guard['cpu_regs'])) == 48 and
+                len(bytes.fromhex(guard['segments'])) == 136, 'keyboard guest snapshot extent')
+        previous = action['tick']
+    raw = bytes.fromhex(resident)
+    pointer = bytes.fromhex(first['resident_pointer'])
+    address = int.from_bytes(pointer[:2], 'little') + int.from_bytes(pointer[2:], 'little') * 16
+    require(clock['resident_linear'] == address and int.from_bytes(raw[20:24], 'little') == 64,
+            'keyboard resident ownership/entry seed')
+    registers = bytes.fromhex(actions[0]['unchanged_guest']['cpu_regs'])
+    segments = bytes.fromhex(actions[0]['unchanged_guest']['segments'])
+    cs = int.from_bytes(segments[8:16], 'little')
+    ds = int.from_bytes(segments[24:32], 'little')
+    es = int.from_bytes(segments[:8], 'little')
+    bx = int.from_bytes(registers[12:16], 'little') & 65535
+    ip = int.from_bytes(registers[32:36], 'little') & 65535
+    require(cs >= 0x0a74 and ip == 0x0d2f and ds == cs - 0x0a74 + 0x0f34 and
+            es * 16 + bx == address, 'original OP counter instruction/context')
+
+
 def ordinary_profile(main: bytes, original: bytes, map_path: Path | None) -> dict:
     candidate = main if map_path else original
     result = profile(main, map_path)
+    result['hooks'] = list(result['hooks'])
     segment, offset = result['hooks'][0][1:]
     header = int.from_bytes(main[8:10], 'little') * 16
     at = header + segment * 16 + offset + 5
@@ -137,6 +173,12 @@ def load(directory: Path, original: bytes) -> dict:
         else:
             raise ValueError('unknown trace event')
     require(terminal and len(rows) == 3997, 'missing terminal')
+    if 'adapter_sha256' in receipt:
+        require('clock-input.json' in receipt['files'], 'missing pinned keyboard record')
+        validate_keyboard_capture(json.loads((directory / 'clock-input.json').read_text()),
+                                  rows[0], resident_rows[0])
+        for path, digest in receipt['source_files'].items():
+            require(sha(Path(path).read_bytes()) == digest, 'keyboard source identity drift: ' + path)
     return dict(receipt=receipt, fields=names, rows=rows, resident=resident_rows, events=events,
                 starting_files=starting_files)
 
@@ -192,6 +234,9 @@ def main() -> int:
     require(left['starting_files'] == right['starting_files'], 'starting physical files differ')
     require(left['receipt']['files']['dosbox-x.conf'] == right['receipt']['files']['dosbox-x.conf'],
             'emulator config differs')
+    if 'adapter_sha256' in left['receipt'] or 'adapter_sha256' in right['receipt']:
+        for key in ('adapter_sha256', 'walker_sha256', 'debugger_sha256', 'font_sha256'):
+            require(left['receipt'].get(key) == right['receipt'].get(key), 'keyboard producer differs: ' + key)
     result = compare(left, right)
     result['capture_receipts'] = {str(directory): sha((directory / 'receipt.json').read_bytes())
                                   for directory in (args.original_capture, args.candidate_capture)}
