@@ -1,5 +1,48 @@
 # Recorded demo and idle OP integration
 
+## Indexed entry-fade palette recovery (v1420)
+
+Demo entry now retains the raw menu palette together with its indexed frame.
+Every published fade step applies `pc98_palette::show()` in the four-bit DAC
+domain, then expands the sixteen colors and paints the saved pixel indices.
+The previous path scaled already expanded RGB8 channels. Palette indices are
+kept directly, including duplicate colors; the frozen menu, idle ordering and
+process handoff keep their existing owners.
+
+The actual muted frontend captures preparation plus seventeen pending OP
+refreshes, stopping before any MAIN update. All eighteen frames retain their
+indices, process generation and process RNG. A separate original OP
+0000:1DE0..1EEA execution uses the captured raw palette at loads 1000/3333:
+36 complete port/return controls. Applying the independently retained analog
+DAC expansion to those outputs agrees on all 4,608,000 captured pixels per
+compiler. The retired RGB8 formula projection differs in sixteen frames;
+that diagnostic is a formula projection rather than a compiled predecessor.
+The comparison covers the fade's indexed palette projection, not full original
+OP scanout.
+
+The cold GNU/optimized UBSan producer is 537/08ff3fc2 and includes the complete
+core/frontend plus palette/demo contracts. Both related CTests pass per
+compiler. Its initial reader assumed a nonexistent reset-receipt field;
+after that correction, the capture adapter also required the normal
+`enable_registration()` storage initialization. Both failures remain.
+Final source 537/6175165a changes only the reader and probe include. Both
+frontends recompile that include while their original cold core libraries
+retain identical hashes; their prior executables and source archive remain.
+The rendering change is present in the original cold source.
+
+Replay: `.analysis/port64/native-demo-palette-v1420/`.
+`current-source-profile.json` and `current-source.tar.gz` retain the final
+reader/probe source; `source-profile.json` and `producer-source.tar.gz` retain
+the initial cold compiler inputs. `focused.json`, `probe-repair.json` and
+`verify_closure.py` record compilation, full original I/O and full pixel
+readback. The capture is available as `--demo-entry-palette-checks DIR`.
+Native CI passes 345 tests. Verified compiler retirement and source-backed
+cache cleanup release 35.92 MiB net. Both final and initial frontends,
+unchanged core libraries, full compressed images/original I/O and 6,893 parent
+pins remain. `verify_retention.py --restore --prefix
+.analysis/port64/native-demo-palette-v1420/build-gnu/` restores one compiler.
+
+
 v1322, 2026-10-09. Real native OP now starts the four archived demos after idle,
 plays their recorded controls with ordinary player-hit consumption, and returns
 to fresh OP on physical input or expiration. All launches remain muted. This

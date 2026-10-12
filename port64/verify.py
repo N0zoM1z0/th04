@@ -16,6 +16,7 @@ import sys
 PORT_FILES = (
     "port64/maine_elapsed_contracts.cpp",
     "port64/verify_maine_elapsed.py",
+    "port64/verify_demo_entry_palette.py",
     "port64/counter_delay_contracts.cpp",
     "port64/verify_counter_delay.py",
     "port64/palette_show_contracts.cpp",

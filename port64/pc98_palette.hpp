@@ -83,4 +83,14 @@ constexpr std::uint8_t analog_rgb8(unsigned nibble) {
     const unsigned six = (four << 2) | (four >> 2);
     return std::uint8_t((six << 2) | (six >> 4));
 }
+// Indexed graphics use one DAC conversion for each of the sixteen colors.
+inline std::array<std::uint32_t,16> argb(const Palette& raw,int tone) {
+    const auto dac=show(raw,tone);std::array<std::uint32_t,16> colors{};
+    for(unsigned color=0;color<16;++color) {
+        const unsigned at=color*3;
+        colors[color]=0xff000000u|(std::uint32_t(analog_rgb8(dac[at]))<<16)|
+            (std::uint32_t(analog_rgb8(dac[at+1]))<<8)|analog_rgb8(dac[at+2]);
+    }
+    return colors;
+}
 } // namespace th04::portable::pc98_palette

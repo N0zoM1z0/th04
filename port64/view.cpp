@@ -1505,6 +1505,9 @@ public:
     const th04::portable::op_startup::Scene* startup_scene() const {return startup_.get();}
     void set_startup_observer(th04::portable::op_startup::Sink observer) {startup_observer_=std::move(observer);}
     bool demo_active() const {return demo_fade_ || (main_ && application_.resident().demo_number);}
+    const th04::portable::pc98_palette::Palette& demo_entry_palette() const {return demo_palette_;}
+    int demo_entry_tone() const {return demo_fade_ ? demo_fade_->tone() : 100;}
+    bool demo_entry_published() const {return demo_fade_ && demo_fade_->published();}
     int demo_idle_frames() const {return demo_idle_.count();}
     const op_music::Scene* music_scene() const {return music_.get();}
     const op_music::Renderer* music_renderer() const {return music_renderer_.get();}
@@ -1947,7 +1950,10 @@ public:
             if(demo_idle_.tick(options,std::uint16_t(registration::input_from_main_actions(held_input)|(held_input&0x4000u)))) {
                 require_view(assets_ && score_store_,"demo requires MAIN assets and OP storage");
                 application_.apply_options(menu_.options());application_.prepare_next_demo();
-                demo_frozen_=render();demo_fade_.emplace(1);screen_=Screen::demo_start;
+                demo_frozen_=render();
+                demo_palette_=title_resources_ ? title_resources_->background.palette : title_background_.palette;
+                require_view(demo_frozen_.indices.size()==demo_frozen_.pixels.size(),"demo entry needs complete menu indices");
+                demo_fade_.emplace(1);screen_=Screen::demo_start;
                 if(repaint)frame_=render();
             } else application_.advance_op_menu_frame();
         }
@@ -2250,7 +2256,7 @@ private:
         // MAINE owners have already been released. Configuration loading can
         // repaint, so publish the OP screen before reloading its host file.
         screen_=Screen::menu;
-        demo_idle_=demo::Idle{};menu_frame_options_.reset();demo_frozen_={};
+        demo_idle_=demo::Idle{};menu_frame_options_.reset();demo_frozen_={};demo_palette_={};
         startup_initial_palette_={};
         sprites_.reset();extra_selection_control_=false;
         if(assets_->full_startup) {
@@ -2330,9 +2336,8 @@ private:
         case Screen::demo_start: {
             auto frame=demo_frozen_;
             if(demo_fade_->published()) {
-                const unsigned tone=unsigned(demo_fade_->tone());
-                for(auto& pixel:frame.pixels)pixel=0xff000000u|
-                    ((((pixel>>16)&255)*tone/100)<<16)|((((pixel>>8)&255)*tone/100)<<8)|((pixel&255)*tone/100);
+                const auto colors=th04::portable::pc98_palette::argb(demo_palette_,demo_fade_->tone());
+                for(unsigned at=0;at<frame.pixels.size();++at)frame.pixels[at]=colors.at(frame.indices[at]);
             }
             return frame;
         }
@@ -2469,6 +2474,7 @@ private:
     std::optional<bool> menu_frame_options_;
     std::optional<demo::Fade> demo_fade_;
     Frame demo_frozen_;
+    th04::portable::pc98_palette::Palette demo_palette_{};
     gameplay::Mode mode_=gameplay::Mode::ordinary;
     bool continue_ending_=false,continue_staff_=false,continue_verdict_=false,continue_congratulations_=false,host_timing_=false;
     // Display initialization invokes the first GDC refresh immediately,
@@ -2915,6 +2921,10 @@ void run_title(
         run_setup_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,main_assets.setup_checks);return;
     }
     if(!demo_checks.empty()) {
+        if(main_assets.demo_entry_palette) {
+            require_view(!window,"demo palette capture requires headless execution");
+            run_demo_entry_palette_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,demo_checks);return;
+        }
         if(main_assets.demo_pictures) {
             require_view(!window,"demo picture capture requires headless execution");
             run_demo_picture_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets,demo_checks);return;
