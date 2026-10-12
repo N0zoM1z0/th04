@@ -14,6 +14,7 @@ import sys
 
 
 PORT_FILES = (
+    "port64/verify_staff_elapsed.py",
     "port64/maine_elapsed_contracts.cpp",
     "port64/verify_maine_elapsed.py",
     "port64/verify_demo_fade.py",

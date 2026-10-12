@@ -881,3 +881,47 @@ The latter saves another 984.19 MiB net across 4,538 owned paths, including
 the deliberately interrupted UBSan campaign; its logs and source identity remain.
 
 Final verified retirement releases 1961.42 MiB net. Both complete program graphs, source freeze and original controls remain.
+
+## Native elapsed Staff Roll (v1424)
+
+Staff's actual scene and Ending caller now use the shared raster/IRQ owner.
+The three dissolve loops poll the inherited unsigned Count1 against2, then
+clear only Count1 after success. They do not use frame_delay's entry reset.
+MAINE 0A05:1298,1325,13C6 each has CMP/JB then MOV Count1,0; the complete
+0A05:0E80..1736 Staff extent remains pinned. Shared black fades align once,
+preserve Count1 and publish all eighteen palette updates. Inactive measure
+waits execute a live WORD frame_delay; active waits query after load/start,
+preserve counters and service supplied measure deadlines. The actual audio
+bridge uses the resident PMD timer deadline. Keys do not skip Staff.
+
+Whole original Staff, black fades, wait and snd_delay_until_measure
+0CC7:03D6..0407 instructions execute at loads1000/3333. Graphics/files and
+measure replies are guarded adapters; ideal IRQ and one-second measure
+stimuli remain separate from physical CPU/I/O/audio costs. Both cold GNU and
+optimized UBSan/bounds producer541/83933826 build84 programs and pass82 CTests.
+Each passes48 original controls,24 coarse and24 one-ms partitions, covering
+inactive BGM, progressing measure and no measure progress. Existing576
+MAINE controls/288 partitions also pass on the same frozen producer.
+
+Each actual muted no-driver frontend completes24 Ending/Staff/verdict/
+Congratulations routes. Independent checks cover576 Ending pages/288 RGB
+frames,48 Staff pages,48 verdict pages and48 Congratulations pages. Current
+RGB uses complete original palette I/O with the retained DAC projection.
+These are component images and route invariants, not physical full scanout.
+Real active-PMD paired scene timing, other scene wait owners, broader gameplay
+and Windows remain open. Historical exact stays661/663.
+
+Compiled whole-scene clear-before and clear-both mutations reject complete
+original traces. A relative-threshold mutant passes coarse input but fails
+one-ms input. The first development build had that same API misuse; its
+program, source, failed partial trace and corrected replay remain separately
+identified. until_count requires the absolute threshold2. Native CI345 passes.
+
+Replay: `.analysis/reconstruction/probes/native-staff-elapsed-v1424/`;
+producer: `.analysis/worktrees/native-staff-elapsed-v1424/.analysis/port64/native-staff-elapsed-v1424/`.
+`verify_staff_elapsed.py` supplies original controls and full time/counter/
+request comparisons; `focused.py` records actual route/page commands.
+Verified content/SHA/CRC/metadata/temp-restore retirement releases908.95 MiB
+net. Sourcefreeze, all programs, full control transcripts and failures remain.
+`verify_retention.py --restore --prefix` restores owned archived paths. The
+source target remains candidate-local-attested; this is scoped runtime agreement.

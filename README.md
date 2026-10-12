@@ -21,15 +21,14 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active. The latest producer joins elapsed MAINE
-Verdict/Congratulations and registration-entry delay with the recovered shared
-palette and indexed Demo entry. Both complete GNU and optimized UBSan/bounds
-graphs build 84 programs and pass 82 CTests. Original instruction/partition
-controls, actual route pages and eight default profiles pass scoped checks.
-See the [current handoff](docs/RE_HANDOFF.md) for producer and replay details.
+Native development is active. Staff Roll now shares elapsed IRQ/fade/measure
+ownership with Ending's other MAINE consumers. Dissolves inherit Count1 and
+clear it after release. Both complete GNU and optimized UBSan graphs pass
+84 programs/82 CTests, full original and partition controls, and24 actual
+Ending routes with independent page checks. See the [handoff](docs/RE_HANDOFF.md).
 
-Registration proper, Staff/Cutscene/MAIN fade waits, physical CPU/ISR costs,
-broader routes and Windows remain open. Historical exact remains separate.
+Other scene waits, real active-PMD paired timing, physical scanout, broader
+gameplay and Windows remain open. Historical exact acceptance is separate.
 
 ## Build and run
 

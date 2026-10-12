@@ -25,7 +25,7 @@ public:
            const cutscene::Assets&,std::function<void()> release_main={},bool bgm_active=false,sound::Timeline* audio=nullptr,vsync::RasterClock* clock=nullptr);
     void advance(std::uint16_t maine_keys,const cutscene::Sink& observer={});
     std::uint64_t advance_elapsed(std::uint64_t,const KeySource&);
-    bool timed_wait() const {return clock_ && (phase_==Phase::verdict || phase_==Phase::congratulations || phase_==Phase::registration_delay);}
+    bool timed_wait() const {return clock_ && (phase_==Phase::staff_roll || phase_==Phase::verdict || phase_==Phase::congratulations || phase_==Phase::registration_delay);}
     void report_song_measure(std::uint16_t measure) {
         if(staff_)staff_->report_song_measure(measure);else song_measure_=measure;
     }

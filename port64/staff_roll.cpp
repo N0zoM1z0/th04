@@ -111,8 +111,8 @@ const char* kind_name(Kind k) {
         "bg_rect","cdg_put","plane","grcg_on","grcg_off","vsync"};
     return names[static_cast<unsigned>(k)];
 }
-Scene::Scene(const Assets& assets,std::array<Bytes,2> pages,unsigned shown)
-    :assets_(&assets),script_([&](const std::string& name) {
+Scene::Scene(const Assets& assets,std::array<Bytes,2> pages,unsigned shown,vsync::RasterClock* clock)
+    :raster_(clock),assets_(&assets),script_([&](const std::string& name) {
         const CdgSheet sheet(assets.sprites.at(name));return Dimensions{sheet.width,sheet.height};
     }),pages_(std::move(pages)),shown_(shown&1) {
     for(auto& page:pages_) {
@@ -184,6 +184,7 @@ void Scene::apply(const Event& e) {
     }
 }
 void Scene::advance(const Sink& observer) {
+    if(raster_)throw std::logic_error("timed Staff Roll requires elapsed admission");
     if(status_==Status::stopped)return;
     ++clock_;
     if(status_==Status::measure) {
@@ -217,5 +218,65 @@ void Scene::advance(const Sink& observer) {
         if(status_!=Status::running)return;
     }
     status_=Status::stopped;
+}
+std::uint64_t Scene::advance_elapsed(std::uint64_t ns,const Sink& observer,
+        const maine::PaletteSink& palette,const maine::ElapsedSink& service,
+        const std::function<std::uint64_t()>& next_measure_service) {
+    if(!raster_)throw std::logic_error("elapsed Staff Roll requires clock");
+    for(;;) {
+        if(status_==Status::stopped)return ns;
+        if(status_==Status::running) {
+            if(next_==script_.requests().size()){status_=Status::stopped;return ns;}
+            const auto& e=script_.requests()[next_++];apply(e);
+            if(observer)observer(e);
+            if(e.kind==Kind::fade) {
+                tone_=e.a ? 0 : 100;
+                timed_fade_.emplace(std::vector<maine::Request>{{maine::RequestKind::fade,0,e.a,e.b}},raster_);
+                status_=Status::delay;
+            } else if(e.kind==Kind::vsync) {
+                // All three original dissolve loops poll the inherited unsigned
+                // Count1 first and clear it AFTER the successful comparison.
+                dissolve_wait_=true;status_=Status::delay;
+            } else if(e.kind==Kind::measure) {
+                measure_goal_=static_cast<std::uint16_t>(e.a);
+                if(audio_active_)status_=Status::measure;
+                else {timed_delay_.emplace(*raster_,e.b);status_=Status::delay;}
+            }
+            continue;
+        }
+        if(timed_fade_) {
+            const auto before=timed_fade_->ticks();
+            ns=timed_fade_->advance_elapsed(ns,[]{return std::uint16_t(0);},{},[&](int tone) {
+                tone_=tone;if(palette)palette(tone);
+            },service);
+            clock_+=timed_fade_->ticks()-before;
+            if(timed_fade_->status()!=maine::AnimationStatus::stopped)return 0;
+            timed_fade_.reset();status_=Status::running;continue;
+        }
+        if(dissolve_wait_ && raster_->counter().one()>=2) {
+            raster_->counter().clear_wait();dissolve_wait_=false;clock_+=2;
+            status_=Status::running;continue;
+        }
+        if(timed_delay_ && timed_delay_->ready()) {
+            clock_+=timed_delay_->minimum();timed_delay_.reset();status_=Status::running;continue;
+        }
+        if(status_==Status::measure) {
+            if(measure_source_)measure_=measure_source_();
+            if(measure_ && *measure_>=measure_goal_){status_=Status::running;continue;}
+        }
+        if(!ns)return 0;
+        auto step=ns;
+        if(status_==Status::measure) {
+            if(next_measure_service) {
+                const auto deadline=next_measure_service();
+                if(!deadline)throw std::logic_error("Staff Roll measure service made no progress");
+                step=std::min(step,deadline);
+            }
+        } else if(raster_->counter().active()) {
+            step=std::min(step,dissolve_wait_ ? raster_->until_count(2) : timed_delay_->until_ready());
+        }
+        if(!step)throw std::logic_error("elapsed Staff Roll wait made no progress");
+        raster_->advance(step);if(service)service(step);ns-=step;
+    }
 }
 } // namespace th04::portable::staff

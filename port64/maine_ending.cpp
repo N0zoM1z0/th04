@@ -92,7 +92,7 @@ void Ending::advance(std::uint16_t keys,const cutscene::Sink& observer) {
 }
 void Ending::start_staff_roll(const staff::Assets& assets) {
     if(phase_!=Phase::staff_roll_pending || !scene_)throw std::logic_error("Staff Roll requires a completed Ending");
-    staff_=std::make_unique<staff::Scene>(assets,std::array<Bytes,2>{scene_->page(0),scene_->page(1)},scene_->shown_page());
+    staff_=std::make_unique<staff::Scene>(assets,std::array<Bytes,2>{scene_->page(0),scene_->page(1)},scene_->shown_page(),clock_);
     staff_->set_audio_active(audio_ ? audio_->bgm_active() : bgm_active_);
     if(audio_)staff_->set_measure_source([this]{return audio_->song_measure();});
     // A new song owns measure progress; the previous Ending song cannot
@@ -152,7 +152,15 @@ std::uint64_t Ending::advance_elapsed(std::uint64_t ns,const KeySource& keys) {
     if(!timed_wait())throw std::logic_error("Ending phase has no elapsed owner");
     const auto service=[this](std::uint64_t step){if(audio_)audio_->advance_elapsed(step);};
     for(;;) {
-        if(phase_==Phase::verdict) {
+        if(phase_==Phase::staff_roll) {
+            const auto deadline=[this,ns] {
+                if(audio_ && audio_->resident())return audio_->resident()->player().player().until_timer();
+                return ns;
+            };
+            ns=staff_->advance_elapsed(ns,[this](const staff::Event& e){if(audio_)audio_->staff(e);},{},service,deadline);
+            if(staff_->status()!=staff::Status::stopped)return 0;
+            phase_=Phase::verdict_pending;
+        } else if(phase_==Phase::verdict) {
             ns=verdict_->advance_elapsed(ns,keys,[this](const verdict::Event& e){verdict_event(e);},service);
             if(verdict_->status()!=verdict::Status::stopped)return 0;
             const auto& r=application_->resident();

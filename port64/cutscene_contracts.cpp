@@ -358,6 +358,7 @@ void contracts() {
     std::cout<<"MAINE cutscene lifecycle contracts: PASS\n";
 }
 }
+void staff_elapsed(const char*,const char*);
 int main(int argc,char** argv) {
     try {
         if(argc==4 && std::string(argv[1])=="--trace") trace(argv[2],std::stoul(argv[3]));
@@ -369,6 +370,7 @@ int main(int argc,char** argv) {
         else if(argc==2 && std::string(argv[1])=="--fade") fade_trace();
         else if(argc==4 && std::string(argv[1])=="--staff-trace") staff_trace(argv[2],std::stoul(argv[3]));
         else if(argc==5 && std::string(argv[1])=="--staff-render") staff_render(argv[2],argv[3],argv[4]);
+        else if(argc==4 && std::string(argv[1])=="--staff-elapsed") staff_elapsed(argv[2],argv[3]);
         else if(argc==5 && std::string(argv[1])=="--staff-kernels") staff_kernels(argv[2],argv[3],argv[4]);
         else if(argc==4 && std::string(argv[1])=="--verdict-trace") verdict_trace(argv[2],argv[3]);
         else if(argc==3 && std::string(argv[1])=="--verdict-clock") verdict_clock(argv[2]);

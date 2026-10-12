@@ -1660,6 +1660,10 @@ public:
             if(repaint)frame_=render();return;
         }
         if(ending_) {
+            if(continue_staff_ && ending_->phase()==maine::Phase::staff_roll_pending) {
+                require_view(assets_ && !assets_->staff_roll.sprites.empty(),"Staff Roll assets missing");
+                ending_->start_staff_roll(assets_->staff_roll);
+            }
             if(continue_verdict_ && ending_->phase()==maine::Phase::verdict_pending)ending_->start_verdict();
             if(continue_congratulations_ && ending_->phase()==maine::Phase::congratulations_pending)ending_->start_congratulations();
         }

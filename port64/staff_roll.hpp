@@ -1,5 +1,6 @@
 #pragma once
 #include "pi_image.hpp"
+#include "maine_animation.hpp"
 #include <functional>
 #include <map>
 #include <optional>
@@ -57,7 +58,10 @@ enum class Status { running, delay, measure, stopped };
 // the inactive backend uses the original fallback frame count.
 class Scene {
 public:
-    Scene(const Assets&,std::array<Bytes,2> pages={},unsigned shown=0);
+    Scene(const Assets&,std::array<Bytes,2> pages={},unsigned shown=0,vsync::RasterClock* clock=nullptr);
+    std::uint64_t advance_elapsed(std::uint64_t,const Sink& observer={},
+        const maine::PaletteSink& palette={},const maine::ElapsedSink& service={},
+        const std::function<std::uint64_t()>& next_measure_service={});
     void advance(const Sink& observer={});
     void report_song_measure(std::uint16_t measure) { measure_=measure; }
     void set_audio_active(bool active) { audio_active_=active; }
@@ -77,6 +81,10 @@ public:
     // Bounded graphics consumer, also used for direct original-kernel controls.
     void apply(const Event&);
 private:
+    vsync::RasterClock* raster_=nullptr;
+    std::optional<maine::Animation> timed_fade_;
+    std::optional<vsync::Delay> timed_delay_;
+    bool dissolve_wait_=false;
     const Assets* assets_;
     Script script_;
     std::array<Bytes,2> pages_;

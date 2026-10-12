@@ -249,3 +249,6 @@ original controls, full compiler graphs and recovery.
 
 The VSync note routes v1423 actual elapsed MAINE consumers, original controls,
 whole-route pages/current DAC projections and owned archive recovery.
+
+The VSync note routes v1424 actual Staff elapsed waits, inherited Count1,
+whole original time/request controls and source/failed-probe archive recovery.

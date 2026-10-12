@@ -1,5 +1,6 @@
 #include "staff_roll.hpp"
 #include "cdg_image.hpp"
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <iterator>
@@ -105,5 +106,51 @@ void staff_contracts() {
     require(active.status()==staff::Status::stopped && !active.live_slots(),"reported sound progress did not resume all Staff Roll owners");
     bool rejected=false;try { CdgSheet malformed(Bytes(16)); }catch(const std::invalid_argument&) { rejected=true; }
     require(rejected,"invalid CDG geometry must fail closed");
+    vsync::RasterClock raster;raster.counter().start();raster.counter().interrupts(5);
+    staff::Scene timed(a,{},0,&raster);bool first_wait=false,first_show=false;
+    std::uint64_t waited_at=0;
+    const auto unused=timed.advance_elapsed(180000000000,[&](const staff::Event& e) {
+        if(e.kind==staff::Kind::vsync && !first_wait) {
+            first_wait=true;waited_at=raster.now();
+            require(raster.counter().one()==64,"Staff dissolve discarded inherited fallback count");
+        } else if(e.kind==staff::Kind::show && first_wait && !first_show) {
+            first_show=true;
+            require(raster.now()==waited_at && raster.counter().one()==0,
+                "Staff dissolve must clear only after immediate inherited-count release");
+        }
+    });
+    require(first_show && unused>0 && timed.status()==staff::Status::stopped && timed.tone()==0 &&
+            !timed.background_alive() && !timed.live_slots(),"elapsed Staff Roll did not complete lifetime");
     std::cout<<"Staff Roll graphics, sound-wait and lifetime contracts: PASS\n";
+}
+
+void staff_elapsed(const char* directory,const char* vectors) {
+    const auto a=assets(directory);std::ifstream in(vectors);
+    require(bool(in),"Staff Roll elapsed vectors missing");
+    unsigned increment,mode,index=0;std::uint64_t seed,phase,horizon,chunk;
+    while(in>>increment>>seed>>phase>>mode>>horizon>>chunk) {
+        vsync::RasterClock raster;raster.counter().start(static_cast<std::uint16_t>(increment));
+        raster.counter().interrupts(seed);raster.advance(phase);
+        staff::Scene scene(a,{},0,&raster);scene.set_audio_active(mode!=0);
+        std::uint64_t song=phase;
+        scene.set_measure_source([&]()->std::optional<std::uint16_t> {
+            return mode==2 ? std::nullopt : std::optional<std::uint16_t>(static_cast<std::uint16_t>((raster.now()-song)/1000000000));
+        });
+        const auto deadline=[&]{return 1000000000-(raster.now()-song)%1000000000;};
+        auto remaining=horizon;std::cout<<"CASE "<<index++<<'\n';
+        const auto observer=[&](const staff::Event& e) {
+            if(e.kind==staff::Kind::bgm_load)song=raster.now();
+            std::cout<<"E "<<raster.now()<<' ';event(e);
+        };
+        const auto palette=[&](int tone){std::cout<<"P "<<raster.now()<<' '<<tone<<'\n';};
+        do {
+            const auto step=chunk ? std::min(chunk,remaining) : remaining;
+            const auto unused=scene.advance_elapsed(step,observer,palette,{},deadline);remaining-=step-unused;
+            if(scene.status()==staff::Status::stopped || !remaining)break;
+        }while(true);
+        std::cout<<"STOP "<<raster.now()<<' '<<remaining<<' '<<int(scene.status())<<' '
+                 <<raster.counter().one()<<' '<<raster.counter().two()<<' '<<raster.counter().accumulator()<<' '
+                 <<scene.event_count()<<' '<<scene.tone()<<'\n';
+    }
+    require(in.eof(),"Staff Roll elapsed vector truncated");
 }
