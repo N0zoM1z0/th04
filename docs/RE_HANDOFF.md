@@ -5,6 +5,36 @@ using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
 remains open. Updated 2026-10-12.
 
+## Ordinary original/reconstructed DOS admission (v1433)
+
+A new read-only MAIN profile captures ordinary Normal Reimu A Stage 1 with
+six lives, zero bombs and held Shot through 3,996 updates. Only MAIN is replaced;
+OP/MAINE/ZUN and all game archives remain pinned originals. Both executions
+complete, with 3,997 pre-update samples plus a terminal sample, two natural
+hits/misses and 142 respawn samples. Consumed input is identical. Full relocated
+MAIN images, MAP/instruction guards, files, counters and RNG caller logs pass.
+Boss bytes remain constant setup; no Boss-combat acceptance.
+
+The pair is **rejected**, not a source-state failure: original entry resident
+seed is0000003F, candidate00000033, with different initial LCG/randring.
+Wall-clock private-Xvfb startup keys are not a deterministic OP input boundary.
+Next: drive the actual original OP start selection at a guarded virtual-time
+boundary; never patch resident RNG, actor state or the clock to create equality.
+Then extend the terminal beyond3996 for ordinary Boss combat.
+
+`compare_th04_dos_ordinary_prefix.py` checks complete trace/module/instruction
+identity and admits only matching consumed input and entry RNG/settings before
+reporting state differences. Actual original self-control and seven counterexamples
+pass; nine public admission tests pass. Root CI passes460 tests, catalog, tracking,
+private target/database checks and Oracle mutations; diff check passes. Runtime pointers and resident performance
+counters remain raw evidence outside the compared state scope.
+
+Replay: `.analysis/reconstruction/probes/dos-ordinary-prefix-v1433/`.
+The v4 original/candidate captures live under `.analysis/runtime/candidates/`.
+Lossless owned retirement releases181.84MiB net with a37.42MiB archive; restore
+captured images/traces with the replay directory's `verify_retention.py --restore`.
+See [DOS differential handoff](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
+
 ## Current native natural routes and strict clear gate (v1432)
 
 The route reader now requires the requested character/rank/shot partition's

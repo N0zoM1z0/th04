@@ -17,6 +17,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/compare_th04_demo_dgroup.py](../probes/compare_th04_demo_dgroup.py) | command | Compare complete demo pools and optional attested global states against ordinary trace controls. |
 | [probes/compare_th04_demo_video.py](../probes/compare_th04_demo_video.py) | command | Compare complete raw video streams and programmed GDC state with ordinary trace controls. |
 | [probes/compare_th04_dos_demos.py](../probes/compare_th04_dos_demos.py) | command | Reject incomplete/reset-mismatched demo traces and report the first logical divergence. |
+| [probes/compare_th04_dos_ordinary_prefix.py](../probes/compare_th04_dos_ordinary_prefix.py) | command | Admit ordinary DOS prefixes by input and entry RNG before reporting state differences. |
 | [probes/inspect_th04_cpu_fault_trace.py](../probes/inspect_th04_cpu_fault_trace.py) | command | Decode private MAIN exception frames without claiming normal gameplay. |
 | [probes/inspect_th04_demo_snapshots.py](../probes/inspect_th04_demo_snapshots.py) | command | Read back DGROUP snapshots against complete ordinary demos and diagnose actor differences. |
 | [probes/inspect_th04_emulator_cpu_fault.py](../probes/inspect_th04_emulator_cpu_fault.py) | command | Locate emulator-side CPU faults in attested, unmodified native MAIN code. |

@@ -5,10 +5,16 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-Updated 2026-10-12. The full native goal remains active on `port/modern-64`, in
-`.analysis/worktrees/native-demo-fade-word-v1421/`. Root `main` keeps the standalone DOS
+Updated 2026-10-12. The full native goal remains active on `port/modern-64`, with the latest verified route snapshot in
+`.analysis/worktrees/native-natural-clear-v1432/`. Root `main` keeps the standalone DOS
 product and indexes native findings. A root `git push` does not commit or push
 native worktree changes.
+
+Original/reconstructed DOS ordinary validation now has a complete Stage 1
+prefix covering two natural deaths and respawns (v1433). The pair is rejected
+because original OP start timing yields different initial RNG seeds despite
+identical consumed gameplay input. Native host agreement remains a separate
+surface. See [current handoff](RE_HANDOFF.md) for the next guarded input step.
 
 ## Current native natural routes and strict clear gate (v1432)
 

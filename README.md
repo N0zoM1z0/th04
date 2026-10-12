@@ -28,7 +28,10 @@ Retained original/reconstructed DOS comparisons agree across all four bundled
 demos on consumed input, score and RNG, nine complete actor/effect pools, and 22
 Boss/Midboss/player state blocks. These demos exercise Midboss fights; Boss
 combat, death/respawn and complete process transitions still need paired
-validation. New complete raw video captures cover both graphics pages, all four
+validation. A new ordinary Stage 1 prefix reaches two natural deaths and
+respawns on both DOS programs; its pair is rejected because OP startup produces
+different initial RNG seeds. Matching consumed input alone does not establish
+state parity. New complete raw video captures cover both graphics pages, all four
 planes, text, palettes and selected GDC display fields. Text, palettes and the
 compared display fields agree. Cold builds and complete replays verify repairs
 to the Stage 4 carpet columns, packed bullet invalidation dimensions and

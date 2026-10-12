@@ -1,9 +1,76 @@
 # Original DOS, reconstructed DOS and native fidelity
 
-Updated 2026-10-11 for agent handoff. The user's primary requested comparison
+Updated 2026-10-12 for agent handoff. The user's primary requested comparison
 is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
+
+## Ordinary Stage 1 prefix and rejected admission (v1433)
+
+Original MAIN077440a3 and frozen ordinary producer1426 MAINf21a5c7c each
+complete Normal ReimuA Stage1 through frame3996. Original OP/MAINE/ZUN stay
+identical; legal physical MIKO.CFG options010600020101 use rank1/lives6/bombs0.
+All game-data archives and starting scores/configuration are checked. Inputs
+are real held Shot from a private owned TCP-disabled Linux Xvfb, muted; no
+resident/actor/hit/score/clock writes. This adapter is separate from the unchanged
+read-only observer. Both runs consume Shot0020 and raw Shift00 throughout.
+
+Observer I is original MAIN0AAF:00B7, after the indirect input callback and before
+actor update. Its ordinary terminal is the actual following JZ at0AAF:00BC,
+not DemoPlay. Both sites are instruction-guarded; candidate MAP places them at
+0708:066D/0672. Existing kind2 frame3996 predicate stops before that frame's actor
+update. There are3997 I rows (0..3996), one identical T row and3996 completed
+updates; do not reuse the Demo comparator's rotation/extent contract.
+
+Both relocated complete MAIN modules equal their own executable plus MZ
+relocations. All36 fields and RNG call counters/addresses are read back. Each
+run has two nonzero hit samples,142 respawn samples,40 distinct miss-time values,
+and resident miss_count0→1→2. Midboss active varies; Boss's24-byte state stays
+constant setup. Original has925 observed RNG events, candidate1268.
+
+These event totals **do not establish a source mismatch**. Entry resident.rand
+is0000003F original versus00000033 candidate; initial LCG bytesac6e5001 versus
+3056c70f and initial randring differ. The new admission gate rejects the pair
+before any state verdict. Wall-clock menu-key timings produce different OP
+seeds. Next bind ordinary start input to a guarded original OP virtual tick;
+never set RNG directly. Longer capture remains necessary for actual Boss combat.
+
+The comparator independently checks images, original supporting products and
+archives, starting physical files, MZ relocation, MAP/instruction-derived field
+ownership, contiguous samples, full ordered RNG counters and terminal extent.
+Matching consumed input/stage and initial RNG/settings are required. Actual
+original self-comparison passes; six single input/RNG perturbations are rejected
+before state comparison, and a hit perturbation at1600 is reported as an admitted
+state failure. Nine public tests cover these admission distinctions. Full actor
+pools, pixels, resident performance counters and full campaign remain outside
+this prefix's scope; runtime pointers are retained separately.
+
+Two failed Xvfb auto-display starts have zero game samples. A diagnostic v3
+includes an external Return and is not the replayable v4 pair. Auto-display
+failed to create its listener; an explicitly owned display14333 passed process/
+owner/TCP-disabled checks. SDL's X11 backend is available. All attempts remain
+recorded; no failure is relabeled as accepted gameplay.
+
+Replay namespace: `.analysis/reconstruction/probes/dos-ordinary-prefix-v1433/`.
+`capture-v4.py`, `controls.py` and the public comparator reproduce this bounded
+experiment. `comparison.json` returns admitted=false/first_difference=null.
+Completed captures are `dos-ordinary-prefix-v1433-v4-{original,candidate}` below
+`.analysis/runtime/candidates/`. Owned18-path/9-blob retirement releases181.84MiB
+net;37.42MiB archive, content hashes/CRC/temp metadata restore/protected proofs
+all pass. `verify_retention.py --restore` restores the required images/raw traces
+before rerunning:
+
+```sh
+python3 scripts/probes/compare_th04_dos_ordinary_prefix.py \
+  .analysis/runtime/candidates/dos-ordinary-prefix-v1433-v4-original \
+  .analysis/runtime/candidates/dos-ordinary-prefix-v1433-v4-candidate \
+  --original-main .analysis/targets/th04/main.exe --output /tmp/ordinary-prefix.json
+```
+
+Expected exit1 is the explicit admission rejection, not a crashed capture.
+Root CI passes460 tests, catalog, tracking, private target/database checks and
+Oracle mutations; diff check passes. The original candidate-local-attested
+provenance gap remains.
 
 ## Starting state and current evidence
 

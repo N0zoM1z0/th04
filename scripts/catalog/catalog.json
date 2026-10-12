@@ -504,6 +504,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/compare_th04_dos_ordinary_prefix.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Admit ordinary DOS prefixes by input and entry RNG before reporting state differences.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/compare_th04_native_maine_link.py",
     "category": "matching",
     "role": "command",
