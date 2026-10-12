@@ -490,6 +490,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/compare_th04_bounded_ordinary.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Compare actual after-update ordinary prefixes with complete actor/RNG/terminal identity gates.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/compare_th04_demo_dgroup.py",
     "category": "runtime",
     "role": "command",

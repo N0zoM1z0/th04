@@ -38,11 +38,26 @@ def main() -> int:
     parser.add_argument('--dgroup-stream', action='store_true')
     parser.add_argument('--video-stream', action='store_true')
     parser.add_argument('--video-layout', type=Path)
+    parser.add_argument('--end-after', type=int,
+                        help='Stop at an observed after-update frame; bounded prefix, not natural game exit')
+    parser.add_argument('--dialog-at-frame', type=int,
+                        help='After this observed frame stalls, release Shot and send ordinary Enter pulses')
+    parser.add_argument('--stall-diagnostic-ms', type=int,
+                        help='Record actual guest PC/RAM after this much virtual no-frame progress')
     args = parser.parse_args()
     if args.video_stream:
         if args.video_layout is None:
             parser.error('video stream requires an attested --video-layout')
         args.dgroup_stream = True
+    if args.end_after is not None:
+        if not 1 <= args.end_after <= 65535:
+            parser.error('--end-after must fit a nonzero stage-frame WORD')
+        args.dgroup_stream = True
+    if args.dialog_at_frame is not None and (args.end_after is None or
+            not 1 <= args.dialog_at_frame < args.end_after):
+        parser.error('dialog cue requires 1 <= frame < --end-after')
+    if args.stall_diagnostic_ms is not None and (args.end_after is None or args.stall_diagnostic_ms < 1000):
+        parser.error('stall diagnostics require a bounded prefix and at least1000 virtual milliseconds')
     output = args.output_dir.resolve()
     if output.exists() or not output.is_relative_to(ROOT / '.analysis/runtime/candidates'):
         parser.error('use a fresh private capture directory')
@@ -85,6 +100,13 @@ def main() -> int:
                 or sha(args.map.read_bytes()) != producer['link']['map_sha256']):
             raise ValueError('ordinary MAIN producer/MAP drift')
     capture_profile = ordinary_profile(main_bytes, original, None if args.original else args.map)
+    if args.end_after is not None:
+        from capture_th04_dos_demos import profile as demo_profile
+        guarded = demo_profile(main_bytes, None if args.original else args.map)
+        capture_profile['hooks'][1] = guarded['hooks'][1]
+        capture_profile['boundary'] = 'ordinary-bounded-after-update-v2'
+        capture_profile['terminal_bytes'] = guarded['terminal_bytes']
+        capture_profile['end_after'] = args.end_after
     output.mkdir(parents=True)
     prepare = [sys.executable, str(ROOT / 'scripts/prepare_product_hdi.py'), '--output-dir',
                str(output / 'prepared'), '--products', 'main', '--rank', '1', '--lives', '6', '--bombs', '0']
@@ -128,6 +150,12 @@ def main() -> int:
                '-defaultconf', '-defaultmapper', '-conf', str(config), '-fastlaunch', '-nogui',
                '-nomenu', '-exit', '-c', f'imgmount 2 "{image}" -t hdd -fs none', '-c', 'boot -l c']
     stream_sources = []
+    if args.end_after is not None:
+        env['TH04_ORDINARY_END_AFTER'] = str(args.end_after)
+    if args.dialog_at_frame is not None:
+        env['TH04_ORDINARY_DIALOG_FRAME'] = str(args.dialog_at_frame)
+    if args.stall_diagnostic_ms is not None:
+        env['TH04_ORDINARY_STALL_MS'] = str(args.stall_diagnostic_ms)
     if args.dgroup_stream:
         env['TH04_ORDINARY_DGROUP'] = '1'
         stream_sources = [adapter.with_name(name) for name in
@@ -160,6 +188,9 @@ def main() -> int:
                 code = child.wait()
     complete = (not timeout and code == 0 and b'TH04_DEMO_OBSERVER_COMPLETE 1\n'
                 in (output / 'boot.log').read_bytes() and not (output / 'clock-input-error.txt').exists())
+    if args.end_after is not None:
+        complete = (not timeout and code == 0 and b'TH04_ORDINARY_PREFIX_COMPLETE\n'
+                    in (output / 'boot.log').read_bytes() and not (output / 'clock-input-error.txt').exists())
     names = ['profile.json', 'observer-profile.txt', 'dosbox-x.conf', 'boot.log', 'raw.txt', 'clock-input.json']
     if args.dgroup_stream:
         complete = complete and b'TH04_ORDINARY_DGROUP_COMPLETE\n' in (output / 'boot.log').read_bytes()
@@ -167,6 +198,10 @@ def main() -> int:
     if args.video_stream:
         complete = complete and b'TH04_ORDINARY_VIDEO_COMPLETE\n' in (output / 'boot.log').read_bytes()
         names += ['ordinary-video.bin.gz', 'ordinary-video.json']
+    if args.end_after is not None:
+        names += ['ordinary-terminal.json']
+    if args.stall_diagnostic_ms is not None:
+        names += ['ordinary-stall.json', 'ordinary-stall-dgroup.bin']
     receipt = dict(schema_version=1, complete=complete, timeout=timeout, exit=code,
                    role='original' if args.original else 'candidate', elapsed=time.monotonic() - started,
                    command=command, main_path=str(main_path.resolve()), main_sha256=sha(main_bytes),
@@ -183,6 +218,11 @@ def main() -> int:
                    resource_budget=dict(cpu_affinity=sorted(os.sched_getaffinity(0)), nice=os.nice(0),
                                         address_space_bytes=1536 * 1024 * 1024),
                    scope=__doc__)
+    if args.end_after is not None:
+        receipt.update(end_after=args.end_after, termination='observed-after-update-prefix',
+                       natural_game_exit=False)
+    if args.dialog_at_frame is not None:
+        receipt['dialog_at_frame'] = args.dialog_at_frame
     if args.video_stream:
         receipt['video_layout'] = dict(path=str(args.video_layout.resolve()),
                                        sha256=sha(args.video_layout.read_bytes()))

@@ -53,7 +53,7 @@ def validate_keyboard_capture(clock: dict, first: dict, resident: str) -> None:
             es * 16 + bx == address, 'original OP counter instruction/context')
 
 
-def ordinary_profile(main: bytes, original: bytes, map_path: Path | None) -> dict:
+def ordinary_profile(main: bytes, original: bytes, map_path: Path | None, end_after=None) -> dict:
     candidate = main if map_path else original
     result = profile(main, map_path)
     result['hooks'] = list(result['hooks'])
@@ -79,6 +79,13 @@ def ordinary_profile(main: bytes, original: bytes, map_path: Path | None) -> dic
         extra = [(name, offset, size) for name, offset, size, *_ in FIELDS]
     names = {field[0] for field in result['fields']}
     result['fields'][-1:-1] = [field for field in extra if field[0] not in names]
+    if end_after is not None:
+        require(isinstance(end_after, int) and 1 <= end_after <= 65535, 'bounded frame WORD')
+        guarded = profile(main, map_path)
+        result['hooks'][1] = guarded['hooks'][1]
+        result['terminal_bytes'] = guarded['terminal_bytes']
+        result['boundary'] = 'ordinary-bounded-after-update-v2'
+        result['end_after'] = end_after
     return result
 
 
@@ -117,7 +124,8 @@ def load(directory: Path, original: bytes, source_snapshot: Path | None = None) 
     if map_path:
         require(sha(map_path.read_bytes()) == receipt['map_sha256'], 'MAP identity drift')
     actual = json.loads((directory / 'profile.json').read_text())
-    expected = ordinary_profile(main, original, map_path)
+    bounded = receipt.get('end_after')
+    expected = ordinary_profile(main, original, map_path, bounded)
     # The original producer recorded candidate witnesses as extra provenance.
     if not map_path:
         actual.pop('witnesses', None)
@@ -167,12 +175,22 @@ def load(directory: Path, original: bytes, source_snapshot: Path | None = None) 
                 events.append(pending)
                 pending = []
             else:
+                require(bounded is None, 'Demo terminal in bounded ordinary run')
                 require(frame == 3996 and len(rows) == 3997 and values == rows[-1] and not pending,
                         'ordinary terminal extent')
                 terminal = True
         else:
             raise ValueError('unknown trace event')
-    require(terminal and len(rows) == 3997, 'missing terminal')
+    bounded_terminal = None
+    if bounded is None:
+        require(terminal and len(rows) == 3997, 'missing terminal')
+    else:
+        require('ordinary-terminal.json' in receipt['files'] and not terminal and
+                len(rows) == bounded, 'bounded sample/terminal extent')
+        require(receipt['termination'] == 'observed-after-update-prefix' and
+                receipt['natural_game_exit'] is False, 'bounded termination class')
+        bounded_terminal = json.loads((directory / 'ordinary-terminal.json').read_text())
+        validate_bounded_terminal(bounded_terminal, main, expected, load_segment, counts)
     if 'adapter_sha256' in receipt:
         require('clock-input.json' in receipt['files'], 'missing pinned keyboard record')
         validate_keyboard_capture(json.loads((directory / 'clock-input.json').read_text()),
@@ -185,7 +203,40 @@ def load(directory: Path, original: bytes, source_snapshot: Path | None = None) 
                 observed = sha(frozen.read_bytes()) if frozen.is_file() else None
             require(observed == digest, 'keyboard source identity drift: ' + path)
     return dict(receipt=receipt, fields=names, rows=rows, resident=resident_rows, events=events,
-                starting_files=starting_files)
+                starting_files=starting_files, bounded_terminal=bounded_terminal, terminal_events=pending)
+
+
+def validate_bounded_terminal(terminal, main, profile, load, counts):
+    require(terminal['schema_version'] == 1 and terminal['complete_prefix'] is True and
+            terminal['natural_game_exit'] is False and
+            terminal['boundary'] == 'ordinary stage_frame write, before mod counters and score update',
+            'bounded terminal class/boundary')
+    require(terminal['frame'] == profile['end_after'] and terminal['load_segment'] == load and
+            terminal['dgroup_segment'] == load + profile['dgroup'], 'bounded terminal extent/address')
+    require(terminal['lcg_calls'] == counts['lcg'] and terminal['ring_calls'] == counts['ring'],
+            'bounded terminal RNG counters')
+    values = terminal['values']
+    require(set(values) == {name for name, _, _ in profile['fields']}, 'bounded terminal fields')
+    for name, _, size in profile['fields']:
+        require(len(bytes.fromhex(values[name])) == size, 'bounded terminal field width: ' + name)
+    require(int.from_bytes(bytes.fromhex(values['frame']), 'little') == profile['end_after'] and
+            values['stage'] == '00', 'bounded terminal frame/stage')
+    resident = bytes.fromhex(terminal['resident'])
+    require(len(resident) == 80 and resident[:11] == b'HUMAConfig\0' and resident[62] == 0,
+            'bounded ordinary resident')
+    segment, seam = profile['hooks'][0][1:]
+    require(terminal['cs'] == load + segment and seam - 0x1f <= terminal['ip'] < seam - 0x1f + 0x300,
+            'bounded terminal gameplay owner')
+    module = relocated_module(main, load)
+    at = segment * 16 + terminal['ip']
+    opcode = bytes.fromhex(terminal['opcode'])
+    frame_offset = profile['fields'][0][1]
+    require(len(opcode) == 16 and module[at:at + 16] == opcode and
+            opcode[:3] == b'\xa3' + frame_offset.to_bytes(2, 'little'), 'bounded terminal frame-store opcode')
+    registers, segments = bytes.fromhex(terminal['cpu_regs']), bytes.fromhex(terminal['segments'])
+    require(len(registers) == 48 and len(segments) == 136 and
+            int.from_bytes(registers[32:36], 'little') & 65535 == terminal['ip'] and
+            int.from_bytes(segments[8:16], 'little') == terminal['cs'], 'bounded CPU terminal context')
 
 
 def admit(left: dict, right: dict) -> list[str]:
@@ -207,7 +258,8 @@ def admit(left: dict, right: dict) -> list[str]:
 def compare(left: dict, right: dict) -> dict:
     reasons = admit(left, right)
     result = dict(admitted=not reasons, rejection_reasons=reasons, passed=False, first_difference=None,
-                  complete_updates=len(left['rows']) - 1, sampled_frames=len(left['rows']),
+                  complete_updates=len(left['rows']) if left.get('bounded_terminal') else len(left['rows']) - 1,
+                  sampled_frames=len(left['rows']),
                   scope='Ordinary pre-update fields and RNG calls; no full actor pools, pixels, timing or campaign acceptance')
     if reasons:
         return result
@@ -221,6 +273,10 @@ def compare(left: dict, right: dict) -> dict:
             result['first_difference'] = dict(frame=frame, field='ordered-rng-calls')
             return result
     result['passed'] = True
+    if left.get('bounded_terminal') or right.get('bounded_terminal'):
+        require(left.get('bounded_terminal') and right.get('bounded_terminal'), 'mixed terminal contracts')
+        if left['terminal_events'] != right['terminal_events']:
+            result.update(passed=False, first_difference=dict(frame=len(left['rows']), field='terminal-rng-calls'))
     return result
 
 

@@ -16,6 +16,12 @@ class Monitor:
         self.profile = json.loads((self.output / 'profile.json').read_text())
         self.current = None
         self.error = None
+        self.end_after = int(os.environ.get('TH04_ORDINARY_END_AFTER', UPDATE_COUNT))
+        self.bounded = os.environ.get('TH04_ORDINARY_END_AFTER') is not None
+        self.terminal = None
+        self.dialog_frame = int(os.environ.get('TH04_ORDINARY_DIALOG_FRAME', 0))
+        self.dialog_requested = False
+        self.dialog_observed = False
         self.process = self.address('th04_demo_observer::process')
         self.load = self.address('th04_demo_observer::load_segment')
         self.active = self.address('th04_demo_observer::active')
@@ -40,10 +46,10 @@ class Monitor:
             raise ValueError('no ordinary DGROUP process')
         self.current.stream.close()
         self.current.raw.close()
-        if self.error or self.current.sequence.frames != UPDATE_COUNT:
+        if self.error or self.current.sequence.frames != self.end_after:
             raise ValueError(self.error or 'incomplete ordinary DGROUP')
         record = dict(schema_version=1, complete=True, boundary=BOUNDARY,
-                      frames=UPDATE_COUNT, block_bytes=DGROUP_SIZE,
+                      frames=self.end_after, block_bytes=DGROUP_SIZE,
                       load_segment=self.current.load, dgroup_segment=self.current.dgroup,
                       mappings=self.current.maps)
         (self.output / 'ordinary-dgroup.json').write_text(json.dumps(record, indent=2) + '\n')
@@ -56,6 +62,11 @@ class Monitor:
                           video_symbols=self.video_symbols, video_mappings=self.current.video_maps)
             (self.output / 'ordinary-video.json').write_text(json.dumps(record, indent=2) + '\n')
             gdb.write('TH04_ORDINARY_VIDEO_COMPLETE\n')
+        if self.bounded:
+            if self.terminal is None:
+                raise ValueError('missing observed bounded terminal')
+            (self.output / 'ordinary-terminal.json').write_text(json.dumps(self.terminal, indent=2) + '\n')
+            gdb.write('TH04_ORDINARY_PREFIX_COMPLETE\n')
 
 
 class Load(gdb.Breakpoint):
@@ -80,7 +91,7 @@ class Frame(gdb.Breakpoint):
         self.linear = self.dgroup * 16
         self.offset = monitor.profile['fields'][0][1]
         self.host = monitor.ram.state()[0] + monitor.ram.physical(self.linear + self.offset)
-        self.sequence = FrameSequence(monitor.ram.integer(self.host, 2))
+        self.sequence = FrameSequence(monitor.ram.integer(self.host, 2), monitor.end_after)
         self.previous = 0
         self.maps, self.last_pages = [], None
         self.raw = (monitor.output / 'ordinary-dgroup.bin.gz').open('xb')
@@ -129,11 +140,33 @@ class Frame(gdb.Breakpoint):
             if pages != self.last_pages:
                 self.maps.append(dict(first_frame=frame, pages=pages))
                 self.last_pages = pages
-            if frame % 500 == 0 or frame == UPDATE_COUNT:
+            if frame % 500 == 0 or frame == m.end_after:
                 self.stream.flush()
                 if m.video is not None:
                     self.video_stream.flush()
                 gdb.write('TH04_ORDINARY_DGROUP %d\n' % frame)
+            if m.bounded and frame == m.end_after:
+                values = {name: data[offset:offset + size].hex()
+                          for name, offset, size in m.profile['fields']}
+                pointer = bytes.fromhex(values['resident_pointer'])
+                resident = int.from_bytes(pointer[:2], 'little') + int.from_bytes(pointer[2:], 'little') * 16
+                registers = bytes(gdb.selected_inferior().read_memory(m.address('cpu_regs'), 48))
+                segments = bytes(gdb.selected_inferior().read_memory(m.address('Segs'), 136))
+                cs = int.from_bytes(segments[8:16], 'little')
+                ip = int.from_bytes(registers[32:36], 'little') & 65535
+                opcode = m.ram.read_range(cs * 16 + ip, 16)[0]
+                m.terminal = dict(schema_version=1, boundary=BOUNDARY, complete_prefix=True,
+                    natural_game_exit=False, frame=frame, load_segment=self.load,
+                    dgroup_segment=self.dgroup, cr0=cr0, cr4=cr4, cr3=cr3, values=values,
+                    resident=m.ram.read_range(resident, 80)[0].hex(), cs=cs, ip=ip,
+                    opcode=opcode.hex(), cpu_regs=registers.hex(), segments=segments.hex(),
+                    lcg_calls=m.ram.integer(m.address('th04_demo_observer::lcg_count'), 8),
+                    ring_calls=m.ram.integer(m.address('th04_demo_observer::ring_count'), 8))
+                return True
+            if m.dialog_frame and frame == m.dialog_frame and not m.dialog_observed:
+                m.dialog_requested = True
+                m.dialog_observed = True
+                return True
             return False
         except Exception as error:
             m.error = str(error)

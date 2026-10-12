@@ -47,7 +47,11 @@ keyboard samples despite equal consumed inputs and independent scalar/RNG
 controls. Complete video captures now agree on both pages of all four VRAM
 planes, the text plane, palettes and configured GDC display fields across this
 ordinary fragment. Raw GDC timing differs on every frame and is retained.
-Boss combat, full process transitions and physical scanout remain open.
+A longer 7,500-update fragment now also pairs ordinary Boss combat: input,
+RNG, nine complete pools and 22 state blocks agree through battle phases 0/1/2.
+Its aggregate retains 258 end-of-update keyboard differences. Original Game
+Over is independently located at frame 7,547; complete Boss defeat, process
+transitions and physical scanout remain open.
 
 Native x64 source lives on `port/modern-64`. Scoped Linux Reimu A runs cover
 Normal, Lunatic and Extra clears with registration, physical saves and fresh

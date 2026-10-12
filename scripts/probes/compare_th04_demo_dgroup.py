@@ -125,7 +125,7 @@ def iter_side(directory, number, profile, diagnostic):
                    (directory / f'DEMO{number}.REC').read_bytes(), load['cr0'], load['cr3'])
 
 
-def summarize_pair(original, candidate, original_offset, candidate_offset, graze_a, graze_b, pools=()):
+def summarize_pair(original, candidate, original_offset, candidate_offset, graze_a, graze_b, pools=(), expected_updates=None):
     """Read every frame, even after a difference, and retain its bounded cause."""
     original_hash, candidate_hash = hashlib.sha256(), hashlib.sha256()
     count, differing_frames, first = 0, 0, None
@@ -180,7 +180,7 @@ def summarize_pair(original, candidate, original_offset, candidate_offset, graze
                              candidate_graze=int.from_bytes(gb, 'little'),
                              differing_slots=slots, bullets=differences)
         count += 1
-    require(count == UPDATE_COUNT, 'incomplete paired actor extent')
+    require(count == (UPDATE_COUNT if expected_updates is None else expected_updates), 'incomplete paired actor extent')
     for name, _, _, slots, stride in pools:
         row = other[name]
         row.update(passed=row['first_difference'] is None, updates=count, bytes_per_frame=slots*stride,

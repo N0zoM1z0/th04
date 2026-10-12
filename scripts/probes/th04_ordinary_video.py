@@ -7,12 +7,15 @@ from th04_demo_video import BLOCK_SIZE
 MAGIC = b'TH04OV1\n'
 
 
-def records(path, load, dgroup, cr0, cr3):
+def records(path, load, dgroup, cr0, cr3, frames=None):
+    limit = UPDATE_COUNT if frames is None else frames
+    if not isinstance(limit, int) or not 1 <= limit <= 65535:
+        raise ValueError('ordinary video frame limit')
     previous = 0
     with gzip.open(path, 'rb') as stream:
         if stream.read(len(MAGIC)) != MAGIC:
             raise ValueError('ordinary video magic')
-        for frame in range(1, UPDATE_COUNT + 1):
+        for frame in range(1, limit + 1):
             header = stream.read(HEADER.size)
             if len(header) != HEADER.size:
                 raise ValueError('truncated ordinary video header')

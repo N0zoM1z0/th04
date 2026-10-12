@@ -5,6 +5,50 @@ using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
 remains open. Updated 2026-10-12.
 
+## Bounded ordinary Boss combat and natural Game Over (v1437)
+
+Original and frozen normal MAIN1426/f21a5c7c now pair7,500 ordinary updates:
+all pre-update input/36 fields/2,837 ordered RNG calls, nine complete pools and
+22 guarded state blocks agree. The original OP/assets/configuration remain
+shared and pinned. Five natural losses are covered. Boss has952 distinct
+24-byte states, HP up to3050, phases0/1/2 and600 nonzero-phase samples from
+frame6900. The aggregate stillfails for258 post-reset input samples; there is
+no Boss-picture/defeat/full campaign or physical timing acceptance.
+
+A separate bounded contract stops at the observed real gameplay-loop frame
+store, not a fake Demo terminal or natural game exit. Original terminal is
+MAIN0AAF:01B3 `A3 8A 53` atload10FC; candidate owner comes from its MAP and
+complete relocated code. GDB flushes actual host observer output while guest
+RAM/registers/PIC time stay unchanged, closes the complete stream then kills
+that captured process. Metadata explicitly says natural_game_exit=false.
+Default3996 behavior remains. Frame limits fit a nonzero WORD; truncation,
+wrong owner/opcode/CPU/RNG/terminal classes reject.
+
+Held Shot first blocked progress at6548 before battle. Releasing Shot after
+that observed stalled frame and ordinary Enter pulses crosses the wait; Shot
+resumes when gameplay advances. No actor/life/score/RNG/clock writes or skipped
+frames. Six-life/no-bomb Normal is a legal fixture, not invincible gameplay.
+
+The longer original naturally reaches Game Over at7547 on the sixth hit.
+Read-only diagnostics stopped after5000 virtual milliseconds of no frame
+progress. Stack shows130E:00E3 frame_delay(1) returning to130E:0149 inside
+input_wait_for_change, then MAIN0AAF:3B1E inside gameover_run(). Target call
+at0AAF:3B19 is the actual far wait0 call. Count1=0 is one sample, **not an IRQ
+fault**. The release-key Game Over wait explains the retained incomplete9000
+attempt; do not classify it as a Boss algorithm hang or successful campaign.
+
+Replay: `.analysis/reconstruction/probes/dos-ordinary-boss-v1437/`.
+`--end-after 7500 --dialog-at-frame 6548` drives the current fixture;
+`compare_th04_bounded_ordinary.py` checks the new terminal/DGROUP contract.
+Five actual-terminal counterexamples and six public terminal tests pass;
+previous stream and keyboard tests pass. Root CI486 tests, tracking, catalog,
+private target/database and Oracle mutations pass; diff check passes. Owned24-path/31-block retirement
+reclaims289.43MiB net with1.69MiB archive after full content/CRC/temp metadata/
+protected checks. Complete compressed memory, terminal/stall/source evidence
+stay live; `recover.py --restore` restores images/raw aliases.
+Next pair Boss pictures and the real Game Over/Continue/process route. Full
+reconstruction/native goal remains active; no product/byte-exact promotion.
+
 ## Ordinary complete video at deaths/respawns (v1436)
 
 Complete ordinary Normal ReimuA Stage1 video now passes all38 configured raw

@@ -7,13 +7,16 @@ MAGIC = b'TH04OG1\n'
 BOUNDARY = 'ordinary stage_frame write, before mod counters and score update'
 
 
-def records(path, load, dgroup, fields, cr0, cr3):
+def records(path, load, dgroup, fields, cr0, cr3, frames=None):
+    limit = UPDATE_COUNT if frames is None else frames
+    if not isinstance(limit, int) or not 1 <= limit <= 65535:
+        raise ValueError('ordinary DGROUP frame limit')
     offsets = {name: (offset, size) for name, offset, size in fields}
     previous = 0
     with gzip.open(path, 'rb') as stream:
         if stream.read(len(MAGIC)) != MAGIC:
             raise ValueError('ordinary DGROUP magic')
-        for frame in range(1, UPDATE_COUNT + 1):
+        for frame in range(1, limit + 1):
             header = stream.read(HEADER.size)
             if len(header) != HEADER.size:
                 raise ValueError('truncated ordinary DGROUP header')

@@ -33,6 +33,15 @@ todo = None
 armed = False
 held = False
 found = None
+dialog_frame = int(os.environ.get('TH04_ORDINARY_DIALOG_FRAME', 0))
+dialog_active = False
+dialog_released = False
+dialog_done = False
+dialog_tick = None
+enter_down = False
+stall_ms = int(os.environ.get('TH04_ORDINARY_STALL_MS', 0))
+last_progress_frame = 0
+last_progress_tick = 0
 
 def read(address, size):
     return bytes(gdb.selected_inferior().read_memory(address, size))
@@ -70,8 +79,31 @@ class Clock(gdb.Breakpoint):
         super().__init__('*(unsigned int *)0x%x' % address, type=gdb.BP_WATCHPOINT, wp_class=gdb.WP_WRITE, internal=True)
 
     def stop(self):
-        global resident, todo, held, found
+        global resident, todo, held, found, dialog_released, dialog_done, last_progress_frame, last_progress_tick
         now = tick()
+        if stall_ms and monitor is not None and monitor.current is not None:
+            frame = monitor.current.sequence.frames
+            if frame != last_progress_frame:
+                last_progress_frame, last_progress_tick = frame, now
+            elif frame > 0 and not dialog_active and now - last_progress_tick >= stall_ms:
+                todo = ('diagnostic',)
+                return True
+        if dialog_active:
+            current_frame = monitor.current.sequence.frames
+            if current_frame > dialog_frame:
+                if enter_down:
+                    todo = ('key', now, 'KBD_enter', False)
+                else:
+                    todo = ('key', now, 'KBD_z', True)
+                    dialog_done = True
+                return True
+            if not dialog_released and now - dialog_tick >= 100:
+                todo = ('key', now, 'KBD_z', False)
+                dialog_released = True
+                return True
+            if dialog_released and schedule and now >= schedule[0][0]:
+                todo = ('key', *schedule.pop(0))
+                return True
         if resident is None and now % 100 == 0 and base():
             try:
                 memory = ram.read_range(0, 655360)[0]
@@ -112,6 +144,40 @@ while gdb.selected_inferior().pid:
         break
     if monitor is not None and monitor.error:
         raise ValueError(monitor.error)
+    if monitor is not None and monitor.terminal is not None:
+        before_flush = snapshot()
+        before_tick = tick()
+        trace_pointer = int(gdb.parse_and_eval("(void *)&'th04_demo_observer::trace'"))
+        trace_file = int.from_bytes(read(trace_pointer,8), 'little')
+        gdb.execute('call (int)fflush((void *)0x%x)' % trace_file, to_string=True)
+        assert before_flush == snapshot() and before_tick == tick()
+        monitor.finish()
+        monitor = None
+        gdb.execute('kill')
+        break
+    if monitor is not None and monitor.dialog_requested:
+        monitor.dialog_requested = False
+        dialog_active = True
+        dialog_tick = tick()
+        schedule = []
+        clock.enabled = True
+        continue
+    if todo is not None and todo[0] == 'diagnostic':
+        registers, segment_data = read(regs,48), read(segments,136)
+        cs = int.from_bytes(segment_data[8:16], 'little')
+        ip = int.from_bytes(registers[32:36], 'little') & 65535
+        linear = cs * 16 + ip
+        opcode = ram.read_range(linear,64)[0].hex() if linear + 64 < 0xa0000 else None
+        data = ram.read_range(monitor.current.linear,65536)[0]
+        (out/'ordinary-stall-dgroup.bin').write_bytes(data)
+        (out/'ordinary-stall.json').write_text(json.dumps(dict(complete_prefix=False,
+            frame=last_progress_frame, tick=tick(), last_progress_tick=last_progress_tick,
+            cs=cs, ip=ip, opcode=opcode, cpu_regs=registers.hex(), segments=segment_data.hex(),
+            load_segment=monitor.current.load, dgroup_segment=monitor.current.dgroup,
+            interpretation='Observed virtual no-frame progress; cause unclassified'),indent=2)+'\n')
+        gdb.execute('kill')
+        monitor = None
+        break
     try:
         clock.enabled = False
         if seedwatch is not None:
@@ -127,6 +193,16 @@ while gdb.selected_inferior().pid:
             gdb.execute('call ((void (*)(int, bool))0x%x)(%d, %s)' % (function, keys[name], 'true' if down else 'false'), to_string=True)
             assert before == tick() and guest == snapshot()
             actions.append(dict(due=due, tick=before, key=name, pressed=down, resident_seed=seed, unchanged_guest=guest))
+            if name == 'KBD_enter':
+                enter_down = down
+            if dialog_active and name == 'KBD_z' and not down:
+                schedule = []
+                for delta in range(500, 30001, 1000):
+                    schedule.extend([(before + delta, 'KBD_enter', True),
+                                     (before + delta + 120, 'KBD_enter', False)])
+            if dialog_active and dialog_done:
+                dialog_active = False
+                schedule = []
             save()
             if len(actions) == 1:
                 schedule = [(before + 120, 'KBD_enter', False)]
@@ -137,7 +213,10 @@ while gdb.selected_inferior().pid:
                 seedwatch = None
         todo = None
         if held:
-            clock.delete()
+            if not dialog_frame and not stall_ms:
+                clock.delete()
+            else:
+                clock.enabled = dialog_active or bool(stall_ms)
         else:
             clock.enabled = True
     except Exception as e:

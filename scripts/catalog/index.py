@@ -41,6 +41,7 @@ OVERRIDES = {
     'prepare_product_hdi.py': ('runtime', 'Prepare a disposable original-data image with verified source or original products.'),
     'build_th04_demo_emulator.py': ('runtime', 'Build a resource-limited pinned read-only normal-core demo observer.'),
     'capture_th04_dos_demos.py': ('runtime', 'Capture ordinary bundled DOS demos after replay input and at the terminal decision.'),
+    'compare_th04_bounded_ordinary.py': ('runtime', 'Compare actual after-update ordinary prefixes with complete actor/RNG/terminal identity gates.'),
     'compare_th04_ordinary_video.py': ('runtime', 'Compare complete ordinary VRAM/palettes/display state with independent scalar controls.'),
     'th04_ordinary_video.py': ('runtime', 'Decode full ordinary video blocks with strict frame/load/stage and gzip checks.'),
     'compare_th04_ordinary_pools.py': ('runtime', 'Compare complete ordinary actor pools against pinned scalar controls and target/MAP owners.'),

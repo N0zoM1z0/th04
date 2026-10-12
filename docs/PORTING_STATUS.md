@@ -21,8 +21,12 @@ post-reset input differences despite equal consumed inputs and scalar controls.
 Current v1436 additionally passes all configured full VRAM/text/palette/display
 regions for the ordinary fragment including deaths/respawns. Raw GDC timing
 still differs every frame; companion post-reset input differs at155samples.
-Boss/full lifecycle/physical/Windows stay open. Native full-picture acceptance
-remains separate; see [current handoff](RE_HANDOFF.md).
+Boss/full lifecycle/physical/Windows stay open. A v1437 bounded7,500-update pair now covers actual Boss phases0/1/2 with
+matching input/RNG/pools/states and258 retained post-reset input differences.
+Original naturally reaches Game Over at7547; held Shot waits for release in
+that UI, not a confirmed IRQ fault. Boss pictures/defeat and paired process
+routes remain open. Native full-picture acceptance remains separate;
+see [current handoff](RE_HANDOFF.md).
 
 ## Current native natural routes and strict clear gate (v1432)
 

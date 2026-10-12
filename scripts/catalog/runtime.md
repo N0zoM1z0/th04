@@ -15,6 +15,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/capture_th04_dos_ordinary_prefix.py](../probes/capture_th04_dos_ordinary_prefix.py) | command | Capture ordinary DOS through original OP using observed menu-count keyboard API input. |
 | [probes/check_th04_carpet_image_table.py](../probes/check_th04_carpet_image_table.py) | command | Check the complete initialized Stage4 carpet table against pinned MAIN instructions and data. |
 | [probes/check_th04_midboss4_initial_state.py](../probes/check_th04_midboss4_initial_state.py) | command | Check the Stage4 midboss toggle initializer and DATA ownership against pinned MAIN. |
+| [probes/compare_th04_bounded_ordinary.py](../probes/compare_th04_bounded_ordinary.py) | command | Compare actual after-update ordinary prefixes with complete actor/RNG/terminal identity gates. |
 | [probes/compare_th04_demo_dgroup.py](../probes/compare_th04_demo_dgroup.py) | command | Compare complete demo pools and optional attested global states against ordinary trace controls. |
 | [probes/compare_th04_demo_video.py](../probes/compare_th04_demo_video.py) | command | Compare complete raw video streams and programmed GDC state with ordinary trace controls. |
 | [probes/compare_th04_dos_demos.py](../probes/compare_th04_dos_demos.py) | command | Reject incomplete/reset-mismatched demo traces and report the first logical divergence. |

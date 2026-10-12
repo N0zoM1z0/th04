@@ -5,6 +5,91 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Actual bounded Boss combat and Game Over wait (v1437)
+
+Root CI486 tests, catalog, tracking, private target/database and Oracle mutation
+checks pass; final diff check passes.
+
+The new after-update bounded contract extends ordinary capture without changing
+the emulator observer or guest bytes. `--end-after N` keeps the attested Demo
+terminal hook at DemoPlay, which ordinary mode does not call. All real L/I/R
+records remain intact; no invented T record. A mapped frame-write watch stores
+complete DGROUP and a real terminal snapshot atN. It contains current fields,
+resident, CPU/segments, observed RNG counters and actual instruction bytes.
+The host observer FILE is flushed with guest RAM/register/PIC preservation
+checks; complete gzip streams close, then GDB kills this disposable capture.
+This is an observed prefix, explicitly not a natural game/process exit.
+
+Original terminal7500 is relative MAIN0AAF:01B3 `A3 8A 53`, load10FC,
+CS1BAB, DGROUP3230. Relocated MZ/code, MAP owner, WORD-store operand, terminal
+CPU PC, frame/stage/resident, full field shapes and every logged RNG counter are
+checked. Complete DGROUP's last fields must equal the separate terminal. New
+scalar samples are I0..N-1; the final after-update snapshot is not relabeled as
+an I sample. Both final prefixes have exactly7500 updates/records. Old3996
+Demo and ordinary contracts remain distinct; their tests continue to pass.
+
+The initial original6000 prefix was valid but Boss stayed setup-only. An
+unmodified9000 continuation waited at6548 while held Shot prevented an input
+change. Normal Enter press/release device events after releasing Shot at that
+observed stall advance the scene. Source dialog opcode'$' uses wait-for-change;
+this interpretation is supported by successful real input, not actor or clock
+patches. The same cue and source input producer drive original and candidate;
+all consumed pre-update inputs and initial RNG/settings agree.
+
+At7500 the actual battle has952 distinct Boss24-byte blocks, phases0/1/2,
+HP range0..3050 and600 nonzero-phase samples from6900. Both cover five natural
+losses. All36 pre-update fields and2,837 ordered RNG calls agree, including final
+pending calls; nine complete pools and22 state owners agree through the longer
+extent. The aggregate remainsfalse for258 end-of-update key_det samples. Full
+Boss pictures, victory/teardown/campaign and physical/general input timing are
+not accepted. A fixed index before the next natural event does not complete
+those requirements.
+
+The longer original attempt independently reaches **natural Game Over** at
+7547 on the sixth hit, with remaining-lives1 before player_update. That routine
+only decrements when rem_lives>1; otherwise it calls gameover_run(). A virtual
+no-frame-progress diagnostic reads guest PC/RAM without altering them. At
+5000ms it shows relative130E:00E3, inside frame_delay(1). Stack returns to
+130E:0149 in input_wait_for_change's release loop, whose caller returns at
+MAIN0AAF:3B1E. Target0AAF:3B19 is `9A 33 01 0E 13`, the actual Game Over wait0
+call. DGROUP2AB2 Count1=0 is a single observation during that loop, not proof
+that IRQ stopped. Held Shot blocks the release-first UI; do not misclassify the
+wait as a Boss division/renderer hang, nor invent completion for a9000 timeout.
+First incomplete attempts and immutable source variants are kept separately.
+
+Public replay:
+
+```sh
+python3 scripts/probes/capture_th04_dos_ordinary_prefix.py --original \
+  --end-after 7500 --dialog-at-frame 6548 --emulator-receipt PINNED \
+  --font-bmp PRIVATE_FONT --output-dir NEW_ORIGINAL
+python3 scripts/probes/capture_th04_dos_ordinary_prefix.py \
+  --end-after 7500 --dialog-at-frame 6548 --build-dir FROZEN_NORMAL --map ITS_MAP \
+  --emulator-receipt PINNED --font-bmp PRIVATE_FONT --output-dir NEW_CANDIDATE
+python3 scripts/probes/compare_th04_bounded_ordinary.py NEW_ORIGINAL NEW_CANDIDATE \
+  --original-main .analysis/targets/th04/main.exe --output /tmp/boss-prefix.json
+```
+
+Expected comparison exit1 retains the post-reset input mismatch; scalar,
+actor_pools and global_states component flags aretrue. Optional
+`--stall-diagnostic-ms 5000` records an incomplete wait snapshot, never a passed
+prefix. Five actual terminal frame/exit/owner/opcode/RNG counterexamples reject;
+six synthetic terminal tests independently reject malformed contexts. Complete
+readonly pixel pairing was not performed for the longer battle.
+
+Replay `.analysis/reconstruction/probes/dos-ordinary-boss-v1437/` routes source
+variants, first6000, incomplete9000/dialog attempts, wait diagnostics, final7500
+pair, controls and retention. Captures `dos-ordinary-boss-v1437-{original,
+original-9000,original-dialog,original-diagnostic,original-7500,candidate-7500}`
+are under `.analysis/runtime/candidates/`. Owned24paths/31blocks retire289.43MiB
+net into1.69MiB anchored archive after SHA/CRC/full temporary size/mode/nsmtime
+restores and protected readback. Compressed memory, opcode/stack diagnostics,
+original/compiler/emulator artifacts, source and receipts stay live.
+`recover.py --restore` restores the retired image/font/raw aliases.
+
+Next pair Boss pictures and the natural Game Over/Continue/process surface;
+complete reconstruction/native behavior remains the objective.
+
 ## Ordinary complete video and retained timing differences (v1436)
 
 Root CI480 tests, catalog, tracking, private target/database and Oracle mutations
