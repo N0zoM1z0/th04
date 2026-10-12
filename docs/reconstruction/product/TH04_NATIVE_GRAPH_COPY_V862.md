@@ -9,10 +9,10 @@ page before writing. Success leaves the destination page selected and returns
 1; an allocation failure changes neither GRCG mode nor access page and
 returns 0. `graph_VramWords` supplies the live plane length.
 
-The bounded historical routine uses `SMEM_WGET`/`SMEM_RELEASE`, while this
-TH04 product candidate borrows a 32,000-byte block at the current 400-line
-setting through `HMEM_ALLOCBYTE`/`HMEM_FREE`. Those two heap entries remain
-unresolved in the no-archive build. The different buffer pool can change
+The bounded historical routine uses `SMEM_WGET`/`SMEM_RELEASE`, while the v862
+TH04 product candidate borrowed a 32,000-byte block at the current 400-line
+setting through `HMEM_ALLOCBYTE`/`HMEM_FREE`. Those two heap entries were still
+unresolved in that no-archive build. The different buffer pool can change
 allocation success under memory pressure; no MAINE runtime page-copy
 checkpoint exists yet. The four-plane copy and page-selection behavior are
 the supported semantic claim, not target bytes or timing.
@@ -44,3 +44,34 @@ The calibration MAP locates `GRAPH_COPY_PAGE` at `098C:3105` with `RETF 2`;
 this is a calibration address, not the original target address. The MZ still
 contains historical-library support and has not reached MAINE in a runtime
 scenario.
+
+
+## DOS SMEM recovery (v1423)
+
+The maintained page-copy owner now uses the shared SMEM cursor rather than
+allocating an HMEM block. Attested original OP 0000:156C..15C1 and MAINE
+0000:11C2..1217 allocate the wrapped WORD byte count, disable GRCG only after
+success, select the opposite/access pages for B/R/G/I, then release the
+workspace. Failure returns AX=0 without port writes; success returns AX=1
+and leaves the destination page selected.
+
+The original helper at OP 0000:1556..156B / MAINE 0000:11AC..11C1 recomputes
+CX as the wrapped DI shifted right after each REP MOVSW. The typed owner
+keeps that rule: after the first read, the count is `words & 0x7FFF`. Zero
+words still perform allocation, eight page selections and release. The
+callee executes real relocated instructions in the component comparison;
+its explicit two-bank RAM model uses DF=0 and does not represent physical
+GDC timing. Complete memory results are retained as deduplicated gzip blobs.
+
+All 160 original/compiled OP and MAINE controls agree at load segments 1000
+and 3333: full retained memory, scratch results, page/GRCG port order, return
+AX and cursor release. The actual v1415 compiled predecessor rejects eight
+zero-length or exactly fitting workspace controls; its eight ordinary-copy
+controls still agree on pixels, ports and AX. No game campaign was run.
+
+The first 1,426-input cold donor is 466389e9. The final profile e60c079f changes
+only the ABI assembly; unchanged objects are checked before reuse and all
+three products are reassembled/relinked and audited. Evidence, both source
+profiles, original/current memory blobs, failed products and the real old
+programs are indexed in the shared SMEM note below. Historical authored exact
+acceptance remains 661/663.

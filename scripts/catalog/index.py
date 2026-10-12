@@ -23,6 +23,7 @@ CATEGORIES = {
 }
 EXTENSIONS = {'.py', '.sh', '.ps1', '.cmd', '.bat', '.java', '.asm', '.gdb'}
 OVERRIDES = {
+    'verify_dos_smem_page_copy.py': ('runtime', 'Compare original and linked DOS SMEM allocation, release, shared HMEM boundaries and complete page-copy memory with seeded DOS/I/O replies.'),
     'verify_dos_text_gaiji.py': ('runtime', 'Compare original and linked DOS text Gaiji memory, store order, wrapped attribute counts and far-call return state.'),
     'verify_dos_gaiji.py': ('runtime', 'Compare original and linked DOS Gaiji writes, port order and far-call return state across WORD address boundaries.'),
     'verify_dos_vsync_wait.py': ('runtime', 'Compare original and linked DOS owner-dispatched VSync waits, word operands, ordered GDC reads and actual IRQ/IRET controls.'),

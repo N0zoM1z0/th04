@@ -5,6 +5,32 @@ using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
 remains open. Updated 2026-10-12.
 
+## DOS shared SMEM and graph page copy (v1423)
+
+`heap.cpp` now owns the upward SMEM cursor alongside descending HMEM.
+`SMEM_WGET` preserves the WORD rounding, shared boundary, segment carry and
+AX/CF distinction; zero bytes can return valid FFF8. Release is an unchecked
+rewind with all registers/flags preserved. Page copy now borrows this
+workspace and keeps the original wrapped-DI count after the first copy.
+The mutable DOS reserve also keeps the original small-block branch.
+
+Final producer 1,426/e60c079f uses the 466389e9 cold C++/ASM donor with verified
+unchanged-object reuse and a freshly assembled independent far-call ABI.
+All 1,242 MAIN/OP/MAINE allocator controls and 160 OP/MAINE page-copy controls
+agree with original instructions at load 1000/3333. The real old v1415 page
+copy rejects eight zero/exact-capacity controls and keeps eight ordinary
+pixel/port controls. Six ABI call bindings, links/MZ/IRQ and MAIN bullet
+switches pass. The original failed MAINE near-call producer remains retained.
+CI passes all 451 tests, tracking, catalog and private target checks.
+Verified compiler/archive and source-backed cache cleanup releases 54.43 MiB
+net. Historical authored exact remains 661/663; no game campaign was run.
+
+Replay: `.analysis/worktrees/dos-smem-page-copy-v1423/.analysis/reconstruction/probes/dos-smem-page-copy-v1423/`.
+Products: `.analysis/build/smem-page-copy-v1423/` inside that frozen tree.
+See [SMEM ownership](reconstruction/product/TH04_NATIVE_HEAP_V863.md) and
+[page copy](reconstruction/product/TH04_NATIVE_GRAPH_COPY_V862.md).
+Continue remaining function recovery and native scene integration.
+
 ## Native elapsed MAINE consumers (v1423)
 
 Development remains active. Verdict and Congratulations in normal Ending,

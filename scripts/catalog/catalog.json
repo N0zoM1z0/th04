@@ -3493,6 +3493,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/runtime/verify_dos_smem_page_copy.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Compare original and linked DOS SMEM allocation, release, shared HMEM boundaries and complete page-copy memory with seeded DOS/I/O replies.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/runtime/verify_dos_text_character.py",
     "category": "support",
     "role": "command",

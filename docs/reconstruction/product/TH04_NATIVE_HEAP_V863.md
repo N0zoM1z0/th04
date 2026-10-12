@@ -122,3 +122,82 @@ python3 scripts/probes/probe_th04_native_heap_runtime.py --output-dir .analysis/
 ```
 
 Repeat the complete comparator for OP and MAINE.
+
+
+## DOS shared SMEM workspace (v1423)
+
+`heap.cpp` now maintains an upward SMEM end mark beside the descending HMEM
+headers. Both allocators use the same free interval. SMEM rounds a WORD byte
+count up to paragraphs, rejects segment carry or a new end beyond the first
+HMEM header, and returns the old end. A zero byte count succeeds without
+advancing the cursor, including when its valid segment happens to equal the
+error value FFF8. `SMEM_RELEASE` rewinds to the supplied WORD without checking
+its range.
+
+These rules are observed in MAIN 0000:21F4, OP 0000:248E and MAINE 0000:209A.
+Each getter's core is 53 bytes, with a six-byte backward automatic-assignment
+tail immediately before its entry; the imported forward Ghidra span crosses
+into the following routine. Release entries are MAIN 0000:21DE, OP
+0000:2478 and MAINE 0000:2084, each 15 bytes. The target bindings check the
+actual data operands before execution.
+
+The automatic DOS assignment uses the mutable `mem_Reserve` WORD, initially
+256 in all three originals. It subtracts that reserve only when the reported
+largest block exceeds it; smaller blocks are requested in full. It also
+retains the original second request if the oversized first query succeeds.
+No DOS free is inserted into that branch.
+
+`smem_abi.asm` is a genuine interface adapter, not an original byte owner.
+C++ cannot publish carry while preserving the public registers. The typed
+core returns a normal DX:AX long containing the segment and carry result;
+the small adapter exposes AX/CF and restores the remaining registers.
+Release saves all registers and flags around the typed cursor write. This
+also distinguishes a valid AX=FFF8 allocation from CF=1 failure.
+
+The final MAIN/OP/MAINE products agree with 1,242 original instruction
+controls at load segments 1000 and 3333. These include byte-count rounding,
+segment overflow, zero allocation at FFF8, unchecked release with both DF
+values, nested workspaces, collision with descending HMEM, hole reuse while
+the workspace fills the lower gap, and both automatic DOS requests under
+mutable reserve/success/failure replies. This is a seeded instruction
+comparison, not a full DOS allocator or physical PC-98 scenario.
+
+The first cold donor 1,426/466389e9 exposed an ABI assembly issue in MAINE:
+TASM interpreted externals declared inside the caller CS as same-segment
+functions and emitted PUSH CS/near fixups. The getter at 0703:6254 then called
+0703:2916 rather than the core at 0703:54F6. The final adapter declares
+externals outside an independent code segment and uses explicit far calls.
+All six actual call destinations now agree with the MAP at their physical
+module addresses.
+
+Final product profile 1,426/e60c079f differs from the cold donor only in
+`smem_abi.asm`. The checked object reuse preserves 650 raw donor objects;
+two recompiled BGIMAGE objects differ only in dependency timestamps and
+remain identical after the existing normalization. The new ABI owner is
+assembled again for all three products. Links, MZ and IRQ audits pass, as
+well as MAIN bullet-table checks. Neither the first donor nor failed
+intermediate builds have been restamped as the final producer.
+
+Replay from the frozen worktree:
+
+```sh
+python3 -B scripts/runtime/verify_dos_smem_page_copy.py \
+  --build .analysis/build/smem-page-copy-v1423 \
+  --output .analysis/reconstruction/probes/dos-smem-page-copy-v1423/replay \
+  --old-build /absolute/path/to/dos-palette-note-v1415/.analysis/build/palette-note-v1415
+python3 -B .analysis/reconstruction/probes/dos-smem-page-copy-v1423/verify_closure.py
+```
+
+Evidence lives in
+`.analysis/worktrees/dos-smem-page-copy-v1423/.analysis/reconstruction/probes/dos-smem-page-copy-v1423/`.
+The closure reads the complete gzip control carriers and deduplicated RAM
+blobs, current/frozen source inputs, actual products and selected OMFs.
+Retention records preserve removed compiler files as content-addressed
+archive members with original paths and metadata. The excluded library
+entries remain semantic owners; historical authored exact stays 661/663.
+
+CI passes 451 tests, ledgers, catalog and private target checks. Full archive
+readback and metadata restoration precede deletion; 11,066 compiler cache
+paths and 550 source-backed Python caches release 54.43 MiB net. All current
+products/MAPs, selected OMFs, failure evidence and 3,923 frozen parent pins
+remain verified.

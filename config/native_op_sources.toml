@@ -153,6 +153,7 @@ asm_sources = [
   "src/shared/hardware/input_state.asm",
   "src/shared/hardware/joystick.asm",
   "src/shared/hardware/palette_state.asm",
+  "src/shared/memory/smem_abi.asm",
   "src/shared/hardware/super_state.asm",
   "src/shared/hardware/planar_blit.asm",
   "src/shared/hardware/super_roll_put.asm",

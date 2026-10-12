@@ -55,6 +55,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_primary_cpu_fault.gdb](../probes/th04_primary_cpu_fault.gdb) | fixture | Run the primary-emulator fault observer with configured symbols/event inputs. |
 | [runtime/fixtures/good_ending.asm](../runtime/fixtures/good_ending.asm) | fixture | Private resident seed for real MAINE Ending tests; bypasses OP/gameplay initialization. |
 | [runtime/verify_dos_gaiji.py](../runtime/verify_dos_gaiji.py) | command | Compare original and linked DOS Gaiji writes, port order and far-call return state across WORD address boundaries. |
+| [runtime/verify_dos_smem_page_copy.py](../runtime/verify_dos_smem_page_copy.py) | command | Compare original and linked DOS SMEM allocation, release, shared HMEM boundaries and complete page-copy memory with seeded DOS/I/O replies. |
 | [runtime/verify_dos_text_gaiji.py](../runtime/verify_dos_text_gaiji.py) | command | Compare original and linked DOS text Gaiji memory, store order, wrapped attribute counts and far-call return state. |
 | [runtime/verify_dos_vsync_lifecycle.py](../runtime/verify_dos_vsync_lifecycle.py) | command | Compare relocated original and linked DOS START/IRQ instructions, including a seeded IRQ during BIOS query. |
 | [runtime/verify_dos_vsync_wait.py](../runtime/verify_dos_vsync_wait.py) | command | Compare original and linked DOS owner-dispatched VSync waits, word operands, ordered GDC reads and actual IRQ/IRET controls. |

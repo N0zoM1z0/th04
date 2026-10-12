@@ -20,7 +20,9 @@ struct HeapBlockHeader {
 static unsigned heap_base_segment;
 static unsigned heap_limit_segment;
 static unsigned heap_first_block_segment; // Lowest linked header; limit when empty.
+static unsigned heap_end_mark_segment; // SMEM grows upward into the same free interval.
 static unsigned heap_dos_owned; // Release the region through DOS only when owned.
+extern "C" unsigned __cdecl mem_Reserve = 256u;
 
 static HeapBlockHeader far *heap_header_at_segment(unsigned segment)
 {
@@ -32,24 +34,25 @@ static void heap_bind_region(unsigned base_segment, unsigned paragraphs, unsigne
 	heap_base_segment = base_segment;
 	heap_limit_segment = base_segment + paragraphs;
 	heap_first_block_segment = heap_limit_segment;
+	heap_end_mark_segment = base_segment;
 	heap_dos_owned = dos_owned;
 }
 
 static int heap_assign_available_dos_block(void)
 {
-	// DOS reports the largest free block in the output word when this oversized
-	// request fails. On success that same word is an allocated segment instead;
-	// release the unexpected allocation and leave the heap unbound.
-	unsigned largest_paragraphs = 0;
+	// The original queries with BX=FFFF, then makes a second allocation.
+	// A successful query leaves BX=FFFF and its allocation owned by DOS;
+	// only a failed query supplies the largest available paragraph count.
+	unsigned largest_paragraphs = 0xFFFFu;
 	if(_dos_allocmem(0xFFFFu, &largest_paragraphs) == 0) {
-		_dos_freemem(largest_paragraphs);
-		return 0;
+		largest_paragraphs = 0xFFFFu;
 	}
-	// Keep 256 paragraphs (4096 bytes) outside the heap for other DOS users.
-	if(largest_paragraphs <= 256u) {
-		return 0;
+	// Subtract the mutable reserve only when the available block exceeds it.
+	// A smaller block is still requested in full.
+	unsigned paragraphs = largest_paragraphs;
+	if(paragraphs > mem_Reserve) {
+		paragraphs -= mem_Reserve;
 	}
-	unsigned paragraphs = largest_paragraphs - 256u;
 	unsigned base_segment = 0;
 	if(_dos_allocmem(paragraphs, &base_segment) != 0) {
 		return 0;
@@ -104,7 +107,8 @@ static unsigned heap_allocate_paragraphs(unsigned paragraphs)
 	if(!allocated_header_segment) {
 		// No reusable hole fits. Carve a new block below the first header,
 		// linking it to the previous first block or the exclusive sentinel.
-		if((heap_first_block_segment - heap_base_segment) < block_paragraphs) {
+		if(heap_end_mark_segment > heap_first_block_segment ||
+		   (heap_first_block_segment - heap_end_mark_segment) < block_paragraphs) {
 			return 0;
 		}
 		allocated_header_segment = heap_first_block_segment - block_paragraphs;
@@ -163,6 +167,7 @@ extern "C" int TH04_PASCAL mem_unassign(void)
 	heap_limit_segment = 0;
 	heap_first_block_segment = 0;
 	heap_dos_owned = 0;
+	heap_end_mark_segment = 0;
 	if(dos_owned && _dos_freemem(base_segment) != 0) {
 		return 0;
 	}
@@ -239,4 +244,27 @@ extern "C" void TH04_PASCAL hmem_free(void __seg *data_segment_handle_arg)
 		previous_header_segment = header_segment;
 		header_segment = next_header_segment;
 	}
+}
+
+// Internal typed result: low WORD is AX's segment/error, high WORD is carry.
+// The public register-preserving Pascal adapters are in smem_abi.asm.
+extern "C" unsigned long TH04_PASCAL th04_smem_wget_core(unsigned byte_count)
+{
+    if(!heap_base_segment && !heap_assign_available_dos_block()) {
+        return 0x1FFF8UL;
+    }
+    const unsigned paragraphs = (byte_count >> 4) + ((byte_count & 15u) != 0);
+    const unsigned old_end_mark = heap_end_mark_segment;
+    const unsigned long next_end_mark = (unsigned long)old_end_mark + paragraphs;
+    if(next_end_mark > 0xFFFFUL || next_end_mark > heap_first_block_segment) {
+        return 0x1FFF8UL;
+    }
+    heap_end_mark_segment = (unsigned)next_end_mark;
+    return old_end_mark;
+}
+
+extern "C" void TH04_PASCAL th04_smem_release_core(unsigned segment)
+{
+    // SMEM_RELEASE is an unchecked stack rewind, not HMEM free/coalescing.
+    heap_end_mark_segment = segment;
 }
