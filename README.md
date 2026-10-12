@@ -54,15 +54,15 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. Producer551/e9fa254c restores the original
-SUPER byte kernel and integrates it into actual registration drawing. Both GNU
-and optimized UBSan pass84 programs/82 CTests,492 original controls,
-155 complete drawing captures and30 physical save/restart routes each.
-Explicit providers preserve zero counts, source/destination wrap and hardware
-write ordering. Natural unowned score RAM, physical timing/scanout, other waits,
-broader gameplay and Windows remain open; see the [handoff](docs/RE_HANDOFF.md).
+Native development is active. Producer554/31e6b3d7 restores MAIN pause:
+Esc opens the original menu, Resume continues the same frame, and Quit returns
+to fresh OP. GNU and optimized UBSan each pass84 programs/82 CTests,
+768 original controls,8 actual frontend routes and ordinary private Linux
+SDL input checks. Prior full Normal-clear failure remains revoked. Broader
+gameplay parity, other waits, unowned score RAM, physical timing/scanout and
+Windows remain open; see the [handoff](docs/RE_HANDOFF.md).
 
-Native branch head: `58383ea`.
+Native branch head: `853e012`.
 
 Current shared DOS restores upward SMEM and descending HMEM ownership and
 the graph page-copy workspace (producer 1,426/e60c079f). All 1,242 allocator and

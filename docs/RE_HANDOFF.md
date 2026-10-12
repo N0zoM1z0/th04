@@ -5,52 +5,61 @@ using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
 remains open. Updated 2026-10-12.
 
-## Native SUPER byte kernel and registration consumer (v1430)
+## Native MAIN pause, resume and Quit (v1431)
 
-The actual registration Renderer now uses recovered mask/B/R/G/E byte passes,
-including the four X-byte/width alignment branches and original GRCG ports.
-Owned SCNUM2 pixels generate planar storage once; release clears that owner.
-The kernel accepts explicit source-read and hardware-write callbacks, preserving
-WORD SI/DI wrap, cross-boundary WORD reads, signed patched row strides and
-ordered byte/WORD writes. It does not manufacture process or low-memory bytes.
+Ordinary MAIN Esc now enters its pause menu. Actors, stage, player resources,
+score and RNG remain suspended while IRQ/audio/text blink service continues.
+The original three gaiji labels at26:12/14/15 and their C1/E9 attributes are
+retained. Up/Down toggles once per release/press; Esc selects Resume, Z/Enter
+confirms, and Q returns Quit immediately without the three space erasures.
+Other confirmations wait for final release and erase four ANK cells per row.
+The completed pause returns latched keys and unused time. The caller resumes
+its suspended frame once; Quit publishes run state and returns to fresh OP,
+with released MAIN resources and a clean second MAIN. Pause Esc is consumed
+by that menu and is not requeued as a new pause after Resume.
 
-Original MAINE 0000:275E..290F executes its self-modifying body with DF clear,
-controlled geometry and a seeded source at9000:0000, at loads1000/3333.
-A zero height means256 rows. Even-aligned zero width enters the CH loop256
-times; odd-aligned zero width decrements the WORD count to255, with first/last
-byte reads. Both read512 bytes per row per pass, including source wrap.
-These are provider controls, not observations of natural malformed-file RAM.
-SUPER_ENTRY_AT 0000:2610..2683 also shows initial dimension-table clearing
-without pointer-table clearing; actual process startup ownership remains open.
+Original MAIN DEMO_TEXT0AAF:07DF..08FD (load0B2CF..0B3ED,287 bytes), full
+input_wait130E:0133..0186, frame_delay130E:00D7..00EB and VSYNC_WAIT0000:2462..
+2487 execute with legal MZ relocations/DGROUP2134 at loads1000/3333.
+Initial/final busy reset-sense loops sample immediately then at explicitly
+chosen counted-edge observation points, without clearing Count1. Those points
+are keyboard/CPU cadence adapters, not measured polling costs. Menu waits
+preserve actual Count1-only clearing and pre/post OR. Physical CPU, keyboard,
+active-PMD timing and full-game paired acceptance remain open.
 
-Cold551/e9fa254c GNU Release and optimized UBSan/bounds each build84 programs
-and pass82 CTests. Both agree with492 original controls /
-246 native vectors on all1,489,840 ordered read/port/write
-events. All shifts, both byte alignments, odd/even/zero/large widths, zero
-height and wrapped source/destination coordinates are covered. Each compiler
-passes155 complete drawing captures (the entire prior drawing fixture corpus
-plus64 signed-high-digit captures) and30 actual registration/save/fresh OP/
-second MAIN routes. Pixel controls retain BFNT/CGROM/GRCG/scanout adapters.
-Five compiled mutations reject zero-height/width returns, source reset per
-plane, wrong source wrap and unsigned stride; unchanged control passes.
+Cold554/31e6b3d7 GNU Release and optimized UBSan/bounds each build84 programs
+and pass82 CTests. Each agrees with768 original controls and
+384 coarse plus384 one-ms partitions on complete events/keys/
+counters/time/selection/result/latch streams. Eight actual frontend routes per
+compiler cover both characters and Esc/Z/menu-Quit/Q, actor/score/RNG freeze,
+raw menu TRAM, resource release/fresh OP/second MAIN.16 original putsa/putca
+controls at loads1000/2000 validate all12 occupied menu cells' code/attribute
+words per compiler; other cells and full graphics are outside that check.
+Each ordinary SDL/private TCP-disabled Linux Xvfb run additionally exercises
+Esc/Z Resume, Q Quit and second MAIN, with read-only traces and zero audio
+opens. No actor/hit/score/clock writes or Windows focus/input are used.
+Four compiled mutations reject cancel-as-Quit, Q erasure, skipped release and
+stale live key_det; unchanged compiled control passes.
 
-Initial551/425fc58e reached the original final RETF6 with all preceding drawing
-events, but Unicorn's mixed return lost the target IP. The current Oracle
-checks actual CA0600 and the original return stack, then adapts only that
-return boundary. Failed source/programs/trace remain distinct. CPU timing,
-physical GRCG/scanout, unowned malformed-score RAM, other waits, broader gameplay
-and Windows remain open. Historical exact stays661/663; the full goal is active.
+Retained dev384-control failure differed only in live key_det during waits;
+reset-sense and OR-sense now update that observable field before STOP. The
+first actual fixture wrongly started from missing/setup CFG; a valid encoded
+configuration fixes its own entry. A dummy-video window probe and later real
+SDL Esc requeue failure remain distinct. Compiler namespace failures and all
+source/program/trace evidence are retained. Prior UBSan Normal-clear acceptance
+stays revoked:0x19 is an unplayed sentinel after a failed survival route; this
+batch does not retry or promote that full-route claim.
 
-Replay: `.analysis/reconstruction/probes/native-super-kernel-v1430/`;
-producer: `.analysis/worktrees/native-super-kernel-v1430/.analysis/port64/native-super-kernel-v1430-v2/`.
-`verify_super_kernel.py` owns original streams; `pixels.py` owns full drawings.
-Archive/content/CRC/mode/nsmtime/temp-restore retirement saves
-835.30 MiB net. Source/all programs/fixtures/receipts remain
-live; cache, captures and original/native aliases recover with
-`verify_retention.py --restore --prefix`. Continue actual RAM-provider ownership
-and remaining source recovery/migration.
+Replay: `.analysis/reconstruction/probes/native-main-pause-v1431/`;
+producer: `.analysis/worktrees/native-main-pause-v1431/.analysis/port64/native-main-pause-v1431-v5/`.
+`verify_main_pause.py` owns original controls; `window.py` owns private SDL keys.
+Content/CRC/mode/nsmtime/temp-restore retirement saves256.67 MiB net.
+Source/all programs/fixtures/receipts/failures remain live or losslessly recover
+with `verify_retention.py --restore --prefix`. Full goal stays active; broader
+Boss/death/process parity, unowned score RAM, other waits, physical scanout and
+Windows remain open. Historical exact stays661/663.
 
-Published native head: `58383ea13fc6d5b942777c9a4cbbc01097e2d571`.
+Published native head: `853e012509849ae2f218972594e67eb6fd591ceb`.
 
 ## Native elapsed registration and all three callers (v1428)
 
@@ -149,6 +158,7 @@ Continue remaining function recovery and native scene integration.
 | Subject | Retained producer | Evidence and recovery |
 | --- | --- | --- |
 | Registration numeral requests/WORD slots | v1429,548/fc9b02eb | VSync note, `native-numeral-slot-v1429` full controls/recovery |
+| SUPER byte kernel/registration | v1430,551/e9fa254c | SUPER sprite note, `native-super-kernel-v1430` controls/recovery |
 | Full Game Over/Continue/Quit | v1427,544/4a62eb34 | VSync note, `native-gameover-elapsed-v1427` receipts |
 | MAIN good/bad/Extra elapsed fade16 | v1426,543/70986a2b | VSync note, `native-main-exit-fade-v1426` receipts |
 | Cutscene/Ending elapsed requests | v1425,542/59d19121 | [VSync note](reconstruction/product/TH04_NATIVE_VSYNC_V864.md), `native-cutscene-elapsed-v1425` receipts |
