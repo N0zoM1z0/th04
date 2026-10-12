@@ -258,3 +258,6 @@ Escape-byte projection, complete original scripts and archived transcript recove
 
 The VSync note routes v1426 actual MAIN good/bad/Extra elapsed fade16,
 original exit/counter controls, same-admission input failure and archive recovery.
+
+The VSync note routes v1427 full Game Over elapsed E/K/counter controls,
+Continue/Quit suspension/host writes, full displays and lossless trace recovery.

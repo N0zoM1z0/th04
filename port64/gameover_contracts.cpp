@@ -75,8 +75,45 @@ bool gameover_render_cli(int argc,char** argv) {
     }
     return true;
 }
+void gameover_elapsed(const char* path) {
+    using namespace th04::portable;
+    std::ifstream in(path);require(bool(in),"Game Over elapsed vectors missing");
+    unsigned stage,used,inc,profile,index=0;std::uint64_t seed,phase,horizon,chunk;
+    while(in>>stage>>used>>inc>>seed>>phase>>profile>>horizon>>chunk) {
+        vsync::RasterClock clock;clock.counter().start(static_cast<std::uint16_t>(inc));clock.counter().interrupts(seed);clock.advance(phase);
+        i::ScoreState resources;resources.power=128;resources.power_overflow=42;resources.dream_items_collected=7;
+        resources.dream_score=1280;resources.remaining_lives=1;resources.remaining_bombs=0;
+        s::Snapshot board;board.digits={std::uint8_t(used),9,8,7,6,5,4,3};
+        for(unsigned k=0;k<8;++k){board.hiscore[k]=k;board.temporary[k]=8+k;board.hud[k]=16+k;}
+        board.delta=12345;board.frame_delta=67890;board.unused=137;board.extends=5;board.hiscore_popup_shown=1;
+        unsigned saves=0;
+        std::cout<<"CASE "<<index++<<'\n';
+        g::Context context{resources,board,std::uint8_t(stage),3,2,[&](const g::Event& e) {
+            std::cout<<"E "<<clock.now()<<' '<<clock.counter().one()<<' '<<clock.counter().two()<<' '<<clock.counter().accumulator()<<' ';event(e);
+        },[&]{++saves;}};
+        const auto keys=[&] {
+            constexpr std::uint64_t hz=2631575,h=106,v=440,r=407;
+            const auto t=clock.now()*hz;const auto n=t<r*h*1000000000 ? 0 : (t-r*h*1000000000)/(v*h*1000000000)+1;
+            const auto on=n%16<5 || n%16>=10;
+            const std::uint16_t value=profile==3 ? 0 : profile==2 ? (n<140 ? 0x20 : (n>=180 && on ? 0x1000 : 0)) : on ? (profile==1 ? 0x1000 : 0x20) : 0;
+            std::cout<<"K "<<clock.now()<<' '<<value<<'\n';return value;
+        };
+        g::Scene scene(context,0,&clock);auto left=horizon;
+        do {
+            const auto step=chunk ? std::min(left,chunk) : left;
+            const auto unused=scene.advance_elapsed(step,keys);left-=step-unused;
+            if(scene.finished() || !left)break;
+        }while(true);
+        const int route=!scene.finished() ? -1 : scene.phase()==g::Phase::continue_run ? 0 : scene.phase()==g::Phase::maine ? 1 : 2;
+        std::cout<<"STOP "<<clock.now()<<' '<<left<<' '<<route<<' '<<scene.tone()<<' '<<int(resources.power)<<' '
+            <<int(resources.dream_items_collected)<<' '<<int(resources.remaining_lives)<<' '<<int(resources.remaining_bombs)<<' '<<int(board.digits[0])
+            <<' '<<clock.counter().one()<<' '<<clock.counter().two()<<' '<<clock.counter().accumulator()<<' '<<saves<<'\n';
+    }
+    require(in.eof(),"malformed Game Over elapsed vector");
+}
 bool gameover_cli(int argc,char** argv) {
     if(argc!=3)return false;
+    if(std::string(argv[1])=="--gameover-elapsed") {gameover_elapsed(argv[2]);return true;}
     const bool scene_mode=std::string(argv[1])=="--gameover-scene";
     if(!scene_mode && std::string(argv[1])!="--gameover-menu")return false;
     std::ifstream input(argv[2]);require(bool(input),"Game Over fixture missing");

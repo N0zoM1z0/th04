@@ -33,7 +33,23 @@ Menu::Menu(Context& c,std::uint16_t initial):context_(&c),previous_sample_(initi
 }
 void Menu::advance(std::uint16_t held) {
     if(choice_!=Choice::pending)return;
-    auto& c=*context_;const auto keys=std::uint16_t(previous_sample_|held);previous_sample_=held;
+    const auto keys=std::uint16_t(previous_sample_|held);previous_sample_=held;
+    sense(keys);
+    if(choice_==Choice::pending) {emit(context_->sink,Kind::delay,0,0,1);++ticks_;}
+}
+Menu::Menu(Context& c,const maine::KeySource& sample):Menu(c,std::uint16_t(0)) {
+    if(choice_==Choice::pending)previous_sample_=sample();
+}
+void Menu::advance_sampled(const maine::KeySource& sample) {
+    if(choice_!=Choice::pending)return;
+    sense(std::uint16_t(previous_sample_|sample()));
+    if(choice_==Choice::pending) {
+        previous_sample_=sample();
+        emit(context_->sink,Kind::delay,0,0,1);++ticks_;
+    }
+}
+void Menu::sense(std::uint16_t keys) {
+    auto& c=*context_;
     bool confirmed=false;
     if(!previous_input_) {
         previous_input_=keys;
@@ -45,7 +61,7 @@ void Menu::advance(std::uint16_t held) {
         if(keys&0x1000u) {selected_=1;confirmed=true;}
         else if(keys&(0x2000u|0x20u))confirmed=true;
     } else previous_input_=keys;
-    if(!confirmed) {emit(c.sink,Kind::delay,0,0,1);++ticks_;return;}
+    if(!confirmed)return;
     if(selected_) {choice_=Choice::quit;return;}
     emit(c.sink,Kind::continue_score);
     if(!c.save_continue)throw std::logic_error("Continue requires score persistence consumer");
@@ -60,16 +76,20 @@ void Menu::advance(std::uint16_t held) {
     c.scoreboard.unused=c.scoreboard.extends=c.scoreboard.hiscore_popup_shown=0;
     emit(c.sink,Kind::hud_score);choice_=Choice::continue_run;
 }
-Scene::Scene(Context& c,std::uint16_t held):context_(&c),previous_sample_(held) {
+Scene::Scene(Context& c,std::uint16_t held,vsync::RasterClock* clock):clock_(clock),context_(&c),previous_sample_(held) {
     if(c.stage==5) {emit(c.sink,Kind::bad_ending);phase_=Phase::bad_ending;return;}
     pump(held);
+}
+void Scene::delay_one() {
+    delay_=1;emit(context_->sink,Kind::delay,0,0,1);
+    if(clock_)count_wait_.emplace(*clock_,1);
 }
 void Scene::pump(std::uint16_t held) {
     auto& c=*context_;
     for(;;) {
         switch(phase_) {
         case Phase::initial_out:case Phase::final_out:
-            if(!fade_out(frame_,c.sink)) {delay_=1;emit(c.sink,Kind::delay,0,0,1);return;}
+            if(!fade_out(frame_,c.sink)) {delay_one();return;}
             if(phase_==Phase::initial_out) {tone_=50;emit(c.sink,Kind::tone,0,0,50);phase_=Phase::initial_in;}
             else if(continued_) {tone_=100;emit(c.sink,Kind::tone,0,0,100);phase_=Phase::final_in;}
             else {
@@ -79,7 +99,7 @@ void Scene::pump(std::uint16_t held) {
             }
             break;
         case Phase::initial_in:case Phase::final_in:
-            if(!fade_in(frame_,c.sink)) {delay_=1;emit(c.sink,Kind::delay,0,0,1);return;}
+            if(!fade_in(frame_,c.sink)) {delay_one();return;}
             if(phase_==Phase::final_in) {emit(c.sink,Kind::wipe);phase_=Phase::continue_run;return;}
             phase_=Phase::slide_in;slide_=50;break;
         case Phase::slide_in:case Phase::slide_out:
@@ -90,12 +110,14 @@ void Scene::pump(std::uint16_t held) {
             if(phase_==Phase::slide_in && slide_<=8) {phase_=Phase::slide_out;slide_=8;break;}
             if(phase_==Phase::slide_out && slide_>=20) {
                 glyphs(c.sink,20,12,"\xb0\xaa\xb6\xae\xb8\xbf\xae\xbb",0xe1);
-                emit(c.sink,Kind::wait);emit(c.sink,Kind::delay,0,0,1);
+                emit(c.sink,Kind::wait);
+                if(!clock_)emit(c.sink,Kind::delay,0,0,1);
                 phase_=Phase::release;previous_sample_=held;return;
             }
             emit(c.sink,Kind::gaiji,slide_,12,0xb0,0xe1);
-            emit(c.sink,Kind::delay,0,0,1);delay_=1;slide_erase_=true;return;
+            delay_one();slide_erase_=true;return;
         case Phase::menu:
+            if(clock_)return;
             if(menu_->choice()==Choice::pending) {
                 menu_->advance(held);
                 if(menu_->choice()==Choice::pending) {delay_=1;return;}
@@ -108,6 +130,7 @@ void Scene::pump(std::uint16_t held) {
 }
 void Scene::advance(std::uint16_t held) {
     if(finished())return;
+    if(clock_)throw std::logic_error("timed Game Over requires elapsed admission");
     ++ticks_;
     if(phase_==Phase::blackout) {
         if(--fade_left_)return;
@@ -130,5 +153,50 @@ void Scene::advance(std::uint16_t held) {
     }
     if(delay_ && --delay_)return;
     pump(held);
+}
+std::uint64_t Scene::advance_elapsed(std::uint64_t ns,const maine::KeySource& keys,const maine::ElapsedSink& service) {
+    if(!clock_ || !keys)throw std::logic_error("elapsed Game Over requires clock and keys");
+    for(;;) {
+        if(finished())return ns;
+        if(count_wait_) {
+            if(count_wait_->ready()) {
+                count_wait_.reset();delay_=0;++ticks_;
+            } else {
+                if(!ns)return 0;
+                const auto step=clock_->counter().active() ? std::min(ns,count_wait_->until_ready()) : ns;
+                clock_->advance(step);if(service)service(step);ns-=step;continue;
+            }
+        }
+        if(phase_==Phase::release || phase_==Phase::press) {
+            if(!input_wait_)input_wait_.emplace(std::vector<maine::Request>{{maine::RequestKind::wait,0}},clock_);
+            const auto before=input_wait_->ticks();
+            ns=input_wait_->advance_elapsed(ns,[&] {
+                const auto held=keys();
+                if(input_before_)emit(context_->sink,Kind::delay,0,0,1);
+                input_before_=!input_before_;return held;
+            },{},{},service);
+            ticks_+=input_wait_->ticks()-before;
+            if(input_wait_->status()!=maine::AnimationStatus::stopped) {
+                phase_=input_wait_->status()==maine::AnimationStatus::release ? Phase::release : Phase::press;return 0;
+            }
+            input_wait_.reset();emit(context_->sink,Kind::wipe);
+            menu_=std::make_unique<Menu>(*context_,keys);phase_=Phase::menu;
+        } else if(phase_==Phase::blackout) {
+            if(!blackout_)blackout_.emplace(std::vector<maine::Request>{{maine::RequestKind::fade,0,0,4}},clock_);
+            const auto before=blackout_->ticks();
+            ns=blackout_->advance_elapsed(ns,keys,{},[this](int tone){tone_=tone;emit(context_->sink,Kind::tone,0,0,tone);},service);
+            ticks_+=blackout_->ticks()-before;
+            if(blackout_->status()!=maine::AnimationStatus::stopped)return 0;
+            blackout_.reset();emit(context_->sink,Kind::maine);phase_=Phase::maine;return ns;
+        }
+        if(phase_==Phase::menu) {
+            if(menu_->choice()==Choice::pending) {
+                menu_->advance_sampled(keys);
+                if(menu_->choice()==Choice::pending){delay_=1;count_wait_.emplace(*clock_,1);continue;}
+            }
+            continued_=menu_->choice()==Choice::continue_run;frame_=32;phase_=Phase::final_out;
+        }
+        pump(0);
+    }
 }
 } // namespace th04::portable::gameover

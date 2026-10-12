@@ -1,6 +1,7 @@
 #pragma once
 #include "item_system.hpp"
 #include "score.hpp"
+#include "maine_animation.hpp"
 #include <functional>
 #include <memory>
 #include <vector>
@@ -29,12 +30,15 @@ enum class Choice { pending, continue_run, quit };
 class Menu {
 public:
     Menu(Context&,std::uint16_t initial_keys=0);
+    Menu(Context&,const maine::KeySource&);
     void advance(std::uint16_t key_det);
+    void advance_sampled(const maine::KeySource&);
     Choice choice() const {return choice_;}
     unsigned selected() const {return selected_;}
     std::uint16_t previous_input() const {return previous_input_;}
     std::uint32_t ticks() const {return ticks_;}
 private:
+    void sense(std::uint16_t keys);
     Context* context_;
     Choice choice_=Choice::pending;
     unsigned selected_=0;
@@ -49,15 +53,22 @@ enum class Phase {
 // MAIN actors/counters must remain suspended until this scene yields a route.
 class Scene {
 public:
-    Scene(Context&,std::uint16_t initial_keys=0);
+    Scene(Context&,std::uint16_t initial_keys=0,vsync::RasterClock* clock=nullptr);
     void advance(std::uint16_t key_det);
+    std::uint64_t advance_elapsed(std::uint64_t,const maine::KeySource&,const maine::ElapsedSink& service={});
+    bool timed() const {return clock_!=nullptr;}
     Phase phase() const {return phase_;}
     bool finished() const {return phase_>=Phase::continue_run;}
     std::uint32_t ticks() const {return ticks_;}
     int tone() const {return tone_;}
     unsigned selected() const {return menu_ ? menu_->selected() : 0;}
 private:
+    void delay_one();
     void pump(std::uint16_t held);
+    vsync::RasterClock* clock_;
+    std::optional<vsync::Delay> count_wait_;
+    std::optional<maine::Animation> input_wait_,blackout_;
+    bool input_before_=true;
     Context* context_;
     Phase phase_=Phase::initial_out;
     std::uint8_t frame_=32;

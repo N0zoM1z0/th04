@@ -88,7 +88,6 @@ void ScoreRoute::verdict_event(const verdict::Event& e) {
 
 std::uint64_t ScoreRoute::advance_elapsed(std::uint64_t ns,std::uint16_t held) {
     if(!timed_wait() || failed_)throw std::logic_error("route phase has no elapsed owner");
-    ++ticks_;
     const auto keys=[held]{return input_from_main_actions(held);};
     const auto service=[this](std::uint64_t step){if(audio_)audio_->advance_elapsed(step);};
     try {
@@ -97,9 +96,13 @@ std::uint64_t ScoreRoute::advance_elapsed(std::uint64_t ns,std::uint16_t held) {
             if(initial_wait_->ready()){initial_wait_.reset();start_registration(held);return ns;}
             if(!ns)return 0;
             auto step=ns;if(clock_->counter().active())step=std::min(step,initial_wait_->until_ready());
-            clock_->advance(step);service(step);ns-=step;continue;
+            const auto before=clock_->counter().two();
+            clock_->advance(step);service(step);ns-=step;
+            ticks_+=static_cast<std::uint16_t>(clock_->counter().two()-before);continue;
         } else {
+            const auto before=verdict_->ticks();
             ns=verdict_->advance_elapsed(ns,keys,[this](const verdict::Event& e){verdict_event(e);},service);
+            ticks_+=verdict_->ticks()-before;
             if(verdict_->status()!=verdict::Status::stopped)return 0;
             sound_.push_back({cutscene::Kind::bgm_control,0x204});
             if(audio_)audio_->handle({sound::ActionKind::command,0x204});

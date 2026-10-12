@@ -358,7 +358,7 @@ player::LifeContext State::life_context() {
                 if(!continue_save_)throw std::logic_error("Continue requires a real score store");
                 continue_save_(scoreboard_.digits);
             }});
-        gameover_=std::make_unique<gameover::Scene>(*gameover_context_,last_input_);
+        gameover_=std::make_unique<gameover::Scene>(*gameover_context_,last_input_,gameover_clock_);
         return std::nullopt;
     };
     context.character_bomb=[this](player::LifeState& state) {
@@ -368,6 +368,11 @@ player::LifeContext State::life_context() {
             sound_action(sound::ActionKind::play,std::uint16_t(draw.value));
     };
     return context;
+}
+std::uint64_t State::advance_gameover_elapsed(std::uint64_t ns,std::uint16_t held,const maine::ElapsedSink& service) {
+    if(!gameover_ || !gameover_->timed())throw std::logic_error("Game Over has no elapsed owner");
+    gameover_events_.clear();last_input_=player::input_from_host_actions(held);
+    return gameover_->advance_elapsed(ns,[this]{return last_input_;},service);
 }
 void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion::Subpixel scroll_delta,stage::Background* background) {
     if(demo_exit_requested_)return;

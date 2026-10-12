@@ -15,6 +15,7 @@ import sys
 
 PORT_FILES = (
     "port64/verify_main_exit_fade.py",
+    "port64/verify_gameover_elapsed.py",
     "port64/verify_cutscene_elapsed.py",
     "port64/verify_staff_elapsed.py",
     "port64/maine_elapsed_contracts.cpp",

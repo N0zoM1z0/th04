@@ -1668,7 +1668,8 @@ public:
             if(continue_congratulations_ && ending_->phase()==maine::Phase::congratulations_pending)ending_->start_congratulations();
         }
         const bool elapsed_wait=(ending_ && ending_->timed_wait()) ||
-            (score_route_ && score_route_->timed_wait()) || (extra_route_ && extra_route_->timed_wait());
+            (score_route_ && score_route_->timed_wait()) || (extra_route_ && extra_route_->timed_wait()) ||
+            (main_ && main_->game_over() && main_->game_over()->timed());
         const auto sound_owner=sound_;
         const auto refresh_ns=std::uint64_t(frame_period.count())*slowdown();
         if(!elapsed_wait)startup_clock_.advance(refresh_ns);
@@ -1773,6 +1774,12 @@ public:
             } else ending_->advance(maine::input_from_main_actions(held_input),ending_observer_);
             if(repaint) frame_=render();
             return;
+        }
+        std::uint64_t gameover_remaining=0;
+        if(main_ && main_->game_over() && main_->game_over()->timed()) {
+            gameover_remaining=main_->advance_gameover_elapsed(refresh_ns,held_input,
+                [this](std::uint64_t step){sound_timeline_->advance_elapsed(step);});
+            if(!main_->game_over()->finished()) {if(repaint)frame_=render();return;}
         }
         const auto host_start=Clock::now();
         if (live_main()) {
@@ -1941,6 +1948,12 @@ public:
                         gameover_renderer_.reset();dialog_scene_.reset();script_.reset();main_.reset();release_sound();sprites_.reset();
                     },false,sound_timeline_.get(),&startup_clock_);
                 screen_=Screen::maine;
+            }
+            if(gameover_remaining) {
+                if(score_route_)gameover_remaining=score_route_->advance_elapsed(gameover_remaining,held_input);
+                else if(ending_ && ending_->timed_wait())gameover_remaining=ending_->advance_elapsed(gameover_remaining,
+                    [held_input]{return maine::input_from_main_actions(held_input);},ending_observer_);
+                advance_tail(gameover_remaining,held_input);
             }
             if (repaint) frame_ = render();
             if(host_timing_ && main_ && main_->frames()!=before) {
@@ -2167,6 +2180,10 @@ private:
         }
         if(score_store_)score_store_=std::make_unique<score_file::HostStore>(score_store_->path().parent_path());
         main_=std::make_unique<gameplay::State>(application_,mode_,player::LifeState{},score_store_.get());
+        // MAIN has its own counter BSS; process replacement keeps raster phase.
+        startup_clock_.counter()=th04::portable::vsync::Counter{};
+        startup_clock_.counter().start();
+        main_->set_gameover_clock(&startup_clock_);
         const auto& r=application_.resident();
         if(r.demo_number)main_->set_demo_replay(assets_->replays[r.demo_number-1]);
         main_->set_gameover_sink([this](const gameover::Event& event) {

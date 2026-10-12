@@ -187,6 +187,8 @@ public:
     const std::vector<gameover::Event>& gameover_events() const {return gameover_events_;}
     void set_sound_sink(sound::ActionSink sink) {sound_sink_=std::move(sink);}
     const gameover::Scene* game_over() const {return gameover_.get();}
+    void set_gameover_clock(vsync::RasterClock* clock) {gameover_clock_=clock;}
+    std::uint64_t advance_gameover_elapsed(std::uint64_t ns,std::uint16_t held,const maine::ElapsedSink& service={});
     bool score_registration_requested() const {return score_registration_requested_;}
     void set_continue_save(std::function<void(const score::Digits&)> save) {continue_save_=std::move(save);}
     void set_gameover_sink(gameover::Sink sink) {gameover_sink_=std::move(sink);}
@@ -346,5 +348,6 @@ private:
     std::uint32_t frames_ = 0;
     std::optional<gameover::Context> gameover_context_;
     std::unique_ptr<gameover::Scene> gameover_;
+    vsync::RasterClock* gameover_clock_=nullptr;
 };
 } // namespace th04::portable::gameplay
