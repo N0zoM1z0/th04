@@ -48,6 +48,14 @@ player source change. OP/MAINE/ZUN agree between the two variants. Export
 preserves the saved image's nonproduct files, configuration and scores.
 Use English Windows input for Z/X gameplay keys.
 
+The newer Continue fixture uses `.analysis/build/dos-continue-alias-v1439/`:
+ordinary MAIN200279/778641ab aliases the Continue count to score byte0. It pairs
+8,000 original updates through natural Game Over/Continue on full scalar/RNG,
+pool and state checks, retaining263 post-reset input differences. This is a
+MAIN-only comparison with original supporting products, not a new installed
+Windows package or a complete four-product route. See the differential note
+for producer receipts and picture/regression scope.
+
 ## Retained product identities
 
 Current inventories: `.analysis/build/th04-{normal,invincible}/build.json`.

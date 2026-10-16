@@ -37,7 +37,9 @@ public _resident
 _resident dd ?
 
 public _continues_used, _score, _hiscore, _score_unused
-_continues_used db ?
+; Continue count is the first byte of score_lebcd_t, not separate storage.
+; Original MAIN0AAF:3CDA increments the score base at DGROUP4349.
+_continues_used label byte
 _score          db 8 dup(?)
 _hiscore        db 8 dup(?)
 _score_unused   db ?

@@ -21,7 +21,18 @@ describe recorded historical evidence, not a fresh availability guarantee.
 Recover original frozen inputs or create a newly attested producer from Git;
 do not rewrite old receipts. Both development goals remain active.
 
-## Natural Continue exposes a product score alias defect (v1439)
+## Natural Continue score alias repaired (v1439)
+
+The product score BSS now aliases `_continues_used` to the first score byte.
+Fresh ASM/link with verified unchanged objects publishes MAIN200279/778641ab
+under `.analysis/build/dos-continue-alias-v1439/`; producer is
+`product-20261016-043629-1b1b2afa-main`. New MAP binds both names to242E:B17C.
+OMF/MZ/IRQ/switch gates pass. The fixed pair now agrees over8,000 updates on
+consumed input, all36 fields/3,042 ordered RNG calls, nine complete pools and22
+state blocks, including the actual7547/7548 Continue. The companion aggregate
+still fails for263 post-reset input samples. Full-picture and complete Demo
+regressions for this new producer remain separate checks; old frozen evidence
+keeps its own producer. Historical exact inputs/ledgers are unchanged.
 
 Original and old f21a5c7c product now run through natural Game Over/Continue to
 8,000 updates using actual release-first keyboard input, with no gameplay
@@ -33,8 +44,8 @@ target MAIN0AAF:3CDA increments the score's first byte at DGROUP4349. New strict
 Continue ownership/reset/cue guards reject this old producer. Preserve the
 complete failure; do not accept Continue merely because gameplay resumes.
 
-Next fix product score storage aliasing, rebuild/replay affected product
-behavior, then advance Quit/MAINE/fresh OP/resident process routes. All438
+Continue with affected product picture/Demo regressions, then advance
+Quit/MAINE/fresh OP/resident process routes. All438
 historical MAIN exact inputs exclude this product-only BSS owner; historical
 accepted inputs remain unchanged. Eleven new controls and root CI506/private
 gates pass. Evidence/source index:

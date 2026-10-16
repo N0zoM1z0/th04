@@ -63,6 +63,13 @@ post-reset input differences remain 253 in these video captures and 259 in
 their separate controls. These new observations preserve the historical
 producer receipts and do not complete Boss defeat or Game Over/Continue routes.
 
+The next natural Game Over/Continue comparison exposed separate product storage
+for the Continue counter and score's first byte. Their alias is now repaired.
+The new MAIN agrees with the original over8,000 updates on consumed input,
+score/RNG, nine pools and22 state blocks, including real Continue and resumed
+gameplay. Its companion retains263 post-reset input differences. Full-picture
+regressions, Quit/MAINE/fresh OP and complete routes remain separate requirements.
+
 Native x64 source lives on `port/modern-64`. Scoped Linux Reimu A runs cover
 Normal, Lunatic and Extra clears with registration, physical saves and fresh
 OP/restart checks. Four complete demos agree with the original on compared

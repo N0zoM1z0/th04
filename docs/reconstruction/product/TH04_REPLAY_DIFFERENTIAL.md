@@ -48,6 +48,28 @@ The proposed storage fix affects product MAIN layout. Exact replay's complete
 TUs use their own scaffold state owners. Historical accepted input/layout is
 therefore unchanged, while affected product behavior must be rebuilt/replayed.
 
+### Product alias repaired and resumed state paired
+
+The product owner now declares `_continues_used label byte` at `_score` rather
+than allocating a ninth score byte. Fresh assembly/link with verified unchanged
+objects produces MAIN200279, SHA-256
+`778641ab845bcd67c6888bacc049e2cfa20fddda844681d3d2fd164f8386abc9`.
+Its new producer is `product-20261016-043629-1b1b2afa-main`; published files are
+in `.analysis/build/dos-continue-alias-v1439/`. This is a verified object-cache
+build with the changed ASM reassembled, not a cold deterministic exact replay.
+OMF/MZ/link, IRQ operands/vectors and bullet switch checks pass. New MAP binds
+counter and score to the same DGROUP242E:B17C; complete menu instructions
+increment that byte. No historical exact input, ledger or receipt changes.
+
+The fixed candidate now pairs all8,000 updates with the original: consumed
+input, 36 fields, all3,042 ordered RNG calls, nine complete pools and22 state
+blocks agree. Both perform the same actual Continue at7547/7548 and reach a
+seventh natural loss by the end. `comparison.json` retains a failed aggregate
+for263 post-reset input samples; do not discard this timing requirement.
+`fixed-route.json` binds the transition/coverage and `fixed-witness.json`
+binds the corrected owner. Complete Demo regressions and the longer prefix's
+picture comparison are separate from this state acceptance.
+
 ## Bounded ordinary video replay contract (v1438)
 
 `compare_th04_ordinary_video.py` now admits the observed after-update terminal
