@@ -5,6 +5,41 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## OP confirmation loss at the first character poll (v1444)
+
+New read-only keyboard-event RAM captures isolate the initial source OP's lost
+second confirmation. At1000ms after the real seed64 store, original OP is in
+the character input loop with input_prev=0 and palette tone100. Source OP is
+still inside initial character rendering's black-in fade, tone84. At1120ms,
+before releasing Enter, source OP is in the character loop with key_det=2000h,
+BIOS Return held and input_prev=2Eh. Its actual branch ignores the confirmation
+until an INPUT_NONE sample clears that byte. At2000ms it is still in character
+selection, while original OP has reached shot selection. Both initial one-update
+MAIN components still admit equal consumed input/state/RNG.
+
+The original and source both read the uninitialized byte at SS:[menu_BP-1].
+Do not add an initializer or call this an input_s.asm defect. The reproduced
+mechanism combines later renderer completion with a key already held at the
+first poll. Exact readiness time between snapshots and the individual renderer
+cost responsible for the delay remain unmeasured. Fresh-OP confirmation and
+one-variable input-schedule experiments are separate follow-ups.
+
+The diagnostic variant preserves the public producer and adds complete RAM at
+actual OP keyboard events, bound to each event's unchanged guest context and
+receipt. The reader compares the complete menu/input/delay code against the
+own-file relocated image. Original decoded payload and804 relocation entries
+also reproduce both independently recorded unpack-load digests. Candidate
+ownership comes from its cold MAP. Loop backedges, including the shot-loop JMP
+trampoline, derive the actual caller return PCs; the first reader's incorrect
+direct-edge requirement is retained as a separate reader failure. Raw stack
+call witnesses alone are not a complete unwind. No source, guest RAM, RNG,
+clock, register, old receipt or historical exact state is changed.
+
+Replay: `.analysis/reconstruction/probes/dos-op-menu-input-v1444/` with
+materialize.py, capture.py and analyze.py. Initial names are
+`dos-op-menu-input-v1444-initial-{original,candidate}`. Captures use the unchanged
+v1443 cold cohort and emulator, CPU1/nice19, serial and muted.
+
 ## Actual four-product boot, restarted MAIN and fixed-menu negative (v1443)
 
 `--all-products` requires process events and a complete normal same-run product
