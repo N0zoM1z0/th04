@@ -8,7 +8,7 @@ whole-game completion metrics. Keep all new code and documentation in English.
 
 | Purpose | Published baseline | Availability |
 | --- | --- | --- |
-| DOS reconstruction, comparison tools and ledgers | `main: 88807717028184f6ab2c9a9241082f068ff8183c` | Current checkout; later evidence commits follow this baseline |
+| DOS reconstruction, comparison tools and ledgers | `main: 07f69d3d6c01c3319b9865357f4420120c2f4b85` | Current checkout; later evidence commits follow this baseline |
 | Native x64 source | `port/modern-64: c0a1060371c5f8ba758ca8b10f6cbc99063ba3d6` | Remote and local Git objects exist; old working directories are missing |
 
 The old `.analysis/worktrees/` directory was absent at the 2026-10-16 audit,
@@ -59,6 +59,37 @@ git -C .analysis/worktrees/port64-next status --short
 Choose another name if it exists. Main commits do not publish native changes;
 commit and push each branch separately and verify its remote head.
 
+## Current Continue repair (v1439)
+
+The natural Continue route exposed a real defect in the old f21a5c7c MAIN:
+`_continues_used` occupied a separate byte before `_score`. Original target
+MAIN0AAF:3CDA increments the score base at DGROUP(2134):4349. Actual admitted
+routes first differed at frame 7548: original score0100000000000000 versus
+candidate0000000000000000, despite both restoring lives/power. The refused
+producer and complete negative are preserved; the new strict gate rejects it.
+
+`src/main/score/state.asm` now aliases both publics. New MAIN is 200,279 bytes,
+SHA-256 `778641ab845bcd67c6888bacc049e2cfa20fddda844681d3d2fd164f8386abc9`,
+in `.analysis/build/dos-continue-alias-v1439/`. MAP/compiler receipt belongs to
+`product-20261016-043629-1b1b2afa-main`. Verified unchanged objects plus fresh
+changed ASM/link pass OMF/MZ/IRQ/switch gates. This is not a cold deterministic
+exact replay. Historical exact MAIN's complete 438-input closure excludes this
+product-only BSS owner, so accepted historical inputs/ledgers are unchanged.
+
+New original/fixed candidate captures agree through 8,000 updates on consumed
+inputs, all 36 fields/3,042 ordered RNG calls, nine full pools and 22 state blocks.
+Natural Game Over/Continue at 7547/7548 restores lives 1->6, bombs 0, power 1 and
+score counter 0->1; gameplay resumes and a seventh loss occurs. The no-video
+companion retains 263 post-reset input differences. Fresh video also agrees
+on all 38 regions at 8,000 actor-update checkpoints; its companion retains 281
+input differences and raw GDC differs every frame. Intermediate Game
+Over UI/wait frames are outside that boundary. All four Demo scalar/RNG
+regressions pass 15,984 updates/four terminals. New-producer full Demo pool/video
+acceptance remains pending; do not inherit older producer acceptance.
+Replay and frozen sources: `.analysis/reconstruction/probes/dos-gameover-continue-v1439/`.
+Root CI 506/private gates pass. Quit/MAINE/fresh OP, resident lifecycle, complete
+process routes and native/cross-emulator/Windows acceptance remain open.
+
 ## Recorded results and open requirements
 
 The following rows describe historical producers. They are not fresh replay
@@ -91,8 +122,9 @@ The two deferred carpet/checkerboard exact cases remain deferred.
 
 ## Next tasks
 
-1. Drive real Game Over/Continue/process routes from the newly paired Boss
-   prefix. The original naturally reaches
+1. Finish full Demo pool/video and intermediate Game Over UI checks, then drive
+   Quit/MAINE/fresh OP and resident process routes. Preserve the actual Continue repair
+   and its failed predecessor. The original naturally reaches
    Game Over at frame 7,547. Release held Shot before operating its release-first
    wait. Do not change lives/RNG/clock or diagnose an IRQ failure from a single
    Count1=0 sample. Record Continue, Quit, MAINE, fresh OP/second MAIN and resident
@@ -102,10 +134,11 @@ The two deferred carpet/checkerboard exact cases remain deferred.
    original missing storage; otherwise build published source under a new
    namespace and collect independent new evidence. The new root MAIN/MAP does
    not restore the native producer, old trees or a fresh four-product build.
-3. Extend past the paired 7,500-update Boss prefix toward defeat and complete
-   process routes with independent input/RNG/pool controls and full video.
-   v1438 now passes all configured video regions over that prefix, with terminal,
-   metadata and 38 actual-frame counterexamples. The 3,996 default remains strict.
+3. Extend past the paired 8,000-update Continue prefix toward Boss defeat and
+   complete process routes with independent input/RNG/pool controls and video.
+   v1439 passes all 38 video regions at 8,000 actor-update checkpoints. The
+   comparator retains v1438's actual-frame counterexamples; eleven new Continue
+   controls and the refused-producer negative apply to v1439. The 3,996 default remains strict.
    Preserve all post-reset/raw-GDC failures when extending the acceptance extent.
 4. Align native state/effects using identical consumed inputs and explicit
    state boundaries: original DOS, reconstructed DOS, then native. Expand game
@@ -135,6 +168,7 @@ sentinel `0x19` remains revoked; newer headless results do not restore it.
 | Pinned observer receipt | `.analysis/runtime/emulators/demo-observer-build-v1365/receipt.json` |
 | Native v1432 root reports | `.analysis/reconstruction/probes/native-natural-clear-v1432/` |
 | New v1438 work | `.analysis/reconstruction/probes/dos-boss-video-v1438/` |
+| Current Continue repair/regressions | `.analysis/reconstruction/probes/dos-gameover-continue-v1439/` |
 
 Historical v1437 ordinary MAIN is 200,279 bytes,
 SHA-256 `f21a5c7ca38ebaee0e0ae544540ed2c36b4429cd846c3a12d8a5ccb887728cd8`.
@@ -193,6 +227,15 @@ MAIN/MAP, receipts, source and failed publication evidence remain live. Its
 video comparison exits 0; its companion comparison exits 1 for 253 input samples.
 The initial post-extension CI passes 495 public tests plus private target,
 database and Oracle gates. Native CI was not rerun in the missing trees.
+
+v1439 archives 24 image/font/raw aliases in 37 blobs, releasing 300.207 MiB net
+with a 2.229 MiB archive after complete content/CRC/temporary mode/nsmtime and
+protected checks. Complete compressed 8,000-record DGROUP/video, refused/fixed
+MAIN/MAP, compiler/source and all failures remain. Use its own `recover.py`
+selectively; its full video comparison exits 0, video companion exits 1 for 281
+input samples, no-video companion exits 1 for 263, and Demo scalar comparison
+exits 0. Root CI 506/private gates pass. Historical exact inputs/ledgers stay
+unchanged; both development goals remain active.
 
 After shared headers/flags/segments/link order/layout changes, invalidate and
 cold-replay affected accepted units. Source recovery, runtime agreement and

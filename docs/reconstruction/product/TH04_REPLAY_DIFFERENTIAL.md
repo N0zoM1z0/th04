@@ -20,16 +20,16 @@ to 8,000 updates. Between pre-update samples 7547/7548, resident lives restore
 from 1 to the legal credit value 6, bombs remain 0, power becomes 1, and score
 changes from `0007040101060000` to `0100000000000000`. The first score byte is
 the Continue count. Target relative MAIN `0AAF:3CDA` is `FE 06 49 43`, incrementing
-DGROUP4349, the same byte as the score owner. The complete 356-byte menu body
+MAIN DGROUP(2134):4349, the same byte as the score owner. The complete 356-byte menu body
 also witnesses power reset and resident credit-to-current copies.
 
 The old f21a5c7c product has a reproduced defect. MAP gives `_continues_used`
-at relative DGROUP242E:B17C but `_score` at242E:B17D. Its maintained BSS owner
+at relative DGROUP242E:B17C but `_score` at 242E:B17D. Its maintained BSS owner
 allocates a separate byte before the eight-byte score, contradicting the
 score union and original instruction. Both actual routes admit identical
-consumed input and initial RNG; the first scalar difference is frame7548,
+consumed input and initial RNG; the first scalar difference is frame 7548,
 `score_digits`: original `0100000000000000`, candidate `0000000000000000`.
-Lives/power still restore. The wrong low score byte persists at7999. The new
+Lives/power still restore. The wrong low score byte persists at 7999. The new
 strict gate rejects candidate counter/score ownership before accepting it.
 The frozen earlier reader is used only to diagnose the refused producer's
 complete raw trace, not to waive that rejection.
@@ -39,11 +39,11 @@ Original capture is `dos-gameover-continue-v1439-original-first`; refused
 candidate is `dos-gameover-continue-v1439-candidate-before`. Both complete
 8,000-record DGROUP streams, frozen first consumer and old MAIN/MAP remain.
 `before-diagnostic.json` binds the actual negative and first divergence.
-Eleven new public Continue counter/reset/cue tests pass; full root CI506 and
-private gates pass. This establishes neither a successful reconstructed
+Eleven new public Continue counter/reset/cue tests pass; full root CI 506 and
+private gates pass. This refused-producer evidence establishes neither a successful reconstructed
 Continue nor MAINE/fresh OP/multiple-process/native/full-route acceptance.
 
-The proposed storage fix affects product MAIN layout. Exact replay's complete
+The storage correction affects product MAIN layout. Exact replay's complete
 438-input MAIN closure excludes `src/main/score/state.asm`; historical exact
 TUs use their own scaffold state owners. Historical accepted input/layout is
 therefore unchanged, while affected product behavior must be rebuilt/replayed.
@@ -52,7 +52,7 @@ therefore unchanged, while affected product behavior must be rebuilt/replayed.
 
 The product owner now declares `_continues_used label byte` at `_score` rather
 than allocating a ninth score byte. Fresh assembly/link with verified unchanged
-objects produces MAIN200279, SHA-256
+objects produces MAIN 200279, SHA-256
 `778641ab845bcd67c6888bacc049e2cfa20fddda844681d3d2fd164f8386abc9`.
 Its new producer is `product-20261016-043629-1b1b2afa-main`; published files are
 in `.analysis/build/dos-continue-alias-v1439/`. This is a verified object-cache
@@ -61,14 +61,74 @@ OMF/MZ/link, IRQ operands/vectors and bullet switch checks pass. New MAP binds
 counter and score to the same DGROUP242E:B17C; complete menu instructions
 increment that byte. No historical exact input, ledger or receipt changes.
 
-The fixed candidate now pairs all8,000 updates with the original: consumed
-input, 36 fields, all3,042 ordered RNG calls, nine complete pools and22 state
-blocks agree. Both perform the same actual Continue at7547/7548 and reach a
+The fixed candidate now pairs all 8,000 updates with the original: consumed
+input, 36 fields, all 3,042 ordered RNG calls, nine complete pools and 22 state
+blocks agree. Both perform the same actual Continue at 7547/7548 and reach a
 seventh natural loss by the end. `comparison.json` retains a failed aggregate
-for263 post-reset input samples; do not discard this timing requirement.
+for 263 post-reset input samples; do not discard this timing requirement.
 `fixed-route.json` binds the transition/coverage and `fixed-witness.json`
 binds the corrected owner. Complete Demo regressions and the longer prefix's
 picture comparison are separate from this state acceptance.
+
+The current producer also passes all four complete bundled-Demo scalar/RNG
+regressions against the retained attested original baseline: 15,984 gameplay
+updates and four terminal records, with identical consumed input/score/RNG.
+`demo-comparison.json` identifies both receipts. The generated `demo-products/`
+fixture explicitly labels OP/MAINE/ZUN as pinned originals; it is not a new
+four-product source build. Full Demo pool/video checks retain their older
+producers until separately replayed for this layout.
+
+All ordinary observations use the actor-update frame boundary. Game Over's
+intermediate UI/fade/wait iterations do not advance that counter, so even a
+complete ordinary video stream does not by itself validate every Game Over UI
+frame. Quit, MAINE, fresh OP/second MAIN and resident lifetimes still require
+explicit process boundaries; the single-MAIN monitor must not silently accept
+their replacement memory as the old process.
+
+### Current-producer pictures and retention
+
+Fresh original/fixed candidate video now agrees on all 38 configured regions
+over 8,000 actor-update checkpoints, including the resumed Continue HUD/state.
+Both pages/all four planes, full TRAM/palettes, modes and programmed GDC fields
+are compared without masks. Each video capture matches its own independent
+no-video scalar/RNG control. Complete per-pool/state digests also match those
+controls; only post-reset input differs. `seal.json` records these checks.
+The video companion retains 281 post-reset input differences, while the separate
+no-video pair retains 263. Complete raw GDC differs on all 8,000 frames. Both
+aggregates remain false; the accepted video extent does not waive timing.
+No intermediate Game Over UI, defeat, natural exit, complete process chain,
+campaign, native picture, cross-emulator or Windows acceptance follows.
+
+Replay after restoring the required image/raw aliases:
+
+```sh
+python3 scripts/probes/compare_th04_ordinary_video.py \
+  .analysis/runtime/candidates/dos-gameover-continue-v1439-original-video \
+  .analysis/runtime/candidates/dos-gameover-continue-v1439-candidate-video \
+  --original-baseline .analysis/runtime/candidates/dos-gameover-continue-v1439-original-first \
+  --candidate-baseline .analysis/runtime/candidates/dos-gameover-continue-v1439-candidate \
+  --baseline-sources . --original-main .analysis/targets/th04/main.exe \
+  --output /tmp/th04-continue-video.json
+python3 scripts/probes/compare_th04_bounded_ordinary.py \
+  .analysis/runtime/candidates/dos-gameover-continue-v1439-original-video \
+  .analysis/runtime/candidates/dos-gameover-continue-v1439-candidate-video \
+  --original-main .analysis/targets/th04/main.exe --output /tmp/th04-continue-pools.json
+```
+
+Expected exits are 0 for video and 1 for 281 input samples; scalar, actor_pools,
+global_states and Continue transition pass. No-video comparison instead exits 1
+for 263. The new Demo scalar comparison exits 0 against `dos-demo-v1365-original`.
+Full Demo pool/picture acceptance for 778641ab remains pending.
+
+Owned retirement covers 24 image/font/raw aliases in six captures and 37 blobs,
+releasing 300.207 MiB net after a 2.229 MiB archive. SHA/CRC, full reconstruction,
+temporary mode/nsmtime and protected-file checks pass before deletion. Complete
+compressed DGROUP/video, failed f21a5c7c and fixed 778641ab MAIN/MAP, compiler
+receipts, exact-impact closure, source snapshots and all negative/input/timing
+evidence remain. Use this namespace's `recover.py --restore --prefix PATH`.
+Root CI 506/private gates, tracking/catalog and diff checks pass. Next pair the
+intermediate Game Over UI, Quit/MAINE/fresh OP and resident process lifetimes;
+keep native recovery and full-route/physical requirements open.
 
 ## Bounded ordinary video replay contract (v1438)
 
@@ -200,7 +260,7 @@ all consumed pre-update inputs and initial RNG/settings agree.
 At7500 the actual battle has952 distinct Boss24-byte blocks, phases0/1/2,
 HP range0..3050 and600 nonzero-phase samples from6900. Both cover five natural
 losses. All36 pre-update fields and2,837 ordered RNG calls agree, including final
-pending calls; nine complete pools and22 state owners agree through the longer
+pending calls; nine complete pools and 22 state owners agree through the longer
 extent. The aggregate remainsfalse for258 end-of-update key_det samples. Full
 Boss pictures, victory/teardown/campaign and physical/general input timing are
 not accepted. A fixed index before the next natural event does not complete
@@ -315,8 +375,8 @@ candidate}` under `.analysis/runtime/candidates/`. Public capture adds:
 
 `compare_th04_ordinary_video.py` uses the same original/candidate plus
 `--original-baseline`, `--candidate-baseline`, `--baseline-sources`,
-`--original-main` and `--output` arguments as the pool comparator. Video exits0;
-companion pool comparison exits1 because its input-sample mismatch is retained.
+`--original-main` and `--output` arguments as the pool comparator. Video exits 0;
+companion pool comparison exits 1 because its input-sample mismatch is retained.
 All complete video/DGROUP records remain compressed and live (~30.52MiB video
 and2.53MiB DGROUP per program), preserving raw diagnostics and further owners.
 Owned8-path/20-block HDI/font/raw-trace retirement releases90.18MiB net with
@@ -352,7 +412,7 @@ Every byte, including inactive records/padding and enemy ES-relative script
 offsets, is compared. Callback/code pointers outside those owners are excluded
 from claimed state; complete DGROUP bytes are kept without normalization.
 
-Nine pools and22 states agree at all3996 frames. Whole extents are shots1224B,
+Nine pools and 22 states agree at all3996 frames. Whole extents are shots1224B,
 enemies2048B, sparks1536B, bullets11440B, custom_entities832B, circles160B,
 items640B, pointnums6400B and gather_circles672B. Raw changing-frame counts are
 3895/3023/1400/1619/0/0/1451/421/0 respectively. These counts show byte changes,
@@ -755,7 +815,7 @@ every recorded consumed input/raw-shift byte pass. All four MAIN loads are10FC;
 original DGROUP3230, candidate DGROUP34F7. Final independent comparison:
 `.analysis/runtime/candidates/dos-demo-v1365-comparison-v3.json`, SHA-256
 `c96307526298c4763d5d15e73e67550b2206222605e231a733efe735c31c537c`.
-The comparator exits1 because the behavioral claim fails, not because a capture
+The comparator exits 1 because the behavioral claim fails, not because a capture
 is truncated or invalid.
 
 | Demo | Sampled boundaries | Result |
@@ -1125,7 +1185,7 @@ stay at setup; hit/miss/respawn are zero throughout. Boss combat and player
 death/respawn therefore remain unaccepted. Midboss has709/739/482/523 distinct
 records and is active707/737/480/523 frames respectively. Player motion has
 2307/2567/2357/2417 distinct records; Demo2 laser time has192 distinct values
-and3770 nonzero frames. Equality of a constant setup field is not a combat test.
+and 3770 nonzero frames. Equality of a constant setup field is not a combat test.
 
 Ownership, coverage and nine frozen reader/test inputs are under
 `.analysis/reconstruction/probes/demo-globals-v1368/`. Twelve new public test
@@ -1513,7 +1573,7 @@ fresh complete DGROUP replay passes nine raw pools24952 B plus22 pointer-free
 states104 B at all15984 updates, input/Shift/graze and independent ordinary
 controls. Boss24B stays setup/distinct1; hit/death/respawn remain unexercised.
 Full video v2 verifies all3996 records per demo and own ordinary traces.
-Demos2/3/4 agree in all38 compared regions: all181 old Demo4 differing updates
+Demos2/3/4 agree in all 38 compared regions: all181 old Demo4 differing updates
 vanish. Demo1 remains first1678/after1677 with1032 differing updates, only B/R/G
 page0 physical row375 at columns13/17/40/41 in the first block. All TRAM/palettes/
 modes/selectors/selected programmed GDC fields agree. Raw GDC clocks/scan/FIFO
@@ -1647,7 +1707,7 @@ claim; the native worktree stays clean.
 
 Fresh complete ordinary replay accepts all15988 scalar/terminal boundaries.
 The independently captured video replay also passes: all four demos agree in
-all38 compared regions at3996 updates each, with zero differing frames and no
+all 38 compared regions at3996 updates each, with zero differing frames and no
 first difference. All1032 remaining Demo1 differences disappear, while the
 other three demos stay accepted. This causally closes the short-row animation
 DATA defect for the bundled-demo presentation scope. Complete raw GDC
@@ -2024,7 +2084,7 @@ fresh --output-dir. Every launch remains muted dummy-SDL; Windows is untouched.
 
 Both original v3 and reconstructed v4 post-update captures complete4×3996
 records, preserving the full independent ordinary scalar/caller trace. The
-complete DOS pair passes all38 compared video regions at every record, including
+complete DOS pair passes all 38 compared video regions at every record, including
 both graphics pages/four planes, full raw TRAM, palettes and selected programmed
 GDC fields. Raw GDC internals differ at every frame and remain diagnostic.
 Replay: root native-presentation-v1377/compare_present.py uses the projected
@@ -3817,7 +3877,7 @@ semantic diagnostic, not natural full31kHz, DOSBox timing or physical acceptance
 Original START preserves phase in all12 runs. One actual original IRQ after
 START with phase65535/modeC adds13311 with carry, leaves accumulator13310 and
 counts unchanged. Current native GNU/optimized UBSan matches12/12 full tuples;
-published frozen v1398 builds/exits0 but matches only4 zero-phase cases. Its
+published frozen v1398 builds/exits 0 but matches only4 zero-phase cases. Its
 8 nonzero-phase states reject;2 cases count an extra IRQ. This independent
 negative distinguishes successful compilation and zero-state tests from the
 actual contract. A failed comparator draft's syntax error remains separately

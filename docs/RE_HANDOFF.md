@@ -24,33 +24,41 @@ do not rewrite old receipts. Both development goals remain active.
 ## Natural Continue score alias repaired (v1439)
 
 The product score BSS now aliases `_continues_used` to the first score byte.
-Fresh ASM/link with verified unchanged objects publishes MAIN200279/778641ab
+Fresh ASM/link with verified unchanged objects publishes MAIN 200279/778641ab
 under `.analysis/build/dos-continue-alias-v1439/`; producer is
-`product-20261016-043629-1b1b2afa-main`. New MAP binds both names to242E:B17C.
-OMF/MZ/IRQ/switch gates pass. The fixed pair now agrees over8,000 updates on
-consumed input, all36 fields/3,042 ordered RNG calls, nine complete pools and22
-state blocks, including the actual7547/7548 Continue. The companion aggregate
-still fails for263 post-reset input samples. Full-picture and complete Demo
-regressions for this new producer remain separate checks; old frozen evidence
-keeps its own producer. Historical exact inputs/ledgers are unchanged.
+`product-20261016-043629-1b1b2afa-main`. New MAP binds both names to 242E:B17C.
+OMF/MZ/IRQ/switch gates pass. The fixed pair now agrees over 8,000 updates on
+consumed input, all 36 fields/3,042 ordered RNG calls, nine complete pools and 22
+state blocks, including the actual 7547/7548 Continue. The companion aggregate
+still fails for 263 post-reset input samples. Fresh full video now agrees on
+all 38 regions at 8,000 actor-update checkpoints; its companion retains 281
+input differences and raw GDC differs every frame. Game Over's intermediate
+UI/wait frames are outside that boundary. All four Demo scalar/RNG regressions
+also pass (15,984 updates/four terminals); their full pool/picture checks for
+this producer remain pending. Old evidence keeps its producer. Historical
+exact inputs/ledgers are unchanged.
 
 Original and old f21a5c7c product now run through natural Game Over/Continue to
 8,000 updates using actual release-first keyboard input, with no gameplay
-writes. Original frame7548 restores lives1->6, bombs0, power1 and increments
-the first score byte0->1. The admitted pair first differs at7548: original
-score0100000000000000, product0000000000000000. Lives/power restore on both.
+writes. Original frame 7548 restores lives 1->6, bombs 0, power 1 and increments
+the first score byte 0->1. The admitted pair first differs at 7548: original
+score 0100000000000000, product 0000000000000000. Lives/power restore on both.
 The product BSS allocates `_continues_used` separately before `_score`, while
 target MAIN0AAF:3CDA increments the score's first byte at DGROUP4349. New strict
 Continue ownership/reset/cue guards reject this old producer. Preserve the
 complete failure; do not accept Continue merely because gameplay resumes.
 
-Continue with affected product picture/Demo regressions, then advance
-Quit/MAINE/fresh OP/resident process routes. All438
+Continue with full Demo pool/video replay, intermediate Game Over UI and
+Quit/MAINE/fresh OP/resident process routes. All 438
 historical MAIN exact inputs exclude this product-only BSS owner; historical
-accepted inputs remain unchanged. Eleven new controls and root CI506/private
+accepted inputs remain unchanged. Eleven new controls and root CI 506/private
 gates pass. Evidence/source index:
 `.analysis/reconstruction/probes/dos-gameover-continue-v1439/` and the existing
 [differential note](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
+Owned retirement verifies 24 image/font/raw aliases in 37 blobs and releases
+300.207 MiB net after a 2.229 MiB archive. Complete compressed streams, both
+producers/MAPs, source, compiler and negative evidence remain. Its `recover.py`
+verifies without expansion or restores selected prefixes; old trees are untouched.
 
 ## Fresh MAIN and complete bounded Boss video (v1438)
 
@@ -146,7 +154,7 @@ regions over3,996 updates per program: both pages/all four262144B planes,
 16384B text, complete analog/digital/text palettes, modes and programmed GDC
 fields. Blocks are279809B each; no screenshot/pixel/unused-tail mask. The
 original and frozen MAIN1426/f21a5c7c each use original OP/MAINE/ZUN/assets and
-legal rank1/lives6/bombs0. Full input/36-field/RNG controls agree with independent
+legal rank1/lives6/bombs 0. Full input/36-field/RNG controls agree with independent
 v1434 baselines. Nine pools/22 states also remain equal in the same captures.
 
 This covers the ordinary fragment's two natural deaths/respawns and Midboss,
@@ -179,7 +187,7 @@ keep raw timing/input requirements separate from the accepted video extent.
 ## Ordinary full pools and retained input-sample difference (v1435)
 
 Normal ReimuA Stage1 now has complete after-update DGROUP streams at3,996
-updates per program. Nine complete object/effect pools and22 guarded state
+updates per program. Nine complete object/effect pools and 22 guarded state
 blocks compare byte-for-byte, including inactive records and padding. Stage
 graze and post-reset Shift also agree. Both consumed-input/36-field/ordered-RNG
 traces agree with independent v1434 baselines. Original/candidate images,
@@ -219,11 +227,11 @@ v1434 baseline aliases were separately removed (not counted as new savings).
 ## Ordinary original/reconstructed DOS state prefix (v1434)
 
 Two independently captured Normal ReimuA Stage1 pairs now pass3,996 updates:
-3,997 pre-update samples plus one terminal, all36 compared fields and1,369
+3,997 pre-update samples plus one terminal, all 36 compared fields and1,369
 ordered RNG calls each. Both contain two natural hits/misses and142 respawn
 samples; original and candidate repeat comparisons also pass. Only MAIN is
 replaced with frozen producer1426/f21a5c7c. OP/MAINE/ZUN, all game archives,
-starting saves and legal rank1/lives6/bombs0 options stay pinned originals.
+starting saves and legal rank1/lives6/bombs 0 options stay pinned originals.
 
 The new input adapter observes actual original OP0A74:0D2F's `INC DWORD
 ES:[BX+14]` reaching64, then queues Enter through DOSBox-X's keyboard API.

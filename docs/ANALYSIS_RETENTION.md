@@ -20,6 +20,23 @@ compilation's wrapper refusal and subsequent verified cache publication are
 retained separately. This does not restore the old working directories or the
 94 missing native protected files. See the v1438 focused differential note.
 
+## Natural Continue score-alias repair (v1439)
+
+`.analysis/reconstruction/probes/dos-gameover-continue-v1439/retention.json`
+covers 24 owned image/font/raw aliases in six captures, stored in 37 blobs
+against the pinned `zun.hdi`. Full SHA/CRC, reconstructed content, temporary
+mode/nsmtime and protected checks pass before removal; net release is
+300.207 MiB after a 2.229 MiB archive. Its `recover.py` verifies without expansion
+or restores only the requested `--prefix`.
+
+Complete 8,000-record DGROUP/video streams, four-Demo scalar results, both the
+refused f21a5c7c and fixed 778641ab MAIN/MAP, source freezes, compiler receipts,
+the 438-input historical exact-impact audit and all input/timing failures stay
+live. Refused-producer replay uses its frozen pre-gate reader diagnostically;
+it does not waive the strict counter-alias rejection. Preserve that reader.
+No original old tree or native protected file is repaired or removed. Temporary
+restoration/return to archives is not additional cleanup.
+
 ## Fresh bounded Boss video (v1438)
 
 `.analysis/reconstruction/probes/dos-boss-video-v1438/retention.json` records
