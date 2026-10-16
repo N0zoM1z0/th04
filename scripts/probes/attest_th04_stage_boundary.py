@@ -134,7 +134,11 @@ def records(capture):
         require(stream.read(1) == b"", "epoch trailing wire data")
 
 
-def attest(capture, target, source_snapshot=None):
+def attest(capture, target, source_snapshot=None, stage2_updates=600):
+    require(
+        type(stage2_updates) is int and 0 < stage2_updates <= 65535,
+        "epoch configured Stage2 extent",
+    )
     prefix = load(capture, target, source_snapshot)
     receipt = prefix["receipt"]
     require(
@@ -195,7 +199,9 @@ def attest(capture, target, source_snapshot=None):
         "epoch own MAP identity",
     )
     require(
-        summary["complete"] and summary["stage2_complete_updates"] == 600,
+        summary["complete"]
+        and summary["stage2_complete_updates"] == stage2_updates
+        and profile["stage2_updates"] == stage2_updates,
         "epoch complete next-stage fixture",
     )
     require(
@@ -226,7 +232,8 @@ def attest(capture, target, source_snapshot=None):
     require(not pending, "epoch unconsumed trailing RNG events")
     require(
         [key for key in raw_rows if key[0] == 0] == [(0, f) for f in range(9837)]
-        and [key for key in raw_rows if key[0] == 1] == [(1, f) for f in range(601)],
+        and [key for key in raw_rows if key[0] == 1]
+        == [(1, f) for f in range(stage2_updates + 1)],
         "epoch complete raw stage/frame ranges",
     )
     module = relocated_module(main, load_segment)
@@ -361,7 +368,7 @@ def attest(capture, target, source_snapshot=None):
             )
             full_mem += 1
         rows.append(row)
-    require(len(rows) == 1807, "epoch full boundary extent")
+    require(len(rows) == 3 * stage2_updates + 7, "epoch full boundary extent")
     b = rows[:6]
     require(
         [v["frame"] for v in b] == [9836, 9836, 9837, 9837, 9837, 0]
@@ -388,7 +395,7 @@ def attest(capture, target, source_snapshot=None):
         reader_sha256=sha(Path(__file__).read_bytes()),
         rows=len(rows),
         stage1_final_complete_frame=9837,
-        stage2_complete_updates=600,
+        stage2_complete_updates=stage2_updates,
         full_conventional_snapshots=full_mem,
         bridge=[
             {
@@ -411,9 +418,9 @@ def attest(capture, target, source_snapshot=None):
         raw_loop_samples=len(raw_rows),
         raw_rng_counts=counts,
         stage_init_lcg_draws=353,
-        loop_contexts_bound=601,
+        loop_contexts_bound=stage2_updates + 1,
         scope=__doc__
-        + " Source/capture/MZ/MAP/profile/ABI identity, complete relocated module, CPU/opcode/DGROUP/video/resident and selected conventional memory are checked. Independent C++ loop samples bind every Stage2 frame. This DOSBox-X fixture observes Stage1 return at9837 and600 complete Stage2 updates, with353 initialization LCG calls and no process reseed. It does not accept a campaign, physical timing, NP2, Windows or historical exactness.",
+        + f" Source/capture/MZ/MAP/profile/ABI identity, complete relocated module, CPU/opcode/DGROUP/video/resident and selected conventional memory are checked. Independent C++ loop samples bind every Stage2 frame. This DOSBox-X fixture observes Stage1 return at9837 and{stage2_updates} complete Stage2 updates, with353 initialization LCG calls and no process reseed. It does not accept a campaign, physical timing, NP2, Windows or historical exactness.",
     )
     return report, rows, raw_rows, events
 
@@ -431,11 +438,13 @@ if __name__ == "__main__":
     p.add_argument("--capture", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--source-snapshot", type=Path)
+    p.add_argument("--stage2-updates", type=int, default=600)
     args = p.parse_args()
     report, *_ = attest(
         args.capture.resolve(),
         (root / ".analysis/targets/th04/main.exe").read_bytes(),
         args.source_snapshot,
+        args.stage2_updates,
     )
     with args.output.open("x") as stream:
         json.dump(report, stream, indent=2)

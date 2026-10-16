@@ -5,6 +5,18 @@ Start with [the actionable handoff](NEXT_AGENT_HANDOFF.md). Keep code/docs
 English, heavy jobs on one low-priority CPU, launches muted/headless and one
 Borland/Wine writer. No Windows GUI, focus changes or host-key injection.
 
+## Current experiment (v1458)
+
+Fresh original/source captures are extending Stage2 to3200 complete updates,
+including the scheduled2600 Midboss boundary. They are running serially from
+new private capsules; do not edit their sources or substitute old snapshots.
+No new3200 acceptance is claimed yet. The declared-extent/streaming readers
+preserve every old600-update verdict and reject eight actual-data controls.
+Thirteen borrowed aliases verify/retire without cleanup credit. A private native
+observer adds the actual22-byte Midboss owner and active byte to the unchanged
+187b574f simulation core. Current bundle:
+`.analysis/reconstruction/probes/dos-stage2-midboss-v1458/`.
+
 ## Actual Stage2 boundary (v1457)
 
 Original and reconstructed DOS actually return from Stage1 at9837, after

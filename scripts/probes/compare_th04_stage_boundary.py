@@ -23,6 +23,8 @@ p.add_argument("--native-frontend", type=Path, required=True)
 p.add_argument("--native-receipt", type=Path, required=True)
 p.add_argument("--output-dir", type=Path, required=True)
 p.add_argument("--source-snapshot", type=Path)
+p.add_argument("--stage2-updates", type=int, default=600)
+p.add_argument("--require-midboss", action="store_true")
 args = p.parse_args()
 root = args.dos_root.resolve()
 r = args.output_dir.resolve()
@@ -41,8 +43,8 @@ sha = lambda b: hashlib.sha256(b).hexdigest()
 target = (root / ".analysis/targets/th04/main.exe").read_bytes()
 a = args.original.resolve()
 b = args.candidate.resolve()
-ar, am, raw, events = attest(a, target, args.source_snapshot)
-br, bm, braw, bevents = attest(b, target, args.source_snapshot)
+ar, am, raw, events = attest(a, target, args.source_snapshot, args.stage2_updates)
+br, bm, braw, bevents = attest(b, target, args.source_snapshot, args.stage2_updates)
 assert [(x["label"], x["stage"], x["frame"]) for x in am] == [
     (x["label"], x["stage"], x["frame"]) for x in bm
 ]
@@ -122,7 +124,7 @@ for row in rows.values():
 video = summarize_pair(
     ((m["ordinal"] + 1, v) for m, g, v in records(a)),
     ((m["ordinal"] + 1, v) for m, g, v in records(b)),
-    expected_updates=1807,
+    expected_updates=3 * args.stage2_updates + 7,
 )
 (r / "dos-video.json").write_text(json.dumps(video, indent=2) + "\n")
 dos = dict(
@@ -138,7 +140,7 @@ dos = dict(
     post_reset_input_first_differences=post_inputs[:8],
     video_regions_passed=video["passed"],
     raw_gdc_differing_records=video["raw_gdc_differing_frames"],
-    scope="Same own-file bridge and600Stage2updates;all35 comparable rawprofilefields/orderedRNG,9pools/22states,38configuredvideo regions. Postresetinput/rawGDC differences remain separate;not fullcampaign/timing/exactness.",
+    scope=f"Same own-file bridge and{args.stage2_updates}Stage2updates;all35 comparable rawprofilefields/orderedRNG,9pools/22states,38configuredvideo regions. Postresetinput/rawGDC differences remain separate;not fullcampaign/timing/exactness.",
 )
 (r / "dos-comparison.json").write_text(json.dumps(dos, indent=2) + "\n")
 print(
@@ -166,7 +168,8 @@ native = [
     json.loads(s) for s in (frontend / "stage-native.jsonl").read_text().splitlines()
 ]
 require(
-    len(native) == 1206 and [v["ordinal"] for v in native] == list(range(1206)),
+    len(native) == 2 * args.stage2_updates + 6
+    and [v["ordinal"] for v in native] == list(range(2 * args.stage2_updates + 6)),
     "native epoch extent/order",
 )
 expected = [
@@ -178,7 +181,7 @@ expected = [
     ("init_return", 0),
 ] + [
     (label, frame)
-    for frame in range(1, 601)
+    for frame in range(1, args.stage2_updates + 1)
     for label in ["stage2-actor", "stage2-score"]
 ]
 require(
@@ -192,7 +195,54 @@ require(
 post_reset_inputs = []
 consumed_input_errors = []
 homing_errors = []
-group_by_label = {(m["label"], m["frame"]): g for m, g, v in records(a)}
+required_native_fields = {
+    "frame",
+    "stage",
+    "input",
+    "score_digits",
+    "score_delta",
+    "score_delta_frame",
+    "lcg",
+    "ring",
+    "ring_cursor",
+    "player_pos",
+    "power",
+    "hit",
+    "invincibility",
+    "respawn",
+    "boss",
+    "boss_statebyte",
+    "boss_hitbox_radius",
+    "boss_phase_timed_out",
+    "homing",
+}
+observed_fields = set(native[0]["fields"])
+extra_fields = observed_fields - required_native_fields
+raw_extents = {name: (left, count * stride) for name, left, _, count, stride in states}
+require(
+    required_native_fields <= observed_fields and extra_fields <= raw_extents.keys(),
+    "native epoch required/known state fields",
+)
+require(
+    not args.require_midboss or {"midboss", "midboss_active"} <= extra_fields,
+    "native epoch required Midboss fields",
+)
+require(
+    all(set(row["fields"]) == observed_fields for row in native),
+    "native epoch stable observed field set",
+)
+# Retain only bounded state slices rather than every64KiB DGROUP record.
+group_by_label = {
+    (m["label"], m["frame"]): {
+        "homing": g[0x4642:0x4646].hex(),
+        **{
+            name: g[off : off + size].hex()
+            for name in extra_fields
+            for off, size in [raw_extents[name]]
+        },
+    }
+    for m, g, v in records(a)
+}
 by = {
     (x["label"], int.from_bytes(bytes.fromhex(x["fields"]["frame"]), "little")): x
     for x in native
@@ -238,7 +288,11 @@ for m in metadata:
                 )
             )
     group = group_by_label[(label, frame)]
-    expected_homing = group[0x4642:0x4646].hex()
+    for name in extra_fields:
+        expected_value = group[name]
+        if nn["fields"][name] != expected_value:
+            changed[name] = dict(original=expected_value, native=nn["fields"][name])
+    expected_homing = group["homing"]
     if nn["fields"]["homing"] != expected_homing:
         homing_errors.append(
             dict(
@@ -267,17 +321,21 @@ for m in metadata:
     if changed:
         checks.append(dict(label=label, frame=frame, fields=changed))
 pools = {name: dict(differing_records=0, first_difference=None) for name, *_ in POOLS}
-wanted = {0: "init_return"} | {i: "stage2-actor" for i in range(1, 601)}
-original_groups = {
-    m["frame"]: g
+original_pool_rows = (
+    (m, g)
     for m, g, v in records(a)
     if m["label"] == "init_return" or m["label"] == "stage2-actor"
-}
+)
 with (frontend / "stage2-pools.bin").open("rb") as stream:
     assert stream.read(8) == b"TH04OP1\n"
-    for frame in range(601):
+    observed_pool_rows = 0
+    for frame, (meta, g) in enumerate(original_pool_rows):
+        require(
+            meta["frame"] == frame and frame <= args.stage2_updates,
+            "native epoch streamed pool order/extent",
+        )
         body = read_frame(stream, 0, frame)
-        g = original_groups[frame]
+        observed_pool_rows += 1
         at = 0
         for name, off, count, stride in POOLS:
             size = count * stride
@@ -301,6 +359,10 @@ with (frontend / "stage2-pools.bin").open("rb") as stream:
                             if x[i] != y[i]
                         ][:24],
                     )
+    require(
+        observed_pool_rows == args.stage2_updates + 1,
+        "native epoch complete streamed pools",
+    )
     assert stream.read(1) == b""
 for row in pools.values():
     row["passed"] = row["first_difference"] is None
@@ -314,9 +376,10 @@ report = dict(
         for name in ["stage-native.jsonl", "stage2-pools.bin"]
     },
     native_producer_receipt_sha256=sha(args.native_receipt.read_bytes()),
+    extra_state_fields=sorted(extra_fields),
     original_attestation=ar,
     candidate_attestation=br,
-    compared_scalar_records=1203,
+    compared_scalar_records=2 * args.stage2_updates + 3,
     consumed_input_errors=consumed_input_errors,
     homing_errors=homing_errors,
     post_reset_input_differences=len(post_reset_inputs),
@@ -328,7 +391,7 @@ report = dict(
         original_initial_main=initial_calls,
         native="Existing prefix-relative count begins after first MAIN initialization",
     ),
-    scope="Recorded native producer versus attested original bridge, Stage2 initialization and600 actor/score pairs. LCG calls use the independently observed first-MAIN count origin; ring calls accumulate native per-fill counters. Every consumed input, homing coordinate and inactive pool byte is compared. Volatile post-reset keys remain measured separately. No Stage2 picture, timing, campaign or exact claim.",
+    scope=f"Recorded native producer versus attested original bridge, Stage2 initialization and{args.stage2_updates} actor/score pairs. LCG calls use the independently observed first-MAIN count origin; ring calls accumulate native per-fill counters. Every consumed input, homing coordinate and inactive pool byte is compared. Volatile post-reset keys remain measured separately. No Stage2 picture, timing, campaign or exact claim.",
 )
 (r / "native-comparison.json").write_text(json.dumps(report, indent=2) + "\n")
 print(
