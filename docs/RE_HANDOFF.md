@@ -21,6 +21,31 @@ describe recorded historical evidence, not a fresh availability guarantee.
 Recover original frozen inputs or create a newly attested producer from Git;
 do not rewrite old receipts. Both development goals remain active.
 
+## Four-source execution observers and current restart negative (v1443)
+
+The new `--all-products` surface pins one complete normal same-run build,
+installs all four products, validates ZUN's two packed outputs and derives OP
+counter ownership from its own MAP/bytes. Actual DOS4B00 entries are observed
+through RETF/JMP/IRET helper returns, rather than inferred from environment
+names. Original/source short probes attest four ZUN entries, initial OP and
+MAIN, with equal first-update input/state/RNG. Full PSP/MCB readback and parent
+PSP875/MCB874 anchor the complete conventional RAM snapshots.
+
+The first full candidate reaches all four source products through MAIN Quit,
+MAINE and fresh OP, but the original fixed three confirmation pulses do not
+restart MAIN. Its first-MAIN7547-update component matches all scalar/RNG/pools/
+states and physical saves, retaining278 post-reset input differences. The route
+stays rejected; no completeness flag or receipt is edited. New
+`--restart-menu-boundary` presses Enter at the actual fresh-menu counter store
+and repeats bounded ordinary confirmations until verified MAIN entry. A new
+original capture passes all nine entries/second-MAIN600 updates with seed65;
+its candidate capture is in progress under separate boundary names.
+
+CI573,22 new public controls and81 actual entry/cohort/counter mutants pass.
+Replay/source: `.analysis/reconstruction/probes/dos-four-product-route-v1443/`.
+The fixed-menu failure remains open; no four-source complete-route, pixel,
+physical timing, native or exact acceptance is claimed yet.
+
 ## Fresh four-product cold build (v1443)
 
 Frozen3ca7b96 source passes a serial complete cold publication without requested

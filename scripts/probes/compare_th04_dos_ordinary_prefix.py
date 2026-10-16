@@ -19,7 +19,7 @@ from compare_th04_dos_demos import relocated_module, require
 from th04_demo_globals import attest_fields
 
 
-def validate_keyboard_capture(clock: dict, first: dict, resident: str) -> None:
+def validate_keyboard_capture(clock: dict, first: dict, resident: str, op_profile=None) -> None:
     actions = clock['actions']
     require(clock['requested_seed'] == 64 and actions, 'keyboard scenario/extent')
     require(actions[0]['key'] == 'KBD_enter' and actions[0]['pressed'] is True,
@@ -49,7 +49,8 @@ def validate_keyboard_capture(clock: dict, first: dict, resident: str) -> None:
     es = int.from_bytes(segments[:8], 'little')
     bx = int.from_bytes(registers[12:16], 'little') & 65535
     ip = int.from_bytes(registers[32:36], 'little') & 65535
-    require(cs >= 0x0a74 and ip == 0x0d2f and ds == cs - 0x0a74 + 0x0f34 and
+    site = op_profile or dict(segment=0x0a74,ip=0x0d2f,dgroup=0x0f34)
+    require(cs >= site['segment'] and ip == site['ip'] and ds == cs - site['segment'] + site['dgroup'] and
             es * 16 + bx == address, 'original OP counter instruction/context')
 
 
@@ -107,12 +108,33 @@ def load(directory: Path, original: bytes, source_snapshot: Path | None = None) 
         entry = filesystem.find_entry(offsets, name)
         return filesystem.file_bytes(u16(filesystem.image, entry + 26), u32(filesystem.image, entry + 28))
     targets = tomllib.loads((ROOT / 'config/targets.toml').read_text())['artifacts']
+    surface = None
+    if receipt.get('all_products'):
+        from th04_product_surface import attest_surface, op_counter_profile
+        surface = json.loads((directory/'product-surface.json').read_text())
+        if receipt['role'] == 'candidate':
+            require(surface == attest_surface(Path(surface['manifest_path']).parent), 'executed four-source manifest')
+        else:
+            original_products = {'th04-'+name:dict(path=str((ROOT/next(t for t in targets if t['id']=='th04-'+name)['private_path']).resolve()),
+                                 size=next(t for t in targets if t['id']=='th04-'+name)['size'],
+                                 sha256=next(t for t in targets if t['id']=='th04-'+name)['sha256']) for name in ('main','op','maine','zun')}
+            require(surface == dict(schema_version=1,origin='pinned-original',products=original_products),
+                    'executed pinned original surface')
+        require(json.loads((directory/'process-targets.json').read_text()) == surface['products'], 'four-product exec target binding')
+        op = Path(surface['products']['th04-op']['path']).read_bytes()
+        op_map = None if receipt['role']=='original' else Path(surface['op_map_path'])
+        require(json.loads((directory/'op-counter-profile.json').read_text()) == op_counter_profile(op,op_map),
+                'executed OP counter profile identity')
     for product, name in [('main', b'MAIN    EXE'), ('op', b'OP      EXE'),
                           ('maine', b'MAINE   EXE'), ('zun', b'ZUN     COM')]:
         data = image_file(name)
         target = next(target for target in targets if target['id'] == 'th04-' + product)
-        require(data == main if product == 'main' else
-                len(data) == target['size'] and sha(data) == target['sha256'], 'executed product: ' + product)
+        if surface is not None:
+            expected = surface['products']['th04-'+product]
+            require(len(data) == expected['size'] and sha(data) == expected['sha256'], 'executed four-product image: '+product)
+        else:
+            require(data == main if product == 'main' else
+                    len(data) == target['size'] and sha(data) == target['sha256'], 'executed product: ' + product)
     for artifact in ARCHIVES.values():
         data = image_file(artifact['fat_name'])
         require(len(data) == artifact['size'] and sha(data) == artifact['sha256'], 'game-data archive drift')
@@ -163,9 +185,11 @@ def load(directory: Path, original: bytes, source_snapshot: Path | None = None) 
         clock = json.loads((directory / 'clock-input.json').read_text())
         if receipt.get('quit_at_frame') is not None:
             from th04_dos_route import validate_keyboard
-            validate_keyboard(clock, receipt, rows[0], resident_rows[0])
+            validate_keyboard(clock, receipt, rows[0], resident_rows[0],
+                op_profile=json.loads((directory/'op-counter-profile.json').read_text()) if receipt.get('all_products') else None)
         else:
-            validate_keyboard_capture(clock, rows[0], resident_rows[0])
+            validate_keyboard_capture(clock, rows[0], resident_rows[0],
+                op_profile=json.loads((directory/'op-counter-profile.json').read_text()) if receipt.get('all_products') else None)
         for path, digest in (receipt['source_files'] | receipt.get('process_host_inputs', {})).items():
             live = Path(path)
             observed = sha(live.read_bytes()) if live.is_file() else None
@@ -175,6 +199,11 @@ def load(directory: Path, original: bytes, source_snapshot: Path | None = None) 
             require(observed == digest, 'keyboard source identity drift: ' + path)
     result = dict(receipt=receipt, fields=names, rows=rows, resident=resident_rows, events=events,
                   starting_files=starting_files, bounded_terminal=bounded_terminal, terminal_events=pending)
+    result['executed_product_hashes'] = ({k:v['sha256'] for k,v in surface['products'].items()} if surface is not None else
+                                          {row['id']:row['sha256'] for row in targets})
+    if receipt.get('all_products'):
+        from th04_dos_boot import validate_boot
+        result['boot'] = validate_boot(directory,receipt,surface,clock)
     if receipt.get('quit_at_frame') is not None:
         from th04_dos_route import validate_route
         required = {'process-events.json', 'process-events.jsonl', 'process-targets.json',

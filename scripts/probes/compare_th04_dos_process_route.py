@@ -75,7 +75,7 @@ def compare_route(original_dir, candidate_dir, original, source_snapshot=None):
     b, bp, br = read_side(candidate_dir, original, source_snapshot)
     require(a['receipt']['role'] == 'original' and b['receipt']['role'] == 'candidate', 'route pair roles')
     for key in ('end_after', 'dialog_at_frame', 'quit_at_frame', 'main_frames', 'termination',
-                'natural_game_exit', 'restart_main', 'restart_updates', 'restart_shot_boundary', 'resident_ownership', 'emulator_sha256', 'emulator_receipt_sha256', 'debugger_sha256',
+                'natural_game_exit', 'all_products', 'restart_main', 'restart_updates', 'restart_shot_boundary', 'restart_menu_boundary', 'resident_ownership', 'emulator_sha256', 'emulator_receipt_sha256', 'debugger_sha256',
                 'adapter_sha256', 'walker_sha256', 'font_sha256', 'process_host_inputs', 'source_files'):
         require(a['receipt'].get(key) == b['receipt'].get(key), 'route pair identity/contract: ' + key)
     require(a['receipt']['files']['dosbox-x.conf'] == b['receipt']['files']['dosbox-x.conf'] and
@@ -130,6 +130,11 @@ def compare_route(original_dir, candidate_dir, original, source_snapshot=None):
         from th04_ordinary_second_main import compare_second
         result['second_main'] = compare_second(original_dir, candidate_dir, a, b, original, pools, symbols, states)
         result['passed'] &= result['second_main']['passed']
+    if a['receipt'].get('all_products'):
+        result.update(boot_entries_verified=True,
+                      executed_artifacts=[row['artifact'] for row in a['boot']['entries']],
+                      executed_product_hashes={role:c['executed_product_hashes'] for role,c in [('original',a),('candidate',b)]},
+                      scope='Actual booted DOS execution of four maintained source products through Quit/MAINE/fresh OP/restarted MAIN; own-file entry identity and configured state only, no full campaign, pixels, physical timing, continuous lifetime or exact acceptance')
     result['passed'] &= all(row['passed'] for row in residents.values()) and all(row['raw_equal'] for row in file_results.values())
     return result
 

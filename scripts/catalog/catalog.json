@@ -3465,6 +3465,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/th04_dos_boot.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Validate actual DOS load-and-go entries, complete entry images, parent PSP and OP counter ownership.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/th04_dos_process.py",
     "category": "runtime",
     "role": "support",
@@ -3546,6 +3553,13 @@
     "category": "runtime",
     "role": "fixture",
     "purpose": "Run the primary-emulator fault observer with configured symbols/event inputs.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_product_surface.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Attest a same-run four-product source cohort and derive OP counter hooks from its own MAP and bytes.",
     "purpose_source": "maintained-description"
   },
   {

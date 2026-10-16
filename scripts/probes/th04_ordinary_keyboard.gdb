@@ -7,7 +7,7 @@ set debuginfod enabled off
 handle SIG33 nostop noprint pass
 starti
 python
-import gdb, json, os, re, hashlib
+import gdb, json, os, re, hashlib, gzip
 from pathlib import Path
 import sys
 sys.path.insert(0, os.environ['TH04_CLOCK_SOURCE_DIR'])
@@ -24,6 +24,8 @@ regs = int(gdb.parse_and_eval('(void *)&cpu_regs'))
 segments = int(gdb.parse_and_eval('(void *)&Segs'))
 membaseptr = int(gdb.parse_and_eval('(void *)&MemBase'))
 ram = HostRam(lambda address, size: gdb.selected_inferior().read_memory(address, size), {name: int(gdb.parse_and_eval('(void *)&' + name)) for name in ('MemBase', 'cpu', 'paging')})
+all_products = os.environ.get('TH04_ORDINARY_ALL_PRODUCTS') == '1'
+op_profile = json.loads((out/'op-counter-profile.json').read_text()) if all_products else None
 actions = []
 schedule = []
 trace = out / 'raw.txt'
@@ -38,6 +40,7 @@ continue_frame = int(os.environ.get('TH04_ORDINARY_CONTINUE_FRAME', 0))
 quit_frame = int(os.environ.get('TH04_ORDINARY_QUIT_FRAME', 0))
 restart_main = os.environ.get('TH04_ORDINARY_RESTART_MAIN') == '1'
 restart_cue = None
+restart_menu_boundary = os.environ.get('TH04_ORDINARY_RESTART_MENU_BOUNDARY') == '1'
 restart_updates = int(os.environ.get('TH04_ORDINARY_RESTART_UPDATES', 0))
 restart_shot_boundary = os.environ.get('TH04_ORDINARY_RESTART_SHOT_BOUNDARY') == '1'
 followup_active = False
@@ -71,6 +74,8 @@ def snapshot():
 
 def save():
     record = dict(actions=actions, remaining=schedule, resident_linear=resident, found=found, requested_seed=64, pic_ticks_address=address, keyboard_function_address=function, keys=keys, scope='Original OP resident seed increment is observed, never written; keyboard API adapter only; no guest RAM/register/clock writes')
+    if all_products:
+        record['all_products'] = True
     if continue_frame or quit_frame:
         record['waits'] = waits
     if restart_main:
@@ -88,11 +93,33 @@ class Seed(gdb.Breakpoint):
         global todo, armed
         value = int.from_bytes(read(base() + ram.physical(resident + 20), 4), 'little')
         if value == 64 and (not armed):
+            if all_products:
+                row = op_counter_event('initial-op-menu')
+                (out/'initial-op-menu.json').write_text(json.dumps(row,indent=2)+'\n')
             todo = ('key', tick(), 'KBD_enter', True)
             armed = True
             return True
         assert value < 64 or armed, ('missed menu seed', value)
         return False
+
+def op_counter_event(kind):
+    entry = process_recorder.last_entry
+    context = process_recorder.context()
+    registers, segment_data = bytes.fromhex(context['cpu_regs']), bytes.fromhex(context['segments'])
+    load = entry['load_segment']
+    cs = int.from_bytes(segment_data[8:16], 'little')
+    ip = int.from_bytes(registers[32:36], 'little') & 65535
+    ds = int.from_bytes(segment_data[24:32], 'little')
+    es = int.from_bytes(segment_data[:8], 'little')
+    bx = int.from_bytes(registers[12:16], 'little') & 65535
+    opcode = ram.read_range(cs*16+ip,len(bytes.fromhex(op_profile['opcode_hex'])))[0]
+    if (entry['artifact'] != 'th04-op' or (cs,ip,ds) !=
+            (load+op_profile['segment'],op_profile['ip'],load+op_profile['dgroup']) or
+            es*16+bx != resident or opcode.hex() != op_profile['opcode_hex']):
+        raise ValueError('MAP/target-attested OP counter owner/opcode')
+    data = ram.read_range(resident,256)[0]
+    return process_recorder.record(kind,context,entry_sequence=entry['sequence'],cs=cs,ip=ip,
+        counter=int.from_bytes(data[20:24],'little'),counter_opcode_hex=opcode.hex())
 
 class FreshMenu(gdb.Breakpoint):
     def __init__(self):
@@ -101,26 +128,28 @@ class FreshMenu(gdb.Breakpoint):
 
     def stop(self):
         global todo
-        context = process_recorder.context()
-        registers, segment_data = bytes.fromhex(context['cpu_regs']), bytes.fromhex(context['segments'])
-        load = process_recorder.last_entry['load_segment']
-        cs = int.from_bytes(segment_data[8:16], 'little')
-        ip = int.from_bytes(registers[32:36], 'little') & 65535
-        if (cs, ip) != (load + 0x0a74, 0x0d2f):
-            return False
-        ds = int.from_bytes(segment_data[24:32], 'little')
-        es = int.from_bytes(segment_data[:8], 'little')
-        bx = int.from_bytes(registers[12:16], 'little') & 65535
-        if ds != load + 0x0f34 or es * 16 + bx != resident:
-            process_recorder.error = 'fresh OP counter resident/context ownership'
-            return True
-        data = ram.read_range(resident,256)[0]
-        if data[:11] != b'HUMAConfig\0':
-            process_recorder.error = 'fresh OP resident identity'
-            return True
-        row = process_recorder.record('fresh-op-menu', context,
-            entry_sequence=process_recorder.last_entry['sequence'], cs=cs, ip=ip,
-            counter=int.from_bytes(data[20:24], 'little'))
+        row = op_counter_event('fresh-op-menu') if all_products else None
+        if row is None:
+            context = process_recorder.context()
+            registers, segment_data = bytes.fromhex(context['cpu_regs']), bytes.fromhex(context['segments'])
+            load = process_recorder.last_entry['load_segment']
+            cs = int.from_bytes(segment_data[8:16], 'little')
+            ip = int.from_bytes(registers[32:36], 'little') & 65535
+            if (cs, ip) != (load + 0x0a74, 0x0d2f):
+                return False
+            ds = int.from_bytes(segment_data[24:32], 'little')
+            es = int.from_bytes(segment_data[:8], 'little')
+            bx = int.from_bytes(registers[12:16], 'little') & 65535
+            if ds != load + 0x0f34 or es * 16 + bx != resident:
+                process_recorder.error = 'fresh OP counter resident/context ownership'
+                return True
+            data = ram.read_range(resident,256)[0]
+            if data[:11] != b'HUMAConfig\0':
+                process_recorder.error = 'fresh OP resident identity'
+                return True
+            row = process_recorder.record('fresh-op-menu', context,
+                entry_sequence=process_recorder.last_entry['sequence'], cs=cs, ip=ip,
+                counter=int.from_bytes(data[20:24], 'little'))
         (out/'fresh-op-menu.json').write_text(json.dumps(row,indent=2)+'\n')
         self.enabled = False
         todo = ('restart-menu' if restart_main else 'route-complete',)
@@ -204,7 +233,7 @@ if os.environ.get('TH04_ORDINARY_DGROUP') == '1':
 process_recorder = None
 if os.environ.get('TH04_ORDINARY_PROCESS_EVENTS') == '1':
     from th04_ordinary_process_gdb import ProcessRecorder
-    process_recorder = ProcessRecorder(out, ram, lambda name: int(gdb.parse_and_eval("(void *)&'" + name + "'")), read, tick, lambda: resident)
+    process_recorder = ProcessRecorder(out, ram, lambda name: int(gdb.parse_and_eval("(void *)&'" + name + "'")), read, tick, lambda: resident, observe_load_go=all_products)
 save()
 while gdb.selected_inferior().pid:
     gdb.execute('continue')
@@ -246,6 +275,11 @@ while gdb.selected_inferior().pid:
     if process_recorder is not None and process_recorder.transfer.at_entry():
         process_recorder.transfer.capture_transfer()
         continue
+    if process_recorder is not None:
+        go = next((transfer for transfer in process_recorder.go_transfers if transfer.at_entry()),None)
+        if go is not None:
+            go.capture_transfer()
+            continue
     if process_recorder is not None and process_recorder.entry_requested:
         entry = process_recorder.entry_requested
         if quit_frame and post_main and entry['artifact'] == 'th04-maine':
@@ -260,7 +294,7 @@ while gdb.selected_inferior().pid:
             fresh_seedwatch = FreshMenu()
             clock.enabled = True
         elif restart_main and post_main and entry['artifact'] == 'th04-main':
-            if restart_cue is None or len(process_recorder.entry_records) != 4:
+            if restart_cue is None or sum(process_recorder.rows[i]['artifact'] == 'th04-main' for i in process_recorder.entry_records) != 2:
                 raise ValueError('unconfigured second MAIN generation')
             restart_cue.update(entry_sequence=entry['sequence'], entry_tick=tick(),
                                action_end=len(actions), cancelled=schedule, enter_down=enter_down)
@@ -298,17 +332,21 @@ while gdb.selected_inferior().pid:
         continue
     if todo is not None and todo[0] == 'restart-menu':
         restart_cue = dict(menu_sequence=process_recorder.rows[-1]['sequence'],
-                           tick=tick(), action_start=len(actions), resident_seed=65)
+                           tick=tick(), action_start=len(actions), resident_seed=65, menu_boundary=restart_menu_boundary)
         schedule = []
-        for delta in (100, 1100, 2100):
+        for delta in (range(0,30001,1000) if restart_menu_boundary else (100,1100,2100)):
             schedule.extend([(tick()+delta,'KBD_enter',True),(tick()+delta+120,'KBD_enter',False)])
-        todo = None
         clock.enabled = True
         save()
-        continue
+        if restart_menu_boundary:
+            todo = ('key',*schedule.pop(0))
+        else:
+            todo = None
+            continue
     if todo is not None and todo[0] in ('route-complete','route-diagnostic'):
         save()
         if todo[0] == 'route-diagnostic':
+            (out/'route-diagnostic-memory.bin.gz').write_bytes(gzip.compress(ram.read_range(0,655360)[0],mtime=0))
             (out/'route-diagnostic.json').write_text(json.dumps(dict(context=process_recorder.context(),
                 resident=ram.read_range(resident,256)[0].hex(), natural_game_exit=False),indent=2)+'\n')
         process_recorder.finish('fresh-op-menu' if todo[0] == 'route-complete' else 'route-incomplete')

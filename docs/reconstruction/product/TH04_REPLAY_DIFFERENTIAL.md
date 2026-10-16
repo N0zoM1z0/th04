@@ -5,6 +5,45 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Actual four-product boot observation and fixed-menu negative (v1443)
+
+`--all-products` requires process events and a complete normal same-run product
+cohort. It installs MAIN/OP/MAINE/ZUN from the newly attested cold manifest,
+checks producer/packing identities, and binds every disk slot and later entry
+to its own file. Candidate OP's unique MAP-owned LES/INC sequence supplies its
+counter CS/IP/DGROUP; the fixed original hook is not reused. First/source
+profiles and all original targets retain their own identities.
+
+Optional DOS4B00 observation watches host CPU_JMP/RET/IRET and verifies the
+complete relocated image before transfer and actual guest CS:IP on return.
+The actual boot uses RETF for four ZUN invocations and initial OP, then far JMP
+for MAIN's4B03 overlay. Initial PSP/MCB and raw request AX read back from the
+complete RAM snapshots. Parent PSP875/MCB874 is a stable, verified allocation
+anchor; environment filenames cannot establish code identity. Short original/
+source probes both pass all six entry/image proofs and one complete MAIN update.
+Eighty-one actual mutants reject image/PC/AX/parent/counter/boot/cohort/packing
+claims;22 public tests and current CI573 pass.
+
+The first full four-source candidate has eight attested entries and reaches
+actual MAINE and fresh OP. Its entire first-MAIN7547-update component agrees on
+consumed input/36 fields/RNG, nine pools and22 states. Physical CFG/SCR and all
+ten complete16-bit checksums agree. Its aggregate retains278 post-reset input
+differences. Nevertheless the fixed three restart pulses never enter second
+MAIN: fresh counter65 becomes71 versus original70. Initial source startup takes
+2752ms from counter64 to MAIN versus original2341ms, and the initial scenario
+also provides held Shot at2200ms. This is an unisolated input/menu negative,
+not an admitted product defect or a complete-route pass. The incomplete capture,
+raw prefix and real diagnostics remain unchanged.
+
+A new `--restart-menu-boundary` scenario confirms at the actual counter-store
+CPU/DGROUP snapshot, then repeats real Enter/release pulses at one-second
+intervals for at most30 seconds. The actual prefix and cancelled suffix are
+both validated; no game state, RNG, seed or clock is assigned. New timeout
+captures also retain full conventional RAM. Its original run attests nine
+entries and600 second-MAIN updates with actual entry seed65; candidate replay
+is in progress in new boundary namespaces. The fixed negative is not restamped.
+Replay namespace: `.analysis/reconstruction/probes/dos-four-product-route-v1443/`.
+
 ## Four-source product cold baseline and OP counter ownership (v1443)
 
 One serial cold build from frozen3ca7b96 source publishes all four products under

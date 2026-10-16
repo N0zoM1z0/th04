@@ -23,6 +23,8 @@ CATEGORIES = {
 }
 EXTENSIONS = {'.py', '.sh', '.ps1', '.cmd', '.bat', '.java', '.asm', '.gdb'}
 OVERRIDES = {
+    'th04_product_surface.py': ('runtime', 'Attest a same-run four-product source cohort and derive OP counter hooks from its own MAP and bytes.'),
+    'th04_dos_boot.py': ('runtime', 'Validate actual DOS load-and-go entries, complete entry images, parent PSP and OP counter ownership.'),
     'th04_ordinary_generation.py': ('runtime', 'Partition actual MAIN generations without relabeling and validate frame/RNG provenance.'),
     'th04_ordinary_second_main.py': ('runtime', 'Validate second MAIN initialization, actual input, complete DGROUP pools and terminal state.'),
     'verify_dos_smem_page_copy.py': ('runtime', 'Compare original and linked DOS SMEM allocation, release, shared HMEM boundaries and complete page-copy memory with seeded DOS/I/O replies.'),

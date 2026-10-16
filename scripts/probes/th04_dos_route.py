@@ -9,15 +9,24 @@ from compare_th04_dos_demos import relocated_module, require
 from th04_dos_process import artifact_for_path, resident_allocation
 
 
-def validate_entry(row, request, image, observed):
+def validate_entry(row, request, image, observed, allow_exec=False):
     require(parse_mz(image).valid, 'route entry MZ integrity')
     load = row['load_segment']
-    require(request['kind'] == 'exec-request' and request['ax'] == 0x4b03 and
-            request['requested_artifact'] == row['artifact'] and
-            request['overlay_load_segment'] == request['overlay_relocation_factor'] == load,
-            'route entry overlay request/load/factor')
-    block = bytes.fromhex(request['overlay_parameter_hex'])
-    require(block == load.to_bytes(2, 'little') * 2, 'route overlay parameter bytes')
+    if allow_exec:
+        require(len(bytes.fromhex(request['cpu_regs'])) == 48 and request['opcode'] == 'cd21',
+                'entry actual software INT21 request')
+        require(request['ax'] == int.from_bytes(bytes.fromhex(request['cpu_regs'])[:2],'little') == row['request_ax'],
+                'entry raw DOS request AX')
+    if allow_exec and request['ax'] == 0x4b00:
+        require(request['kind'] == 'exec-request' and request['requested_artifact'] == row['artifact'],
+                'entry actual DOS load-and-go request')
+    else:
+        require(request['kind'] == 'exec-request' and request['ax'] == 0x4b03 and
+                request['requested_artifact'] == row['artifact'] and
+                request['overlay_load_segment'] == request['overlay_relocation_factor'] == load,
+                'route entry overlay request/load/factor')
+        block = bytes.fromhex(request['overlay_parameter_hex'])
+        require(block == load.to_bytes(2, 'little') * 2, 'route overlay parameter bytes')
     require(row['file_sha256'] == sha(image) and observed == relocated_module(image, load) and
             row['image_bytes'] == len(observed) and row['relocated_sha256'] == sha(observed),
             'route complete raw relocated image')
@@ -36,15 +45,22 @@ def validate_entry(row, request, image, observed):
             int.from_bytes(psp[0x2c:0x2e], 'little') == owner['environment_segment'] and
             artifact_for_path(bytes.fromhex(owner['executable_hex'])) == row['artifact'],
             'route entry MCB/PSP/environment')
+    if allow_exec:
+        require(owner['parent_psp'] == int.from_bytes(psp[0x16:0x18],'little'),
+                'entry actual parent PSP field')
 
 
-def validate_keyboard(clock, receipt, first, resident):
+def validate_keyboard(clock, receipt, first, resident, op_profile=None):
     from compare_th04_dos_ordinary_prefix import validate_keyboard_capture
     actions, waits = clock['actions'], clock['waits']
     initial_actions = actions[:clock['second_main']['action_start']] if clock.get('second_main') else actions
     shots = [i for i, row in enumerate(initial_actions) if row['key'] == 'KBD_z' and row['pressed'] is True]
     require(shots, 'route gameplay Shot')
-    validate_keyboard_capture(dict(clock, actions=actions[:shots[-1] + 1]), first, resident)
+    initial_clock = dict(clock, actions=actions[:shots[-1] + 1])
+    if op_profile is None:
+        validate_keyboard_capture(initial_clock, first, resident)
+    else:
+        validate_keyboard_capture(initial_clock, first, resident, op_profile=op_profile)
     require(len(waits) == 2 and [row['kind'] for row in waits] == ['dialogue', 'quit'] and
             [row['frame'] for row in waits] == [receipt['dialog_at_frame'], receipt['quit_at_frame']],
             'route dialogue/Quit cue identity')
@@ -85,7 +101,7 @@ def validate_restart_keys(clock, previous_end):
             'route restart action extent/seed')
     actual = actions[start:end]
     planned = [[cue['tick'] + delta + offset, 'KBD_enter', pressed]
-               for delta in (100, 1100, 2100) for offset, pressed in ((0, True), (120, False))]
+               for delta in (range(0,30001,1000) if cue.get('menu_boundary') else (100,1100,2100)) for offset, pressed in ((0, True), (120, False))]
     require([[event['due'], event['key'], event['pressed']] for event in actual] + cue['cancelled'] == planned and
             all(event['tick'] <= cue['entry_tick'] and event['frame'] is None for event in actual) and
             cue['enter_down'] is actual[-1]['pressed'], 'route actual ordinary restart keys/cancellation')
@@ -102,12 +118,13 @@ def validate_route(directory, receipt, capture):
             'route complete process metadata')
     require([row['sequence'] for row in rows] == list(range(len(rows))) and
             all(a['tick'] <= b['tick'] for a, b in zip(rows, rows[1:])), 'route event sequence/clock')
-    entries = [row for row in rows if row['kind'] == 'entry']
+    all_entries = [row for row in rows if row['kind'] == 'entry']
+    entries = [row for row in all_entries if row['request_ax'] == 0x4b03] if receipt.get('all_products') else all_entries
     require([row['artifact'] for row in entries] == expected_artifacts and
-            metadata['entries'] == [row['sequence'] for row in entries], 'route executable generations')
+            metadata['entries'] == [row['sequence'] for row in all_entries], 'route executable generations')
     targets = json.loads((directory / 'process-targets.json').read_text())
     dump_names = set()
-    for row in entries:
+    for row in all_entries:
         spec = targets[row['artifact']]
         image = Path(spec['path']).read_bytes()
         require(sha(image) == spec['sha256'] and len(image) == spec['size'], 'route target file identity')
@@ -117,7 +134,7 @@ def validate_route(directory, receipt, capture):
                 sha((directory / name).read_bytes()) == row['ram_file_sha256'] == receipt['files'][name],
                 'route entry dump identity/extent')
         observed = gzip.decompress((directory / name).read_bytes())
-        validate_entry(row, rows[row['request_sequence']], image, observed)
+        validate_entry(row, rows[row['request_sequence']], image, observed, allow_exec=receipt.get('all_products',False))
         dump_names.add(name)
     require(dump_names == {name for name in receipt['files'] if name.startswith('process-entry-')},
             'route complete entry dump set')
@@ -126,7 +143,7 @@ def validate_route(directory, receipt, capture):
             'route retained PSP/predecessor generations')
     for artifact in ('th04-op', 'th04-maine', 'th04-zun'):
         # The initial image gate separately attests these original products.
-        require(targets[artifact]['sha256'] == capture['original_product_hashes'][artifact],
+        require(targets[artifact]['sha256'] == capture['executed_product_hashes'][artifact],
                 'route original supporting image identity')
     require(targets['th04-main']['sha256'] == receipt['main_sha256'], 'route MAIN producer binding')
     handoff = json.loads((directory / 'main-handoff.json').read_text())
@@ -152,20 +169,33 @@ def validate_route(directory, receipt, capture):
     registers, segments = bytes.fromhex(menu['cpu_regs']), bytes.fromhex(menu['segments'])
     load = entries[2]['load_segment']
     base = menu['resident_linear']
-    require(menu['cs'] == int.from_bytes(segments[8:16], 'little') == load + 0x0a74 and
-            menu['ip'] == int.from_bytes(registers[32:36], 'little') & 65535 == 0x0d2f and
-            int.from_bytes(segments[24:32], 'little') == load + 0x0f34 and
-            int.from_bytes(segments[:8], 'little') * 16 + (int.from_bytes(registers[12:16], 'little') & 65535) == base,
-            'route fresh OP menu/resident CPU ownership')
+    if receipt.get('all_products'):
+        from th04_dos_boot import validate_counter
+        profile = json.loads((directory/'op-counter-profile.json').read_text())
+        memory = gzip.decompress((directory/menu['memory_file']).read_bytes())
+        validate_counter(menu,entries[2],profile,memory)
+    else:
+        require(menu['cs'] == int.from_bytes(segments[8:16], 'little') == load + 0x0a74 and
+                menu['ip'] == int.from_bytes(registers[32:36], 'little') & 65535 == 0x0d2f and
+                int.from_bytes(segments[24:32], 'little') == load + 0x0f34 and
+                int.from_bytes(segments[:8], 'little') * 16 + (int.from_bytes(registers[12:16], 'little') & 65535) == base,
+                'route fresh OP menu/resident CPU ownership')
     require(all(row['resident_linear'] == base and bytes.fromhex(row['resident_hex'])[:11] == b'HUMAConfig\0'
                 for row in (request, *entries[1:], menu)), 'route shared resident address/identity')
     before, after = bytes.fromhex(entries[2]['resident_hex']), bytes.fromhex(menu['resident_hex'])
     require(after[:20] + after[24:] == before[:20] + before[24:] and
             menu['counter'] == int.from_bytes(after[20:24], 'little') ==
             (int.from_bytes(before[20:24], 'little') + 1) & 0xffffffff, 'route fresh OP resident counter store')
-    ownership = validate_resident_memory(directory, receipt, rows, entries) if receipt.get('resident_ownership') else None
+    ownership = validate_resident_memory(directory, receipt, rows, all_entries,
+        root_mcb=metadata.get('root_program_mcb') if receipt.get('all_products') else None) if receipt.get('resident_ownership') else None
     if restart:
         cue = capture['clock']['restart']
+        require(bool(cue.get('menu_boundary')) == bool(receipt.get('restart_menu_boundary')),
+                'route restart menu input policy')
+        if receipt.get('restart_menu_boundary'):
+            action = capture['clock']['actions'][cue['action_start']]
+            require(action['tick'] == menu['tick'] and action['unchanged_guest']['cpu_regs'] == menu['cpu_regs'] and
+                    action['unchanged_guest']['segments'] == menu['segments'], 'actual fresh-menu confirmation boundary')
         require(cue['menu_sequence'] == menu['sequence'] and cue['tick'] == menu['tick'] and
                 cue['entry_sequence'] == entries[-1]['sequence'] and cue['entry_tick'] == entries[-1]['tick'] and
                 menu['sequence'] < entries[-1]['request_sequence'] < entries[-1]['sequence'] and
@@ -197,10 +227,10 @@ def validate_route(directory, receipt, capture):
                 scope='Actual overlay entries and resident use; checkpoint allocation proof only when resident_ownership is present; no continuous lifetime or second-MAIN gameplay acceptance')
 
 
-def validate_resident_memory(directory, receipt, rows, entries):
+def validate_resident_memory(directory, receipt, rows, entries, root_mcb=None):
     samples, names = [], set()
     for row in rows:
-        if row['resident_linear'] is None:
+        if row['resident_linear'] is None and not receipt.get('all_products'):
             continue
         name = 'process-memory-%04d.bin.gz' % row['sequence']
         require(row['memory_file'] == name and sha((directory / name).read_bytes()) ==
@@ -208,11 +238,12 @@ def validate_resident_memory(directory, receipt, rows, entries):
         memory = gzip.decompress((directory / name).read_bytes())
         require(len(memory) == 655360 and sha(memory) == row['conventional_sha256'],
                 'route complete conventional memory')
-        allocation = row['resident_allocation']
-        require(allocation == resident_allocation(memory, allocation['program_mcb'], row['resident_linear']) and
-                allocation['program_mcb'] == entries[0]['owner']['mcb_segment'] and
-                memory[row['resident_linear']:row['resident_linear'] + 256].hex() == row['resident_hex'],
-                'route actual resident allocation/content')
+        if row['resident_linear'] is not None:
+            allocation = row['resident_allocation']
+            require(allocation == resident_allocation(memory, allocation['program_mcb'], row['resident_linear']) and
+                    allocation['program_mcb'] == (root_mcb if root_mcb is not None else entries[0]['owner']['mcb_segment']) and
+                    memory[row['resident_linear']:row['resident_linear'] + 256].hex() == row['resident_hex'],
+                    'route actual resident allocation/content')
         if row['kind'] == 'entry':
             owner = row['owner']
             psp, mcb = owner['psp_segment'] * 16, owner['mcb_segment'] * 16
@@ -221,7 +252,8 @@ def validate_resident_memory(directory, receipt, rows, entries):
             start = row['load_segment'] * 16
             module = gzip.decompress((directory / row['ram_file']).read_bytes())
             require(memory[start:start + len(module)] == module, 'route entry/conventional image agreement')
-        samples.append(dict(sequence=row['sequence'], kind=row['kind'], allocation=allocation['allocation']))
+        if row['resident_linear'] is not None:
+            samples.append(dict(sequence=row['sequence'], kind=row['kind'], allocation=allocation['allocation']))
         names.add(name)
     require(samples and names == {name for name in receipt['files'] if name.startswith('process-memory-')},
             'route complete ownership dump set')

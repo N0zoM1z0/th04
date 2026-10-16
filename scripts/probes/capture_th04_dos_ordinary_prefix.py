@@ -53,8 +53,12 @@ def main() -> int:
                         help='Observe this many actual second-MAIN updates after restart (1..3995)')
     parser.add_argument('--restart-shot-boundary', action='store_true',
                         help='Send second-MAIN Shot at the first actual actor-update write instead of an entry delay')
+    parser.add_argument('--restart-menu-boundary', action='store_true',
+                        help='Confirm fresh OP at its actual counter store and repeat real Enter pulses until MAIN entry')
     parser.add_argument('--stall-diagnostic-ms', type=int,
                         help='Record actual guest PC/RAM after this much virtual no-frame progress')
+    parser.add_argument('--all-products', action='store_true',
+                        help='Install and attest a complete same-run four-product build and observe DOS4B00 entries')
     parser.add_argument('--process-events', action='store_true',
                         help='Observe actual guest INT21 requests and MCB/PSP process activity')
     parser.add_argument('--emulator-archive', type=Path, default=PRIVATE / 'dosbox-x-199aa35f.tar.gz')
@@ -85,6 +89,10 @@ def main() -> int:
         parser.error('Restart updates require restart, no video, and 1..3995 updates')
     if args.restart_shot_boundary and (args.restart_updates is None or args.restart_updates < 2):
         parser.error('Boundary Shot requires at least two second-MAIN updates')
+    if args.all_products and not args.process_events:
+        parser.error('Four-product surface requires process events')
+    if args.restart_menu_boundary and (not args.all_products or not args.restart_main):
+        parser.error('Boundary menu requires an all-product restart route')
     output = args.output_dir.resolve()
     if output.exists() or not output.is_relative_to(ROOT / '.analysis/runtime/candidates'):
         parser.error('use a fresh private capture directory')
@@ -139,6 +147,10 @@ def main() -> int:
                 or not parse_mz(main_bytes).valid
                 or sha(args.map.read_bytes()) != producer['link']['map_sha256']):
             raise ValueError('ordinary MAIN producer/MAP drift')
+    surface = None
+    if args.all_products and not args.original:
+        from th04_product_surface import attest_surface
+        surface = attest_surface(args.build_dir.resolve())
     capture_profile = ordinary_profile(main_bytes, original, None if args.original else args.map)
     if args.end_after is not None:
         from capture_th04_dos_demos import profile as demo_profile
@@ -152,9 +164,19 @@ def main() -> int:
         process_targets = {'th04-' + name: dict(path=str((ROOT / row['private_path']).resolve()),
                            size=row['size'], sha256=row['sha256']) for name, row in products.items()}
         process_targets['th04-main'] = dict(path=str(main_path.resolve()), size=len(main_bytes), sha256=sha(main_bytes))
+        if surface is not None:
+            process_targets = surface['products']
         (output / 'process-targets.json').write_text(json.dumps(process_targets, indent=2) + '\n')
+    if args.all_products:
+        from th04_product_surface import op_counter_profile
+        if surface is None:
+            surface = dict(schema_version=1, origin='pinned-original', products=process_targets)
+        (output/'product-surface.json').write_text(json.dumps(surface,indent=2)+'\n')
+        op = Path(process_targets['th04-op']['path']).read_bytes()
+        op_map = None if args.original else Path(surface['op_map_path'])
+        (output/'op-counter-profile.json').write_text(json.dumps(op_counter_profile(op,op_map),indent=2)+'\n')
     prepare = [sys.executable, str(ROOT / 'scripts/prepare_product_hdi.py'), '--output-dir',
-               str(output / 'prepared'), '--products', 'main', '--rank', '1', '--lives', '6', '--bombs', '0']
+               str(output / 'prepared'), '--products', *(['main','op','maine','zun'] if args.all_products else ['main']), '--rank', '1', '--lives', '6', '--bombs', '0']
     prepare += ['--original'] if args.original else ['--build-dir', str(args.build_dir.resolve())]
     with (output / 'prepare.log').open('wb') as stream:
         subprocess.run(prepare, check=True, stdout=stream, stderr=subprocess.STDOUT)
@@ -197,6 +219,8 @@ def main() -> int:
     stream_sources = []
     if args.process_events:
         env['TH04_ORDINARY_PROCESS_EVENTS'] = '1'
+    if args.all_products:
+        env['TH04_ORDINARY_ALL_PRODUCTS'] = '1'
     if args.end_after is not None:
         env['TH04_ORDINARY_END_AFTER'] = str(args.end_after)
     if args.dialog_at_frame is not None:
@@ -211,6 +235,8 @@ def main() -> int:
         env['TH04_ORDINARY_RESTART_UPDATES'] = str(args.restart_updates)
     if args.restart_shot_boundary:
         env['TH04_ORDINARY_RESTART_SHOT_BOUNDARY'] = '1'
+    if args.restart_menu_boundary:
+        env['TH04_ORDINARY_RESTART_MENU_BOUNDARY'] = '1'
     if args.stall_diagnostic_ms is not None:
         env['TH04_ORDINARY_STALL_MS'] = str(args.stall_diagnostic_ms)
     if args.dgroup_stream:
@@ -229,7 +255,7 @@ def main() -> int:
         env.update(TH04_ORDINARY_VIDEO='1', TH04_ORDINARY_VIDEO_LAYOUT=str(args.video_layout.resolve()))
         stream_sources += [adapter.with_name(name) for name in ('th04_demo_video.py', 'th04_ordinary_video.py')]
     if args.process_events:
-        stream_sources += [adapter.with_name(name) for name in ('th04_dos_process.py', 'th04_ordinary_process_gdb.py', 'th04_ordinary_generation.py')]
+        stream_sources += [adapter.with_name(name) for name in ('th04_dos_process.py', 'th04_ordinary_process_gdb.py', 'th04_ordinary_generation.py', 'th04_product_surface.py')]
     started = time.monotonic()
     timeout = False
     with (output / 'boot.log').open('wb') as stream:
@@ -283,6 +309,11 @@ def main() -> int:
         complete = complete and b'TH04_ORDINARY_SECOND_MAIN_COMPLETE\n' in (output / 'boot.log').read_bytes()
     if args.restart_shot_boundary and complete:
         names += ['second-main/first-update.json']
+    if args.all_products:
+        names += ['product-surface.json','op-counter-profile.json','initial-op-menu.json']
+    for name in ('route-diagnostic.json','route-diagnostic-memory.bin.gz'):
+        if (output/name).exists():
+            names.append(name)
     receipt = dict(schema_version=1, complete=complete, timeout=timeout, exit=code,
                    role='original' if args.original else 'candidate', elapsed=time.monotonic() - started,
                    command=command, main_path=str(main_path.resolve()), main_sha256=sha(main_bytes),
@@ -320,6 +351,9 @@ def main() -> int:
                                        sha256=sha(args.video_layout.read_bytes()))
     if args.process_events:
         receipt.update(process_events=True, resident_ownership=True, process_host_inputs=process_inputs)
+    if args.all_products:
+        receipt['all_products'] = True
+        receipt['restart_menu_boundary'] = args.restart_menu_boundary
     (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
     print(json.dumps(dict(complete=complete, output=str(output))))
     return 0 if complete else 1
