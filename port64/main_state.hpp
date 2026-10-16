@@ -41,6 +41,7 @@
 #include "host_score.hpp"
 #include "hud.hpp"
 #include "hud_popup.hpp"
+#include "hud_titles.hpp"
 #include "demo.hpp"
 #include "sound_runtime.hpp"
 #include <memory>
@@ -227,6 +228,8 @@ public:
     void finish_post_boss_dialog();
     bool next_stage_requested() const { return next_stage_requested_; }
     const popup::Snapshot& popup_state() const { return popup_; }
+    const titles::Snapshot& title_state() const { return titles_; }
+    const std::vector<titles::Draw>& title_draws() const { return title_draws_; }
     const transition::Overlay& overlay() const { return overlay_; }
     const transition::Text& overlay_cell() const { return overlay_cell_; }
     bool bonus_text_visible() const { return clear_bonus_.has_value() && !leave_text_replaced_; }
@@ -258,6 +261,8 @@ private:
     application::State* application_;
     popup::Snapshot popup_{};
     transition::Overlay overlay_{};
+    titles::Snapshot titles_{};
+    std::vector<titles::Draw> title_draws_;
     transition::Text overlay_cell_{transition::TextKind::character,4,1,32,5};
     std::optional<transition::Departure> departure_;
     bool frame_suspended_=false,dialog_finished_=false,next_stage_requested_=false,leave_text_replaced_=false;

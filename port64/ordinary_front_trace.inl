@@ -17,6 +17,8 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
     pools.write("TH04OP1\n",8);
     std::ofstream popup_rows(output/"popup-rows.bin",std::ios::binary);
     require_view(bool(popup_rows),"ordinary popup rows unavailable");popup_rows.write("TH04PU1\n",8);
+    std::ofstream title_rows(output/"title-rows.bin",std::ios::binary);
+    require_view(bool(title_rows),"ordinary title rows unavailable");title_rows.write("TH04TI1\n",8);
     FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&assets,gameplay::Mode::ordinary);
     scene.enable_configuration();scene.enable_registration();
     for(unsigned i=0;i<seed;++i)scene.advance(0,false,false);
@@ -30,6 +32,7 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
     });
     const stage::Program program(assets.standard);
     std::ofstream popup_state(output/"popup-state.txt");require_view(bool(popup_state),"ordinary popup state unavailable");
+    std::ofstream title_state(output/"title-state.txt");require_view(bool(title_state),"ordinary title state unavailable");
     scene.main_state().set_actor_observer([&](const gameplay::State& s){
         th04::portable::demo_wire::pools(pools,0,s,program);
         const auto& p=s.popup_state();
@@ -37,6 +40,12 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
             <<p.left<<' '<<p.destination<<' '<<+p.requested<<' '<<(p.active ? 0x67e8 : 0x11be)<<' '<<p.bonus<<' ';
         for(auto b:p.shift)popup_state<<std::hex<<std::setfill('0')<<std::setw(2)<<+b;
         popup_state<<std::dec<<'\n';
+        const auto& t=s.title_state();
+        const auto callback=s.overlay().callback;
+        const unsigned pointer=callback==transition::Callback::enter ? 0x62b3 : callback==transition::Callback::leave ? 0x6349 : callback==transition::Callback::titles ? 0x6446 : callback==transition::Callback::boss_titles ? 0x66a5 : 0x11be;
+        title_state<<s.frames()<<' '<<+s.overlay().time<<' '<<pointer<<' '<<+t.frame<<' '<<+t.boss_frame<<' '<<+t.sprite<<' '<<+t.stage_id<<' '<<+t.bgm_id<<' '<<t.stage_length<<' '<<t.bgm_length<<' '<<t.boss_length;
+        for(const auto& d:s.title_draws())title_state<<'|'<<d.left<<' '<<d.top<<' '<<+d.sprite<<' '<<+d.color;
+        title_state<<'\n';
     });
     const auto base_draws=scene.process_random_draws(),base_samples=scene.main_state().random_samples();
     const auto hex=[&](const auto& bytes){constexpr char digits[]="0123456789abcdef";for(auto value:bytes)state<<digits[unsigned(value)>>4]<<digits[unsigned(value)&15];};
@@ -73,6 +82,14 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
             std::ofstream snapshot(output/("popup-"+std::to_string(frame)+"-text.bin"),std::ios::binary);
             snapshot.write(reinterpret_cast<const char*>(text.data()),text.size());
             require_view(main.frames()==frame,"popup observation advanced the simulation");
+        }
+        {
+            const auto tram=main_text_plane(main).physical_bytes(0xa0000,16384);
+            const std::uint32_t number=frame;title_rows.write(reinterpret_cast<const char*>(&number),4);
+            for(unsigned row:{11u,13u,23u}) {
+                title_rows.write(reinterpret_cast<const char*>(tram.data()+row*160),160);
+                title_rows.write(reinterpret_cast<const char*>(tram.data()+8192+row*160),160);
+            }
         }
         if(frame==updates)break;
         const auto held=std::uint16_t((keys&0x2fu)|(keys&0x10u ? 0x800u : 0)|(keys&0x1000u ? 0x2000u : 0)|(keys&0x2000u ? 0x1000u : 0));

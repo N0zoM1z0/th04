@@ -71,7 +71,7 @@ struct MainAssets {
     Bytes stage_tiles,boss_tiles;
     Bytes explosion_sprite,orange_background,orange_transition;
     std::array<Bytes,2> dialog_scripts,player_faces;
-    Bytes boss_faces,gaiji,font_bitmap;
+    Bytes boss_faces,gaiji,font_bitmap,title_dissolve_out,title_dissolve_in;
     std::map<std::string,Bytes> dialog_sprites;
     Bytes reimu_map_tiles, marisa_map_tiles, map, standard;
 };

@@ -120,7 +120,7 @@ void State::load_stage(const stage::Program::Bytes& standard) {
         else marisa_.emplace(th04::portable::marisa::prepare_stage4({}));
     }
     orange_active_=false;post_boss_dialog_pending_=false;
-    clear_bonus_.reset();departure_.reset();overlay_={};
+    clear_bonus_.reset();departure_.reset();overlay_={};title_draws_.clear();
     overlay_cell_={transition::TextKind::character,4,1,32,5};
     popup_.active=false;
     frame_suspended_=false;dialog_finished_=false;next_stage_requested_=false;leave_text_replaced_=false;
@@ -138,27 +138,32 @@ void State::set_demo_replay(const std::vector<std::uint8_t>& bytes) {
 void State::start_orange_after_dialog() {
     if (!stage_ || orange_active_ || midboss_.snapshot().active) throw std::logic_error("invalid Orange dialog handoff");
     orange_active_=true;
+    titles::request_boss(titles_,overlay_.callback,stage_id_,std::uint8_t(playchar_));
 }
 void State::start_kurumi_after_dialog(std::array<std::uint8_t,3> palette_zero) {
     if(stage_id_!=1 || !stage_ || !stage_->stopped() || boss_active() || midboss_state().active || !kurumi_)
         throw std::logic_error("invalid Kurumi dialog handoff");
     // Stage2 BFNT palette loading replaces the preceding boss color0.
     kurumi_->set_palette_zero(palette_zero);kurumi_active_=true;
+    titles::request_boss(titles_,overlay_.callback,stage_id_,std::uint8_t(playchar_));
 }
 void State::start_elly_after_dialog(std::array<std::uint8_t,3> palette_zero) {
     if(stage_id_!=2 || !stage_ || !stage_->stopped() || boss_active() || midboss_state().active || !elly_)
         throw std::logic_error("invalid Elly dialog handoff");
     elly_->set_palette_zero(palette_zero);elly_active_=true;
+    titles::request_boss(titles_,overlay_.callback,stage_id_,std::uint8_t(playchar_));
 }
 void State::start_marisa_after_dialog(std::array<std::uint8_t,3> palette_zero) {
     if(stage_id_!=3 || playchar_!=application::Playchar::reimu || !stage_ || !stage_->stopped() || boss_active() || midboss_state().active || !marisa_)
         throw std::logic_error("invalid Marisa dialog handoff");
     marisa_->set_palette_zero(palette_zero);marisa_active_=true;
+    titles::request_boss(titles_,overlay_.callback,stage_id_,std::uint8_t(playchar_));
 }
 void State::start_reimu_after_dialog(std::array<std::uint8_t,3> palette_zero) {
     if(stage_id_!=3 || playchar_!=application::Playchar::marisa || !stage_ || !stage_->stopped() || boss_active() || midboss_state().active || !reimu_)
         throw std::logic_error("invalid Reimu dialog handoff");
     reimu_->set_palette_zero(palette_zero);reimu_active_=true;
+    titles::request_boss(titles_,overlay_.callback,stage_id_,std::uint8_t(playchar_));
 }
 void State::start_yuuka5_after_dialog(std::array<std::uint8_t,3> palette_zero) {
     if(stage_id_!=4 || !stage_ || !stage_->stopped() || boss_active() || midboss_state().active || !stage5_)
@@ -169,6 +174,7 @@ void State::start_yuuka5_after_dialog(std::array<std::uint8_t,3> palette_zero) {
     yuuka5::Snapshot initial;initial.boss=stage5_->boss;
     initial.boss.palette_zero=palette_zero;initial.midboss_frames_until=60000-65536;
     yuuka5_.emplace(initial);yuuka5_active_=true;
+    titles::request_boss(titles_,overlay_.callback,stage_id_,std::uint8_t(playchar_));
 }
 void State::begin_stage6_dialog(stage::Background& background) {
     if(!stage6_dialog_ready(background)) throw std::logic_error("invalid Stage6 dialogue gate");
@@ -181,7 +187,8 @@ void State::start_yuuka6_after_dialog(std::array<std::uint8_t,3> palette_zero) {
     // Do not repeat stage initialization, random-ring fill or laser reset here.
     yuuka6::Snapshot initial;initial.boss=stage6_->boss;initial.boss.palette_zero=palette_zero;
     yuuka6_.emplace(initial);yuuka6::BackgroundState bg;bg.palette_zero=palette_zero;
-    yuuka6_background_=yuuka6::Background(bg);yuuka6_active_=true;stage6_battle_pending_=false;
+    yuuka6_background_=yuuka6::Background(bg);yuuka6_active_=true;
+    titles::request_boss(titles_,overlay_.callback,stage_id_,std::uint8_t(playchar_));stage6_battle_pending_=false;
 }
 void State::begin_extra_dialog(stage::Background& background) {
     if(!extra_dialog_ready(background))throw std::logic_error("invalid Extra dialogue gate");
@@ -193,6 +200,7 @@ void State::start_mugetsu_after_dialog(std::array<std::uint8_t,3> palette_zero) 
     mugetsu::Snapshot initial;initial.boss=stagex_->boss;initial.boss.palette_zero=palette_zero;
     initial.midboss_frames_until=motion::wrap(midboss_state().start_frame);
     mugetsu_.emplace(initial);extra_battle_pending_=false;
+    titles::request_boss(titles_,overlay_.callback,stage_id_,std::uint8_t(playchar_));
 }
 void State::start_gengetsu_after_dialog() {
     if(!gengetsu_dialog_pending() || !frame_suspended_ || !extra_post_dialog_blocked_)
@@ -201,6 +209,7 @@ void State::start_gengetsu_after_dialog() {
     initial.bomb_invincibility=mugetsu_->snapshot().bomb_invincibility;
     initial.lasers=thick_lasers_.snapshot();
     gengetsu_.emplace(gengetsu::prepare_after_dialog(initial));mugetsu_.reset();
+    titles_.bgm_id=15;overlay_.callback=transition::Callback::boss_titles;
     extra_post_dialog_blocked_=false;extra_handoff_resumed_=true;dialog_finished_=true;
 }
 void State::finish_extra_final_dialog() {
@@ -273,7 +282,7 @@ void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
     yuuka5_active_=false;bad_ending_requested_=false;
     stage6_battle_pending_=false;
     life_.prepare_stage();kurumi_active_=false;elly_active_=false;reimu_active_=false;marisa_active_=false;
-    orange_active_=false;clear_bonus_.reset();departure_.reset();overlay_={};
+    orange_active_=false;clear_bonus_.reset();departure_.reset();overlay_={};title_draws_.clear();
     overlay_cell_={transition::TextKind::character,4,1,32,5};
     popup_.active=false;
     frame_suspended_=false;dialog_finished_=false;post_boss_dialog_pending_=false;
@@ -801,12 +810,30 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             performance_ = signed_lowered<int(minimum[rank_]) ? minimum[rank_] : lowered;
         }
     }
-    const bool leaving=overlay_.callback==transition::Callback::leave;
+    const auto before_overlay=overlay_.callback;
+    const bool leaving=before_overlay==transition::Callback::leave;
     const auto writes=transition::update_overlay(overlay_);
     if(!writes.empty()) { overlay_cell_=writes.back();if(leaving) leave_text_replaced_=true; }
     for(const auto& write:writes) {
         if(write.kind==transition::TextKind::gaiji)hud_text_.put(int(write.left),int(write.row),std::uint8_t(write.value),std::uint16_t(write.attribute));
         else hud_text_.put_character(int(write.left),int(write.row),std::uint16_t(write.value),std::uint16_t(write.attribute));
+    }
+    title_draws_.clear();
+    if(before_overlay==transition::Callback::enter && overlay_.callback==transition::Callback::titles)titles_.frame=0;
+    else if(!application_->resident().demo_number) {
+        auto title_scroll=scroll_line_;
+        if(background && !background->streams_released() && life_.state().scroll_active &&
+           (overlay_.callback==transition::Callback::titles || overlay_.callback==transition::Callback::boss_titles)) {
+            // FrontEnd commits this background update after State returns.
+            // Original overlay1 runs after scroll_driver. Replay the same
+            // update on a private value to read its resulting scroll origin;
+            // do not advance the live ring or change the actors' input phase.
+            auto rendered_background=*background;
+            rendered_background.update(true);
+            title_scroll=std::int16_t(rendered_background.scroll_line());
+        }
+        title_draws_=titles::update(titles_,overlay_.callback,hud_text_,
+            stage_id_,std::uint8_t(playchar_),title_scroll,life_.state().scroll_active!=0);
     }
     popup::update(popup_,hud_text_);
     playfield_shift_=playfield::update(playfield_shake_,std::uint8_t(frames_&1u),std::uint8_t(frames_&3u));

@@ -75,6 +75,7 @@ namespace op_score = th04::portable::op_score;
 namespace op_ranking = th04::portable::op_ranking;
 namespace op_music = th04::portable::op_music;
 namespace gameover = th04::portable::gameover;
+namespace transition = th04::portable::transition;
 
 using Clock = std::chrono::steady_clock;
 // PC-98 640x400 cadence. Advance simulation independently of host redraw or
@@ -644,6 +645,7 @@ struct MainSprites {
     Bytes boss_face_bytes,gaiji;
     CdgSheet reimu_faces,marisa_faces,boss_faces;
     dialog::Font font;
+    th04::portable::titles::Graphics title_dissolve;
     std::map<std::string,Bytes> dialog_files;
     struct Slot { const sprite::Sheet* sheet=nullptr;unsigned image=0; };
     std::array<Slot,256> stage_slots{};
@@ -669,7 +671,7 @@ struct MainSprites {
           boss_tiles(assets.boss_tiles),enemies(assets.enemies),explosion(assets.explosion_sprite),point_number_font(assets.point_number_main),
           backdrop_bytes(assets.orange_background),transition(assets.orange_transition),backdrop(backdrop_bytes),
           scripts(assets.dialog_scripts),face_bytes(assets.player_faces),boss_face_bytes(assets.boss_faces),gaiji(assets.gaiji),
-          reimu_faces(face_bytes[0]),marisa_faces(face_bytes[1]),boss_faces(boss_face_bytes),font(assets.font_bitmap),dialog_files(assets.dialog_sprites),standard(assets.standard),
+          reimu_faces(face_bytes[0]),marisa_faces(face_bytes[1]),boss_faces(boss_face_bytes),font(assets.font_bitmap),title_dissolve(assets.title_dissolve_out,assets.title_dissolve_in),dialog_files(assets.dialog_sprites),standard(assets.standard),
           reimu_tiles(assets.reimu_map_tiles), marisa_tiles(assets.marisa_map_tiles),
           background(assets.map, assets.standard) {
         require_view(background.required_image_count() <= reimu_tiles.count() &&
@@ -1160,6 +1162,9 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         for (auto p:circle::raster(e.center,static_cast<std::uint16_t>(e.radius)))
             put_indexed_pixel(frame,palette,p.x,p.y,0,0,state.circles().snapshot().color);
     }
+    sprites.title_dissolve.raster(state.title_draws(),display_line,[&](unsigned x,unsigned y,std::uint8_t color) {
+        put_indexed_pixel(frame,palette,int(x),int(y),0,0,color);
+    });
     const auto shake=state.playfield_shift();
     if(shake.x || shake.y) {
         playfield::move(frame.indices,display_line,shake);

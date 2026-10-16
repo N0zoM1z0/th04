@@ -127,6 +127,7 @@ add_library(
   score.cpp
   stage_transition.cpp
   hud_popup.cpp
+  hud_titles.cpp
   stage_session.cpp
   menu_state.cpp
   random_lcg.cpp
@@ -238,6 +239,10 @@ add_executable(th04-port64-bonus-contracts bonus_contracts.cpp)
 target_link_libraries(th04-port64-bonus-contracts PRIVATE th04-portable-core)
 add_executable(th04-port64-score-contracts score_contracts.cpp)
 target_link_libraries(th04-port64-score-contracts PRIVATE th04-portable-core)
+
+add_executable(th04-port64-titles-contracts titles_contracts.cpp)
+target_link_libraries(th04-port64-titles-contracts PRIVATE th04-portable-core)
+target_compile_features(th04-port64-titles-contracts PRIVATE cxx_std_17)
 
 add_executable(th04-port64-popup-contracts popup_contracts.cpp)
 target_link_libraries(th04-port64-popup-contracts PRIVATE th04-portable-core)

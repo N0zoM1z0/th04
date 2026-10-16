@@ -5,7 +5,7 @@
 #include <vector>
 
 namespace th04::portable::transition {
-enum class Callback : std::uint8_t { none,enter,leave,titles };
+enum class Callback : std::uint8_t { none,enter,leave,titles,boss_titles };
 struct Overlay { std::uint8_t time=0;Callback callback=Callback::enter; };
 enum class TextKind : std::uint8_t { character,gaiji };
 struct Text { TextKind kind{};unsigned left=0,row=0,value=0,attribute=0; };

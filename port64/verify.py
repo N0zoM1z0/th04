@@ -14,6 +14,10 @@ import sys
 
 
 PORT_FILES = (
+    "port64/hud_titles.hpp",
+    "port64/hud_titles.cpp",
+    "port64/titles_contracts.cpp",
+    "port64/verify_titles.py",
     "port64/hud_popup.hpp",
     "port64/hud_popup.cpp",
     "port64/popup_contracts.cpp",
