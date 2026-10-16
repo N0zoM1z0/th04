@@ -8,8 +8,8 @@ whole-game completion metrics. Keep all new code and documentation in English.
 
 | Purpose | Published baseline | Availability |
 | --- | --- | --- |
-| DOS reconstruction, comparison tools and ledgers | `main: 8ce9916` | Current checkout; later evidence commits follow this baseline |
-| Native x64 source | `port/modern-64: 4b3bf1d` | Fresh writable `.analysis/native/port64-recovery-v1445/`; old frozen working directories remain missing |
+| DOS reconstruction, comparison tools and ledgers | `main: 82d2a35` | Current checkout; later evidence commits follow this baseline |
+| Native x64 source | `port/modern-64: d22e190` | Fresh writable `.analysis/native/port64-recovery-v1445/`; old frozen working directories remain missing |
 
 The old `.analysis/worktrees/` directory was absent at the 2026-10-16 audit,
 although Git retains its registrations. This includes `native-natural-clear-v1432`,
@@ -59,25 +59,39 @@ git -C .analysis/native/port64-recovery-v1445 log -n 3 --oneline
 Avoid recreating a missing frozen directory. Main commits do not publish native changes;
 commit and push each branch separately and verify its remote head.
 
-## Explosion palette and dialogue back-page repairs (v1454)
+## Recorded elapsed display fixture (v1455)
 
-Native `4b3bf1d` fixes the measured full-picture failures at 9284 and 9349.
-Both fresh GNU and optimized UBSan programs retain all 9835 selected ordinary
-updates, nine pools, four Boss blocks, homing, player input, Continue/save,
-popup/title rows and 2665 actual BB calls. All 59 complete pictures are compared:
-**57 RGB samples pass; 9600 and 9700 still differ 407 pixels each**. All 59 active
-TRAM samples pass. Source closure: 565/b23a708a; GNU 87 programs/83 CTests pass.
-Stage2 update 9836, full campaigns, raw graphics-plane identity, elapsed/scanout
-parity, NP2, Windows, pristine provenance and historical exactness remain open.
+Native `d22e190` adds an optional recorded-time replay through the existing
+elapsed display interface. Both cold GNU and optimized UBSan programs match
+**all 59 complete 640x400 RGB pictures and all 59 active TRAM samples** at their
+recorded score-return times. All 9835 selected updates, nine pools, four Boss
+blocks, homing, consumed input, Continue/save, popup/title rows and 2665 actual
+BB calls still pass. Source closure: 565/533075c0; GNU 87 programs/83 CTests pass.
 
-See [bounded differential evidence](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md)
-for target addresses, independent page controls, replay and remaining clocks.
+The independent raw PIC clock predicts all 9896 original phase/count observations
+without fitting a phase. Only frame numbers and elapsed nanoseconds enter native.
+Default logical timing still fails three samples by 407 pixels each on this new
+capture; the old v1454 two-sample failure remains unchanged. This fixture accepts
+completed display boundaries, not natural OP/loader/UI-interior or CPU/I/O timing,
+every frame, physical scanout or campaigns. Primary original/reconstructed DOS
+beyond 8000, native Stage2 update 9836, NP2, Windows, pristine provenance and
+historical exactness remain open. Both full development goals remain active.
 
-Verified recovery replays the actual wrong-front program and both corrected
-9835-update producers, including all 177 picture/index/TRAM identities. Two
-disjoint owned journals release 666.617 MiB net; all 18400 protected hashes
-remain equal. One restored owned executable and four borrowed aliases verify
-SHA/mode/nsmtime then retire; borrowed bytes receive no new cleanup credit.
+See the [bounded differential evidence](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
+
+Verified recovery restores eight owned capture aliases and the actual compiled
+ignored-time counterexample, replays it and both cold 9835-update producers, then
+checks SHA/mode/nsmtime and retires all nine aliases. All 177 picture/index/TRAM
+identities reproduce per program; the counterexample still rejects all 9836
+clock boundaries while its selected gameplay gates pass. No borrowed files.
+
+The closed retention journal preserves all 18400 parent hashes and verifies
+21663 protected hashes. It retires 1214 owned files into 129 blobs:
+500.203 MiB after archive/gzip, or 482.402 MiB after the three journal files too.
+The initial journal mistakenly froze its still-open console log; preserve it and
+use `closed-retention.json` for the explicit one-log metadata correction and
+`recover_closed.py` / `replay_restored_v2.py` for recovery. No target, source,
+producer, capture, old failure or parent journal was rewritten.
 
 ## Boss circle clipping and complete sampled pictures (v1452)
 
@@ -458,25 +472,23 @@ The two deferred carpet/checkerboard exact cases remain deferred.
 
 ## Next tasks
 
-1. Resolve the two measured clock/blink differences at9600 and9700,407 pixels
-   each. Both final profiles compare all59 full RGB/TRAM samples:57 RGB/all59
-   activeTRAM pass after independently repairing explosion tone9284 and copied
-   dialogue back page9349. Bind the actual elapsed origin/work/reset scenario
-   before changing native timing;do not fit a phase,mask pixels,or revive the
-   finished circle/palette/page investigations. The primary original/source DOS
-   comparison beyond8000 remains a separate required surface.
+1. Extend the primary original/reconstructed DOS comparison beyond 8000 and
+   investigate native Stage2 update 9836 with each producer's own attested MAP,
+   CS/DS and explicit STD/Continue/post-Boss boundaries. The completed 9835-update
+   elapsed fixture now passes all 59 sampled RGB/TRAM pictures; it does not
+   accept autonomous natural timing or whole campaigns. Preserve the old logical
+   failures and every prior raw-GDC/process/missing-producer limitation.
 2. The v1443 four-source nine-entry/second-MAIN extension and fresh native
    recovery are completed bounded steps. Continue DOS OP renderer/readiness
    diagnosis or new-producer Demo pool/video checks; retain post-reset/raw-GDC
    failures and the unfinished first-MAIN sample. Missing old native94 files
    and old candidate MAPs remain historical gaps. Use the new attested native
    producer; never re-sign old receipts or recreate missing frozen directories.
-3. Extend the primary original/reconstructed DOS comparison beyond8000
-   updates and route native beyond the newly accepted9835 selected updates only
-   after addressing the retained pictures. Use each candidate's own MAP/CS/DS
-   and explicit STD/Continue/post-Boss waits. Native Stage2 update9836 is outside
-   the current comparison. Preserve raw-GDC/process failures and missing old
-   producer gaps;do not re-sign original addresses onto a reconstructed MZ.
+3. Use independently observed elapsed inputs only with their own original
+   capture. Natural OP/loader/UI-interior and CPU/I/O timing, physical scanout,
+   raw native plane identity, every-frame pictures and NP2 remain separate
+   tasks. Do not fit phase, feed blink verdicts, mask pixels, re-sign original
+   addresses onto a reconstructed MZ or revive the finished palette/page repair.
 4. Align native state/effects using identical consumed inputs and explicit
    state boundaries: original DOS, reconstructed DOS, then native. Expand game
    area checks to HUD/page changes/text/palettes/full pictures. GNU/UBSan equality

@@ -10,7 +10,7 @@ remains open. Updated 2026-10-17.
 Start with [the actionable handoff](NEXT_AGENT_HANDOFF.md) for both published
 branches, startup commands, claim limits, next comparisons and cleanup rules.
 Published branch baselines and fresh MAIN paths are indexed there; the native
-source baseline is now `4b3bf1d`, with later evidence commits following it.
+source baseline is now `d22e190`, with later evidence commits following it.
 The old `.analysis/worktrees/` directory is absent although Git still registers
 its trees. This includes frozen native route programs/results and the DOS
 v1437 candidate MAIN/MAP. Root-level reports, compressed DOS captures and
@@ -21,25 +21,39 @@ describe recorded historical evidence, not a fresh availability guarantee.
 Recover original frozen inputs or create a newly attested producer from Git;
 do not rewrite old receipts. Both development goals remain active.
 
-## Explosion palette and dialogue back-page repairs (v1454)
+## Recorded elapsed display fixture (v1455)
 
-Native `4b3bf1d` fixes the measured full-picture failures at 9284 and 9349.
-Both fresh GNU and optimized UBSan programs retain all 9835 selected ordinary
-updates, nine pools, four Boss blocks, homing, player input, Continue/save,
-popup/title rows and 2665 actual BB calls. All 59 complete pictures are compared:
-**57 RGB samples pass; 9600 and 9700 still differ 407 pixels each**. All 59 active
-TRAM samples pass. Source closure: 565/b23a708a; GNU 87 programs/83 CTests pass.
-Stage2 update 9836, full campaigns, raw graphics-plane identity, elapsed/scanout
-parity, NP2, Windows, pristine provenance and historical exactness remain open.
+Native `d22e190` adds an optional recorded-time replay through the existing
+elapsed display interface. Both cold GNU and optimized UBSan programs match
+**all 59 complete 640x400 RGB pictures and all 59 active TRAM samples** at their
+recorded score-return times. All 9835 selected updates, nine pools, four Boss
+blocks, homing, consumed input, Continue/save, popup/title rows and 2665 actual
+BB calls still pass. Source closure: 565/533075c0; GNU 87 programs/83 CTests pass.
 
-See [bounded differential evidence](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md)
-for target addresses, independent page controls, replay and remaining clocks.
+The independent raw PIC clock predicts all 9896 original phase/count observations
+without fitting a phase. Only frame numbers and elapsed nanoseconds enter native.
+Default logical timing still fails three samples by 407 pixels each on this new
+capture; the old v1454 two-sample failure remains unchanged. This fixture accepts
+completed display boundaries, not natural OP/loader/UI-interior or CPU/I/O timing,
+every frame, physical scanout or campaigns. Primary original/reconstructed DOS
+beyond 8000, native Stage2 update 9836, NP2, Windows, pristine provenance and
+historical exactness remain open. Both full development goals remain active.
 
-Verified recovery replays the actual wrong-front program and both corrected
-9835-update producers, including all 177 picture/index/TRAM identities. Two
-disjoint owned journals release 666.617 MiB net; all 18400 protected hashes
-remain equal. One restored owned executable and four borrowed aliases verify
-SHA/mode/nsmtime then retire; borrowed bytes receive no new cleanup credit.
+See the [bounded differential evidence](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
+
+Verified recovery restores eight owned capture aliases and the actual compiled
+ignored-time counterexample, replays it and both cold 9835-update producers, then
+checks SHA/mode/nsmtime and retires all nine aliases. All 177 picture/index/TRAM
+identities reproduce per program; the counterexample still rejects all 9836
+clock boundaries while its selected gameplay gates pass. No borrowed files.
+
+The closed retention journal preserves all 18400 parent hashes and verifies
+21663 protected hashes. It retires 1214 owned files into 129 blobs:
+500.203 MiB after archive/gzip, or 482.402 MiB after the three journal files too.
+The initial journal mistakenly froze its still-open console log; preserve it and
+use `closed-retention.json` for the explicit one-log metadata correction and
+`recover_closed.py` / `replay_restored_v2.py` for recovery. No target, source,
+producer, capture, old failure or parent journal was rewritten.
 
 ## Boss circle clipping and complete sampled pictures (v1452)
 

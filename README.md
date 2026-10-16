@@ -25,14 +25,21 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
-Native `4b3bf1d` fixes the measured full-picture failures at 9284 and 9349.
-Both fresh GNU and optimized UBSan programs retain all 9835 selected ordinary
-updates, nine pools, four Boss blocks, homing, player input, Continue/save,
-popup/title rows and 2665 actual BB calls. All 59 complete pictures are compared:
-**57 RGB samples pass; 9600 and 9700 still differ 407 pixels each**. All 59 active
-TRAM samples pass. Source closure: 565/b23a708a; GNU 87 programs/83 CTests pass.
-Stage2 update 9836, full campaigns, raw graphics-plane identity, elapsed/scanout
-parity, NP2, Windows, pristine provenance and historical exactness remain open.
+Native `d22e190` adds an optional recorded-time replay through the existing
+elapsed display interface. Both cold GNU and optimized UBSan programs match
+**all 59 complete 640x400 RGB pictures and all 59 active TRAM samples** at their
+recorded score-return times. All 9835 selected updates, nine pools, four Boss
+blocks, homing, consumed input, Continue/save, popup/title rows and 2665 actual
+BB calls still pass. Source closure: 565/533075c0; GNU 87 programs/83 CTests pass.
+
+The independent raw PIC clock predicts all 9896 original phase/count observations
+without fitting a phase. Only frame numbers and elapsed nanoseconds enter native.
+Default logical timing still fails three samples by 407 pixels each on this new
+capture; the old v1454 two-sample failure remains unchanged. This fixture accepts
+completed display boundaries, not natural OP/loader/UI-interior or CPU/I/O timing,
+every frame, physical scanout or campaigns. Primary original/reconstructed DOS
+beyond 8000, native Stage2 update 9836, NP2, Windows, pristine provenance and
+historical exactness remain open. Both full development goals remain active.
 See the [current handoff](docs/RE_HANDOFF.md) for replay and recovery.
 
 

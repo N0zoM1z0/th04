@@ -5,6 +5,105 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Recorded elapsed display fixture (v1455)
+
+Native `d22e190` adds an optional recorded-time replay through the existing
+elapsed display interface. Both cold GNU and optimized UBSan programs match
+**all 59 complete 640x400 RGB pictures and all 59 active TRAM samples** at their
+recorded score-return times. All 9835 selected updates, nine pools, four Boss
+blocks, homing, consumed input, Continue/save, popup/title rows and 2665 actual
+BB calls still pass. Source closure: 565/533075c0; GNU 87 programs/83 CTests pass.
+
+The independent raw PIC clock predicts all 9896 original phase/count observations
+without fitting a phase. Only frame numbers and elapsed nanoseconds enter native.
+Default logical timing still fails three samples by 407 pixels each on this new
+capture; the old v1454 two-sample failure remains unchanged. This fixture accepts
+completed display boundaries, not natural OP/loader/UI-interior or CPU/I/O timing,
+every frame, physical scanout or campaigns. Primary original/reconstructed DOS
+beyond 8000, native Stage2 update 9836, NP2, Windows, pristine provenance and
+historical exactness remain open. Both full development goals remain active.
+
+Evidence is runtime-observed under the pinned DOSBox-X binary
+`6e1a6e706d8b62aefa3204e30be5b77125fb4413d6891b5d10bd2701a6616ba1`.
+Pinned MAIN remains 156258 bytes/SHA `077440a3c4e9ab52...`, 1136 relocations,
+entry 0000:0000 and candidate-local-attested provenance. Fresh preflight and
+full MAIN Ghidra/MZ attestation pass. Original load is 10FC and DGROUP is 3230.
+After-actor observations are relative MAIN 0AAF:01B3; sampled score returns are
+0AAF:0207. The extra actor 9836 is a partial tail, excluded from native acceptance.
+
+The source/ELF/compiler ABI witness binds 8-byte PIC ticks and signed cycle
+counts, GDC size 232 and phase/count/rate offsets 196/197/198. No debugger host
+function is called. One extra hardware execution breakpoint observes actual
+master cursor advances only until actor 1; the loader watch retires before the
+actor watch is allocated. Later timestamps reuse existing actor/score stops.
+Every clock row retains raw CPU registers/segments and a read-only assertion.
+Every actor GDC hash/three clock bytes matches the complete CRC-checked ordinary
+video stream; all 59 score rows bind complete checkpoint video and CPU context.
+
+The first actual display initialization is PIC 15/8 ms: frame_start equals the
+raw PIC rational and mode_time_base, with mode frame count zero. This supplies
+the independent origin. Fixed constructor phase/count zero replays all 1084
+short-probe and 1109 full-probe master entries without resynchronization. The
+existing rounded 17723227 ns native period then predicts both phase and count
+at all 107 short and 9896 full business boundaries, with zero differences.
+Raw blink bytes are verdicts; the exported file contains only frame/ns rows.
+Score-return times replace actor times on the 59 picture frames. Frame 0 display
+is excluded; its native output checks only the common constructor reset.
+
+The two captures have different elapsed startup durations. Selected state,
+RNG/input, all nine native pool bytes and final CFG/SCR identities reproduce
+v1454; timing-observer inertness is not established. Do not reuse one capture's
+timestamps with another or relabel the old logical failures. On this new capture,
+default logical mode fails 9349/9600/9700 by 407 pixels each. Its complete 177
+outputs equal the prior b23a program on the same capture. Recorded-time GNU and
+UBSan agree on all 177 outputs and each independently matches original RGB/TRAM.
+The live product blink algorithm, display period and logical gameplay clock did
+not change. Intermediate blocking UI polls remain explicit component stimuli.
+
+Twelve actual-data controls reject wrong PIC rationals, CPU boundaries, extents,
+read-only assertions, prefix/score phases, rate, epoch, period and native clock
+outputs. A separately compiled producer reads all elapsed times but omits both
+existing `observe_text_time` calls. Its 9835 selected state/pool/input/homing/save
+gates pass, while required actual clock output rejects all 9836 boundaries.
+An input file alone cannot satisfy recorded-time acceptance.
+
+Replay from the DOS repository root, using fresh output names and restoring
+only the four full-capture aliases from the closed journal first:
+
+```sh
+python3 scripts/probes/attest_th04_display_clock.py \
+  --capture .analysis/runtime/candidates/native-clock-phase-v1455-original \
+  --main .analysis/targets/th04/main.exe --output .analysis/NEW-clock.json \
+  --times-output .analysis/NEW-display-ns.txt
+python3 .analysis/native/port64-recovery-v1445/port64/verify_ordinary_state.py \
+  --dos-root . --original .analysis/runtime/candidates/native-clock-phase-v1455-original \
+  --exe .analysis/native/port64-recovery-v1445/.analysis/port64/clock-phase-v1455-final/gnu/th04-port64 \
+  --output-dir .analysis/NEW-elapsed --frontend --require-homing --updates 9835 \
+  --recorded-display-time
+```
+
+The immutable `full-watch/` capture snapshot and `full-capture.log` under
+`.analysis/reconstruction/probes/native-clock-phase-v1455/` record the capture
+recipe. Its `capture.py --original` uses the pinned emulator receipt, font,
+video layout, `--end-after 9836 --dialog-at-frame 6548 --dialog-checkpoints
+--continue-at-frame 7547 --post-boss-dialog-at-frame 9348`. Public clock reports,
+private producer manifests, cold source archive/builds, all raw time evidence,
+negative controls and the default failures remain distinct.
+
+Verified recovery restores eight owned capture aliases and the actual compiled
+ignored-time counterexample, replays it and both cold 9835-update producers, then
+checks SHA/mode/nsmtime and retires all nine aliases. All 177 picture/index/TRAM
+identities reproduce per program; the counterexample still rejects all 9836
+clock boundaries while its selected gameplay gates pass. No borrowed files.
+
+The closed retention journal preserves all 18400 parent hashes and verifies
+21663 protected hashes. It retires 1214 owned files into 129 blobs:
+500.203 MiB after archive/gzip, or 482.402 MiB after the three journal files too.
+The initial journal mistakenly froze its still-open console log; preserve it and
+use `closed-retention.json` for the explicit one-log metadata correction and
+`recover_closed.py` / `replay_restored_v2.py` for recovery. No target, source,
+producer, capture, old failure or parent journal was rewritten.
+
 ## Explosion palette and dialogue back-page repairs (v1454)
 
 Native `4b3bf1d` fixes the measured full-picture failures at 9284 and 9349.
