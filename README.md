@@ -25,13 +25,13 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
-Native `a8a67af` restores the actual pre-scroll title phase after v1450's
-constructed-BB inference was disproved. Both cold GNU/UBSan programs match2665
-actual BB calls,8000 title/state checks and38 complete playfield pictures.
-Whole-picture acceptance still fails7 score-area samples. Original captures
-are DOSBox-X,not NP2. See the current handoff for the exact remaining points.
-Verified recoverable cleanup releases257.988MiB;actual failure/positive programs
-replay without changing the seven-picture aggregate failure.
+Native `a8e0165` applies the original stage clipping to Boss circles. Both new
+cold GNU/UBSan programs now match all38 complete640x400 sampled pictures:
+the previous seven score-area failures (1377 pixels) are resolved. Selected
+8000-update state/input/RNG/pools/Boss/Continue/save,title/popup rows and2665
+actual BB calls remain equal. Original capture is DOSBox-X;full campaigns,
+unsampled pictures,physical timing,NP2 and Windows remain open. Source565/394e53f4;
+see the [current handoff](docs/RE_HANDOFF.md) for replay and cleanup rules.
 
 Development is active. All four DOS products build from maintained local source.
 Retained original/reconstructed DOS comparisons agree across all four bundled

@@ -5,7 +5,55 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
-## Actual title phase and picture gate (v1451)
+## Boss circle clipping and complete sampled pictures (v1452)
+
+Native `a8e0165` fixes the seven remaining v1451 score-area graphics samples.
+Actual private pixel-write traces identify the Orange entrance circle at
+center (232,40), radius 326, color 9 as the writer of (557,64) at update 6740.
+Both trace programs reproduce the frozen producer's selected 8000-update state
+and all 38 complete BMP/index/TRAM observations before the repair.
+
+Original MAIN far `0000:11EC` reads DGROUP clipping words 032C..033A.
+All 38 captured after-score DGROUPs retain `(32,16)-(415,383)`, with zoom 0;
+the native circle helper had assumed the default whole-screen rectangle.
+The helper now accepts a clip rectangle,and the common Boss-circle call supplies
+that observed stage rectangle. This preserves the target's clipped-bottom-row
+asymmetry. Isolated original execution and both compiler profiles verify
+900 render vectors and 1053 circle vectors,including 135 stage-clip cases.
+Other Boss/disc/rectangle and actor rendering paths are outside this repair.
+The first primitive run passed comparisons but failed its legacy Unicorn receipt
+lookup. `controls_wrapper.py` aliases the already loaded Unicorn2 CDLL for that
+path field only;its hash pins engine 2.1.4/ddb196ec. The successful reruns execute
+900 render and 1053 circle vectors per profile,including 135 stage-clip cases.
+The logging failure and the wrapper import failure remain retained;neither is
+a successful receipt.
+
+Both fresh GNU and optimized UBSan programs now match **all 38 complete 640x400
+RGB pictures** at actual score return `0AAF:0207`:zero differing pixels,
+including the seven previously failing frames6740,6741,6753,6765,6772,6773,6774.
+The uncorrected real producer still reproduces 1377 differing pixels;changing
+one complete-picture pixel independently fails the same comparator.
+Both profiles preserve selected 21 scalar/RNG/input fields,nine complete pools,
+four Boss blocks,Continue,CFG/SCR,popup state/rows and title state/three rows
+over 8000 updates,plus 2665 actual BB calls over 7999 intervals. Repeat paints
+preserve pools/RNG/input and full pixels. All 15988 native Demo state boundaries
+stay equal. GNU 87 programs and 83 CTests pass;source closure 565/394e53f4.
+
+Evidence: `.analysis/reconstruction/probes/native-score-pixels-v1452/`.
+Original capture remains the immutable DOSBox-X v1451 score capture with live
+font/video/DGROUP;the v1450 constructed-BB Oracle remains refuted. The correct
+pre-scroll title phase from `a8a67af` is retained. Old negative reports and
+retention journals remain unchanged. Restore the v1451 score capture's four
+archived aliases before strict original readers,and verify/retire them afterward
+without counting borrowed files as new cleanup.
+
+Next extend the original/native comparison beyond 8000 toward Boss defeat and
+process/campaign completion. These 38 samples establish programmed-display
+agreement,not every frame or physical scanout. Other globals,full routes,NP2,
+Windows,canonicality and historical exactness remain open. Both full goals
+remain active.
+
+## Historical v1451 producer: title phase repaired, seven pictures failed
 
 Native `a8a67af` restores the original pre-scroll title phase. The v1450
 constructed BB-call Oracle and its pending-background preview are withdrawn.
