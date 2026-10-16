@@ -2441,3 +2441,48 @@ rerun the emulator. Use fresh outputs. Manual recovery supports recover.py
 identities, every finish.json late_protected entry and that finish identity.
 Old journals and the incomplete v1458 reader observation remain unchanged.
 The two old public capture/keyboard files remain frozen backing inputs.
+
+
+## Stage2 wait-owner preparation (v1460)
+
+The v1460 opt-in wait adapter has complete 566-file/6a2664d6 cold GNU87/83CTests
+and optimized UBSan2 builds. Both actual programs reproduce the prior3500
+state/pool wires and the separate9835/59RGB-TRAM elapsed fixture. Eleven actual
+CLI plan mutations reject; the streaming reader reproduces all21014 original/
+source3500 metadata/DGROUP/video records byte for byte. Native-only forecasts
+identify Continue5363 and pre-Boss dialogue6982 and drive8000 planned updates.
+Original/reconstructed8000 captures are in progress; those forecasts and the
+new auxiliary input protocol do not widen the accepted target frontier yet.
+Use `.analysis/reconstruction/probes/dos-stage2-boss-v1460/` and the new native
+`.analysis/port64/stage2-boss-v1460-final/{gnu,ubsan}` programs. The prior3747
+programs/cache and all frozen historical readers remain preserved.
+
+The old generic diagnostic guard stopped at5363 and did not identify its owner.
+An initial dialogue-only prototype produced no dialogue records and rejected a
+non-dialogue stall. Explicit typed Game Over observations then demonstrate the
+native Continue5363 path, followed by dialogue6982. These failed scouts and
+all private compiler/source capsules remain separate. They are budget and
+control-plane observations, not evidence that the original uses those boundaries.
+
+The explicit `stage-epoch-waits.txt` stimulus grammar is:
+
+```text
+TH04_STAGE_WAITS 1 2
+5363 continue
+6982 dialogue
+```
+
+Frames/kinds are declared inputs. The driver rejects invalid headers, duplicate/
+out-of-range cues, unknown kinds, trailing data, missing actual waits and waits
+that were declared but never observed. It uses normal FrontEnd key inputs and
+the existing Kurumi owner, without assigning gameplay/RNG/phase. Legacy mode
+has no wait file and retains its prior byte-identical observation wires.
+
+Stage2-consumed.txt records State::player_input once per actual actor boundary.
+UI polls can change State::last_input: the private native Continue resumes with
+player32/last0, while the later dialogue finishes with8192. This reuses the
+v1448 player-prefix versus STD ordering discovery. Target comparisons require
+own-file player-entry CPU/full-memory evidence, rather than assuming the loop
+sample owns every post-dialogue player prefix. Ordinary loop checks remain
+strict elsewhere. New auxiliary video and key/GDC differences will be reported
+separately; no native Stage2 picture or natural UI timing claim follows.

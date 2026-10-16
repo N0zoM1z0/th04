@@ -6,6 +6,25 @@
         std::string magic;unsigned version,extent,final_keys,final_shift;
         require_view(bool(epoch_plan>>magic>>version>>extent>>final_keys>>final_shift) &&
             magic=="TH04_STAGE_EPOCH" && version==1 && extent>0 && extent<=65535 && final_keys<=65535 && final_shift==0,"epoch fixture header/input");
+        std::ifstream wait_plan(fs::path(assets.save_directory)/"stage-epoch-waits.txt");
+        const bool wait_inputs=bool(wait_plan);
+        std::vector<std::pair<unsigned,std::string>> wait_frames,observed_wait_frames;
+        std::ofstream wait_blocks,player_samples;
+        if(wait_inputs) {
+            unsigned count;
+            require_view(bool(wait_plan>>magic>>version>>count) && magic=="TH04_STAGE_WAITS" &&
+                version==1 && count>0 && count<=16,"epoch wait plan header");
+            for(unsigned i=0;i<count;++i) {
+                unsigned frame;std::string kind;
+                require_view(bool(wait_plan>>frame>>kind) && frame>0 && frame<extent &&
+                    (kind=="dialogue" || kind=="continue") &&
+                    (wait_frames.empty() || frame>wait_frames.back().first),"epoch wait cue kind/order/extent");
+                wait_frames.emplace_back(frame,kind);
+            }
+            wait_plan>>std::ws;require_view(wait_plan.peek()==std::char_traits<char>::eof(),"epoch trailing wait cues");
+            wait_blocks.open(output/"stage2-blocks.txt");player_samples.open(output/"stage2-consumed.txt");
+            require_view(bool(wait_blocks)&&bool(player_samples),"epoch wait observations unavailable");
+        }
         std::ofstream epoch(output/"stage-native.jsonl"),epoch_pools(output/"stage2-pools.bin",std::ios::binary),tail_pools(output/"stage1-tail-pools.bin",std::ios::binary);
         require_view(bool(epoch)&&bool(epoch_pools)&&bool(tail_pools),"epoch output unavailable");
         epoch_pools.write("TH04OP1\n",8);tail_pools.write("TH04OP1\n",8);
@@ -16,6 +35,7 @@
             bool comma=false;
             const auto field=[&](const char* name,const auto& bytes) {if(comma)epoch<<',';comma=true;epoch<<'"'<<name<<"\":\"";dump(bytes);epoch<<'"';};
             const auto integer=[&](const char* name,std::uint64_t value,unsigned size) {std::vector<std::uint8_t> b;for(unsigned i=0;i<size;++i)b.push_back(std::uint8_t(value>>(i*8)));field(name,b);};
+            if(wait_inputs && std::string(label)=="stage2-actor")player_samples<<s.frames()<<' '<<s.player_input()<<'\n';
             const auto& life=s.life();const auto& board=s.scoreboard();const auto& resident=scene.resident();
             epoch<<"{\"ordinal\":"<<ordinal++<<",\"label\":\""<<label<<"\",\"resource_stage\":"<<+resident.resource_stage<<",\"resident_stage\":"<<+resident.stage<<",\"fields\":{";
             integer("frame",s.frames(),2);integer("stage",resident.resource_stage,1);integer("input",s.consumed_input(),2);
@@ -48,9 +68,37 @@
         });
         for(unsigned frame=0;frame<extent;++frame) {
             unsigned number,keys,shift;require_view(bool(epoch_plan>>number>>keys>>shift)&&number==frame&&keys<=65535&&shift==0,"epoch Stage2 input/order/width");
-            scene.advance(translate(keys),false,false);
+            if(wait_inputs) {
+                for(unsigned attempt=0;;++attempt) {
+                    require_view(attempt<10000 && scene.live_main() && !scene.pause_active(),"epoch unconfigured blocking owner");
+                    const bool blocked=scene.dialog_active();const auto status=scene.dialog_status();
+                    const auto* go=scene.main_state().game_over();const int go_before=go ? int(go->phase()) : -1;
+                    auto held=blocked ? std::uint16_t((status==th04::portable::dialog::Status::press ||
+                        status==th04::portable::dialog::Status::running) ? 0x1000 : 0) : translate(keys);
+                    if(go) {
+                        const bool waiting=go->phase()==gameover::Phase::press || go->phase()==gameover::Phase::menu;
+                        held=std::uint16_t(waiting && attempt%20<10 ? 0x1000 : 0);
+                    }
+                    scene.advance(held,false,false);
+                    if(blocked || scene.dialog_active() || go || scene.main_state().game_over()) {
+                        const std::string kind=go || scene.main_state().game_over() ? "continue" : "dialogue";
+                        const auto cue=std::make_pair(frame,kind);
+                        wait_blocks<<frame<<' '<<attempt<<' '<<kind<<' '<<unsigned(status)<<' '<<go_before<<' '
+                            <<held<<' '<<scene.main_state().frames()<<' '<<scene.dialog_offset()<<' '
+                            <<scene.main_state().player_input()<<' '<<scene.main_state().consumed_input()<<' '
+                            <<scene.process_random_draws()-base_draws<<' '
+                            <<ring_offset+scene.main_state().random_samples()-base_samples<<'\n';
+                        require_view(std::find(wait_frames.begin(),wait_frames.end(),cue)!=wait_frames.end(),"epoch undeclared wait cue");
+                        if(observed_wait_frames.empty() || observed_wait_frames.back()!=cue)observed_wait_frames.push_back(cue);
+                    }
+                    if(scene.main_state().frames()==frame+1)break;
+                    require_view(scene.main_state().frames()==frame && (scene.dialog_active() ||
+                        scene.main_state().game_over()),"epoch non-UI stalled frame");
+                }
+            } else scene.advance(translate(keys),false,false);
             require_view(scene.main_state().frames()==frame+1&&scene.resident().resource_stage==1&&!scene.dialog_active()&&!scene.main_state().game_over(),"epoch unexpected owner or incomplete Stage2 update");
             observe("stage2-score",scene.main_state());
         }
         epoch_plan>>std::ws;require_view(epoch_plan.peek()==std::char_traits<char>::eof(),"epoch trailing input");
+        require_view(observed_wait_frames==wait_frames,"epoch configured wait not observed");
     }

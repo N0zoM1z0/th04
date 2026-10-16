@@ -43,7 +43,10 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
         require_view(scene.text_refreshes()==1,"recorded display requires the common first refresh");
         scene.observe_text_time(0);
     }
-    if(fs::exists(fs::path(assets.save_directory)/"stage-epoch-plan.txt"))scene.enable_stage2();
+    if(fs::exists(fs::path(assets.save_directory)/"stage-epoch-plan.txt")) {
+        if(fs::exists(fs::path(assets.save_directory)/"stage-epoch-waits.txt"))scene.enable_kurumi();
+        else scene.enable_stage2();
+    }
     scene.enable_configuration();scene.enable_registration();
     for(unsigned i=0;i<seed;++i)scene.advance(0,false,false);
     scene.input(menu::Input::confirm);if(character)scene.input(menu::Input::right);

@@ -38,6 +38,19 @@ inside the private recorded emulator. Never inject expected state/RNG/phase.
 
 ## Verified frontier
 
+The v1460 opt-in wait adapter has complete 566-file/6a2664d6 cold GNU87/83CTests
+and optimized UBSan2 builds. Both actual programs reproduce the prior3500
+state/pool wires and the separate9835/59RGB-TRAM elapsed fixture. Eleven actual
+CLI plan mutations reject; the streaming reader reproduces all21014 original/
+source3500 metadata/DGROUP/video records byte for byte. Native-only forecasts
+identify Continue5363 and pre-Boss dialogue6982 and drive8000 planned updates.
+Original/reconstructed8000 captures are in progress; those forecasts and the
+new auxiliary input protocol do not widen the accepted target frontier yet.
+Use `.analysis/reconstruction/probes/dos-stage2-boss-v1460/` and the new native
+`.analysis/port64/stage2-boss-v1460-final/{gnu,ubsan}` programs. The prior3747
+programs/cache and all frozen historical readers remain preserved.
+
+
 Original and reconstructed DOS now complete 3500 Stage2 updates in the same
 process. The observed Midboss activates at 2601, enters defeat at 3349,
 reaches phase3/HP0 at 3413 and resets at 3414; 86 further updates retain
@@ -136,5 +149,4 @@ git diff --check
 
 Run focused comparisons first. Native push: git push origin HEAD:port/modern-64.
 Root/native commits publish separately;verify remote heads and clean trees.
-Do not mark either full goal complete after this bounded batch. Continue actual
-Midboss termination and the remaining original/source/native requirements.
+Do not mark either full goal complete after this bounded batch. Continue Stage2 Boss/clear and the remaining original/source/native requirements.

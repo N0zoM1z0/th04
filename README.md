@@ -47,6 +47,10 @@ witnesses verify DOS reset. No gameplay repair was needed. Native Stage2 picture
 natural clocks, campaigns, NP2, Windows and pristine provenance remain open.
 Both goals stay active; see the [current handoff](docs/RE_HANDOFF.md).
 
+The new opt-in wait adapter is cold-built as566/6a2664d6 and preserves the
+3500/59-picture legacy fixtures in GNU and UBSan. Original/source8000
+verification is running; native-only forecasts do not extend acceptance.
+
 
 With local inputs and the toolchain installed:
 
