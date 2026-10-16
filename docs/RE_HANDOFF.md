@@ -37,7 +37,14 @@ reader scope repair. The frozen first reader mistakenly included second-MAIN
 Shot in its initial OP validation, thereby rejecting Quit Escape events. That
 negative is retained and reproduced on the same unchanged captured clock. The
 new public regression bounds initial input before the second-MAIN action start.
-Candidate capture uses a separate namespace and paired admission remains pending.
+The timed-input candidate is now terminal but the pair is not admitted: first
+second-MAIN consumed input is2000 versus0000 despite matching seed/RNG. Later
+pool/score differences cannot be classified as a product defect. The failed pair
+retains292/17 post-reset differences across first/second MAIN. New optional
+`--restart-shot-boundary` sends Shot at the first actual actor-update store,
+bound to its CPU/DGROUP snapshot; new boundary captures are in progress.
+CI551 and three new boundary controls pass. The rejected pair's12 recoverable
+aliases release114.992 MiB net; its original reports/streams/receipts remain.
 Supporting products remain original; this is not a full campaign or exact claim.
 
 ## Resident allocation and paired second MAIN (v1441)

@@ -39,6 +39,7 @@ quit_frame = int(os.environ.get('TH04_ORDINARY_QUIT_FRAME', 0))
 restart_main = os.environ.get('TH04_ORDINARY_RESTART_MAIN') == '1'
 restart_cue = None
 restart_updates = int(os.environ.get('TH04_ORDINARY_RESTART_UPDATES', 0))
+restart_shot_boundary = os.environ.get('TH04_ORDINARY_RESTART_SHOT_BOUNDARY') == '1'
 followup_active = False
 followup = None
 post_main = False
@@ -273,7 +274,8 @@ while gdb.selected_inferior().pid:
                 profile = json.loads((out/'profile.json').read_text())
                 profile['end_after'] = restart_updates
                 (second/'profile.json').write_text(json.dumps(profile,indent=2)+'\n')
-                monitor = Monitor(second, ram, generation=2, end_after=restart_updates)
+                monitor = Monitor(second, ram, generation=2, end_after=restart_updates,
+                                  input_frame=1 if restart_shot_boundary else None)
                 assert before == snapshot() and before_tick == tick()
                 event = process_recorder.record('second-main-observer-armed', process_recorder.context(),
                     entry_sequence=entry['sequence'], expected_generation=2,
@@ -281,7 +283,8 @@ while gdb.selected_inferior().pid:
                 followup = dict(entry_sequence=entry['sequence'], armed_sequence=event['sequence'],
                                 requested_updates=restart_updates, action_start=len(actions), tick=tick())
                 schedule = [(tick(),'KBD_enter',False)] if enter_down else []
-                schedule.append((tick()+200,'KBD_z',True))
+                if not restart_shot_boundary:
+                    schedule.append((tick()+200,'KBD_z',True))
                 followup_active = True
                 post_main_tick = tick()
                 clock.enabled = True
@@ -313,6 +316,11 @@ while gdb.selected_inferior().pid:
             gdb.write('TH04_ORDINARY_ROUTE_COMPLETE\n')
         gdb.execute('kill')
         break
+    if followup_active and monitor is not None and monitor.input_requested:
+        monitor.input_requested = False
+        (out/'second-main/first-update.json').write_text(json.dumps(monitor.input_snapshot,indent=2)+'\n')
+        followup.update(shot_boundary_frame=1, shot_boundary_tick=tick())
+        todo = ('key',tick(),'KBD_z',True)
     if monitor is not None and monitor.terminal is not None:
         before_flush = snapshot()
         before_tick = tick()

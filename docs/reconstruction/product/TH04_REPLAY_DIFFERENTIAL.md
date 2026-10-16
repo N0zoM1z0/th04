@@ -31,8 +31,16 @@ and replay remain under `first-reader-*` and `reader-rejection-replay.json`.
 Current admission uses the explicit second-MAIN action start; a public regression
 catches the old scope. No capture/producer receipt is restamped. Eight protocol
 controls plus this regression pass; full CI548 and27 actual trace/DGROUP/PSP/
-observer/keyboard/terminal counterexamples pass. Candidate capture is separate
-and paired comparison remains pending. Replay namespace:
+observer/keyboard/terminal counterexamples pass. The candidate timed-input
+capture completes but is not admitted: original initial consumed input2000,
+candidate0000, with equal seed70/initial RNG. Subsequent score/pool differences
+are not a reproduced game defect. Preserve this actual negative; first/second
+post-reset counts are292/17. `--restart-shot-boundary` now binds ordinary Shot to
+the first actual actor-update store (frame1), its full DGROUP/CPU snapshot and
+unchanged guest proof. It requires at least two updates and uses a new namespace.
+Three public boundary guards and CI551 pass; new paired evidence is pending.
+The old timed pair retires12 owned aliases in25 blobs (114.992 MiB net after a
+1.844 MiB archive); all compressed streams, sources, failures and receipts remain. Replay namespace:
 `.analysis/reconstruction/probes/dos-second-main-updates-v1442/`.
 
 ## Paired resident MCB checkpoints and second MAIN (v1441)

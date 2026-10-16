@@ -51,6 +51,8 @@ def main() -> int:
                         help='After verified fresh OP menu, use ordinary keys to observe a second MAIN entry')
     parser.add_argument('--restart-updates', type=int,
                         help='Observe this many actual second-MAIN updates after restart (1..3995)')
+    parser.add_argument('--restart-shot-boundary', action='store_true',
+                        help='Send second-MAIN Shot at the first actual actor-update write instead of an entry delay')
     parser.add_argument('--stall-diagnostic-ms', type=int,
                         help='Record actual guest PC/RAM after this much virtual no-frame progress')
     parser.add_argument('--process-events', action='store_true',
@@ -81,6 +83,8 @@ def main() -> int:
     if args.restart_updates is not None and (not args.restart_main or args.video_stream or
             not 1 <= args.restart_updates <= 3995):
         parser.error('Restart updates require restart, no video, and 1..3995 updates')
+    if args.restart_shot_boundary and (args.restart_updates is None or args.restart_updates < 2):
+        parser.error('Boundary Shot requires at least two second-MAIN updates')
     output = args.output_dir.resolve()
     if output.exists() or not output.is_relative_to(ROOT / '.analysis/runtime/candidates'):
         parser.error('use a fresh private capture directory')
@@ -205,6 +209,8 @@ def main() -> int:
         env['TH04_ORDINARY_RESTART_MAIN'] = '1'
     if args.restart_updates is not None:
         env['TH04_ORDINARY_RESTART_UPDATES'] = str(args.restart_updates)
+    if args.restart_shot_boundary:
+        env['TH04_ORDINARY_RESTART_SHOT_BOUNDARY'] = '1'
     if args.stall_diagnostic_ms is not None:
         env['TH04_ORDINARY_STALL_MS'] = str(args.stall_diagnostic_ms)
     if args.dgroup_stream:
@@ -275,6 +281,8 @@ def main() -> int:
                   'second-main/ordinary-dgroup.json', 'second-main/ordinary-dgroup.bin.gz',
                   'second-main/ordinary-terminal.json', 'second-main-prefix.json']
         complete = complete and b'TH04_ORDINARY_SECOND_MAIN_COMPLETE\n' in (output / 'boot.log').read_bytes()
+    if args.restart_shot_boundary and complete:
+        names += ['second-main/first-update.json']
     receipt = dict(schema_version=1, complete=complete, timeout=timeout, exit=code,
                    role='original' if args.original else 'candidate', elapsed=time.monotonic() - started,
                    command=command, main_path=str(main_path.resolve()), main_sha256=sha(main_bytes),
@@ -306,6 +314,7 @@ def main() -> int:
             receipt['main_frames'] = json.loads(metadata.read_text())['frames']
     if args.restart_updates is not None:
         receipt['restart_updates'] = args.restart_updates
+        receipt['restart_shot_boundary'] = args.restart_shot_boundary
     if args.video_stream:
         receipt['video_layout'] = dict(path=str(args.video_layout.resolve()),
                                        sha256=sha(args.video_layout.read_bytes()))

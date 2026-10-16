@@ -11,10 +11,13 @@ from th04_ordinary_dgroup import BOUNDARY, MAGIC
 
 
 class Monitor:
-    def __init__(self, output, ram, generation=1, end_after=None):
+    def __init__(self, output, ram, generation=1, end_after=None, input_frame=None):
         self.output, self.ram = Path(output), ram
         self.profile = json.loads((self.output / 'profile.json').read_text())
         self.generation = generation
+        self.input_frame = input_frame
+        self.input_requested = False
+        self.input_snapshot = None
         self.current = None
         self.error = None
         self.end_after = int(os.environ.get('TH04_ORDINARY_END_AFTER', UPDATE_COUNT)) if end_after is None else end_after
@@ -172,7 +175,7 @@ class Frame(gdb.Breakpoint):
                 if m.video is not None:
                     self.video_stream.flush()
                 gdb.write('TH04_ORDINARY_DGROUP %d\n' % frame)
-            if (m.bounded and frame == m.end_after) or (m.quit_frame and frame == m.quit_frame):
+            if (m.bounded and frame == m.end_after) or (m.quit_frame and frame == m.quit_frame) or frame == m.input_frame:
                 values = {name: data[offset:offset + size].hex()
                           for name, offset, size in m.profile['fields']}
                 pointer = bytes.fromhex(values['resident_pointer'])
@@ -189,7 +192,10 @@ class Frame(gdb.Breakpoint):
                     opcode=opcode.hex(), cpu_regs=registers.hex(), segments=segments.hex(),
                     lcg_calls=m.ram.integer(m.address('th04_demo_observer::lcg_count'), 8),
                     ring_calls=m.ram.integer(m.address('th04_demo_observer::ring_count'), 8))
-                if m.quit_frame and frame == m.quit_frame:
+                if frame == m.input_frame:
+                    m.input_snapshot = snapshot
+                    m.input_requested = True
+                elif m.quit_frame and frame == m.quit_frame:
                     m.route_prefix_terminal = snapshot
                     m.quit_requested = True
                 else:

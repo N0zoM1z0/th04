@@ -88,3 +88,31 @@ class KeyboardGenerationOwnershipTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError,'phase probe'):
                 validate_keyboard(clock,{},None,None)
         self.assertEqual(initial.call_args.args[0]['actions'],actions[:3])
+
+
+class SecondShotBoundaryTests(unittest.TestCase):
+    def setUp(self):
+        from th04_ordinary_second_main import validate_shot_boundary
+        self.check=validate_shot_boundary
+        self.action=dict(frame=1,tick=1234,due=1234,unchanged_guest=dict(cpu_regs='00'*48,segments='00'*136))
+        self.followup=dict(shot_boundary_tick=1234)
+        self.snapshot=dict(cpu_regs='00'*48,segments='00'*136)
+
+    def test_actual_first_actor_frame_and_context_admits(self):
+        self.check(self.action,self.followup,self.snapshot)
+
+    def test_entry_delay_or_old_frame_cannot_claim_actor_boundary(self):
+        for frame in (0,7547,None):
+            self.action['frame']=frame
+            with self.subTest(frame=frame),self.assertRaises(ValueError):
+                self.check(self.action,self.followup,self.snapshot)
+
+    def test_other_cpu_context_or_late_tick_rejects(self):
+        for field in ('tick','due'):
+            original=self.action[field];self.action[field]+=1
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                self.check(self.action,self.followup,self.snapshot)
+            self.action[field]=original
+        self.snapshot['cpu_regs']='01'*48
+        with self.assertRaises(ValueError):
+            self.check(self.action,self.followup,self.snapshot)

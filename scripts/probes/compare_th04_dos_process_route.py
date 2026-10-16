@@ -75,7 +75,7 @@ def compare_route(original_dir, candidate_dir, original, source_snapshot=None):
     b, bp, br = read_side(candidate_dir, original, source_snapshot)
     require(a['receipt']['role'] == 'original' and b['receipt']['role'] == 'candidate', 'route pair roles')
     for key in ('end_after', 'dialog_at_frame', 'quit_at_frame', 'main_frames', 'termination',
-                'natural_game_exit', 'restart_main', 'restart_updates', 'resident_ownership', 'emulator_sha256', 'emulator_receipt_sha256', 'debugger_sha256',
+                'natural_game_exit', 'restart_main', 'restart_updates', 'restart_shot_boundary', 'resident_ownership', 'emulator_sha256', 'emulator_receipt_sha256', 'debugger_sha256',
                 'adapter_sha256', 'walker_sha256', 'font_sha256', 'process_host_inputs', 'source_files'):
         require(a['receipt'].get(key) == b['receipt'].get(key), 'route pair identity/contract: ' + key)
     require(a['receipt']['files']['dosbox-x.conf'] == b['receipt']['files']['dosbox-x.conf'] and
