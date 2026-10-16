@@ -15,6 +15,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [inspect_omf.py](../inspect_omf.py) | command | Validate an Intel OMF object and emit a machine-readable record inventory. |
 | [probe_tc4j_pc98_ide.py](../probe_tc4j_pc98_ide.py) | command | Replay the TC4J PC-98 IDE integrated-compiler MOV-direction probe. |
 | [probes/analyze_dialog_relocation_runs.py](../probes/analyze_dialog_relocation_runs.py) | command | Inspect complete dialog.cpp MZ relocation order and candidate OMF records. |
+| [probes/compare_th04_dos_blink_pictures.py](../probes/compare_th04_dos_blink_pictures.py) | command | Compare complete sampled programmed display, including recorded GDC blinking. |
 | [probes/compare_th04_native_maine_link.py](../probes/compare_th04_native_maine_link.py) | command | Compare two cold TH04 native-link diagnostic receipts. |
 | [probes/compare_th04_native_op_link.py](../probes/compare_th04_native_op_link.py) | command | Compare two cold standalone TH04 OP link receipts. |
 | [probes/compare_th04_native_source_compile.py](../probes/compare_th04_native_source_compile.py) | command | Compare two TH04-only compile receipts and all their OMF objects. |

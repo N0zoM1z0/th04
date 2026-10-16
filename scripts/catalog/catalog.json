@@ -532,6 +532,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/compare_th04_dos_blink_pictures.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Compare complete sampled programmed display, including recorded GDC blinking.",
+    "purpose_source": "source-docstring"
+  },
+  {
     "path": "scripts/probes/compare_th04_dos_demos.py",
     "category": "runtime",
     "role": "command",
