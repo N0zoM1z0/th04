@@ -1,5 +1,115 @@
 # Stage Lifecycle evidence
 
+## Stage and BGM title rendering repaired (v1450)
+
+Native `3bf2aea` restores stage numbers/names, BGM strings, separate title/Boss
+clocks and the shared graphics dissolve. Original MAIN relative `0AAF:6446`
+and `0AAF:66A5` are the owners; DGROUP `1BBC/1BDC` owns their string tables.
+The original ordinary capture's BGM row differs from v1449 on334 frames,
+first99. That old report remains FAILED. Both new cold GNU/optimized UBSan
+programs match all8000 title fields, three complete80-column character/attribute
+rows and actual BB calls. Popup rows/state and the selected gameplay/input/RNG,
+nine pools, four Boss blocks, Continue and CFG/SCR remain equal.
+
+Each profile passes7895 original-instruction cases at loads1000/3333, comparing
+complete16KiB TRAM, all title state, BB calls and four complete32KiB GRCG planes.
+GNU builds87 programs and passes83 CTests. All15988 old/current native Demo
+state boundaries, six late popup BMPs and dialogue-prefix BMP remain equal. The first
+title producer passed text but misplaced43 frames of BB draws by1px. Its actual
+source/program SHA is recovered and its failure reruns. The corrected owner
+reads the result of the pending background update without advancing live state.
+
+Source565/02e852a2 and receipts live under
+`.analysis/reconstruction/probes/native-bgm-title-v1450/`. Native replay is
+`port64/verify_titles.py`; use pinned Unicorn2.1.4. Its older1.0.2 engine rejects
+this strlen/RETF path. Hardware callbacks explicitly stop and rethrow errors.
+The GRCG adapter and pinned3072-byte file-backed BB extent are explicit.
+
+Verified archival retires1332 owned aliases/intermediates in
+1079 blobs, releasing115.574MiB after archive and new gzip recipes;
+7293 protected hashes remain. `recover.py` restores by SHA/mode/nsmtime.
+`replay_restored.py` reruns old BGM334, first-scroll43 and both final actual
+8000-update programs, then verifies/retires one owned and four borrowed original
+aliases separately. Old journals/totals and the94 missing files are unchanged.
+
+Next compare natural title/picture bands with same-boundary font/video evidence,
+then extend beyond8000 toward Boss defeat and process/campaign completion.
+Complete natural pictures, other globals, physical timing/scanout, Windows,
+canonicality and historical exactness remain open. Both full goals stay active.
+
+The two callback clocks are BYTEs at DGROUP46A0/1B63. They share dissolve
+sprite1BB6; lengths are separate WORDs4680/4682/4686, rather than one contiguous
+three-WORD array (4684 is the stage-title ID). BGM ID469A and callback469C are
+retained. Stage0/Reimu selects name IDs0/0; the other stage/character mappings,
+all17 BGM IDs and the alternate Gengetsu ID are covered by original instructions.
+Text first appears at title frame25, repeats while cel22 lasts, and wipes at192.
+In the observed ordinary run, BGM occupies99..265 and6574..6740. The title callback
+expires at299 with sprite0; the Boss callback expires at6774 retaining sprite16.
+Expiry and BYTE-wrap controls distinguish these resets.
+
+TXT.BB is2048 bytes. TXT2.BB is also2048, but original loader0AAF:6A61 reads
+only its first1024. The3072 loaded bytes have SHA256
+`00d1f591a385dbe5f8ac92d2c73cabc863e93d4a012d8291a901bc1316af804e`.
+The Python FAT/PAR path attests the parent archive before deriving this extent.
+No target executable instructions or original assets enter maintained source.
+Display strings are semantic Shift-JIS data checked through original tables,
+strlen and text instructions. Native Graphics uses actual private file assets.
+
+`verify_dos_hud_titles.py` executes original title, strlen, text/gaiji, scroll and
+BB instructions. It replaces no callee; a near-return sentinel ends the call.
+Actual OUT7C/7E controls an explicit GRCG RMW adapter. Actual STOSD/MOVSD masks
+write four independently seeded planes; unexpected CPU VRAM reads reject.
+The standalone comparison reads all147456 native TRAM/graphics bytes per case,
+including untouched regions. All595 original instruction addresses are retained
+as target execution observations, not independent disassembler Oracles.
+
+Old Unicorn1.0.2 produces an invalid16-bit CS:IP on this actual strlen/RETF path
+at both loads and is rejected after44 visited addresses. Unicorn2.1.4 is isolated
+under the private batch directory, with its shared-library hash in every final
+component receipt. Its target results additionally agree with the independent
+ordinary NP2 recording. Pinned1.x ctypes callbacks swallow Python exceptions:
+the new hardware/code guards stop emulation first and rethrow after emu_start.
+Negative controls reject a synthetic mask, unexpected OUT, changed field,
+changed BB coordinate, changed text byte, truncation and trailing records.
+
+The first natural row/state comparison passed but43 BB coordinate frames failed,
+first74: original physical top93, first native94. FrontEnd commits background
+advancement after State returns; overlay1 needs the resulting origin. The repair
+runs that same background update on a private value for the title's coordinate
+query. Live background/actors are not advanced twice. The target-derived call
+reader still rejects the first actual executable and accepts the corrected one.
+This is a phase ownership fix, not a fitted1px offset.
+
+The first diagnostic executable was overwritten by the next incremental link.
+`preserve_negative.py` reconstructs its565-file receipt-pinned source closure,
+rebuilds at the original path, and requires its original executable SHA before
+admitting the recovered counterexample. It then restores/rebuilds the positive
+source and requires that prior executable SHA too. No receipt is restamped.
+The recovered archive and actual negative executable remain replayable.
+
+Natural graphics evidence here compares actual ordered BB calls and their
+primitive separately; it does not compare an entire native picture with original
+scanout. Text rows compare complete characters/attributes, not font pixels.
+Late popup/prefix BMP equality is native regression evidence; v1449's six
+same-boundary original font projections keep their own narrower scope.
+
+Replay with the matching native branch and a fresh output directory:
+
+```sh
+PYTHONPATH=PRIVATE_UNICORN_2_1_4 python3 port64/verify_titles.py \
+  --dos-root DOS_ROOT --exe COLD_TITLES_CONTRACT \
+  --bb ATTESTED_LOADED_BB --output-dir NEW_COMPONENT
+PYTHONPATH=PRIVATE_UNICORN_2_1_4 python3 scripts/probes/compare_th04_dos_titles.py \
+  --original RESTORED_ORIGINAL --native NEW_FRONTEND \
+  --target PINNED_MAIN --bb ATTESTED_LOADED_BB --output NEW_REPORT
+```
+
+The original strict reader requires the four borrowed font-capture aliases;
+restore them with v1449/recover.py and its font-original prefix. New title/popup
+row readers consume verified `.bin.gz` aliases directly. The v1450 recovery
+replay covers actual old BGM334, recovered first-scroll43 and both final games.
+The unused Unicorn static library is archived; its dynamic tool stays live.
+
 ## Common MAIN popup rendering repaired (v1449)
 
 Native `da4ee5f` adds the real popup clock, pending-ID replacement, bonus digits
@@ -32,8 +142,8 @@ full-width popup bands (6144 pixels each) match both native programs exactly;
 used live glyph bits also match the pinned BFT. This accepts instantaneous
 programmed-display projections, not physical scanout or complete pictures.
 
-The whole two-row UI report still FAILS: BGM row 23 differs on 334 frames, first 99.
-Next recover its title callback/string/timing owner and retain that counterexample.
+The historical v1449 BGM334 aggregate failure remains unchanged; v1450 has a
+separate new-producer acceptance above.
 Broader pictures, other globals, process/campaign, Windows and historical exactness
 remain open. Source 561/f28cc274 and replay receipts live under
 `.analysis/reconstruction/probes/native-pickup-video-v1449/`. Public readers are

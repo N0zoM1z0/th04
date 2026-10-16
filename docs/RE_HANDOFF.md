@@ -1,70 +1,48 @@
 # TH04 native branch handoff
 
-## Common MAIN popup rendering repaired (v1449)
+## Stage and BGM title rendering repaired (v1450)
 
-Native `da4ee5f` adds the real popup clock, pending-ID replacement, bonus digits
-and persistent TRAM writes for BONUS, FULL POWERUP, high score and Extend.
-The original `0AAF:67E8` callback runs after overlay1 and before score drain.
-Rendering a host repaint no longer recreates a blank playfield text plane.
+Native `3bf2aea` restores stage numbers/names, BGM strings, separate title/Boss
+clocks and the shared graphics dissolve. Original MAIN relative `0AAF:6446`
+and `0AAF:66A5` are the owners; DGROUP `1BBC/1BDC` owns their string tables.
+The original ordinary capture's BGM row differs from v1449 on334 frames,
+first99. That old report remains FAILED. Both new cold GNU/optimized UBSan
+programs match all8000 title fields, three complete80-column character/attribute
+rows and actual BB calls. Popup rows/state and the selected gameplay/input/RNG,
+nine pools, four Boss blocks, Continue and CFG/SCR remain equal.
 
-Fresh GNU/optimized UBSan builds preserve the complete 8000-update selected
-state/input/RNG, nine pools, four Boss blocks and CFG/SCR result. Both now match
-the complete 80-column popup character/attribute row and all popup fields at
-all 8000 boundaries. The old actual renderer differs on 256 frames: BONUS and
-FULL POWERUP each last 128 updates. Each compiler profile also passes 7689
-original-instruction component cases at load segments 1000/3333, with complete
-16KiB TRAM and ABI checks. GNU builds 86 programs and passes 83 CTests; all 15988
-old/current native Demo state boundaries remain equal.
+Each profile passes7895 original-instruction cases at loads1000/3333, comparing
+complete16KiB TRAM, all title state, BB calls and four complete32KiB GRCG planes.
+GNU builds87 programs and passes83 CTests. All15988 old/current native Demo
+state boundaries, six late popup BMPs and dialogue-prefix BMP remain equal. The first
+title producer passed text but misplaced43 frames of BB draws by1px. Its actual
+source/program SHA is recovered and its failure reruns. The corrected owner
+reads the result of the pending background update without advancing live state.
 
-The first `a9e09a7` producer passed its configured after-actor checks but cleared
-retained BONUS during the following score return: actual original code keeps
-25000, while its default-argument request stores0. The corrected overload leaves
-the shared amount unchanged unless an explicit bonus producer supplies it.
-Actual popup+score CPU/native composition now passes at both loads,including
-that return boundary. Default arguments are compiled into callers,so complete
-new cold builds recompile MAIN and every affected caller. Initial source/
-programs/reports remain unchanged and their narrower positive observations stay
-valid. Final source 561/f28cc274 includes this correction.
+Source565/02e852a2 and receipts live under
+`.analysis/reconstruction/probes/native-bgm-title-v1450/`. Native replay is
+`port64/verify_titles.py`; use pinned Unicorn2.1.4. Its older1.0.2 engine rejects
+this strlen/RETF path. Hardware callbacks explicitly stop and rethrow errors.
+The GRCG adapter and pinned3072-byte file-backed BB extent are explicit.
 
-An additional original 8001-update capture reads actual 528384-byte font RAM,
-raw video, DGROUP and unchanged CPU context at six declared frames. Those six
-full-width popup bands (6144 pixels each) match both native programs exactly;
-used live glyph bits also match the pinned BFT. This accepts instantaneous
-programmed-display projections, not physical scanout or complete pictures.
+Verified archival retires1332 owned aliases/intermediates in
+1079 blobs, releasing115.574MiB after archive and new gzip recipes;
+7293 protected hashes remain. `recover.py` restores by SHA/mode/nsmtime.
+`replay_restored.py` reruns old BGM334, first-scroll43 and both final actual
+8000-update programs, then verifies/retires one owned and four borrowed original
+aliases separately. Old journals/totals and the94 missing files are unchanged.
 
-The whole two-row UI report still FAILS: BGM row 23 differs on 334 frames, first 99.
-Next recover its title callback/string/timing owner and retain that counterexample.
-Broader pictures, other globals, process/campaign, Windows and historical exactness
-remain open. Source 561/f28cc274 and replay receipts live under
-`.analysis/reconstruction/probes/native-pickup-video-v1449/`. Public readers are
-`scripts/runtime/verify_dos_hud_popup.py` and `scripts/probes/compare_th04_dos_popup.py`;
-native component replay uses port64/verify_popup.py with --dos-root. Both full
-development goals remain active.
+Next compare natural title/picture bands with same-boundary font/video evidence,
+then extend beyond8000 toward Boss defeat and process/campaign completion.
+Complete natural pictures, other globals, physical timing/scanout, Windows,
+canonicality and historical exactness remain open. Both full goals stay active.
 
-Verified archival retires 255 owned capture/prototype/intermediate/raw aliases
-into 245 blobs:34.573MiB archive and339.895MiB released after its archive. All 255 recoveries
-pass SHA/CRC/mode/nsmtime;2550 protected digests remain equal. Restoring five
-owned aliases and rerunning three actual 8000-update programs reproduces the old
-popup failure and both current passes,including selected state/pools/Boss/input/
-GO/prefix/saves and six complete BMPs; BGM334 remains. Those five aliases are
-verified and retired again. Current GNU cache/programs,UBSan game+popup,both new
-cold cores and complete compressed original memory/video/font/source stay live.
-Use recover.py before strict capture readers or replay_restored.py for the
-complete restore/run/retirement cycle. Text-row readers also accept the verified
-.gz streams directly. Old94 missing files and prior journals remain untouched.
+## Retained popup result (v1449)
 
-A separate final journal retires 240 newly owned intermediates/aliases in 238
-blobs:3.418MiB archive,23.809MiB after its archive and2524 protected hashes. Both journals total363.703MiB after archives; five new row-gzip recipes use
-0.488MiB,leaving363.215MiB released after both. The initial255/245 journal remains unchanged. Four
-borrowed font-capture aliases verify and retire without being counted twice.
-replay_final.py restores those four plus two owned score diagnostic programs,
-reruns the old 0 / corrected 25000 results and both final 8000-update games,then
-verifies metadata and retires them separately. Use recover_final.py for final
-intermediates and recover.py for the initial capture aliases.
-
-Final root CI573 with live MAIN database/mutation checks and native CI354 pass;
-git diff --check passes in both trees. Native private Ghidra skips because its
-project is absent; the actual database replay is in DOS root.
+Native `da4ee5f` remains the replayable popup/score-tail producer. Its BGM334
+aggregate failure, score-tail0/25000 counterexample, source closure and both
+retention journals are preserved in the focused differential note. V1450
+supersedes only the newly built title producer and its configured gates.
 
 ## Native Continue and full-power pickup repaired (v1448)
 
