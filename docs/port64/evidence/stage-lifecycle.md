@@ -1,5 +1,143 @@
 # Stage Lifecycle evidence
 
+## Common MAIN popup rendering repaired (v1449)
+
+Native `da4ee5f` adds the real popup clock, pending-ID replacement, bonus digits
+and persistent TRAM writes for BONUS, FULL POWERUP, high score and Extend.
+The original `0AAF:67E8` callback runs after overlay1 and before score drain.
+Rendering a host repaint no longer recreates a blank playfield text plane.
+
+Fresh GNU/optimized UBSan builds preserve the complete 8000-update selected
+state/input/RNG, nine pools, four Boss blocks and CFG/SCR result. Both now match
+the complete 80-column popup character/attribute row and all popup fields at
+all 8000 boundaries. The old actual renderer differs on 256 frames: BONUS and
+FULL POWERUP each last 128 updates. Each compiler profile also passes 7689
+original-instruction component cases at load segments 1000/3333, with complete
+16KiB TRAM and ABI checks. GNU builds 86 programs and passes 83 CTests; all 15988
+old/current native Demo state boundaries remain equal.
+
+The first `a9e09a7` producer passed its configured after-actor checks but cleared
+retained BONUS during the following score return: actual original code keeps
+25000, while its default-argument request stores0. The corrected overload leaves
+the shared amount unchanged unless an explicit bonus producer supplies it.
+Actual popup+score CPU/native composition now passes at both loads,including
+that return boundary. Default arguments are compiled into callers,so complete
+new cold builds recompile MAIN and every affected caller. Initial source/
+programs/reports remain unchanged and their narrower positive observations stay
+valid. Final source 561/f28cc274 includes this correction.
+
+An additional original 8001-update capture reads actual 528384-byte font RAM,
+raw video, DGROUP and unchanged CPU context at six declared frames. Those six
+full-width popup bands (6144 pixels each) match both native programs exactly;
+used live glyph bits also match the pinned BFT. This accepts instantaneous
+programmed-display projections, not physical scanout or complete pictures.
+
+The whole two-row UI report still FAILS: BGM row 23 differs on 334 frames, first 99.
+Next recover its title callback/string/timing owner and retain that counterexample.
+Broader pictures, other globals, process/campaign, Windows and historical exactness
+remain open. Source 561/f28cc274 and replay receipts live under
+`.analysis/reconstruction/probes/native-pickup-video-v1449/`. Public readers are
+`scripts/runtime/verify_dos_hud_popup.py` and `scripts/probes/compare_th04_dos_popup.py`;
+native component replay uses port64/verify_popup.py with --dos-root. Both full
+development goals remain active.
+
+The native popup owner is `port64/hud_popup.hpp/.cpp`. It keeps one requested
+ID rather than an event queue: a different request replaces the current label
+only at clock 64 or later. Expiry at 128 clears the popup line, resets its byte
+clock and removes the callback. Same-ID requests do not restart that clock.
+The original shift buffer, label length, current/destination columns, reached
+flag and bonus dword are all retained and compared. Bonus numeric rendering
+includes the fixed trailing continues digit. All four labels, bonus boundaries
+including FFFFFFFFh, same-frame writes and request changes around 63/64 are
+covered by actual original popup/points/CRT/gaiji/text execution. There are no
+callee adapters; only a near-return sentinel terminates each component call.
+The two load segments have distinct relocated data and code ownership.
+
+MAIN applies item full-power requests after bullets update, bullet-zap bonus
+requests in the bullet sink and score/Extend requests after the frame boundary.
+Overlay1 writes first; popup writes follow it. Actual rendering consumes the
+persistent text memory instead of blanking it during every repaint. Stage
+initialization disables the popup callback without inventing a clock reset.
+The original source/binary exact-state ledgers and Borland layout are unchanged.
+
+The diagnostic old renderer is an unchanged v1448 cold core/main/audio with
+only the text-observation harness recompiled into view.cpp. Its source closure
+is the v1448 frozen producer plus baseline-diff.tar.gz; new popup files in that
+archive are explicitly unlinked candidate material. Baseline/current complete
+selected state and raw pool streams agree. The strict popup row differs first
+at 3995 and again at 7641; the old code's first full-power band differs by 78 pixels,
+then 594 for the fully drawn label. Current GNU/UBSan differ by zero in all six
+sample bands. The raw popup-row comparison covers all 80 columns,160 character
+bytes and 160 attribute bytes, with no ignored-byte mask. Popup state is emitted
+at the actual actor observer before score-tail requests; row observations have
+no score-tail writer. The separate BGM-row failure remains in every report.
+
+Two original captures are admitted: original-v2 carries the complete 8001 video/
+DGROUP prefix, and font-original additionally binds six live font snapshots.
+Their starting image/files and all observed pre-I state/resident/RNG/input events
+agree. Retained real native output is independently re-compared against the
+font capture without rerunning or changing either original receipt. All nine
+complete pools at each font checkpoint agree. The calibrated font array is at
+VGA offset 312, size 528384, within the attested 535896-byte object. Pinned g++8
+headers and four relevant font/drawing source files agree with the exact source
+archive. The captured font state, not an assumed asset bank, supplies pixel bits.
+GDC text origin/pitch/height/enable, white text palette, raw TRAM, graphics,
+GRB/DAC expansion and double-wide sequencing are checked. Six 6144-pixel samples
+are distinct temporal observations, not a whole-animation or full-screen result.
+
+The first copied capture driver completed raw observations but failed finalization
+because adjacent video-helper aliases were missing. It has no admission receipt.
+The fresh original-v2 producer includes those unchanged helpers; the first run,
+its terminal error and full raw compressed data remain separate. An early pixel
+projection also rejected the GDC origin because it confused partition-length
+bits with address bits. Its failed source/log are retained; the corrected
+projection validates the low address bits. No failed report is restamped.
+
+Replay after restoring this batch's owned capture aliases:
+
+```sh
+python3 .analysis/native/port64-recovery-v1445/port64/verify_popup.py \
+  --dos-root "$PWD" \
+  --exe .analysis/native/port64-recovery-v1445/.analysis/port64/popup-v1449-final/gnu/th04-port64-popup-contracts \
+  --output-dir NEW_COMPONENT
+python3 scripts/probes/compare_th04_dos_popup.py \
+  --original .analysis/runtime/candidates/native-pickup-video-v1449-font-original \
+  --native .analysis/reconstruction/probes/native-pickup-video-v1449/final-gnu-observation/frontend \
+  --target .analysis/targets/th04/main.exe --output NEW_ROW_REPORT.json
+```
+
+The second command intentionally returns1 while BGM remains different; inspect
+popup_passed and the separate row/state verdicts. Never turn that aggregate into
+a pass by discarding row 23. Complete commands and the final frozen 561-file source are in final-cold-source.json,
+final component/run receipts and final-result.json. Initial e918678d reports
+cover the earlier after-actor surface; score-tail-negative.json adds its later
+counterexample without rebinding those reports.
+
+Verified archival retires 255 owned capture/prototype/intermediate/raw aliases
+into 245 blobs:34.573MiB archive and339.895MiB released after its archive. All 255 recoveries
+pass SHA/CRC/mode/nsmtime;2550 protected digests remain equal. Restoring five
+owned aliases and rerunning three actual 8000-update programs reproduces the old
+popup failure and both current passes,including selected state/pools/Boss/input/
+GO/prefix/saves and six complete BMPs; BGM334 remains. Those five aliases are
+verified and retired again. Current GNU cache/programs,UBSan game+popup,both new
+cold cores and complete compressed original memory/video/font/source stay live.
+Use recover.py before strict capture readers or replay_restored.py for the
+complete restore/run/retirement cycle. Text-row readers also accept the verified
+.gz streams directly. Old94 missing files and prior journals remain untouched.
+
+A separate final journal retires 240 newly owned intermediates/aliases in 238
+blobs:3.418MiB archive,23.809MiB after its archive and2524 protected hashes. Both journals total363.703MiB after archives; five new row-gzip recipes use
+0.488MiB,leaving363.215MiB released after both. The initial255/245 journal remains unchanged. Four
+borrowed font-capture aliases verify and retire without being counted twice.
+replay_final.py restores those four plus two owned score diagnostic programs,
+reruns the old 0 / corrected 25000 results and both final 8000-update games,then
+verifies metadata and retires them separately. Use recover_final.py for final
+intermediates and recover.py for the initial capture aliases.
+
+Final root CI573 with live MAIN database/mutation checks and native CI354 pass;
+git diff --check passes in both trees. Native private Ghidra skips because its
+project is absent; the actual database replay is in DOS root.
+
 ## Native Continue and full-power pickup repaired (v1448)
 
 Native source `7bdcd60` now applies item collection's clear effect to the real
