@@ -82,8 +82,9 @@ not complete-loop acceptance. Native Stage2 update 9836 remains unaccepted.
    Extend original/source DOS and native using each file's own MAP, CS/DS and
    explicit STD/Continue/post-Boss waits. Avoid guessing observer ordering or
    changing gameplay to match an unaligned checkpoint.
-2. Locate actual input reset/IRQ/read ownership at the first post-reset mismatch
-   (checkpoint 5/after update 4), retaining both 302/312 vectors. Raw GDC,
+2. Locate actual input reset/IRQ/read ownership at the first post-reset mismatch:
+   no-video checkpoint 5/after update 4; video checkpoint 48/after update 47.
+   Retain both 302/312 vectors. Raw GDC,
    elapsed/physical timing, every-frame RGB and native raw-plane identity remain
    separate requirements. Equal consumed input alone cannot waive these gates.
 3. Continue complete four-product process/campaign and cross-emulator validation.

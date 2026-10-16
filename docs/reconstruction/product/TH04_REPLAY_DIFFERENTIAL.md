@@ -47,7 +47,8 @@ assertion of candidate dialogue/player ABI. Existing target-specific original
 STD checkpoints are not rearmed at the second cue. No gameplay/RNG state or
 clock is assigned. All selected state/pool data and the 38 regions are compared
 without new normalization or masks; full raw GDC remains diagnostic and differs.
-The first post-reset input difference is at checkpoint 5, after update 4.
+The no-video first post-reset input difference is at checkpoint 5 (after update
+4); the video first difference is at checkpoint 48 (after update 47).
 
 The public `capture_th04_dos_boss_suffix.py` and `th04_boss_suffix_keyboard.gdb`
 keep the legacy public capture/adapter byte identities unchanged because older

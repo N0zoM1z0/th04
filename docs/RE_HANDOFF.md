@@ -71,8 +71,9 @@ two deferred exact cases stay deferred.
    rebind, then extend original/reconstructed DOS and native Stage2 with each
    producer's own MAP/CS/DS. Do not change gameplay or observer ordering from a
    guessed stage boundary.
-2. Diagnose the first post-reset input difference (checkpoint 5/after update 4)
-   against actual reset/IRQ/read ownership; preserve the 302/312 vectors and
+2. Diagnose the first post-reset input differences (no-video checkpoint 5,
+   video checkpoint 48) against actual reset/IRQ/read ownership; preserve the
+   302/312 vectors and
    raw GDC differences. Natural timing is not settled by equal consumed input.
 3. Preserve the earlier four-source nine-entry/second-MAIN component result,
    its OP confirmation/readiness failure and missing-producer limitations.
