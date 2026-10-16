@@ -55,10 +55,17 @@ def validate_release_resume(clock, wait, kind, frame, previous_end=0):
 def validate_wait_cues(clock, receipt):
     frames = [receipt['dialog_at_frame'], receipt['continue_at_frame']]
     require(0 < frames[0] < frames[1] < receipt['end_after'] - 1, 'Continue cue extent/order')
+    kinds = ['dialogue', 'continue']
+    postboss = receipt.get('post_boss_dialog_at_frame')
+    if postboss is not None:
+        require(type(postboss) is int and frames[-1] < postboss < receipt['end_after'] - 1,
+                'post-Boss cue extent/order')
+        frames.append(postboss)
+        kinds.append('dialogue')
     waits, actions = clock['waits'], clock['actions']
-    require(len(waits) == 2, 'Continue wait count')
+    require(len(waits) == len(frames), 'Continue wait count')
     previous_end = 0
-    for kind, frame, wait in zip(('dialogue', 'continue'), frames, waits):
+    for kind, frame, wait in zip(kinds, frames, waits):
         previous_end = validate_release_resume(clock, wait, kind, frame, previous_end)
 
 

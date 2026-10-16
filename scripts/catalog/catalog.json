@@ -357,6 +357,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/attest_th04_postboss_checkpoints.py",
+    "category": "setup",
+    "role": "command",
+    "purpose": "Attest original player input before the blocking post-Boss dialogue.",
+    "purpose_source": "source-docstring"
+  },
+  {
     "path": "scripts/probes/audit_th04_native_bullet_switches.py",
     "category": "hardware",
     "role": "command",

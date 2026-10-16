@@ -13,5 +13,6 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [bootstrap_toolchain.sh](../bootstrap_toolchain.sh) | command | Acquire/install calibrated Borland candidate tools below ignored private state. |
 | [check_environment.py](../check_environment.py) | command | Report available ingestion, analysis, build, and runtime tools. |
 | [import_targets.py](../import_targets.py) | command | Import pinned TH04 (and optional TH01 smoke) targets from the legal RAR. |
+| [probes/attest_th04_postboss_checkpoints.py](../probes/attest_th04_postboss_checkpoints.py) | command | Attest original player input before the blocking post-Boss dialogue. |
 | [tool-env.sh](../tool-env.sh) | support | Source pinned Ghidra/JDK environment paths into the current shell. |
 | [verify_targets.py](../verify_targets.py) | command | Verify private targets against the checked-in manifest and MZ invariants. |
