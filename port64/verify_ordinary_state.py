@@ -6,6 +6,9 @@ This does not accept natural native OP timing, other globals, pictures, blocking
 scene timing, complete process routes, or historical executable bytes.
 --frontend drives the real dialogue owner with separately declared release/Enter
 controls and checks actual gameplay input; --updates names the bounded extent.
+--recorded-display-time attests original raw PIC time and GDC verdicts, then
+drives the existing display clock with elapsed nanoseconds at completed
+boundaries. This fixture does not accept UI interiors or natural loader timing.
 """
 from __future__ import annotations
 
@@ -135,6 +138,37 @@ def compare_owners(capture: dict, raw: bytes, updates: int) -> dict:
                 differing_boundaries=len(differences), differences=differences)
 
 
+def compare_display_clock(raw: bytes, times: str, updates: int, period: int) -> dict:
+    """Require actual native clock output, not merely an accepted time file."""
+    plan = times.splitlines()
+    require(len(plan) == updates + 1 and
+            plan[0] == f'TH04_DISPLAY_NS 1 {updates} {period}', 'display time plan header/extent')
+    expected_times = [0]
+    for frame, line in enumerate(plan[1:], 1):
+        columns = list(map(int, line.split()))
+        require(len(columns) == 2 and columns[0] == frame and
+                expected_times[-1] < columns[1] < 2**63, 'display time plan order/width')
+        expected_times.append(columns[1])
+    lines = raw.decode('ascii').splitlines()
+    require(len(lines) == updates + 2 and
+            lines[0] == f'TH04_DISPLAY_CLOCK 1 {updates} {period} 1',
+            'recorded native display clock header/extent')
+    differences = []
+    for frame, line in enumerate(lines[1:]):
+        columns = list(map(int, line.split()))
+        require(len(columns) == 4 and columns[0] == frame and
+                0 <= columns[1] < 2**63 and 0 <= columns[2] < 2**64 and
+                columns[3] in (0, 1), 'native display clock order/width')
+        refreshes = 1 + expected_times[frame] // period
+        expected = [frame, expected_times[frame], refreshes, int(bool((refreshes // 32) & 3))]
+        if columns != expected:
+            differences.append(dict(frame=frame, expected=expected, actual=columns))
+    return dict(passed=not differences, configured=True, boundaries=len(lines)-1,
+                differing_boundaries=len(differences), differences=differences[:8],
+                native_trace_sha256=sha(raw), times_sha256=sha(times.encode()),
+                scope='Actual existing native elapsed clock at completed boundaries; frame 0 only checks constructor reset, not original display equivalence.')
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('dos-root', 'original', 'exe', 'output-dir'):
@@ -144,9 +178,12 @@ def main() -> int:
     parser.add_argument('--require-homing', action='store_true',
                         help='Require the actual native homing trace and compare every original DGROUP record')
     parser.add_argument('--dialog-observer-profile', type=Path)
+    parser.add_argument('--recorded-display-time', action='store_true',
+                        help='Attest raw original elapsed time and require actual native clock consumption')
     args = parser.parse_args()
     require(0 < args.updates <= 65535, 'ordinary requested extent')
     require(not args.require_homing or args.frontend, 'homing requires the actual FrontEnd')
+    require(not args.recorded_display_time or args.frontend, 'recorded display time requires the actual FrontEnd')
     root = Path(__file__).resolve().parents[1]
     dos = args.dos_root.resolve()
     sys.path.insert(0, str(dos / 'scripts/probes'))
@@ -173,6 +210,15 @@ def main() -> int:
     output.mkdir(parents=True, exist_ok=False)
     inputs = output / 'inputs'
     (inputs / 'save').mkdir(parents=True)
+    display_attestation = None
+    display_times = None
+    if args.recorded_display_time:
+        from attest_th04_display_clock import analyze
+        display_attestation, display_times = analyze(original, target)
+        require(display_attestation['passed'] and display_attestation['updates'] == args.updates,
+                'complete original display clock attestation/extent')
+        (output/'display-clock-attestation.json').write_text(json.dumps(display_attestation, indent=2)+'\n')
+        (inputs/'save/ordinary-display-times.txt').write_text(display_times)
     for fat, name in (('MIKO    CFG', 'MIKO.CFG'), ('GENSOU  SCR', 'save/GENSOU.SCR')):
         (inputs / name).write_bytes(bytes.fromhex(capture['starting_files'][fat]))
     image = (original / 'prepared/diagnostic.hdi').read_bytes()
@@ -219,6 +265,11 @@ def main() -> int:
     (output / 'stdout.txt').write_bytes(run.stdout)
     (output / 'stderr.txt').write_bytes(run.stderr)
     run.check_returncode()
+    display_clock = dict(passed=True, configured=False, scope='Logical display clock; no elapsed-time acceptance.')
+    if args.recorded_display_time:
+        display_clock = compare_display_clock((frontend/'display-clock.txt').read_bytes(),
+            display_times, args.updates, display_attestation['period_ns'])
+        display_clock['attestation_sha256'] = sha((output/'display-clock-attestation.json').read_bytes())
     state_raw = (frontend/'state.txt').read_bytes() if args.frontend else run.stdout
     (output / 'state.txt').write_bytes(state_raw)
     witness = None
@@ -347,9 +398,9 @@ def main() -> int:
     require(restored_hash.digest() == raw_hash.digest(), 'ordinary pool retention readback')
     raw_path.unlink()
     require(source_manifest(root)[0] == manifest, 'ordinary native source drift')
-    report = dict(passed=scalar['passed'] and pools['passed'] and consumed['passed'] and owners['passed'] and physical_files['passed'] and homing['passed'], accepts_exact=False,
+    report = dict(passed=scalar['passed'] and pools['passed'] and consumed['passed'] and owners['passed'] and physical_files['passed'] and homing['passed'] and display_clock['passed'], accepts_exact=False,
         natural_game_exit=False, updates=args.updates, scalar=scalar, actor_pools=pools,
-        command=command, frontend=args.frontend, consumed_input=consumed,
+        command=command, frontend=args.frontend, consumed_input=consumed, display_clock=display_clock,
         player_input_boundary=[w['scope'] for w in (witness, continue_witness) if w],
         continue_blocks=continue_blocks, physical_files=physical_files, starting_inputs=starting_inputs, boss_owners=owners, homing=homing, source_manifest_sha256=manifest, source_files=sources,
         executable_sha256=sha(args.exe.read_bytes()), original_receipt_sha256=sha((original/'receipt.json').read_bytes()),

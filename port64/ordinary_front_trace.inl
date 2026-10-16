@@ -20,6 +20,14 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
         }
         require_view(picture_plan.eof() && !picture_frames.empty(),"ordinary picture plan syntax/extent");
     }
+    std::ifstream display_times(fs::path(assets.save_directory)/"ordinary-display-times.txt");
+    const bool recorded_display=bool(display_times);
+    std::uint64_t display_ns=0;
+    if(recorded_display) {
+        std::string magic;unsigned version,extent;std::uint64_t period;
+        require_view(bool(display_times>>magic>>version>>extent>>period) && magic=="TH04_DISPLAY_NS" &&
+            version==1 && extent==updates && period==std::uint64_t(frame_period.count()),"recorded display header/period/extent");
+    }
     fs::create_directories(output);
     std::ofstream owners(output/"owners.txt"),go_blocks(output/"gameover-blocks.txt"),go_events(output/"gameover-events.txt");
     std::ofstream state(output/"state.txt"),consumed(output/"consumed.txt"),blocks(output/"blocks.txt"),pools(output/"pools.bin",std::ios::binary);
@@ -31,6 +39,10 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
     std::ofstream title_rows(output/"title-rows.bin",std::ios::binary);
     require_view(bool(title_rows),"ordinary title rows unavailable");title_rows.write("TH04TI1\n",8);
     FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&assets,gameplay::Mode::ordinary);
+    if(recorded_display) {
+        require_view(scene.text_refreshes()==1,"recorded display requires the common first refresh");
+        scene.observe_text_time(0);
+    }
     scene.enable_configuration();scene.enable_registration();
     for(unsigned i=0;i<seed;++i)scene.advance(0,false,false);
     scene.input(menu::Input::confirm);if(character)scene.input(menu::Input::right);
@@ -61,11 +73,20 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
     const auto base_draws=scene.process_random_draws(),base_samples=scene.main_state().random_samples();
     const auto hex=[&](const auto& bytes){constexpr char digits[]="0123456789abcdef";for(auto value:bytes)state<<digits[unsigned(value)>>4]<<digits[unsigned(value)&15];};
     state<<"TH04_ORDINARY_STATE 1 "<<updates<<'\n';
+    std::ofstream display_clock(output/"display-clock.txt");require_view(bool(display_clock),"display clock output unavailable");
+    display_clock<<"TH04_DISPLAY_CLOCK 1 "<<updates<<' '<<frame_period.count()<<' '<<recorded_display<<'\n';
     unsigned blocked_ticks=0,dialog_ticks=0;bool prefix_saved=false;
     for(unsigned frame=0;frame<=updates;++frame) {
         unsigned number,keys,shift;
         require_view(bool(plan>>number>>keys>>shift) && number==frame && keys<=65535 && !(keys&~0x303fu) && shift<=1,"ordinary FrontEnd input/order/width");
         auto& main=scene.main_state();require_view(main.frames()==frame,"ordinary FrontEnd missing update");
+        if(recorded_display && frame) {
+            unsigned sample;std::uint64_t now;
+            require_view(bool(display_times>>sample>>now) && sample==frame && now>display_ns &&
+                now<=std::uint64_t(INT64_MAX),"recorded display time order/width");
+            display_ns=now;scene.observe_text_time(std::int64_t(now));
+        }
+        display_clock<<frame<<' '<<display_ns<<' '<<scene.text_refreshes()<<' '<<scene.text_blink_visible()<<'\n';
         const auto& life=main.life();const auto pos=main.player().position().current;
         const auto target=main.homing_target().value_or(th04::portable::motion::Point{-15984,-15984});
         homing<<frame<<' '<<target.x<<' '<<target.y<<'\n';
@@ -171,5 +192,9 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
         require_view(main.frames()==frame+1 && scene.resident().stage==0,"ordinary FrontEnd crossed stage extent");
     }
     plan>>std::ws;require_view(plan.peek()==std::char_traits<char>::eof(),"ordinary FrontEnd trailing input");
+    if(recorded_display) {
+        display_times>>std::ws;
+        require_view(display_times.peek()==std::char_traits<char>::eof(),"recorded display trailing time");
+    }
     std::ofstream result(output/"result.txt");result<<"updates "<<updates<<" blocked_ticks "<<blocked_ticks<<" dialog_ticks "<<dialog_ticks<<'\n';
 }
