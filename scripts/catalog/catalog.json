@@ -3682,6 +3682,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/th04_stage_boundary_gdb.py",
+    "category": "boundaries",
+    "role": "support",
+    "purpose": "Read-only code-fetch checkpoints across the actual next-stage lifecycle.",
+    "purpose_source": "source-docstring"
+  },
+  {
     "path": "scripts/probes/th04_title_draw_checkpoints_gdb.py",
     "category": "runtime",
     "role": "support",

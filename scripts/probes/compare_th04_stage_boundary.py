@@ -25,6 +25,7 @@ p.add_argument("--output-dir", type=Path, required=True)
 p.add_argument("--source-snapshot", type=Path)
 p.add_argument("--stage2-updates", type=int, default=600)
 p.add_argument("--require-midboss", action="store_true")
+p.add_argument("--require-bounded-watchpoints", action="store_true")
 args = p.parse_args()
 root = args.dos_root.resolve()
 r = args.output_dir.resolve()
@@ -43,8 +44,20 @@ sha = lambda b: hashlib.sha256(b).hexdigest()
 target = (root / ".analysis/targets/th04/main.exe").read_bytes()
 a = args.original.resolve()
 b = args.candidate.resolve()
-ar, am, raw, events = attest(a, target, args.source_snapshot, args.stage2_updates)
-br, bm, braw, bevents = attest(b, target, args.source_snapshot, args.stage2_updates)
+ar, am, raw, events = attest(
+    a,
+    target,
+    args.source_snapshot,
+    args.stage2_updates,
+    args.require_bounded_watchpoints,
+)
+br, bm, braw, bevents = attest(
+    b,
+    target,
+    args.source_snapshot,
+    args.stage2_updates,
+    args.require_bounded_watchpoints,
+)
 assert [(x["label"], x["stage"], x["frame"]) for x in am] == [
     (x["label"], x["stage"], x["frame"]) for x in bm
 ]

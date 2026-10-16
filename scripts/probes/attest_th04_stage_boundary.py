@@ -134,7 +134,54 @@ def records(capture):
         require(stream.read(1) == b"", "epoch trailing wire data")
 
 
-def attest(capture, target, source_snapshot=None, stage2_updates=600):
+def watchpoint_resources(summary, rows, expected_slots, required=False):
+    """Validate actual debugger registry observations without guest-state writes."""
+    if "watchpoint_cache_limit" not in summary:
+        require(not required, "epoch required bounded watchpoint observations")
+        return None
+    baseline = summary["baseline_registered_breakpoints"]
+    require(
+        type(baseline) is int
+        and 0 <= baseline <= 64
+        and summary["watchpoint_cache_limit"] == expected_slots,
+        "epoch bounded watchpoint declaration",
+    )
+    previous_slots = 0
+    maximum_registered = baseline
+    for row in rows:
+        slots = row["watchpoint_cache_slots"]
+        registered = row["registered_breakpoints"]
+        require(
+            type(slots) is int
+            and previous_slots <= slots <= expected_slots
+            and type(registered) is int
+            and slots <= registered <= baseline + slots
+            and row["baseline_registered_breakpoints"] == baseline,
+            "epoch bounded watchpoint registry",
+        )
+        previous_slots = slots
+        maximum_registered = max(maximum_registered, registered)
+    require(
+        previous_slots == summary["watchpoint_cache_slots"] == expected_slots
+        and maximum_registered == summary["maximum_registered_breakpoints"],
+        "epoch complete watchpoint resource summary",
+    )
+    return dict(
+        passed=True,
+        cache_slots=expected_slots,
+        baseline_registered=baseline,
+        maximum_registered=maximum_registered,
+        observations=len(rows),
+    )
+
+
+def attest(
+    capture,
+    target,
+    source_snapshot=None,
+    stage2_updates=600,
+    require_bounded_watchpoints=False,
+):
     require(
         type(stage2_updates) is int and 0 < stage2_updates <= 65535,
         "epoch configured Stage2 extent",
@@ -422,6 +469,11 @@ def attest(capture, target, source_snapshot=None, stage2_updates=600):
         scope=__doc__
         + f" Source/capture/MZ/MAP/profile/ABI identity, complete relocated module, CPU/opcode/DGROUP/video/resident and selected conventional memory are checked. Independent C++ loop samples bind every Stage2 frame. This DOSBox-X fixture observes Stage1 return at9837 and{stage2_updates} complete Stage2 updates, with353 initialization LCG calls and no process reseed. It does not accept a campaign, physical timing, NP2, Windows or historical exactness.",
     )
+    resources = watchpoint_resources(
+        summary, rows, len(profile["entries"]), require_bounded_watchpoints
+    )
+    if resources is not None:
+        report["watchpoint_resources"] = resources
     return report, rows, raw_rows, events
 
 
@@ -439,12 +491,14 @@ if __name__ == "__main__":
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--source-snapshot", type=Path)
     p.add_argument("--stage2-updates", type=int, default=600)
+    p.add_argument("--require-bounded-watchpoints", action="store_true")
     args = p.parse_args()
     report, *_ = attest(
         args.capture.resolve(),
         (root / ".analysis/targets/th04/main.exe").read_bytes(),
         args.source_snapshot,
         args.stage2_updates,
+        args.require_bounded_watchpoints,
     )
     with args.output.open("x") as stream:
         json.dump(report, stream, indent=2)

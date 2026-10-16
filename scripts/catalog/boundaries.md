@@ -27,4 +27,5 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/replay_diet145f.py](../probes/replay_diet145f.py) | command | Cold A/B replay of the pinned DIET 1.45f packaging step. |
 | [probes/review_th04_enemy_script_boundary.py](../probes/review_th04_enemy_script_boundary.py) | command | Review the complete MAIN B4M enemy-script code and jump-table boundary. |
 | [probes/roundtrip_diet_target.py](../probes/roundtrip_diet_target.py) | command | Calibrate DIET restore/repack on private copies of pinned packed targets. |
+| [probes/th04_stage_boundary_gdb.py](../probes/th04_stage_boundary_gdb.py) | support | Read-only code-fetch checkpoints across the actual next-stage lifecycle. |
 | [smoke_ghidra_oracle.py](../smoke_ghidra_oracle.py) | command | Calibrate the Ghidra database Oracle with independent negative mutations. |

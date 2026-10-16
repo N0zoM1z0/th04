@@ -5687,3 +5687,33 @@ then uses frozen consumers to reproduce both failed DOS vectors and native
 failure/pass results. Full target initializer decodes replay through
 `replay_target_owners.py --output-dir NEW` in the bundle. Static target evidence
 is classified separately from runtime observations; no exact promotion follows.
+
+
+## Stage2 Midboss battle through3200 (v1458)
+
+Original/reconstructed DOS now complete3200 Stage2 updates in the same process,
+including Midboss activation at actor2601 and600 battle updates. The NPC remains
+active at3200 withHP100/phase1/frame39; defeat is not accepted. Comparable loop
+fields/7787 ordered RNG calls,9 full pools/22 states and38 configured video
+regions agree over9607 bridge/actor/score/loop snapshots. Aggregate remainsfalse
+for248 post-reset input and9607 raw-GDC records. Older18 and302/312 failures
+retain their own captures.
+
+Maintained native closure566/3747e671 adds direct22-byte Midboss/active telemetry
+and permits declared16-bit diagnostic extents. No gameplay repair was needed
+in this span. ColdGNU87 programs/83CTests and optimizedUBSan2 match6403 selected
+records and3201 complete9-pool snapshots,input/homing/Boss/Midboss/RNG;both also
+reproduce old9835 selectedupdates and59 RGB/TRAM elapsed pairs/177 observations.
+Native116 volatile post-reset samples remain separately measured. Stage2 native
+pictures,natural clocks,full NPC defeat/campaigns,NP2/Windows remainopen.
+
+The initial reader kept a newly disabled watchpoint per checkpoint. A controlled
+stop at1709 remainsincomplete. The new bounded collector reuses7 watchpoints;
+actual original/source maxima are10 total including3 baseline. A standalone
+public-class3200-switch test and six resource mutations pass;ten new actual
+capture-data negatives also reject. Full CFG/SCR bytes match with16-bit score
+checksums;Continue changes section1. Preserve the oldfailedcapture/source.
+Current programs: native `.analysis/port64/stage2-midboss-v1458-final/{gnu,ubsan}`.
+Current root-owned bundle: `.analysis/reconstruction/probes/dos-stage2-midboss-v1458/`.
+Recovery/retention is being closed. Next extend through the actual Midboss reset;
+do not infer death from a fixed stop or copy target state into native.
