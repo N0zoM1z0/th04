@@ -1,29 +1,27 @@
 # TH04 reconstruction and native handoff
 
 Updated2026-10-17. Both full development goals remain active. Work on one
-bounded claim, keep all code/docs English and use frequent `gpt-6.1-sol: ...`
-commits/pushes. Historical function acceptance is not whole-game completion.
+bounded claim, keep code/docs English and publish frequent gpt-6.1-sol: commits.
 
 ## Current baselines
 
 | Purpose | Identity | Location |
 | --- | --- | --- |
-| DOS tools/boundary evidence | main cb34388 plus final evidence commits | This checkout |
-| Native semantic repair | port/modern-64 3340389 plus final evidence commits | `.analysis/native/port64-recovery-v1445/` |
+| DOS tools | main b7fe3d8 plus cached-reader/final evidence commits | This checkout |
+| Native telemetry | port/modern-64 8cd826e plus final evidence commits | `.analysis/native/port64-recovery-v1445/` |
 | Normal DOS cohort | MAIN778641ab/MAP42d7d2c7 | `.analysis/build/dos-four-products-v1443/` |
-| Current native cold programs/cache | 566/187b574f | Native `.analysis/port64/stage-epoch-v1457-final/{gnu,ubsan}` |
+| Native cold GNU/cache/UBSan | 566/3747e671 | Native `.analysis/port64/stage2-midboss-v1458-final/{gnu,ubsan}` |
 
-The native full closure is187b574fe1e099d3344f9150d6a30b879772545d9219521f6cae4dcb011a74c4.
-DOS MAIN200279 bytes/1183 relocations; original MAIN156258/1136, header6144,
-entry0000:0000. Own candidate MAP:
+Full native closure:3747e67195391032e6f8a1bbd0eea2ef68fdcc4f59be01adb344b47af8b76c72.
+Source/compat DOS code stays unchanged since07f69d3. MAIN200279 bytes/1183relocs;
+original MAIN156258/1136,header6144,entry0000:0000. Candidate MAP:
 `.analysis/reconstruction/probes/product-20261016-065147-3427b48f-main/source/obj/main-native.map`.
-Full target hashes/provenance are in `config/targets.toml`; canonicality stays
-candidate-local-attested. Old `.analysis/build/th04/` is not the current cohort.
+Use config/targets.toml for full hashes and candidate-local-attested provenance.
 
-## Startup and limits
+## Startup
 
-Read AGENTS.md, RE_HANDOFF, ARCHITECTURE, RE_WORKFLOW, ORACLES, KNOWLEDGE_BASE and
-relevant skills. Query the knowledge ledger before new experiments.
+Read AGENTS.md,RE_HANDOFF,ARCHITECTURE,RE_WORKFLOW,ORACLES,KNOWLEDGE_BASE and
+relevant skills; query the knowledge ledger before new experiments.
 
 ```sh
 git status --short
@@ -34,98 +32,98 @@ python3 scripts/status.py
 python3 scripts/ghidra.py th04-main check
 ```
 
-Use one low-priority CPU, one Borland/Wine writer and muted headless launches.
-No Windows GUI, focus changes or host keys. Emulator keyboard stimuli remain
-inside the recorded private scenario. Never patch target bytes or inject
-expected native gameplay/RNG/phase state. Historical exactness remains separate.
+Use one low-priority CPU and one Borland/Wine writer. Keep launches muted/
+headless; no Windows GUI, focus changes or host keys. Keyboard stimuli stay
+inside the private recorded emulator. Never inject expected state/RNG/phase.
 
 ## Verified frontier
 
-Original and reconstructed DOS actually return from Stage1 at9837, after
-the old actor9836 stop, then initialize Stage2 in the same process.600 complete
-Stage2 updates agree on comparable loop fields and5656 ordered RNG events,
-nine complete pools,22 state blocks and38 configured video regions across1807
-bridge/Stage2 records. Actual CPU/CS:IP/DS/opcode, full DGROUP/video/resident,
-28 full conventional-memory witnesses and601 Stage2 raw-loop contexts bind the
-observations to each artifact's own MZ/MAP. Absolute LCG calls rise354 to707
-in Stage2 initialization; its353 draws continue the existing process state.
+Original/reconstructed DOS complete3200 Stage2 updates, with Midboss activation
+at actor2601 and600 battle updates. The NPC remainsactive at3200 withHP100,
+phase1/frame39; defeat is not accepted. Comparable loop fields and7787 ordered
+RNG calls (707 LCG/7080 ring), nine full pools,22 states and38 configured video
+regions agree across9607 bridge/actor/score/loop snapshots. Own MZ/MAP/CPU/DS/
+opcode, full DGROUP/video/resident and conventional-memory witnesses bind each
+producer. Aggregate remainsfalse for248 post-reset input and9607 raw-GDC records.
+Older v1457 18/1807 and v1456 302/312/9836 vectors remain independent failures.
+These are MAIN-only replacements with original OP/MAINE/ZUN/assets.
 
-Aggregate DOS acceptance remains false:18 post-reset input and1807 full raw-GDC
-snapshots differ. The independent older v1456 control/video pairs retain302/312
-post-reset input differences and9836 raw-GDC differences, despite equal nine
-pools,22 states,38 configured regions and complete CFG/SCR bytes. These are
-MAIN-only replacements with original OP/MAINE/ZUN/assets, not full four-product
-campaign parity. Target provenance remains candidate-local-attested.
+Native code8cd826e adds direct22-byte Midboss/active telemetry and a16-bit
+extent guard; no gameplay repair was needed in this span. Complete566-file
+3747e671 closure, coldGNU87 programs/83CTests and optimizedUBSan2 match6403
+selected bridge/init/actor-score records,3201 complete9-pool snapshots, consumed
+inputs, homing, Boss/Midboss and continuous RNG. Full state/pool wires agree
+across programs. Native116 volatile post-reset samples remain separately
+measured. Both programs also reproduce the distinct9835 selected-update,
+59 full640x400 RGB/TRAM elapsed pairs/177 observations, with real Continue,
+physical saves,title/popup and actor gates. Stage2 native pictures and natural
+OP/loader/UI/CPU clocks are not accepted by this component.
 
-Native code3340389 fixes the omitted400-record point-number clear and the
-query that returned old Orange before prepared Kurumi became active. It does
-not change a guessed frame boundary. Complete source closure566/187b574f,
-fresh GNU87 programs/83CTests and optimized UBSan2 pass. Both actual programs
-match1203 selected bridge/init/actor-score records and all nine complete pools
-at Stage2init+600updates, consumed inputs, homing, Boss fields and continuous
-RNG. Their Stage2 state/pool wires are identical. Sixteen volatile post-reset
-key snapshots remain separately measured against native consumed input.
+The initial reader created and disabled a new watchpoint per checkpoint;
+standalone GDB confirms disabled objects remain registered. Its controlled
+stop at1709 remainsincomplete. The replacement reuses seven own-file boundary
+watchpoints; actual original/source maxima are10 including3 baseline across
+all9607 snapshots. The public class survives3200 realGDB switches atseven
+cached points. Six resource-data mutations,ten new capture-data mutations and
+eight earlier extent/observation guards reject. Old600 semantic vectors remain
+identical. Complete physical CFG/SCR bytes match; allten16-bit score checksums
+validate and ranked Continue changes decoded section1.
 
-Both current programs also reproduce the separate v1455 elapsed fixture:
-9835 selected updates,59 complete640x400 RGB/TRAM pairs and177 full native
-observations, with real input/homing/pools/Boss/Continue/save/title/popup gates.
-Historical default-logical failures and natural OP/loader/UI/CPU clocks remain
-unresolved. No Stage2 picture or autonomous timing acceptance follows.
-Initial565-file diagnostic build omitted the new include from PORT_FILES and
-is retained as diagnostic only; final builds use the complete566-file closure.
+Root-owned bundle: `.analysis/reconstruction/probes/dos-stage2-midboss-v1458/`,
+privately linked in native. Use paired-final-{gnu,ubsan},native-final-result,
+files,midboss-lifecycle,cached/captures and all actual negative/control receipts.
+The initial original capture is intentionally incomplete;never restamp it.
 
-Evidence route: [bounded differential](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md)
-and native `docs/port64/evidence/stage-lifecycle.md`. Current bundle:
-`.analysis/reconstruction/probes/dos-stage2-boundary-v1457/`.
-Use `native-final-result.json`, `public-final-{gnu,ubsan}`, legacy-regressions,
-original/candidate attestations, target-init owners, actual negatives and captures.
-The initial565-file build and earlier failed vectors stay immutable.
+## Next work
 
-## Next bounded work
+Continue through actual Midboss reset/defeat from the verified3200 frontier;
+do not infer death from a fixed stop. Consider a recorded lifecycle stop with
+an independently checked bound, preserving continuous raw inputs/RNG and each
+own CS/DS/MAP. Add native Stage2 pictures only with actual original checkpoints
+and elapsed ownership. Resolve reset/IRQ/read timing behind248 and older key
+failures; equal consumed input does not waive GDC or physical timing.
+Full original/source/native campaigns, four-product routes, NP2, native Windows,
+every-frame/raw-plane rendering, audio/input clocks, pristine provenance and
+historical exactness remain open. Do not reopen the two deferred MAIN cases.
 
-1. Extend actual Stage2 frame600 toward the Midboss; use each file's own code/
-   data segments and STD. Original stage loop returns at9837, not the old9836
-   actor stop. Native already naturally matched that boundary; do not invent
-   a frame correction. Preserve inactive bytes and setup/reset ownership.
-2. Measure rendering and elapsed ownership before accepting new Stage2 pictures.
-   Resolve reset/IRQ/read timing behind old302/312 and new18 key differences;
-   raw GDC, physical timing and native raw-plane identity remain separate gates.
-3. Continue full four-product process/campaign and independent emulator work.
-   Older nine-entry/second-MAIN components do not accept OP confirmation/timing,
-   full endings/routes, NP2, native original-campaign parity or physical scanout.
+The native diagnostic accepts16-bit extents;3200 is the verified extent,not
+full-stage acceptance. Require both --require-midboss and
+--require-bounded-watchpoints with --stage2-updates N for new paired claims.
+The public th04_stage_boundary_gdb.py maintains a fixed cache; future captures
+must freeze private copies before running. Preserve own-file address and
+raw-frame/RNG ordering when extending the lifecycle or adding UI waits.
 
-## Replay and cleanup
+## Replay and retention
 
-Verified retention archives2732 owned generated files into1676 content blobs,
-releasing1385.176 MiB after archive, gzip and both journal files. All28575
-protected hashes verify, including all24890 parent identities. Actual recovery
-restores12 owned capture aliases and the pre-fix executable, executes it and
-both retained repaired GNU/UBSan programs from fresh input-only fixtures, then
-replays the frozen DOS/native consumers. The old native failure remains false;
-both repaired vectors remain true. All13 restored aliases verify SHA, size,
-mode and nsmtime before retirement. Four borrowed v1455 aliases were separately
-verified and retired without cleanup credit. Current final GNU/cache/UBSan
-cores and all complete compressed original evidence remain live. New backing
-paths are immutable private files; older journals and missing-file gaps remain.
+Archive311 owned generated files into125 content blobs,
+releasing1288.430 MiB after archive, gzip and both journal files. All32386
+protected hashes verify, including28575 parent identities, all51 prior
+finish.late_protected entries and the old finish identity. Actual recovery
+restores17 owned aliases (12 complete-capture aliases,4 incomplete-capture
+aliases and the private executable), executes allthree pinned native programs
+from fresh input-only fixtures, and replays frozen DOS/native consumers.
+Both actual standalone GDB probes reproduce growth versus bounded caching;
+the controlled original still rejects. Every restored alias verifies SHA,
+size,mode and nsmtime before retirement. Earlier borrowed13 reader-control
+aliases and4 elapsed-fixture aliases receive no cleanup credit. Keep current
+final GNU/cache/UBSan cores and all compressed complete/incomplete evidence.
 
 ```sh
-python3 .analysis/reconstruction/probes/dos-stage2-boundary-v1457/replay_restored.py \
-  --output-dir .analysis/reconstruction/probes/NEW-stage-epoch-recovery
+python3 .analysis/reconstruction/probes/dos-stage2-midboss-v1458/replay_restored.py \
+  --output-dir .analysis/reconstruction/probes/NEW-midboss-recovery
 ```
 
-Use fresh names. It restores13 owned aliases, actually executes all three native
-programs, replays captured DOS comparisons and retires verified aliases again.
-Manual readers need the exact image/font/raw aliases restored via `recover.py`.
-Keep complete compressed CPU/DGROUP/video/memory/raw/RNG evidence and current
-final GNU/cache/UBSan cores. New recipes use private immutable sources, not
-mutable maintained paths. The legacy two public capture/keyboard paths remain
-frozen; use separate new tools or private snapshots for future captures.
+Use fresh names. Keep complete compressed DGROUP/video/raw/CPU/memory/RNG and
+current final GNU/cache/UBSan cores. Preserve the prior28575 plus51 late hashes,
+the current journal and its finish.late_protected in subsequent retention.
+Frozen recipes use private source snapshots;the legacy two public capture/
+keyboard files retain their old hashes. Do not count borrowed/repeated aliases.
 
-Old missing worktrees, native v1432's94 protected files and v1437 MAIN/MAP remain
-missing. Do not repopulate frozen paths, conceal loss with pruning, substitute
-producers or count absence as cleanup. Older journals remain valid separately.
+Old missing worktrees,native v1432's94 protected files and v1437 MAIN/MAP remain
+missing. Never repopulate frozen paths,substitute producers,prune to hide loss
+or count absence as cleanup.
 
-## Build, check and publish
+## Check and publish
 
 ```sh
 python3 scripts/build.py --output-dir .analysis/build/NEW-products
@@ -133,7 +131,7 @@ python3 scripts/ci.py
 git diff --check
 ```
 
-Run focused comparisons first. Native push: `git push origin HEAD:port/modern-64`.
-Root and native commits publish separately; verify both remote heads and clean
-trees. Do not mark either full goal complete after this bounded batch. Continue
-from current ledgers/receipts, preserve failed gates and publish concrete progress.
+Run focused comparisons first. Native push: git push origin HEAD:port/modern-64.
+Root/native commits publish separately;verify remote heads and clean trees.
+Do not mark either full goal complete after this bounded batch. Continue actual
+Midboss termination and the remaining original/source/native requirements.

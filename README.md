@@ -25,20 +25,20 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
-The primary original/reconstructed DOS comparison now completes Stage1 at9837
-and600 real Stage2 updates in the same process. Comparable loop/RNG fields,
-nine full pools,22 states and38 configured video regions agree. Aggregate
-failure remains explicit for18 post-reset input and1807 raw-GDC snapshots;
-older302/312 vectors remain independently retained.
+The primary original/reconstructed DOS comparison now covers3200 Stage2 updates,
+including Midboss activation at2601 and600 battle updates. Nine complete pools,
+22 states,7787 ordered RNG calls and38 configured video regions agree across
+9607 checkpoints. Aggregate retains248 post-reset input and9607 raw-GDC failures;
+older failure vectors remain independent. The NPC is stillactive at3200/HP100.
 
-Native3340389 repairs missing point-number reset and prepared inactive Boss
-queries. Complete566/187b574f cold GNU87 programs/83CTests and optimized UBSan2
-match Stage2init+600updates, nine complete pools, input/homing/Boss and RNG.
-Both also reproduce all9835 selected updates and59 complete RGB/TRAM pairs in
-the separate recorded elapsed fixture. Stage2 pictures, autonomous timing,
-full original campaigns, NP2, Windows and pristine provenance remain open.
-Both full goals remain active. See the [current handoff](docs/RE_HANDOFF.md)
-for precise scope, retained failures, source identities and verified recovery.
+Native8cd826e adds direct Midboss observation;no gameplay repair was needed.
+Complete566/3747e671 coldGNU87 programs/83CTests and optimizedUBSan2 match6403
+selected records,3201 full9-pool snapshots,input/homing/Boss/Midboss/RNG,plus
+the separate9835 selected-update/59 completeRGB-TRAM elapsed fixture. A bounded
+watchpoint cache fixes collector growth;actual original/source maxima stay10.
+Full Midboss defeat,Stage2native pictures,natural clocks,campaigns,NP2,Windows
+and pristine provenance remainopen. Both full goals remainactive;see the
+[current handoff](docs/RE_HANDOFF.md) for scope and verified recovery.
 
 
 Development is active. All four DOS products build from maintained local source.

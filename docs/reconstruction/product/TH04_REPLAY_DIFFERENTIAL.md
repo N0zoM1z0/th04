@@ -5715,5 +5715,25 @@ capture-data negatives also reject. Full CFG/SCR bytes match with16-bit score
 checksums;Continue changes section1. Preserve the oldfailedcapture/source.
 Current programs: native `.analysis/port64/stage2-midboss-v1458-final/{gnu,ubsan}`.
 Current root-owned bundle: `.analysis/reconstruction/probes/dos-stage2-midboss-v1458/`.
-Recovery/retention is being closed. Next extend through the actual Midboss reset;
+Recovery/retention is closed below. Next extend through the actual Midboss reset;
 do not infer death from a fixed stop or copy target state into native.
+
+
+### Closed3200 recovery
+
+Archive311 owned generated files into125 content blobs,
+releasing1288.430 MiB after archive, gzip and both journal files. All32386
+protected hashes verify, including28575 parent identities, all51 prior
+finish.late_protected entries and the old finish identity. Actual recovery
+restores17 owned aliases (12 complete-capture aliases,4 incomplete-capture
+aliases and the private executable), executes allthree pinned native programs
+from fresh input-only fixtures, and replays frozen DOS/native consumers.
+Both actual standalone GDB probes reproduce growth versus bounded caching;
+the controlled original still rejects. Every restored alias verifies SHA,
+size,mode and nsmtime before retirement. Earlier borrowed13 reader-control
+aliases and4 elapsed-fixture aliases receive no cleanup credit. Keep current
+final GNU/cache/UBSan cores and all compressed complete/incomplete evidence.
+
+The fixed cached reader has a real public-class GDB switch probe;the original
+per-checkpoint creation pattern remains a retained negative. Midboss defeat
+and new native pictures are open;do not reinterpret the3200 boundary as death.

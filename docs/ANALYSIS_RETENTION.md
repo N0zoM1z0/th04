@@ -1,5 +1,22 @@
 # Private build and analysis retention
 
+## Midboss battle and bounded-reader retention (v1458)
+
+Archive311 owned generated files into125 content blobs,
+releasing1288.430 MiB after archive, gzip and both journal files. All32386
+protected hashes verify, including28575 parent identities, all51 prior
+finish.late_protected entries and the old finish identity. Actual recovery
+restores17 owned aliases (12 complete-capture aliases,4 incomplete-capture
+aliases and the private executable), executes allthree pinned native programs
+from fresh input-only fixtures, and replays frozen DOS/native consumers.
+Both actual standalone GDB probes reproduce growth versus bounded caching;
+the controlled original still rejects. Every restored alias verifies SHA,
+size,mode and nsmtime before retirement. Earlier borrowed13 reader-control
+aliases and4 elapsed-fixture aliases receive no cleanup credit. Keep current
+final GNU/cache/UBSan cores and all compressed complete/incomplete evidence.
+
+Use the root-owned v1458 recover.py and replay_restored.py with fresh outputs.
+
 ## Stage2 boundary and native reset retention (v1457)
 
 Verified retention archives2732 owned generated files into1676 content blobs,
