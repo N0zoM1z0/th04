@@ -42,6 +42,18 @@ retention journals remain unchanged. Restore the v1451 score capture's four
 archived aliases before strict original readers,and verify/retire them afterward
 without counting borrowed files as new cleanup.
 
+Verified retention archives 640 owned aliases/intermediates in 255 blobs,
+releasing 254.469 MiB after archive and new gzip recipes; all 13102 protected
+hashes remain equal. Current GNU87/cache, UBSan game/Orange/cold cores, all38
+GNU pictures, complete original compressed font/video/memory and the old failed
+producer remain recoverable or live. `recover.py` verifies SHA/mode/nsmtime.
+`replay_restored.py` restores one owned archived actual writer, borrows four
+v1451 original aliases and reruns it plus both repaired8000-update programs.
+Every selected state/entry/popup gate and all38 BMP identities reproduce;
+the old writer still fails1377 pixels and both current profiles pass. All five
+aliases verify and retire afterward. The four borrowed aliases receive no new
+cleanup credit; previous journals and failed attempts remain unchanged.
+
 Next extend the original/native comparison beyond 8000 toward Boss defeat and
 process/campaign completion. These 38 samples establish programmed-display
 agreement,not every frame or physical scanout. Other globals,full routes,NP2,

@@ -41,6 +41,8 @@ the previous seven score-area failures (1377 pixels) are resolved. Selected
 actual BB calls remain equal. Original capture is DOSBox-X;full campaigns,
 unsampled pictures,physical timing,NP2 and Windows remain open. Source565/394e53f4;
 see the [current handoff](docs/RE_HANDOFF.md) for replay and cleanup rules.
+Actual archived-writer/current-producer recovery passes; 254.469 MiB of owned
+duplicates/intermediates are reclaimed with protected hashes unchanged.
 
 With local inputs and the toolchain installed:
 
