@@ -18,7 +18,9 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [export_analysis_bundle.py](../export_analysis_bundle.py) | command | Export a private, reproducible address/relocation bundle for one MZ target. |
 | [ghidra.py](../ghidra.py) | command | Run the pinned, target-attested TH04 Ghidra workflow. |
 | [probes/analyze_diet_relocation_owners.py](../probes/analyze_diet_relocation_owners.py) | command | Compare OP/MAINE candidate and target-restored relocation order by MAP owner. |
+| [probes/attest_th04_stage_boundary.py](../probes/attest_th04_stage_boundary.py) | command | Attest actual own-file stage epochs from raw trace,CPU,DGROUP and video. |
 | [probes/compare_diet_payloads.py](../probes/compare_diet_payloads.py) | command | Compare a cold TH04 candidate with the independently unpacked target payload. |
+| [probes/compare_th04_stage_boundary.py](../probes/compare_th04_stage_boundary.py) | support | Replay the bounded DOS stage-epoch comparison and optional native observations. |
 | [probes/partition_diet_mz_residual.py](../probes/partition_diet_mz_residual.py) | command | Partition OP/MAINE DIET packed residual among three MZ input surfaces. |
 | [probes/probe_diet145f_internal_metadata.py](../probes/probe_diet145f_internal_metadata.py) | command | Read DIET 1.45f's hidden -^ metadata from TH04 packed executables. |
 | [probes/probe_diet145f_relocation_order_roundtrip.py](../probes/probe_diet145f_relocation_order_roundtrip.py) | command | Test whether DIET 1.45f preserves arbitrary MZ relocation-table order. |

@@ -5620,3 +5620,41 @@ snapshot. This snapshot is published on review/startup-motion-join-v1403;
 merge it only after selecting one writable source session and attesting the
 combined producer. Both incoming histories are preserved. The older v1401
 startup implementation itself already reached port/modern-64 through fffcc83.
+
+
+## Actual Stage1 return and Stage2 first600 updates (v1457)
+
+A new read-only instruction-fetch reader continues the same normal process
+past the old actor9836 stop. Original MAIN0AAF:0207 still has quit0 at frame9836;
+MAIN0AAF:0081 returns with quit2 at frame9837. Reconstructed MAIN uses its own
+0708:07BD/0637 points and current MAP. The same process frees the old stage,
+initializes Stage2 and resets its local frame to0. Absolute LCG calls rise
+354 to707 during initialization; ring calls remain4698. The first MAIN
+initialization already consumed353 LCG calls. Native counters retain that
+existing relative origin; no target state or RNG value is injected.
+
+Each capture retains1807 complete DGROUP/video snapshots, raw CPU/CS:IP/DS,
+opcode readback,256-byte resident data and28 full conventional-memory witnesses.
+The independent C++ trace retains Stage1 I0..I9836 and Stage2 I0..I600 in one
+load, with all5656 ordered RNG events (707 LCG/4949 ring).601 Stage2 loop contexts
+bind the GDB observations. Nine complete pools,22 state blocks and all38
+configured video regions agree across the bridge and600 complete Stage2 updates.
+Aggregate acceptance stays false:18 post-reset input differences and1807 raw-GDC
+differences remain. The earlier v1456 302/312 vectors remain independently valid.
+
+`attest_th04_stage_boundary.py` verifies MZ/MAP/profile/ABI identity, relocated
+bytes, complete stream extents and actual ownership. Ten actual-data negatives
+repair outer hashes before testing inner rejection. The original capsule,
+profiles and capture source hashes stay frozen in
+`.analysis/reconstruction/probes/dos-stage2-boundary-v1457/`. The recorded
+producer is `run_captures.py` in that probe root;
+its keyboard stimuli and trace flush are explicit. The boundary reader itself
+writes no guest state, code or clock and calls no guest/host function.
+
+Initial native observation exposed two independently bounded problems: missing
+point-number pool reset (601 differing snapshots) and a query returning the old
+inactive Orange instead of prepared Kurumi (1201 differing records). Natural
+source fixes pass the diagnostic GNU vector. Final complete-source build,
+UBSan and old elapsed display regressions are tracked separately before renewal.
+No Stage2 pictures, physical timing, full campaigns, NP2, Windows, pristine
+provenance or historical byte exactness are accepted by this fragment.

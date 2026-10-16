@@ -378,6 +378,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/attest_th04_stage_boundary.py",
+    "category": "boundaries",
+    "role": "command",
+    "purpose": "Attest actual own-file stage epochs from raw trace,CPU,DGROUP and video.",
+    "purpose_source": "source-docstring"
+  },
+  {
     "path": "scripts/probes/audit_th04_native_bullet_switches.py",
     "category": "hardware",
     "role": "command",
@@ -642,6 +649,13 @@
     "role": "command",
     "purpose": "Compare complete ordinary VRAM/palettes/display state with independent scalar controls.",
     "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/compare_th04_stage_boundary.py",
+    "category": "boundaries",
+    "role": "support",
+    "purpose": "Replay the bounded DOS stage-epoch comparison and optional native observations.",
+    "purpose_source": "source-docstring"
   },
   {
     "path": "scripts/probes/inspect_dialog_fixup_order.py",

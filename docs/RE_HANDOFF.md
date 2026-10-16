@@ -6,6 +6,22 @@ current index; historical experiment details remain in focused notes and Git.
 All code/docs stay English. Use one low-priority CPU for heavy jobs; keep
 launches muted/headless. Do not open Windows GUI, change focus or inject host keys.
 
+## Actual Stage2 boundary (v1457)
+
+Original and reconstructed MAIN return from Stage1 at9837, after the old9836
+actor stop, then initialize Stage2 in the same process.600 complete Stage2
+updates agree on comparable loop fields/RNG, nine full pools,22 state blocks
+and38 configured video regions across1807 boundary records. Aggregate remains
+false for18 post-reset input and1807 raw-GDC differences. Own MZ/MAP/CPU/opcode,
+full DGROUP/video/resident and28 full-memory witnesses are retained; ten actual
+data negatives reject. See the focused differential note and
+`.analysis/reconstruction/probes/dos-stage2-boundary-v1457/`.
+
+Native point-number reset and inactive Boss query fixes pass a diagnostic GNU
+vector. Complete-source fresh builds, UBSan and9835 elapsed regressions are in
+progress; this does not yet renew current native acceptance. Extend Stage2 from
+actual frame600 next, preserving all earlier timing failures.
+
 ## Original/reconstructed DOS Boss suffix (v1456)
 
 The primary DOS comparison now reaches **9836 after-actor checkpoints**, with
@@ -22,7 +38,7 @@ checkpoints. Across all four captures, complete initial/final CFG/SCR bytes agre
 full 16-bit score checksums validate and real Continue changes decoded section 1.
 The original and candidate use their own files/MAP/CS/DS. This is MAIN-only
 replacement with original OP/MAINE/ZUN/assets, not a full four-product campaign.
-Complete update 9836, Stage2 transitions, interior UI, physical timing, NP2,
+The v1456 fixture alone does not accept later Stage2, interior UI, physical timing, NP2,
 Windows, pristine provenance and historical exactness remain open.
 
 Source/capture/result/recovery details:
