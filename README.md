@@ -25,6 +25,13 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
+Native `3bf2aea` restores stage/BGM title text and graphics dissolve. New cold
+GNU/UBSan programs agree with original title state, three complete text rows
+and BB calls over8000 updates; each passes7895 two-load CPU/TRAM/four-plane
+cases. Existing selected gameplay/pool/input/save checks remain equal. Old
+BGM334 and first-scroll43 counterexamples remain. Complete pictures, campaign,
+Windows and historical exactness remain open; see the current handoff.
+
 Development is active. All four DOS products build from maintained local source.
 Retained original/reconstructed DOS comparisons agree across all four bundled
 demos on consumed input, score and RNG, nine complete actor/effect pools, and 22
