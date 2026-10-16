@@ -8,7 +8,7 @@ whole-game completion metrics. Keep all new code and documentation in English.
 
 | Purpose | Published baseline | Availability |
 | --- | --- | --- |
-| DOS reconstruction, comparison tools and ledgers | `main: 73424f3` | Current checkout; later evidence commits follow this baseline |
+| DOS reconstruction, comparison tools and ledgers | `main: 27e474e` | Current checkout; later evidence commits follow this baseline |
 | Native x64 source | `port/modern-64: c0a1060371c5f8ba758ca8b10f6cbc99063ba3d6` | Remote and local Git objects exist; old working directories are missing |
 
 The old `.analysis/worktrees/` directory was absent at the 2026-10-16 audit,
@@ -58,6 +58,44 @@ git -C .analysis/worktrees/port64-next status --short
 
 Choose another name if it exists. Main commits do not publish native changes;
 commit and push each branch separately and verify its remote head.
+
+## Current four-source cold build and process route (v1443)
+
+All four products cold-build serially from frozen3ca7b96 without requested
+object caches. Fresh manifest is `.analysis/build/dos-four-products-v1443/build.json`:
+MAIN778641ab, OP7ca38942, MAINE3b562840, ZUNd6043dce. MAIN reproduces the fixed
+Continue product below; ZUN's two cold component/packing outputs agree. Own
+MAPs/receipts live under product-20261016-065147-3427b48f-{main,op,maine,zun}.
+These inputs exist independently of the missing historical worktrees.
+
+New boundary original/source captures actually execute four ZUN4B00 entries,
+initial OP4B00 and MAIN->MAINE->fresh OP->second MAIN4B03. Complete relocated
+entry images/actual PCs, raw AX and full PSP/MCB/RAM agree with their own files.
+OP's source counter hook comes from its own MAP0700:035B/DS0FF2, not original
+0A74:0D2F/DS0F34. Parent PSP875/MCB874 anchors allocation walks.
+
+The first MAIN7547 completed updates (plus unfinished final sample) and second
+MAIN600 updates agree on consumed input/36 fields/ordered RNG, nine pools and
+22 state blocks. Six resident256 samples and physical CFG/SCR agree. Aggregate
+passed=false retains270/10 post-reset input differences. Candidate fresh menu
+requires four confirmations/3345 emulated ticks versus original three/2338,
+despite equal seed65. The earlier fixed three-pulse candidate never enters
+second MAIN and remains rejected with its own278 first-MAIN input differences.
+Do not call that earlier capture complete or diagnose a product bug from it.
+
+Replay/source/recovery: `.analysis/reconstruction/probes/dos-four-product-route-v1443/`.
+Boundary names: `dos-four-product-route-v1443-boundary-{original,candidate}`.
+CI573,22 public tests,81 boot/cohort mutants and12 boundary mutants pass.
+Thirty owned aliases are recoverably retired (304.902 MiB net,41 blobs).
+Use retention/recover.py --restore --prefix for a specific capture, or
+replay_restored.py for boundary restore/comparison/retirement. The restored
+comparison reproduces the identical report digest and expected exit1. Full
+compressed evidence, diagnostics, cold/current source, products/MAPs and
+receipts stay live; missing old native trees are outside this cleanup.
+Prioritize isolating OP input/confirmation latency or new-producer Demo pool/
+video comparisons, then resume native work in a fresh attested checkout. Avoid
+expanding control-plane tests as a substitute for source/runtime progress.
+Full campaign, pixels, timing, native and exact acceptance remain open.
 
 ## Current Continue repair (v1439)
 

@@ -5,7 +5,7 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
-## Actual four-product boot observation and fixed-menu negative (v1443)
+## Actual four-product boot, restarted MAIN and fixed-menu negative (v1443)
 
 `--all-products` requires process events and a complete normal same-run product
 cohort. It installs MAIN/OP/MAINE/ZUN from the newly attested cold manifest,
@@ -39,10 +39,43 @@ A new `--restart-menu-boundary` scenario confirms at the actual counter-store
 CPU/DGROUP snapshot, then repeats real Enter/release pulses at one-second
 intervals for at most30 seconds. The actual prefix and cancelled suffix are
 both validated; no game state, RNG, seed or clock is assigned. New timeout
-captures also retain full conventional RAM. Its original run attests nine
-entries and600 second-MAIN updates with actual entry seed65; candidate replay
-is in progress in new boundary namespaces. The fixed negative is not restamped.
+captures also retain full conventional RAM. New original/source captures each
+attest nine entries: four ZUN, initial OP, MAIN, MAINE, fresh OP and second MAIN.
+Each whole relocated image matches its own pinned file at actual entry; the
+source side uses all four cold products. Second-MAIN entry seed65 agrees.
+
+Both admitted MAIN components agree on consumed input,36 fields/ordered RNG,
+nine full actor pools and22 state blocks: first7547 completed updates plus its
+unfinished final pre-update sample, then600 second-MAIN updates with actual
+terminal fields. Six full resident256 checkpoints, twelve allocation checkpoints
+per side and physical CFG/SCR agree; all ten full16-bit score checksums pass.
+The aggregate still rejects270 first-MAIN and10 second-MAIN post-reset input
+samples. Candidate fresh OP takes four confirmations/3345 emulated ticks to
+MAIN versus original three/2338. This is a bounded state-component agreement,
+not physical timing or menu-input parity. The earlier fixed-menu failure with
+278 first-MAIN post-reset differences remains unchanged and unresolved.
+
+Twelve additional actual mutants reject the old three-pulse policy, missing
+actual actions, truncated cancellations and incorrect first-confirmation tick,
+CPU registers or segments on both captures. Current observer source is frozen
+separately at27e474e in boundary-source.tar.gz/JSON (1553 maintained inputs);
+cold-product source remains frozen3ca7b96. boundary-result.json indexes the
+component pass and aggregate failure without changing either capture receipt.
+No complete campaign, pixels, native, continuous allocation lifetime or exact
+claim follows. The fixed negative is not restamped.
 Replay namespace: `.analysis/reconstruction/probes/dos-four-product-route-v1443/`.
+
+retention/retention.json journals30 owned terminal HDI/font/raw aliases in41
+content blobs:304.902 MiB net after a2.615 MiB archive. Full SHA/CRC, every
+temporary reconstruction with mode/nsmtime and430 protected files pass. The
+twelve boundary aliases were restored; the full comparator reproduced SHA256
+116b768fca555e2f9202d6ff893329b5fb81da9f4593195802ddbdae16219b3c and
+its expected aggregate exit1, then those verified aliases were retired again.
+Full conventional RAM, entry/DGROUP streams, real diagnostics, both source
+archives, all producer snapshots, current EXEs/MAPs and receipts remain live.
+replay_restored.py repeats this focused restore/compare/retirement; recover.py
+can restore another capture by prefix. Do not infer availability of missing
+historical native worktrees from this independent root retention proof.
 
 ## Four-source product cold baseline and OP counter ownership (v1443)
 
@@ -62,8 +95,9 @@ A naive post-instruction address would be0360. An attested original fresh-menu
 RAM snapshot independently shows the INC32 bytes at the observed saved EIP
 0A74:0D2F, preceded by LES BX,[1A64]. Hooks must use the observed executing-store
 site and each product's own MAP/bytes. The existing fixed original OP hook
-cannot stand in for candidate identity. Runtime extension is pending and will
-also distinguish actual DOS4B00 entries from environment-name activity.
+cannot stand in for candidate identity. The new runtime extension distinguishes
+actual DOS4B00 entries from environment-name activity and attests both original
+and source OP counter RAM/CPU context.
 
 ## Admitted second-MAIN initialization and 600 actor updates (v1442)
 

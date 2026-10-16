@@ -183,6 +183,18 @@ with a new observer generation and literal unmodified process IDs. Shot is tied
 to its first actual actor-update store and CPU/DGROUP snapshot. The timed-input
 negative remains separate; physical timing and continuous lifetime are open.
 
+The v1443 four-source surface requires a complete same-run cold product cohort
+and independently binds each installed disk slot, full load image and actual
+guest PC to its own file. Actual DOS4B00 boot transfers use RETF for four ZUN
+invocations and initial OP; later4B03 overlays use far JMP. OP counter ownership
+comes from each artifact's own MAP/opcode and runtime CPU/RAM readback. Parent
+PSP875/MCB874 anchors MCB walks across child reuse. New original/source routes
+admit nine entries and both MAIN state components (7547 then600 updates), six
+resident256 samples and physical saves. The aggregate retains270/10 post-reset
+input differences. Source fresh OP needs four confirmations versus original
+three; an earlier fixed three-pulse source route remains incomplete. Bounded
+state agreement does not establish UI/input timing or whole-game fidelity.
+
 ## Private and generated state
 
 `.tools/` contains the ignored pinned Ghidra/JDK downloads and versioned

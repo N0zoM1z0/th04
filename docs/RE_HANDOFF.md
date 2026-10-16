@@ -21,13 +21,13 @@ describe recorded historical evidence, not a fresh availability guarantee.
 Recover original frozen inputs or create a newly attested producer from Git;
 do not rewrite old receipts. Both development goals remain active.
 
-## Four-source execution observers and current restart negative (v1443)
+## Four-source boot, Quit and restarted MAIN components (v1443)
 
 The new `--all-products` surface pins one complete normal same-run build,
 installs all four products, validates ZUN's two packed outputs and derives OP
 counter ownership from its own MAP/bytes. Actual DOS4B00 entries are observed
-through RETF/JMP/IRET helper returns, rather than inferred from environment
-names. Original/source short probes attest four ZUN entries, initial OP and
+through native transfer helpers; the observed boot uses RETF and overlays use
+far JMP. Original/source short probes attest four ZUN entries, initial OP and
 MAIN, with equal first-update input/state/RNG. Full PSP/MCB readback and parent
 PSP875/MCB874 anchor the complete conventional RAM snapshots.
 
@@ -37,14 +37,30 @@ restart MAIN. Its first-MAIN7547-update component matches all scalar/RNG/pools/
 states and physical saves, retaining278 post-reset input differences. The route
 stays rejected; no completeness flag or receipt is edited. New
 `--restart-menu-boundary` presses Enter at the actual fresh-menu counter store
-and repeats bounded ordinary confirmations until verified MAIN entry. A new
-original capture passes all nine entries/second-MAIN600 updates with seed65;
-its candidate capture is in progress under separate boundary names.
+and repeats bounded ordinary confirmations until verified MAIN entry. The new
+original and candidate captures now attest all nine entries and second-MAIN600
+updates with seed65. First-MAIN7547 completed updates plus its unfinished final
+sample, second-MAIN600 updates, consumed inputs/36 fields/RNG, nine pools and22
+states agree. Six full resident256 checkpoints and physical CFG/SCR agree.
+Candidate menu confirmation takes four pulses/3345 emulated ticks versus
+original three/2338. The new aggregate still fails270/10 post-reset input
+samples; the fixed-menu failure remains separate and unresolved.
 
-CI573,22 new public controls and81 actual entry/cohort/counter mutants pass.
+CI573,22 new public controls,81 actual entry/cohort/counter mutants and12 actual
+menu-plan/first-confirmation CPU-binding mutants pass.
 Replay/source: `.analysis/reconstruction/probes/dos-four-product-route-v1443/`.
-The fixed-menu failure remains open; no four-source complete-route, pixel,
-physical timing, native or exact acceptance is claimed yet.
+The four-source route and configured MAIN state components are admitted;
+complete campaign, pixels, physical timing, continuous lifetime, native and
+exact acceptance remain open. Boundary report retains aggregate passed=false.
+
+Verified retention retires30 terminal capture HDI/font/raw aliases in41 blobs,
+releasing304.902 MiB net after a2.615 MiB archive. All content, temporary mode/
+nsmtime and430 protected inputs pass. Restoring the twelve boundary aliases
+reproduces the identical report digest, including its expected aggregate failure,
+before verified retirement again. Full RAM/entry/DGROUP streams, diagnostics,
+both frozen source archives, producer snapshots, all four EXEs/MAPs and receipts
+remain. Run retention/recover.py before replaying a capture-dependent reader;
+replay_restored.py handles the boundary comparison and retirement together.
 
 ## Fresh four-product cold build (v1443)
 
@@ -59,9 +75,10 @@ No product exact state or four-source runtime acceptance follows from the build.
 Current OP's MAP/raw bytes locate its menu-counter store at0700:035B, DS0FF2,
 resident offset2626; original uses0A74:0D2F, DS0F34. The actual saved EIP at a
 memory watchpoint names the INC instruction, not its next instruction. Runtime
-extension will bind each artifact to its own file/MAP and verify actual DOS4B00
+extension binds each artifact to its own file/MAP and verifies actual DOS4B00
 boot entries as well as4B03 overlay entries. Supporting products in all older
-v1442 comparisons remain original; the new runtime is still pending.
+v1442 comparisons remain original; only the new v1443 captures execute all four
+maintained products.
 
 ## Paired second-MAIN initialization and 600 updates (v1442)
 
