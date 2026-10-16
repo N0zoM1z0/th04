@@ -5,6 +5,31 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Resident MCB checkpoints and original second MAIN (v1441)
+
+`--restart-main` extends the configured Quit route: after the actual fresh OP
+counter65 store, ordinary Enter pulses are scheduled at100/1100/2100 milliseconds,
+with120ms releases. The original enters a second MAIN with counter70. The stop
+is the actual entry at10FC:0000, before second-MAIN gameplay acceptance. Pending
+restart keys are explicitly cancelled and recorded at that bounded stop.
+
+The observer captures complete conventional RAM at ten request/entry/retirement/
+menu checkpoints. The reader verifies each dump against the receipt, its complete
+RAM digest, resident bytes, entry module and a fresh MCB walk. Program MCB10EB
+links through9FE9 to final resident MCB9FEE; data9FEF has16 paragraphs (256 bytes),
+raw header `5affff10000000000000000000000000`, owner wordFFFF. Metadata calls
+this raw DOS field `owner_psp`; FFFF does not identify a verified live PSP.
+All ten original checkpoints retain the same allocated extent/header. This is
+checkpoint evidence, not proof that no free/reallocate could occur between them.
+
+Original-only admission and frozen producer scripts live under
+`.analysis/reconstruction/probes/dos-process-restart-v1441/`. Candidate capture is
+separate and paired comparison is pending. Seven public MCB-chain controls reject
+freed/split/unlinked/out-of-RAM/early-Z/invalid-anchor states; six restart controls
+reject missing keys, stale seed, old MAIN frame ownership, missing cancellation,
+actions after entry and wrong held-key state. Full CI539 passes. No product
+source, exact ledgers or compiler identities change in this control-plane batch.
+
 ## Actual Quit -> MAINE -> fresh OP route (v1440)
 
 The two new captures `dos-process-route-v1440-{original-first,candidate}` use
@@ -45,7 +70,9 @@ python3 .analysis/reconstruction/probes/dos-process-route-v1440/route-retention/
 python3 scripts/probes/compare_th04_dos_process_route.py \
   .analysis/runtime/candidates/dos-process-route-v1440-original-first \
   .analysis/runtime/candidates/dos-process-route-v1440-candidate \
-  --original-main .analysis/targets/th04/main.exe --output /tmp/th04-route.json
+  --original-main .analysis/targets/th04/main.exe \
+  --source-snapshot .analysis/reconstruction/probes/dos-process-route-v1440/original-first-source \
+  --output /tmp/th04-route.json
 ```
 
 Exit1 is expected for the retained input failure. `comparison.json` is bound by

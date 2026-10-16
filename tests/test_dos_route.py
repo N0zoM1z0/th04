@@ -124,3 +124,51 @@ class ScoreChecksumTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class RestartKeyboardTests(unittest.TestCase):
+    def setUp(self):
+        from th04_dos_route import validate_restart_keys
+        self.validate = validate_restart_keys
+        self.plan = [[1000 + delta + offset, 'KBD_enter', pressed]
+                     for delta in (100, 1100, 2100) for offset, pressed in ((0, True), (120, False))]
+        self.clock = dict(actions=[dict(due=due, tick=due, key=key, pressed=down, frame=None)
+                                   for due, key, down in self.plan[:5]],
+                          restart=dict(action_start=0, action_end=5, tick=1000, entry_tick=3200,
+                                       resident_seed=65, cancelled=self.plan[5:], enter_down=True))
+
+    def check(self):
+        self.validate(self.clock, 0)
+
+    def test_actual_key_prefix_and_explicit_pending_cancellation_pass(self):
+        self.check()
+
+    def test_missing_restart_confirmation_rejects(self):
+        self.clock['actions'].pop(2)
+        self.clock['restart']['action_end'] -= 1
+        with self.assertRaisesRegex(ValueError, 'ordinary restart keys'):
+            self.check()
+
+    def test_gameplay_frame_must_not_survive_old_monitor_retirement(self):
+        self.clock['actions'][0]['frame'] = 7547
+        with self.assertRaisesRegex(ValueError, 'ordinary restart keys'):
+            self.check()
+
+    def test_unrecorded_cancellation_rejects(self):
+        self.clock['restart']['cancelled'] = []
+        with self.assertRaisesRegex(ValueError, 'ordinary restart keys'):
+            self.check()
+
+    def test_keys_after_entry_cannot_prove_restart(self):
+        self.clock['actions'][-1]['tick'] = 3201
+        with self.assertRaisesRegex(ValueError, 'ordinary restart keys'):
+            self.check()
+
+    def test_stale_seed_or_enter_state_rejects(self):
+        self.clock['restart']['resident_seed'] = 64
+        with self.assertRaisesRegex(ValueError, 'extent/seed'):
+            self.check()
+        self.clock['restart']['resident_seed'] = 65
+        self.clock['restart']['enter_down'] = False
+        with self.assertRaisesRegex(ValueError, 'ordinary restart keys'):
+            self.check()

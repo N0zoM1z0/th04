@@ -47,6 +47,8 @@ def main() -> int:
                         help='Release Shot and operate the real Continue wait after this later observed frame')
     parser.add_argument('--quit-at-frame', type=int,
                         help='Release Shot, send ordinary Escape pulses, then observe MAINE and fresh OP menu')
+    parser.add_argument('--restart-main', action='store_true',
+                        help='After verified fresh OP menu, use ordinary keys to observe a second MAIN entry')
     parser.add_argument('--stall-diagnostic-ms', type=int,
                         help='Record actual guest PC/RAM after this much virtual no-frame progress')
     parser.add_argument('--process-events', action='store_true',
@@ -72,6 +74,8 @@ def main() -> int:
         parser.error('Quit route requires process events, no Continue cue, and dialog < Quit < end-after')
     if args.stall_diagnostic_ms is not None and (args.end_after is None or args.stall_diagnostic_ms < 1000):
         parser.error('stall diagnostics require a bounded prefix and at least1000 virtual milliseconds')
+    if args.restart_main and args.quit_at_frame is None:
+        parser.error('Restart requires a configured Quit route')
     output = args.output_dir.resolve()
     if output.exists() or not output.is_relative_to(ROOT / '.analysis/runtime/candidates'):
         parser.error('use a fresh private capture directory')
@@ -192,6 +196,8 @@ def main() -> int:
         env['TH04_ORDINARY_CONTINUE_FRAME'] = str(args.continue_at_frame)
     if args.quit_at_frame is not None:
         env['TH04_ORDINARY_QUIT_FRAME'] = str(args.quit_at_frame)
+    if args.restart_main:
+        env['TH04_ORDINARY_RESTART_MAIN'] = '1'
     if args.stall_diagnostic_ms is not None:
         env['TH04_ORDINARY_STALL_MS'] = str(args.stall_diagnostic_ms)
     if args.dgroup_stream:
@@ -246,7 +252,8 @@ def main() -> int:
         names += ['ordinary-stall.json', 'ordinary-stall-dgroup.bin']
     if args.process_events:
         names += ['process-events.json', 'process-events.jsonl', 'process-targets.json']
-        names += sorted(path.name for path in output.glob('process-entry-*.bin.gz'))
+        names += sorted(path.name for pattern in ('process-entry-*.bin.gz', 'process-memory-*.bin.gz')
+                        for path in output.glob(pattern))
         complete = complete and (output / 'process-events.json').is_file() and not (output / 'process-error.txt').exists()
     if args.quit_at_frame is not None:
         names += ['main-handoff.json', 'handoff-dgroup.bin', 'fresh-op-menu.json']
@@ -274,7 +281,7 @@ def main() -> int:
     if args.continue_at_frame is not None:
         receipt['continue_at_frame'] = args.continue_at_frame
     if args.quit_at_frame is not None:
-        receipt.update(quit_at_frame=args.quit_at_frame, termination='observed-fresh-op-menu',
+        receipt.update(quit_at_frame=args.quit_at_frame, restart_main=args.restart_main, termination='observed-second-main-entry' if args.restart_main else 'observed-fresh-op-menu',
                        natural_game_exit=False)
         metadata = output / 'ordinary-dgroup.json'
         if metadata.is_file():
@@ -283,7 +290,7 @@ def main() -> int:
         receipt['video_layout'] = dict(path=str(args.video_layout.resolve()),
                                        sha256=sha(args.video_layout.read_bytes()))
     if args.process_events:
-        receipt.update(process_events=True, process_host_inputs=process_inputs)
+        receipt.update(process_events=True, resident_ownership=True, process_host_inputs=process_inputs)
     (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
     print(json.dumps(dict(complete=complete, output=str(output))))
     return 0 if complete else 1

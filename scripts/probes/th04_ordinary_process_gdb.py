@@ -6,7 +6,7 @@ from pathlib import Path
 
 import gdb
 
-from th04_dos_process import artifact_for_path, c_string, process_owner
+from th04_dos_process import resident_allocation, artifact_for_path, c_string, process_owner
 from compare_th04_dos_demos import relocated_module
 
 
@@ -120,6 +120,18 @@ class ProcessRecorder(gdb.Breakpoint):
         row = dict(sequence=len(self.rows), kind=kind, **context, **values,
                    resident_linear=resident,
                    resident_hex=None if resident is None else self.ram.read_range(resident, 256)[0].hex())
+        if resident is not None:
+            memory = self.ram.read_range(0, 655360)[0]
+            anchor = values.get('owner') or (self.last_entry or {}).get('owner')
+            if anchor is None:
+                raise ValueError('resident allocation lacks observed program owner')
+            row['resident_allocation'] = resident_allocation(memory, anchor['mcb_segment'], resident)
+            name = 'process-memory-%04d.bin.gz' % row['sequence']
+            with (self.output / name).open('xb') as stream:
+                stream.write(gzip.compress(memory, mtime=0))
+            row.update(memory_file=name,
+                       memory_file_sha256=hashlib.sha256((self.output / name).read_bytes()).hexdigest(),
+                       conventional_sha256=hashlib.sha256(memory).hexdigest())
         self.rows.append(row)
         with (self.output / 'process-events.jsonl').open('a') as stream:
             stream.write(json.dumps(row, sort_keys=True) + '\n')
@@ -131,9 +143,10 @@ class ProcessRecorder(gdb.Breakpoint):
         self.finished = True
         (self.output / 'process-events.json').write_text(json.dumps(dict(schema_version=1,
             complete_capture=not self.error,
-            complete_route=not self.error and boundary == 'fresh-op-menu' and
+            complete_route=not self.error and boundary in ('fresh-op-menu', 'second-main-entry') and
                            [self.rows[i]['artifact'] for i in self.entry_records] ==
-                           ['th04-main', 'th04-maine', 'th04-op'], boundary=boundary,
+                           (['th04-main', 'th04-maine', 'th04-op', 'th04-main'] if
+                            boundary == 'second-main-entry' else ['th04-main', 'th04-maine', 'th04-op']), boundary=boundary,
             events=len(self.rows), pending=self.pending_exec, error=self.error,
             entries=self.entry_records,
             scope='Booted guest DOS, with internal DOS kernel disabled: actual software INT21 requests and subsequent MCB/PSP-owned activity; requests alone are not successful exec or natural exit'), indent=2) + '\n')

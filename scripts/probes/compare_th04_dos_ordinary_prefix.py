@@ -191,7 +191,7 @@ def load(directory: Path, original: bytes, source_snapshot: Path | None = None) 
         count = receipt['main_frames']
         require('ordinary-terminal.json' in receipt['files'] and not terminal and
                 type(count) is int and 0 < count == receipt['quit_at_frame'] < bounded and
-                len(rows) == count + 1 and receipt['termination'] == 'observed-fresh-op-menu' and
+                len(rows) == count + 1 and receipt['termination'] == ('observed-second-main-entry' if receipt.get('restart_main') else 'observed-fresh-op-menu') and
                 receipt['natural_game_exit'] is False, 'route completed prefix/partial sample extent')
         route_terminal = json.loads((directory / 'ordinary-terminal.json').read_text())
         validate_bounded_terminal(route_terminal, main, dict(expected, end_after=count), load_segment,
@@ -227,6 +227,7 @@ def load(directory: Path, original: bytes, source_snapshot: Path | None = None) 
         require(required <= receipt['files'].keys(), 'route pinned process evidence extent')
         result['original_product_hashes'] = {row['id']: row['sha256'] for row in targets}
         result['route_prefix_terminal'] = route_terminal
+        result['clock'] = clock
         result['route'] = validate_route(directory, receipt, result)
     if receipt.get('continue_at_frame') is not None:
         from th04_ordinary_continue import attest_continue, validate_wait_cues, validate_transition

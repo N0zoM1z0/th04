@@ -75,7 +75,7 @@ def compare_route(original_dir, candidate_dir, original, source_snapshot=None):
     b, bp, br = read_side(candidate_dir, original, source_snapshot)
     require(a['receipt']['role'] == 'original' and b['receipt']['role'] == 'candidate', 'route pair roles')
     for key in ('end_after', 'dialog_at_frame', 'quit_at_frame', 'main_frames', 'termination',
-                'natural_game_exit', 'emulator_sha256', 'emulator_receipt_sha256', 'debugger_sha256',
+                'natural_game_exit', 'restart_main', 'resident_ownership', 'emulator_sha256', 'emulator_receipt_sha256', 'debugger_sha256',
                 'adapter_sha256', 'walker_sha256', 'font_sha256', 'process_host_inputs', 'source_files'):
         require(a['receipt'].get(key) == b['receipt'].get(key), 'route pair identity/contract: ' + key)
     require(a['receipt']['files']['dosbox-x.conf'] == b['receipt']['files']['dosbox-x.conf'] and
@@ -102,6 +102,10 @@ def compare_route(original_dir, candidate_dir, original, source_snapshot=None):
         x, y = bytes.fromhex(left['resident_hex']), bytes.fromhex(right['resident_hex'])
         residents[label] = dict(passed=x == y, original_sha256=sha(x), candidate_sha256=sha(y),
                                 differing_offsets=[i for i, (u, v) in enumerate(zip(x, y)) if u != v])
+    if a['route']['restart_main']:
+        x, y = (bytes.fromhex(c['route']['entries'][-1]['resident_hex']) for c in (a,b))
+        residents['second_main_entry'] = dict(passed=x == y, original_sha256=sha(x), candidate_sha256=sha(y),
+                                             differing_offsets=[i for i, (u,v) in enumerate(zip(x,y)) if u != v])
     af, bf = file_state(original_dir), file_state(candidate_dir)
     file_results = {name: dict(original=af[name], candidate=bf[name],
                               raw_equal=af[name]['final_hex'] == bf[name]['final_hex']) for name in af}
@@ -111,8 +115,11 @@ def compare_route(original_dir, candidate_dir, original, source_snapshot=None):
                   global_states_passed=all(result['pools'][name]['passed'] for name, *_ in states),
                   route_entries_verified=True, resident_checkpoints=residents, files=file_results,
                   completed_updates=count, pre_update_samples=len(a['rows']), incomplete_update=count,
-                  witnesses=witnesses, executed_artifacts=['th04-main', 'th04-maine', 'th04-op'],
-                  scope='Actual MAIN Quit -> original MAINE -> fresh original OP menu, full entry images and resident use; MAIN-only reconstruction, no resident allocation-owner MCB, complete campaign, native, UI-frame or physical timing acceptance',
+                  witnesses=witnesses, executed_artifacts=[row['artifact'] for row in a['route']['entries']],
+                  resident_ownership={role: capture['route']['resident_ownership'] for role, capture in
+                                      (('original', a), ('candidate', b))},
+                  second_main_entry_verified=a['route']['restart_main'],
+                  scope='Actual MAIN Quit -> original MAINE -> fresh original OP, optional second MAIN entry and checkpoint resident allocation proof; MAIN-only reconstruction, no continuous allocation lifetime, second-MAIN gameplay, complete campaign, native, UI-frame or physical timing acceptance',
                   receipts={str(path): sha((path / 'receipt.json').read_bytes()) for path in (original_dir, candidate_dir)})
     result['passed'] &= all(row['passed'] for row in residents.values()) and all(row['raw_equal'] for row in file_results.values())
     return result

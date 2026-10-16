@@ -6,7 +6,7 @@ from pathlib import Path
 
 from capture_th04_dos_demos import parse_mz, sha
 from compare_th04_dos_demos import relocated_module, require
-from th04_dos_process import artifact_for_path
+from th04_dos_process import artifact_for_path, resident_allocation
 
 
 def validate_entry(row, request, image, observed):
@@ -70,20 +70,39 @@ def validate_keyboard(clock, receipt, first, resident):
             any(row['key'] == 'KBD_esc' and row['pressed'] is True for row in events) and
             not any(row['key'] == 'KBD_z' and row['pressed'] is True for row in events),
             'route release-first real Quit keys')
+    if receipt.get('restart_main'):
+        validate_restart_keys(clock, quit_wait['action_end'])
     require(not clock['remaining'], 'route pending keyboard events')
 
 
+def validate_restart_keys(clock, previous_end):
+    actions = clock['actions']
+    cue = clock['restart']
+    start, end = cue['action_start'], cue['action_end']
+    require(previous_end <= start < end == len(actions) and
+            cue['tick'] < cue['entry_tick'] and cue['resident_seed'] == 65,
+            'route restart action extent/seed')
+    actual = actions[start:end]
+    planned = [[cue['tick'] + delta + offset, 'KBD_enter', pressed]
+               for delta in (100, 1100, 2100) for offset, pressed in ((0, True), (120, False))]
+    require([[event['due'], event['key'], event['pressed']] for event in actual] + cue['cancelled'] == planned and
+            all(event['tick'] <= cue['entry_tick'] and event['frame'] is None for event in actual) and
+            cue['enter_down'] is actual[-1]['pressed'], 'route actual ordinary restart keys/cancellation')
+
 def validate_route(directory, receipt, capture):
+    restart = receipt.get('restart_main', False)
+    expected_artifacts = ['th04-main', 'th04-maine', 'th04-op'] + (['th04-main'] if restart else [])
+    expected_boundary = 'second-main-entry' if restart else 'fresh-op-menu'
     metadata = json.loads((directory / 'process-events.json').read_text())
     rows = [json.loads(s) for s in (directory / 'process-events.jsonl').read_text().splitlines()]
     require(metadata['schema_version'] == 1 and metadata['complete_capture'] is True and
-            metadata['complete_route'] is True and metadata['boundary'] == 'fresh-op-menu' and
+            metadata['complete_route'] is True and metadata['boundary'] == expected_boundary and
             metadata['error'] is None and metadata['pending'] is None and metadata['events'] == len(rows),
             'route complete process metadata')
     require([row['sequence'] for row in rows] == list(range(len(rows))) and
             all(a['tick'] <= b['tick'] for a, b in zip(rows, rows[1:])), 'route event sequence/clock')
     entries = [row for row in rows if row['kind'] == 'entry']
-    require([row['artifact'] for row in entries] == ['th04-main', 'th04-maine', 'th04-op'] and
+    require([row['artifact'] for row in entries] == expected_artifacts and
             metadata['entries'] == [row['sequence'] for row in entries], 'route executable generations')
     targets = json.loads((directory / 'process-targets.json').read_text())
     dump_names = set()
@@ -102,7 +121,7 @@ def validate_route(directory, receipt, capture):
     require(dump_names == {name for name in receipt['files'] if name.startswith('process-entry-')},
             'route complete entry dump set')
     require(len({row['owner']['psp_segment'] for row in entries}) == 1 and
-            [rows[row['request_sequence']]['caller_artifact'] for row in entries[1:]] == ['th04-main', 'th04-maine'],
+            [rows[row['request_sequence']]['caller_artifact'] for row in entries[1:]] == ['th04-main', 'th04-maine'] + (['th04-op'] if restart else []),
             'route retained PSP/predecessor generations')
     for artifact in ('th04-op', 'th04-maine', 'th04-zun'):
         # The initial image gate separately attests these original products.
@@ -127,7 +146,7 @@ def validate_route(directory, receipt, capture):
             retired[0]['unchanged_guest']['segments'] == request['segments'] == retired[0]['segments'] and
             retired[0]['tick'] == request['tick'], 'route old MAIN observer retirement')
     menu = json.loads((directory / 'fresh-op-menu.json').read_text())
-    require(menu == rows[-1] and menu['kind'] == 'fresh-op-menu' and
+    require(menu in rows and (restart or menu == rows[-1]) and menu['kind'] == 'fresh-op-menu' and
             menu['entry_sequence'] == entries[2]['sequence'], 'route fresh OP activity boundary')
     registers, segments = bytes.fromhex(menu['cpu_regs']), bytes.fromhex(menu['segments'])
     load = entries[2]['load_segment']
@@ -143,9 +162,48 @@ def validate_route(directory, receipt, capture):
     require(after[:20] + after[24:] == before[:20] + before[24:] and
             menu['counter'] == int.from_bytes(after[20:24], 'little') ==
             (int.from_bytes(before[20:24], 'little') + 1) & 0xffffffff, 'route fresh OP resident counter store')
+    ownership = validate_resident_memory(directory, receipt, rows, entries) if receipt.get('resident_ownership') else None
+    if restart:
+        cue = capture['clock']['restart']
+        require(cue['menu_sequence'] == menu['sequence'] and cue['tick'] == menu['tick'] and
+                cue['entry_sequence'] == entries[-1]['sequence'] and cue['entry_tick'] == entries[-1]['tick'] and
+                menu['sequence'] < entries[-1]['request_sequence'] < entries[-1]['sequence'] and
+                entries[-1] == rows[-1] and entries[-1]['resident_linear'] == base,
+                'route actual fresh-menu/second-MAIN generation')
     return dict(entries=entries, handoff=request, menu=menu, resident_pointer=base,
+                resident_ownership=ownership, restart_main=restart,
                 completed_updates=count, partial_update=count, natural_game_exit=False,
-                scope='Actual overlay entries, published/shared resident bytes and fresh OP menu use; resident allocation-owner MCB not sampled')
+                scope='Actual overlay entries and resident use; checkpoint allocation proof only when resident_ownership is present; no continuous lifetime or second-MAIN gameplay acceptance')
+
+
+def validate_resident_memory(directory, receipt, rows, entries):
+    samples, names = [], set()
+    for row in rows:
+        if row['resident_linear'] is None:
+            continue
+        name = 'process-memory-%04d.bin.gz' % row['sequence']
+        require(row['memory_file'] == name and sha((directory / name).read_bytes()) ==
+                row['memory_file_sha256'] == receipt['files'][name], 'route ownership memory identity')
+        memory = gzip.decompress((directory / name).read_bytes())
+        require(len(memory) == 655360 and sha(memory) == row['conventional_sha256'],
+                'route complete conventional memory')
+        allocation = row['resident_allocation']
+        require(allocation == resident_allocation(memory, allocation['program_mcb'], row['resident_linear']) and
+                allocation['program_mcb'] == entries[0]['owner']['mcb_segment'] and
+                memory[row['resident_linear']:row['resident_linear'] + 256].hex() == row['resident_hex'],
+                'route actual resident allocation/content')
+        if row['kind'] == 'entry':
+            start = row['load_segment'] * 16
+            module = gzip.decompress((directory / row['ram_file']).read_bytes())
+            require(memory[start:start + len(module)] == module, 'route entry/conventional image agreement')
+        samples.append(dict(sequence=row['sequence'], kind=row['kind'], allocation=allocation['allocation']))
+        names.add(name)
+    require(samples and names == {name for name in receipt['files'] if name.startswith('process-memory-')},
+            'route complete ownership dump set')
+    require(all(row['allocation'] == samples[0]['allocation'] for row in samples),
+            'route persistent allocation checkpoint identity')
+    return dict(passed=True, checkpoints=samples,
+                scope='Actual MCB chain/owner field and allocated resident extent at captured checkpoints; no continuous lifetime claim')
 
 
 def decode_score_sections(data):

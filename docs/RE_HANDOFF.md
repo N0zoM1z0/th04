@@ -21,6 +21,25 @@ describe recorded historical evidence, not a fresh availability guarantee.
 Recover original frozen inputs or create a newly attested producer from Git;
 do not rewrite old receipts. Both development goals remain active.
 
+## Resident allocation and original second MAIN (v1441)
+
+The original route now reaches a second MAIN through real Quit/MAINE/fresh OP
+and ordinary restart keys. Four complete relocated images and actual entries
+at10FC:0000 retain PSP10EC. Ten complete conventional RAM snapshots independently
+walk program MCB10EB ->9FE9 -> resident MCB9FEE, data9FEF, exactly16 paragraphs.
+Its raw owner word isFFFF at every checkpoint. The metadata key `owner_psp`
+mirrors that DOS field; it does not attest a live PSPFFFF. Fresh menu counter65
+advances to70 at actual second MAIN entry. The second MAIN has not yet run a
+validated gameplay update; no continuous allocation lifetime is claimed.
+
+Original admission: `.analysis/reconstruction/probes/dos-process-restart-v1441/original-admission.json`.
+The new optional `--restart-main` requires a Quit route. Producer scripts are
+frozen under `producer-source/`; CI539 and thirteen new public allocation/key
+controls pass. Candidate capture has its own `dos-process-restart-v1441-candidate`
+namespace; paired admission remains pending until its actual receipt is terminal.
+The first MAIN retains 7,547 completed updates plus one unfinished pre-update
+sample. Supporting products remain original; exact ledgers are unchanged.
+
 ## Actual Quit, MAINE and fresh OP route (v1440)
 
 New original/candidate runs execute real MAIN Quit -> original MAINE -> fresh

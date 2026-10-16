@@ -60,3 +60,39 @@ def process_owner(memory, cs, ip):
     if len(rows) > 1:
         raise ValueError('ambiguous DOS process MCB/PSP ownership')
     return rows[0] if rows else None
+
+
+def resident_allocation(memory, program_mcb, resident, extent=256):
+    """Walk actual DOS MCB links from a PSP-owned program block to the final Z."""
+    if (len(memory) != 655360 or type(program_mcb) is not int or not 0x50 <= program_mcb < 0xa000 or
+            type(resident) is not int or extent <= 0 or not 0 <= resident < resident + extent <= len(memory)):
+        raise ValueError('resident allocation RAM/anchor/extent')
+    first = program_mcb * 16
+    if (int.from_bytes(memory[first + 1:first + 3], 'little') != program_mcb + 1 or
+            memory[first + 16:first + 18] != b'\xcd\x20'):
+        raise ValueError('resident allocation program PSP anchor')
+    segment, chain, found = program_mcb, [], None
+    while True:
+        at = segment * 16
+        header = memory[at:at + 16]
+        if len(header) != 16 or header[0] not in b'MZ':
+            raise ValueError('resident allocation broken MCB chain')
+        owner = int.from_bytes(header[1:3], 'little')
+        size = int.from_bytes(header[3:5], 'little')
+        start, end = at + 16, (segment + 1 + size) * 16
+        if end > len(memory):
+            raise ValueError('resident allocation MCB beyond conventional RAM')
+        chain.append(dict(segment=segment, header_hex=header.hex()))
+        if start < resident + extent and resident < end:
+            if not start <= resident < resident + extent <= end or owner == 0 or found is not None:
+                raise ValueError('resident allocation freed/split/ambiguous extent')
+            found = dict(mcb_segment=segment, data_segment=segment + 1, owner_psp=owner,
+                         paragraphs=size, start=start, end=end, header_hex=header.hex())
+        if header[0] == ord('Z'):
+            break
+        segment += 1 + size
+    if found is None:
+        raise ValueError('resident allocation outside anchored MCB chain')
+    return dict(program_mcb=program_mcb, resident_linear=resident, extent=extent,
+                allocation=found, chain=chain,
+                scope='Observed allocated extent and DOS owner field at this checkpoint; no continuous lifetime claim')

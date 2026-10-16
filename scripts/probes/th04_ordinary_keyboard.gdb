@@ -36,6 +36,8 @@ found = None
 dialog_frame = int(os.environ.get('TH04_ORDINARY_DIALOG_FRAME', 0))
 continue_frame = int(os.environ.get('TH04_ORDINARY_CONTINUE_FRAME', 0))
 quit_frame = int(os.environ.get('TH04_ORDINARY_QUIT_FRAME', 0))
+restart_main = os.environ.get('TH04_ORDINARY_RESTART_MAIN') == '1'
+restart_cue = None
 post_main = False
 post_main_tick = None
 escape_down = False
@@ -67,6 +69,8 @@ def save():
     record = dict(actions=actions, remaining=schedule, resident_linear=resident, found=found, requested_seed=64, pic_ticks_address=address, keyboard_function_address=function, keys=keys, scope='Original OP resident seed increment is observed, never written; keyboard API adapter only; no guest RAM/register/clock writes')
     if continue_frame or quit_frame:
         record['waits'] = waits
+    if restart_main:
+        record['restart'] = restart_cue
     (out / 'clock-input.json').write_text(json.dumps(record, indent=2) + '\n')
 
 class Seed(gdb.Breakpoint):
@@ -112,7 +116,8 @@ class FreshMenu(gdb.Breakpoint):
             entry_sequence=process_recorder.last_entry['sequence'], cs=cs, ip=ip,
             counter=int.from_bytes(data[20:24], 'little'))
         (out/'fresh-op-menu.json').write_text(json.dumps(row,indent=2)+'\n')
-        todo = ('route-complete',)
+        self.enabled = False
+        todo = ('restart-menu' if restart_main else 'route-complete',)
         return True
 
 class Clock(gdb.Breakpoint):
@@ -248,7 +253,29 @@ while gdb.selected_inferior().pid:
             schedule = [(tick(),'KBD_enter',False)] if enter_down else []
             fresh_seedwatch = FreshMenu()
             clock.enabled = True
+        elif restart_main and post_main and entry['artifact'] == 'th04-main':
+            if restart_cue is None or len(process_recorder.entry_records) != 4:
+                raise ValueError('unconfigured second MAIN generation')
+            restart_cue.update(entry_sequence=entry['sequence'], entry_tick=tick(),
+                               action_end=len(actions), cancelled=schedule, enter_down=enter_down)
+            schedule = []
+            process_recorder.entry_requested = None
+            save()
+            process_recorder.finish('second-main-entry')
+            gdb.write('TH04_ORDINARY_ROUTE_COMPLETE\n')
+            gdb.execute('kill')
+            break
         process_recorder.entry_requested = None
+        continue
+    if todo is not None and todo[0] == 'restart-menu':
+        restart_cue = dict(menu_sequence=process_recorder.rows[-1]['sequence'],
+                           tick=tick(), action_start=len(actions), resident_seed=65)
+        schedule = []
+        for delta in (100, 1100, 2100):
+            schedule.extend([(tick()+delta,'KBD_enter',True),(tick()+delta+120,'KBD_enter',False)])
+        todo = None
+        clock.enabled = True
+        save()
         continue
     if todo is not None and todo[0] in ('route-complete','route-diagnostic'):
         save()
