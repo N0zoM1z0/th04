@@ -1,54 +1,46 @@
 # TH04 native 64-bit bring-up
 
-## Actual title phase and picture gate (v1451)
+## Boss circle clipping and complete sampled pictures (v1452)
 
-Native `a8a67af` restores the original pre-scroll title phase. The v1450
-constructed BB-call Oracle and its pending-background preview are withdrawn.
-Original MAIN relative `0AAF:0148` calls overlay1 before scroll_driver at018A;
-after-actor DGROUP at01B3 already contains the later scroll. Actual BB entry
-`0AAF:15AA` records top94/scroll326 at update74; the later DGROUP scroll325
-made the old Oracle invent top93. That Oracle falsely accepted the wrong
-producer and rejected the correct one on43 intervals. Old reports stay unchanged.
+Native `a8e0165` fixes the seven remaining v1451 score-area graphics samples.
+Actual private pixel-write traces identify the Orange entrance circle at
+center (232,40), radius 326, color 9 as the writer of (557,64) at update 6740.
+Both trace programs reproduce the frozen producer's selected 8000-update state
+and all 38 complete BMP/index/TRAM observations before the repair.
 
-Three complete original8001-update captures use **DOSBox-X**, not NP2; the
-old emulator label is corrected. New code-fetch observers record2665 real BB
-calls over7999 armed intervals2..8000 and38 live font/video/DGROUP checkpoints
-at actual score return `0AAF:0207`. Both new cold GNU/UBSan programs agree on
-all actual arguments,8000 title fields/three complete text rows and popup
-rows/state, plus selected gameplay/input/RNG,nine pools,four Boss blocks,
-Continue and CFG/SCR. All38 complete playfields (141312 pixels each),stage
-bands and BGM bands match. Repeated paints preserve state/RNG and whole pixels.
+Original MAIN far `0000:11EC` reads DGROUP clipping words 032C..033A.
+All 38 captured after-score DGROUPs retain `(32,16)-(415,383)`, with zoom 0;
+the native circle helper had assumed the default whole-screen rectangle.
+The helper now accepts a clip rectangle,and the common Boss-circle call supplies
+that observed stage rectangle. This preserves the target's clipped-bottom-row
+asymmetry. Isolated original execution and both compiler profiles verify
+900 render vectors and 1053 circle vectors,including 135 stage-clip cases.
+Other Boss/disc/rectangle and actor rendering paths are outside this repair.
 
-**Whole-picture aggregate remains FAILED** on7 samples6740,6741,6753,6765,
-6772,6773,6774:1377 total differing pixels in the right score area. Their complete
-visible TRAM banks are equal; first target graphics index1 differs from native9
-or15. At6740 the first pixel is557,64. Trace actual render_main writers next;
-do not assume an owner or hide it with a HUD/clip mask. Actual post-score evidence
-eliminates the earlier score-tail observation mismatch but does not waive this gap.
+Both fresh GNU and optimized UBSan programs now match **all 38 complete 640x400
+RGB pictures** at actual score return `0AAF:0207`:zero differing pixels,
+including the seven previously failing frames6740,6741,6753,6765,6772,6773,6774.
+The uncorrected real producer still reproduces 1377 differing pixels;changing
+one complete-picture pixel independently fails the same comparator.
+Both profiles preserve selected 21 scalar/RNG/input fields,nine complete pools,
+four Boss blocks,Continue,CFG/SCR,popup state/rows and title state/three rows
+over 8000 updates,plus 2665 actual BB calls over 7999 intervals. Repeat paints
+preserve pools/RNG/input and full pixels. All 15988 native Demo state boundaries
+stay equal. GNU 87 programs and 83 CTests pass;source closure 565/394e53f4.
 
-Source565/ea71e83c,87 GNU programs/83 CTests,optimized UBSan game and
-all15988 native Demo state boundaries pass their scoped gates. Title-contract
-executables are byte-identical to prior7895x2 proofs; that reuse is explicit,
-not a new run. Evidence lives under
-`.analysis/reconstruction/probes/native-title-pixels-v1451/`. Public readers are
-`compare_th04_dos_title_entries.py` and `compare_th04_dos_title_pictures.py`.
-The old `compare_th04_dos_titles.py` is a historical refuted-BB diagnostic.
+Evidence: `.analysis/reconstruction/probes/native-score-pixels-v1452/`.
+Original capture remains the immutable DOSBox-X v1451 score capture with live
+font/video/DGROUP;the v1450 constructed-BB Oracle remains refuted. The correct
+pre-scroll title phase from `a8a67af` is retained. Old negative reports and
+retention journals remain unchanged. Restore the v1451 score capture's four
+archived aliases before strict original readers,and verify/retire them afterward
+without counting borrowed files as new cleanup.
 
-Verified retention retires559 newly owned aliases/intermediates in
-287 blobs, releasing257.988MiB after archive and new gzip recipes;
-10590 protected hashes stay equal. `recover.py` verifies/restores SHA/mode/nsmtime.
-`replay_restored.py` restores5 owned aliases,reruns the actual wrong-phase and
-both current8000-update programs,and reproduces all38 BMPs per program.
-The seven whole-picture failures also reproduce. Those5 aliases verify and
-retire again;no borrowed/missing old file is counted. Current GNU87/cache,
-UBSan game/title/cold cores,complete original compressed data/font/entries and
-GNU38 scene pictures remain live. Restore aliases before strict capture readers
-or archived UBSan/baseline picture paths;new title/popup row readers use `.gz`.
-
-Next resolve the7 actual full-picture samples,then extend beyond8000 toward
-Boss defeat/process/campaign completion. Complete pictures outside these samples,
-other globals,physical scanout/timing,NP2 cross-emulator,Windows,canonicality and
-historical exactness remain open. Both full development goals stay active.
+Next extend the original/native comparison beyond 8000 toward Boss defeat and
+process/campaign completion. These 38 samples establish programmed-display
+agreement,not every frame or physical scanout. Other globals,full routes,NP2,
+Windows,canonicality and historical exactness remain open. Both full goals
+remain active.
 
 ## Historical title gates (v1450; BB phase inference withdrawn)
 

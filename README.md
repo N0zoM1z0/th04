@@ -21,8 +21,8 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Native development is active. Current frozen554/31e6b3d7 GNU and optimized
-UBSan now pass four strict natural headless routes: Easy ReimuA, Normal ReimuA,
+Native development is active. Historical frozen554/31e6b3d7 GNU and optimized
+UBSan passed four strict natural headless routes: Easy ReimuA, Normal ReimuA,
 Normal MarisaA and Extra ReimuA earned by the same-run Normal save. All four
 complete captures/saves agree across compilers, with real clear mask1 and no
 Continue. The new554/a79f199f reader rejects sentinel/high masks, wrong
@@ -34,13 +34,13 @@ complete pictures, physical timing and Windows remain open; see the
 
 ## Build and run
 
-Native `a8a67af` restores the actual pre-scroll title phase after v1450's
-constructed-BB inference was disproved. Both cold GNU/UBSan programs match2665
-actual BB calls,8000 title/state checks and38 complete playfield pictures.
-Whole-picture acceptance still fails7 score-area samples. Original captures
-are DOSBox-X,not NP2. See the current handoff for the exact remaining points.
-Verified recoverable cleanup releases257.988MiB;actual failure/positive programs
-replay without changing the seven-picture aggregate failure.
+Native `a8e0165` applies the original stage clipping to Boss circles. Both new
+cold GNU/UBSan programs now match all38 complete640x400 sampled pictures:
+the previous seven score-area failures (1377 pixels) are resolved. Selected
+8000-update state/input/RNG/pools/Boss/Continue/save,title/popup rows and2665
+actual BB calls remain equal. Original capture is DOSBox-X;full campaigns,
+unsampled pictures,physical timing,NP2 and Windows remain open. Source565/394e53f4;
+see the [current handoff](docs/RE_HANDOFF.md) for replay and cleanup rules.
 
 With local inputs and the toolchain installed:
 
