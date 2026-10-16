@@ -5,7 +5,62 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
-## Ordinary native dialogue and Boss prefix (v1446)
+## Original dialogue/player input boundary corrected (v1447)
+
+The v1446 input interpretation and the `13e6676` latch are withdrawn. Actual
+original MAIN code-fetch/caller checkpoints at load `10FC` show STD `0AAF:2454`,
+dialog `0AAF:2BFB/2A7C`, then player `0AAF:5FCF`, all at frame 6548. Dialogue occurs
+before player_update. The loop sample contains `20h` (Shot), but player entry
+contains `2000h` (Enter). The old comparator confused these boundaries. Its state/
+pool/Boss results remain; player-input acceptance is withdrawn. Old receipts
+are unchanged and affected evidence/knowledge is explicitly reclassified.
+
+Native `a7f9bea` removes that latch and keeps live dialogue keys. Public capture
+--dialog-checkpoints and attest_th04_dialog_checkpoints.py bind target code,
+CPU/stack, conventional/DGROUP memory, raw video and observer sources. Native
+--frontend requires this witness for blocked frames. A fresh public original
+capture of 7,501 updates supports GNU/UBSan 7,500-update comparisons: 21 state/RNG
+fields, actual player input, nine full pools and four Boss blocks agree.
+The real old executable fails only player input at 6548 (`20h` versus `2000h`).
+
+One pre-script sample also matches player/RNG fields, all nine pools and all
+141,312 pixels of the instantaneous programmed-GDC playfield graphics projection.
+Box subregions overlap that playfield; they are not extra samples. Independent
+emulator rendering source matches its pinned archive and corroborates GRB/DAC
+conversion. TRAM, full pictures/scanout and physical timing remain open.
+Eight real inner controls check PC/frame/code/caller/memory/input ownership.
+
+Source closure557/f6c6e393 has fresh main/view/audio builds against unchanged attested
+cold GNU/UBSan cores. Fresh dependencies cover 130 own files; 231 reused core
+dependencies/library hashes and 82 unchanged core contracts pass. This is a
+leaf rebuild, not a fresh complete cold-core build. Final root CI 573 with live
+MAIN database/mutation checks and native CI 354 pass. Native private Ghidra
+skips because its project is absent; the real database replay is in DOS root.
+
+Verified archival retires 26 owned aliases in 17 blobs: 346.137 MiB net after a
+39.959 MiB archive. SHA/CRC/mode/nsmtime and 258 protected hashes pass. Four
+restored 7,500-update FrontEnds reproduce two old input failures and two current
+passes, with complete selected state/pool/Boss/file/prefix outputs. Five aliases
+are verified and retired again. Current GNU cache/programs, selected UBSan game/
+cold cores and full compressed capture/RAM/video/source evidence remain. Failed
+layout and 6549-stop captures stay distinct. Old missing 94 files are unrelated.
+
+Replay/source/recovery: `.analysis/reconstruction/probes/native-dialog-prefix-v1447/`.
+Original: `native-dialog-prefix-v1447-public-original`; use recover.py before
+readers, or replay_restored.py for restore/replay/retirement. Native tree:
+`.analysis/native/port64-recovery-v1445/`. The closed retirement log is pinned
+only in a separate final closure; no old journal or receipt is rebound.
+Continue Game Over/Continue input/resident/score ownership and complete pictures.
+Broader process/campaign, Windows and historical exactness remain open.
+
+## Historical v1446 result and superseded input interpretation
+
+V1447 supersedes the player-input interpretation and latch described below.
+The original dialogue is in the earlier STD callback, before player_update;
+pre-loop20h is not the actual player-entry2000h. Retained comparisons establish
+selected state/pool/Boss agreement only. The following records the disproved
+v1446 inference and its historical producers; use the corrected witness above.
+
 
 Source `13e6676` preserves Stage1's gameplay input across blocking dialogue
 refreshes. Target MAIN `0AAF:00F1` calls player_update at `0AAF:5FCF` before the

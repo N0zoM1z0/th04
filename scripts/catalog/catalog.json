@@ -343,6 +343,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/attest_th04_dialog_checkpoints.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Attest original STD/dialog/player code-fetch, caller and memory evidence without conflating input boundaries.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/audit_th04_native_bullet_switches.py",
     "category": "hardware",
     "role": "command",
@@ -3462,6 +3469,13 @@
     "category": "runtime",
     "role": "support",
     "purpose": "Read/decode complete two-page PC-98 VRAM, palettes and GDC without guest memory accessors.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_dialog_checkpoints_gdb.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Read original pre-Boss code-fetch checkpoints, conventional memory and raw video without guest writes.",
     "purpose_source": "maintained-description"
   },
   {

@@ -8,6 +8,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | Path | Kind | Purpose |
 | --- | --- | --- |
 | [prepare_product_hdi.py](../prepare_product_hdi.py) | command | Prepare a disposable original-data image with verified source or original products. |
+| [probes/attest_th04_dialog_checkpoints.py](../probes/attest_th04_dialog_checkpoints.py) | command | Attest original STD/dialog/player code-fetch, caller and memory evidence without conflating input boundaries. |
 | [probes/build_th04_cpu_fault_emulator.py](../probes/build_th04_cpu_fault_emulator.py) | command | Build a private, pinned DOSBox-X observer without changing game bytes. |
 | [probes/build_th04_demo_emulator.py](../probes/build_th04_demo_emulator.py) | command | Build a resource-limited pinned read-only normal-core demo observer. |
 | [probes/calibrate_th04_cpu_fault_emulator.py](../probes/calibrate_th04_cpu_fault_emulator.py) | command | Falsify a private emulator observer using an independent DIV-zero COM. |
@@ -58,6 +59,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_demo_host_ram.py](../probes/th04_demo_host_ram.py) | support | Read conventional emulator host RAM with an independent read-only VM86 page walk. |
 | [probes/th04_demo_snapshot.gdb](../probes/th04_demo_snapshot.gdb) | fixture | Observe stage-frame writes in host RAM and take read-only DGROUP diagnostic snapshots. |
 | [probes/th04_demo_video.py](../probes/th04_demo_video.py) | support | Read/decode complete two-page PC-98 VRAM, palettes and GDC without guest memory accessors. |
+| [probes/th04_dialog_checkpoints_gdb.py](../probes/th04_dialog_checkpoints_gdb.py) | support | Read original pre-Boss code-fetch checkpoints, conventional memory and raw video without guest writes. |
 | [probes/th04_dos_boot.py](../probes/th04_dos_boot.py) | support | Validate actual DOS load-and-go entries, complete entry images, parent PSP and OP counter ownership. |
 | [probes/th04_dos_process.py](../probes/th04_dos_process.py) | support | Resolve conventional DOS process ownership from complete MCB, PSP and environment evidence. |
 | [probes/th04_dos_route.py](../probes/th04_dos_route.py) | support | Validate actual overlay images/generations, real Quit keys, shared resident use and full score checksums. |
