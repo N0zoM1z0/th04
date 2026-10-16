@@ -5,7 +5,115 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
-## Stage and BGM title rendering repaired (v1450)
+## Actual title phase and picture gate (v1451)
+
+Native `a8a67af` restores the original pre-scroll title phase. The v1450
+constructed BB-call Oracle and its pending-background preview are withdrawn.
+Original MAIN relative `0AAF:0148` calls overlay1 before scroll_driver at018A;
+after-actor DGROUP at01B3 already contains the later scroll. Actual BB entry
+`0AAF:15AA` records top94/scroll326 at update74; the later DGROUP scroll325
+made the old Oracle invent top93. That Oracle falsely accepted the wrong
+producer and rejected the correct one on43 intervals. Old reports stay unchanged.
+
+Three complete original8001-update captures use **DOSBox-X**, not NP2; the
+old emulator label is corrected. New code-fetch observers record2665 real BB
+calls over7999 armed intervals2..8000 and38 live font/video/DGROUP checkpoints
+at actual score return `0AAF:0207`. Both new cold GNU/UBSan programs agree on
+all actual arguments,8000 title fields/three complete text rows and popup
+rows/state, plus selected gameplay/input/RNG,nine pools,four Boss blocks,
+Continue and CFG/SCR. All38 complete playfields (141312 pixels each),stage
+bands and BGM bands match. Repeated paints preserve state/RNG and whole pixels.
+
+**Whole-picture aggregate remains FAILED** on7 samples6740,6741,6753,6765,
+6772,6773,6774:1377 total differing pixels in the right score area. Their complete
+visible TRAM banks are equal; first target graphics index1 differs from native9
+or15. At6740 the first pixel is557,64. Trace actual render_main writers next;
+do not assume an owner or hide it with a HUD/clip mask. Actual post-score evidence
+eliminates the earlier score-tail observation mismatch but does not waive this gap.
+
+Source565/ea71e83c,87 GNU programs/83 CTests,optimized UBSan game and
+all15988 native Demo state boundaries pass their scoped gates. Title-contract
+executables are byte-identical to prior7895x2 proofs; that reuse is explicit,
+not a new run. Evidence lives under
+`.analysis/reconstruction/probes/native-title-pixels-v1451/`. Public readers are
+`compare_th04_dos_title_entries.py` and `compare_th04_dos_title_pictures.py`.
+The old `compare_th04_dos_titles.py` is a historical refuted-BB diagnostic.
+
+Next resolve the7 actual full-picture samples,then extend beyond8000 toward
+Boss defeat/process/campaign completion. Complete pictures outside these samples,
+other globals,physical scanout/timing,NP2 cross-emulator,Windows,canonicality and
+historical exactness remain open. Both full development goals stay active.
+
+The actual original order is overlay1 at MAIN_01_TEXT0AAF:0148,scroll driver
+at018A,frame write at01B3,score call at0204 and actual return at0207. A hash-pinned
+callee replay is only as valid as its caller state/time. Reversing the later
+title clock and dissolve sprite did not reverse the later scroll driver. The
+v1450 "43-frame fix" was a false inference; v1451 restores the earlier authored
+argument phase and checks actual runtime registers/stack instead.
+
+The actual BB observer watches code reads at0AAF:15AA. It attests CS:IP,DS,
+left/top/cel registers,caller return63F0,opcode,stage counter,scroll and unchanged
+CPU state. A full stream records2665 calls over intervals2..8000,including zero
+counts. The first actor boundary arms the stream; no unobserved interval is
+claimed. Independent font/entry/score-return observers preserve the same complete
+8001-update selected state,resident and keyboard/RNG event sequence across three
+original captures. All are DOSBox-X6e1a6e70,not NP2.
+
+The first view-only diagnostic links unchanged v1450 cold main/audio/core
+inputs and adds38 actual scene repaints. It retains the wrong preview and fails
+43 real BB intervals and11 title-picture samples. Final a8a67af source cold-builds
+all87 GNU consumers/83CTest and optimized UBSan game/title consumers. Both pass
+actual entry,full title rows and all38 complete playfield RGB comparisons.
+Complete pictures compare640x400 with no ignored pixel region. Their aggregate
+still fails on the7 score-area samples; band/playfield verdicts stay separate.
+
+Original after-actor and native after-full-update images initially also differ
+on score text. The new observer reads original video/font/DGROUP at actual
+score-return instruction0207. Source/CPU evidence selects this phase before the
+comparison; there is no fitted frame delay. The remaining7 samples have identical
+complete visible character/attribute banks and different underlying graphics.
+`remaining-picture-gap.json` records exact points,indices and colors for tracing.
+Do not "fix" it with a blanket HUD or playfield clip.
+
+GDC row_height at host offset172 is uint8_t; offset173 is live row_line. The
+first stronger guard read a WORD and rejected frame6549's16-line mode as528.
+Pinned pc98_gdc.h and live snapshots distinguish them. The corrected programmed
+projection uses the BYTE field and explicitly excludes live scan timing. A
+row_line mutation preserves the projection; row_height17 rejects. The original
+font/palette/VRAM data are unchanged. This expands a correctly typed gate; it
+does not mask a hardware state or establish physical scanout.
+
+Every selected repaint executes twice and compares all nine pool bytes,RNG,
+clock and full RGB/indices. The target projection uses actual same-boundary
+528384-byte font RAM,complete raw VRAM/palettes/GDC and immutable CPU context.
+English/Japanese title fonts therefore no longer rely on an assumed font bank.
+A changed pixel outside both title bands still fails the whole-picture Oracle.
+Field/BB/text mutations,truncation/trailing records and row-height controls also
+reject. GNU/UBSan's complete title-contract executable SHAs match the retained
+7895-case/two-load receipts,so these unchanged components are reused rather than
+rerun. No whole-game or historical exact promotion follows.
+
+Replay actual entry arguments and actual post-score pictures with fresh outputs:
+
+```sh
+python3 scripts/probes/compare_th04_dos_title_entries.py \
+  --original RESTORED_SCORE_CAPTURE --native NEW_FRONTEND \
+  --target PINNED_MAIN --output NEW_ENTRY_REPORT
+python3 scripts/probes/compare_th04_dos_title_pictures.py \
+  --original RESTORED_SCORE_CAPTURE --native NEW_FRONTEND \
+  --target PINNED_MAIN --native-root NATIVE_CHECKOUT \
+  --phase after-score --output NEW_PICTURE_REPORT
+```
+
+The second command must currently exit1 for the whole-picture gap,while its
+title/playfield verdicts pass. Retain that failure. A debugger argument snapshot
+and a disassembler view are not interchangeable Oracle evidence.
+
+## Historical title gates (v1450; BB phase inference withdrawn)
+
+This section preserves the historical v1450 interpretation. Its actual-BB
+phase and first-"negative" claims are refuted by v1451 above; old JSON remains
+unchanged. Clock/TRAM/primitive observations keep their narrower scope.
 
 Native `3bf2aea` restores stage numbers/names, BGM strings, separate title/Boss
 clocks and the shared graphics dissolve. Original MAIN relative `0AAF:6446`
@@ -72,7 +180,7 @@ Old Unicorn1.0.2 produces an invalid16-bit CS:IP on this actual strlen/RETF path
 at both loads and is rejected after44 visited addresses. Unicorn2.1.4 is isolated
 under the private batch directory, with its shared-library hash in every final
 component receipt. Its target results additionally agree with the independent
-ordinary NP2 recording. Pinned1.x ctypes callbacks swallow Python exceptions:
+ordinary DOSBox-X recording. Pinned1.x ctypes callbacks swallow Python exceptions:
 the new hardware/code guards stop emulation first and rethrow after emu_start.
 Negative controls reject a synthetic mask, unexpected OUT, changed field,
 changed BB coordinate, changed text byte, truncation and trailing records.

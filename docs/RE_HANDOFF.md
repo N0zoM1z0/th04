@@ -10,7 +10,7 @@ remains open. Updated 2026-10-16.
 Start with [the actionable handoff](NEXT_AGENT_HANDOFF.md) for both published
 branches, startup commands, claim limits, next comparisons and cleanup rules.
 Published branch baselines and fresh MAIN paths are indexed there; the native
-source baseline is now `3bf2aea`, with later evidence commits following it.
+source baseline is now `a8a67af`, with later evidence commits following it.
 The old `.analysis/worktrees/` directory is absent although Git still registers
 its trees. This includes frozen native route programs/results and the DOS
 v1437 candidate MAIN/MAP. Root-level reports, compressed DOS captures and
@@ -21,42 +21,52 @@ describe recorded historical evidence, not a fresh availability guarantee.
 Recover original frozen inputs or create a newly attested producer from Git;
 do not rewrite old receipts. Both development goals remain active.
 
-## Stage and BGM title rendering repaired (v1450)
+## Actual title phase and picture gate (v1451)
 
-Native `3bf2aea` restores stage numbers/names, BGM strings, separate title/Boss
-clocks and the shared graphics dissolve. Original MAIN relative `0AAF:6446`
-and `0AAF:66A5` are the owners; DGROUP `1BBC/1BDC` owns their string tables.
-The original ordinary capture's BGM row differs from v1449 on334 frames,
-first99. That old report remains FAILED. Both new cold GNU/optimized UBSan
-programs match all8000 title fields, three complete80-column character/attribute
-rows and actual BB calls. Popup rows/state and the selected gameplay/input/RNG,
-nine pools, four Boss blocks, Continue and CFG/SCR remain equal.
+Native `a8a67af` restores the original pre-scroll title phase. The v1450
+constructed BB-call Oracle and its pending-background preview are withdrawn.
+Original MAIN relative `0AAF:0148` calls overlay1 before scroll_driver at018A;
+after-actor DGROUP at01B3 already contains the later scroll. Actual BB entry
+`0AAF:15AA` records top94/scroll326 at update74; the later DGROUP scroll325
+made the old Oracle invent top93. That Oracle falsely accepted the wrong
+producer and rejected the correct one on43 intervals. Old reports stay unchanged.
 
-Each profile passes7895 original-instruction cases at loads1000/3333, comparing
-complete16KiB TRAM, all title state, BB calls and four complete32KiB GRCG planes.
-GNU builds87 programs and passes83 CTests. All15988 old/current native Demo
-state boundaries, six late popup BMPs and dialogue-prefix BMP remain equal. The first
-title producer passed text but misplaced43 frames of BB draws by1px. Its actual
-source/program SHA is recovered and its failure reruns. The corrected owner
-reads the result of the pending background update without advancing live state.
+Three complete original8001-update captures use **DOSBox-X**, not NP2; the
+old emulator label is corrected. New code-fetch observers record2665 real BB
+calls over7999 armed intervals2..8000 and38 live font/video/DGROUP checkpoints
+at actual score return `0AAF:0207`. Both new cold GNU/UBSan programs agree on
+all actual arguments,8000 title fields/three complete text rows and popup
+rows/state, plus selected gameplay/input/RNG,nine pools,four Boss blocks,
+Continue and CFG/SCR. All38 complete playfields (141312 pixels each),stage
+bands and BGM bands match. Repeated paints preserve state/RNG and whole pixels.
 
-Source565/02e852a2 and receipts live under
-`.analysis/reconstruction/probes/native-bgm-title-v1450/`. Native replay is
-`port64/verify_titles.py`; use pinned Unicorn2.1.4. Its older1.0.2 engine rejects
-this strlen/RETF path. Hardware callbacks explicitly stop and rethrow errors.
-The GRCG adapter and pinned3072-byte file-backed BB extent are explicit.
+**Whole-picture aggregate remains FAILED** on7 samples6740,6741,6753,6765,
+6772,6773,6774:1377 total differing pixels in the right score area. Their complete
+visible TRAM banks are equal; first target graphics index1 differs from native9
+or15. At6740 the first pixel is557,64. Trace actual render_main writers next;
+do not assume an owner or hide it with a HUD/clip mask. Actual post-score evidence
+eliminates the earlier score-tail observation mismatch but does not waive this gap.
 
-Verified archival retires1332 owned aliases/intermediates in
-1079 blobs, releasing115.574MiB after archive and new gzip recipes;
-7293 protected hashes remain. `recover.py` restores by SHA/mode/nsmtime.
-`replay_restored.py` reruns old BGM334, first-scroll43 and both final actual
-8000-update programs, then verifies/retires one owned and four borrowed original
-aliases separately. Old journals/totals and the94 missing files are unchanged.
+Source565/ea71e83c,87 GNU programs/83 CTests,optimized UBSan game and
+all15988 native Demo state boundaries pass their scoped gates. Title-contract
+executables are byte-identical to prior7895x2 proofs; that reuse is explicit,
+not a new run. Evidence lives under
+`.analysis/reconstruction/probes/native-title-pixels-v1451/`. Public readers are
+`compare_th04_dos_title_entries.py` and `compare_th04_dos_title_pictures.py`.
+The old `compare_th04_dos_titles.py` is a historical refuted-BB diagnostic.
 
-Next compare natural title/picture bands with same-boundary font/video evidence,
-then extend beyond8000 toward Boss defeat and process/campaign completion.
-Complete natural pictures, other globals, physical timing/scanout, Windows,
-canonicality and historical exactness remain open. Both full goals stay active.
+Next resolve the7 actual full-picture samples,then extend beyond8000 toward
+Boss defeat/process/campaign completion. Complete pictures outside these samples,
+other globals,physical scanout/timing,NP2 cross-emulator,Windows,canonicality and
+historical exactness remain open. Both full development goals stay active.
+
+## Historical title gates (v1450; BB phase inference withdrawn)
+
+Clock/string/row and complete primitive observations remain valid. The old
+constructed natural-BB interpretation and its source preview are refuted by
+v1451 actual entries/pictures. The archived first "negative" uses the correct
+pre-scroll phase. Old receipts/source/programs/journals remain immutable; use
+the focused differential note for the correction and replay context.
 
 ## Retained popup result (v1449)
 
