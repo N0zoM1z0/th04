@@ -9,7 +9,8 @@ remains open. Updated 2026-10-16.
 
 Start with [the actionable handoff](NEXT_AGENT_HANDOFF.md) for both published
 branches, startup commands, claim limits, next comparisons and cleanup rules.
-At this audit main/origin were 83c94d1 and native remote was c0a1060.
+Published branch baselines and fresh MAIN paths are indexed there; the native
+remote remains c0a1060.
 The old `.analysis/worktrees/` directory is absent although Git still registers
 its trees. This includes frozen native route programs/results and the DOS
 v1437 candidate MAIN/MAP. Root-level reports, compressed DOS captures and
@@ -19,6 +20,49 @@ retention archive alone does not restore the whole tree. The entries below
 describe recorded historical evidence, not a fresh availability guarantee.
 Recover original frozen inputs or create a newly attested producer from Git;
 do not rewrite old receipts. Both development goals remain active.
+
+## Fresh MAIN and complete bounded Boss video (v1438)
+
+Fresh original/candidate captures now agree over 7,500 updates on all 38
+complete configured video regions, including Boss phases 0/1/2 and five natural
+losses. Both pages/all planes, TRAM, complete palettes, modes and programmed
+GDC fields agree. Consumed inputs, 36 fields, 2,837 ordered RNG calls, nine
+complete pools and 22 state blocks agree with independent no-video controls.
+Raw GDC differs on all 7,500 frames. The video capture's companion aggregate
+fails for 253 post-reset input samples; the separate controls fail for 259.
+Keep these new counts distinct from historical v1437's 258 and v1436's 155.
+
+Original terminal is relative MAIN0AAF:01B3, candidate0708:0769, both load10FC;
+DGROUP3230/352A. These remain observed after-update terminals, natural exit
+false. This DOSBox-X MAIN-only prefix does not accept Boss defeat, Game
+Over/Continue, a complete four-product process chain, native pictures,
+cross-emulator behavior, Windows, physical scanout or a full campaign.
+
+New root MAIN/MAP files are available without restoring a missing worktree.
+The initial cold compilation linked and passed IRQ/switch audits, but the
+product wrapper refused publication because comparison scripts changed its
+conservative input fingerprint during compilation. A subsequent build checked
+the object cache, reused 192 C++ objects, relinked and published a new producer.
+This is verified cache publication following cold compilation, not a cold
+deterministic exact replay. Both attempts and their receipts remain retained.
+
+Published MAIN is 200,279 bytes, SHA-256 f21a5c7c..., with MAP SHA-256
+2b6a74a0..., identical in content to the historical v1437 records. Paths and
+producer identity are new: `.analysis/build/dos-boss-video-v1438/build.json`
+and `product-20261016-041217-299bcab8-main` under the root probes directory.
+Historical receipts, missing paths and provenance remain unchanged.
+
+The ordinary video gate now admits receipt-bound observed prefixes while
+preserving the 3,996-update default. Complete metadata, CPU/terminal, ABI,
+mapping, stream/CRC and independent baseline contracts remain required.
+Fresh ABI replay checks 12 inputs/15 symbols. All 7,500 original video records
+decode, and 38 actual Boss-frame region mutations plus five terminal mutations
+reject. Public CI passes 495 tests and private target/database/Oracle gates.
+Replay is `.analysis/reconstruction/probes/dos-boss-video-v1438/`.
+Use its `recover.py --restore --prefix PATH` before replaying retired image/raw
+aliases. Complete compressed DGROUP/video, source, receipts, MAIN and MAP stay
+retained. Next drive real Game Over/Continue/process boundaries and pair native
+full pictures; the original missing native producer files remain unresolved.
 
 ## Bounded ordinary Boss combat and natural Game Over (v1437)
 

@@ -56,6 +56,13 @@ Its aggregate retains 258 end-of-update keyboard differences. Original Game
 Over is independently located at frame 7,547; complete Boss defeat, process
 transitions and physical scanout remain open.
 
+A fresh root MAIN/MAP producer now supports a new 7,500-update Boss pair with
+all 38 complete configured video regions equal. Independent no-video controls
+and complete pools/states also agree. Raw GDC still differs every frame;
+post-reset input differences remain 253 in these video captures and 259 in
+their separate controls. These new observations preserve the historical
+producer receipts and do not complete Boss defeat or Game Over/Continue routes.
+
 Native x64 source lives on `port/modern-64`. Scoped Linux Reimu A runs cover
 Normal, Lunatic and Extra clears with registration, physical saves and fresh
 OP/restart checks. Four complete demos agree with the original on compared

@@ -11,6 +11,34 @@ referenced by their receipts are missing. See [new-agent handoff](NEXT_AGENT_HAN
 before restoring or replaying. Do not count this unexplained absence as verified
 cleanup, weaken protected-file checks or substitute a new build into old receipts.
 
+A new root MAIN producer is now available in
+`.analysis/build/dos-boss-video-v1438/`, with its MAP in
+`.analysis/reconstruction/probes/product-20261016-041217-299bcab8-main/`.
+Its MAIN/MAP content hashes reproduce the historical v1437 identities, but
+its producer, publication and captures have new receipts. The initial cold
+compilation's wrapper refusal and subsequent verified cache publication are
+retained separately. This does not restore the old working directories or the
+94 missing native protected files. See the v1438 focused differential note.
+
+## Fresh bounded Boss video (v1438)
+
+`.analysis/reconstruction/probes/dos-boss-video-v1438/retention.json` records
+16 explicitly owned image/font/raw aliases in four new captures, encoded in
+24 content-addressed blobs against the pinned `zun.hdi`. Full SHA/CRC,
+reconstructed content, temporary mode/nsmtime and protected-file checks pass
+before removal. Net release is 194.625 MiB after the 1.069 MiB archive.
+Both complete 7,500-record DGROUP/video pairs remain compressed and live;
+the new MAIN/MAP, compiler receipts, failed initial publication, source archive,
+ABI probe, 38-region/five-terminal controls and all comparison failures remain.
+
+Its `recover.py` verifies without expansion by default. Use `--restore --prefix
+PATH` for required `.analysis/runtime/candidates/dos-boss-video-v1438-*` aliases.
+All four directories need images/raw for complete video replay with independent
+baselines. Video passes; the companion state aggregate retains 253 input
+differences and the separate controls retain 259. Returning temporary aliases
+to archived state is not new cleanup. Neither old trees nor original frozen
+native protected files are removed or repaired by this retirement.
+
 ## Native palette fade join (v1414)
 
 Current native head is `6b0e1ba`, producer 530/4dc27bde. Source, selected

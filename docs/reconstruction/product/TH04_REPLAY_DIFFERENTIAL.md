@@ -24,6 +24,83 @@ raw GDC differences separately. This tooling change alone establishes no new
 Boss-picture or campaign acceptance. New builds/captures use a separate v1438
 namespace; missing historical v1437 MAIN/MAP receipts remain unchanged.
 
+### Fresh producer and complete Boss pictures
+
+New v1438 captures now pair **7,500 updates and all 38 configured video
+regions**, including Boss phases 0/1/2 and five natural losses. Each record
+contains all 279,809 bytes; both graphics pages/all four planes, full TRAM,
+analog/digital/text palettes, modes and programmed GDC fields agree without
+pixel masks. Original relative MAIN terminal is `0AAF:01B3`, candidate
+`0708:0769`, both load `10FC`; DGROUP is `3230` and `352A` respectively.
+Complete raw GDC state still differs on every frame. The separate companion
+aggregate remains false for **253 post-reset input samples**; consumed inputs,
+36 fields, 2,837 ordered RNG calls, nine complete pools and 22 state blocks
+agree. Independent no-video controls also agree on those components but retain
+**259** post-reset differences. These are new captures, distinct from v1437's
+258 and v1436's 155. Neither monitor control nor picture agreement accepts
+general input timing, raw scanout or physical GDC timing.
+
+The complete ordered pool/state hashes also match each program's independent
+no-video capture, not just the other program. `observer-controls.json` derives
+this from both attested full comparison reports: all nine pools, 22 states and
+post-reset Shift agree; post-reset input remains different for both programs.
+
+The initial cold compilation linked all 193 C/C++ roots, 156 ASM owners, eight
+state and four sprite objects, with valid OMF and passing IRQ/switch audits.
+Its outer build wrapper correctly refused publication because the concurrent
+comparison-tool changes altered the conservative product fingerprint. After
+the tools stabilized, verified cache publication reused 192 C++ objects and
+relinked a new producer. Both attempts are retained. This is not a cold
+deterministic exact replay. New ordinary MAIN is 200,279 bytes with SHA-256
+`f21a5c7ca38ebaee0e0ae544540ed2c36b4429cd846c3a12d8a5ccb887728cd8`;
+MAP SHA-256 is
+`2b6a74a073f98a2b53ab9583ad1bfee5775886b8954240b1efab2c5d089bdf59`.
+The content reproduces the historical v1437 identities, while producer paths,
+receipts and observations are new. Historical missing-tree receipts were not
+edited or repopulated with the new producer.
+
+Root build manifest: `.analysis/build/dos-boss-video-v1438/build.json`.
+Compiler/MAP receipt:
+`.analysis/reconstruction/probes/product-20261016-041217-299bcab8-main/receipt.json`.
+Reports, frozen public source, 12-input/15-symbol ABI probe, controls and recovery:
+`.analysis/reconstruction/probes/dos-boss-video-v1438/`. Four fresh captures are
+`dos-boss-video-v1438-{original-control,candidate-control,original,candidate}`
+under `.analysis/runtime/candidates/`. Controls decode the entire original
+stream, then use actual frames 1/6901/7500 for 38 independent region mutations
+and five terminal mutations. Those bounded controls are separate from full-pair
+acceptance. The raw-GDC counterexample is retained as a diagnostic difference.
+
+After selective image/raw restoration, replay:
+
+```sh
+python3 scripts/probes/compare_th04_ordinary_video.py \
+  .analysis/runtime/candidates/dos-boss-video-v1438-original \
+  .analysis/runtime/candidates/dos-boss-video-v1438-candidate \
+  --original-baseline .analysis/runtime/candidates/dos-boss-video-v1438-original-control \
+  --candidate-baseline .analysis/runtime/candidates/dos-boss-video-v1438-candidate-control \
+  --baseline-sources . --original-main .analysis/targets/th04/main.exe \
+  --output /tmp/th04-boss-video.json
+python3 scripts/probes/compare_th04_bounded_ordinary.py \
+  .analysis/runtime/candidates/dos-boss-video-v1438-original \
+  .analysis/runtime/candidates/dos-boss-video-v1438-candidate \
+  --original-main .analysis/targets/th04/main.exe --output /tmp/th04-boss-pools.json
+```
+
+Expected exits are 0 for video and 1 for the retained 253-sample input failure.
+This is DOSBox-X-only bounded MAIN replacement with original OP/MAINE/ZUN and
+assets. No Boss defeat, natural process exit, Game Over/Continue route, complete
+four-product process chain, native picture, cross-emulator, Windows or campaign
+acceptance follows. Next drive the real release-first Game Over/Continue and
+process boundaries before extending Boss-defeat/full-route comparisons.
+
+Owned-only retirement archives 16 image/font/raw paths in 24 blobs, releasing
+194.625 MiB net after a 1.069 MiB archive. Full SHA/CRC, content, temporary
+mode/nsmtime and protected-file readback pass before deletion. Complete
+compressed streams, new MAIN/MAP, frozen sources, compiler receipts, failed
+publication and input/timing failures remain. Use this namespace's
+`recover.py --restore --prefix PATH`, never a historical producer's recovery
+script. Root CI passes 495 tests plus private gates; no exact ledger changes.
+
 ## Actual bounded Boss combat and Game Over wait (v1437)
 
 Root CI486 tests, catalog, tracking, private target/database and Oracle mutation
