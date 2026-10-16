@@ -51,7 +51,8 @@ def compare_demo(original, native, demo, expected_frames=3996):
                         differing_bytes=len(indices),changes=[dict(offset=i,slot=i//stride,
                             record_offset=i%stride,original=a[i],native=b[i]) for i in indices[:24]])
         frames+=1
-    require(frames==expected_frames,'original complete configured pool extent')
+    message='original complete demo pool extent' if expected_frames==3996 else 'original complete configured pool extent'
+    require(frames==expected_frames,message)
     for name,_,count,stride in POOLS:
         row=result[name];row.update(passed=row['first_difference'] is None,updates=frames,
             bytes_per_frame=count*stride,original_sha256=row.pop('original_hash').hexdigest(),
