@@ -59,6 +59,22 @@ class OrdinaryVideoProtocolTests(unittest.TestCase):
         with self.assertRaises(gzip.BadGzipFile):
             self.decode(bytes(corrupt), compressed=True)
 
+    def test_boss_extent_is_explicit_and_default_remains_strict(self):
+        # Small bodies keep the 7,500-frame protocol control inexpensive.
+        with patch.object(protocol, 'BLOCK_SIZE', 8):
+            data = bytearray(protocol.MAGIC)
+            for frame in range(1, 7501):
+                data.extend(protocol.HEADER.pack(1, frame, 0x1000, 0x2000, 1, 0, 4096))
+                data.extend(bytes(8))
+            with tempfile.TemporaryDirectory() as directory:
+                path = Path(directory) / 'boss.gz'
+                path.write_bytes(gzip.compress(data))
+                self.assertEqual(sum(1 for _ in protocol.records(path, 0x1000, 0x2000, 1, 4096, 7500)), 7500)
+                with self.assertRaisesRegex(ValueError, 'extra ordinary'):
+                    list(protocol.records(path, 0x1000, 0x2000, 1, 4096))
+                with self.assertRaisesRegex(ValueError, 'truncated.*header'):
+                    list(protocol.records(path, 0x1000, 0x2000, 1, 4096, 7501))
+
 
 if __name__ == '__main__':
     unittest.main()

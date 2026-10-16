@@ -1,9 +1,28 @@
 # Original DOS, reconstructed DOS and native fidelity
 
-Updated 2026-10-12 for agent handoff. The user's primary requested comparison
+Updated 2026-10-16. The user's primary requested comparison
 is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
+
+## Bounded ordinary video replay contract (v1438)
+
+`compare_th04_ordinary_video.py` now admits the observed after-update terminal
+contract used by the 7,500-update Boss prefix. It takes the frame count from
+the attested capture receipt, checks terminal load/DGROUP/CPU context against
+the video stream, and preserves the existing ABI, source, mapping, CRC and
+complete-stream guards. The default Demo and ordinary extent remains 3,996.
+Independent scalar baselines must have identical terminal class, extent,
+dialogue cue and emulator configuration as well as product/reset identities.
+Truncating both streams equally cannot satisfy the longer contract.
+
+Public controls cover an explicit 7,500-record stream, refusal under the old
+default or a longer requested extent, metadata truncation, terminal CPU drift,
+mapping overflow, ELF bias, and mismatched baseline extent/dialogue/exit/config.
+The video reducer still compares all 38 complete configured regions and counts
+raw GDC differences separately. This tooling change alone establishes no new
+Boss-picture or campaign acceptance. New builds/captures use a separate v1438
+namespace; missing historical v1437 MAIN/MAP receipts remain unchanged.
 
 ## Actual bounded Boss combat and Game Over wait (v1437)
 

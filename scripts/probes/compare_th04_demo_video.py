@@ -77,7 +77,9 @@ def iter_side(directory, number, profile, diagnostic):
                    load['load_segment']+profile['dgroup'], [3, 0, 2, 1][number-1], load['cr0'], load['cr3'])
 
 
-def summarize_pair(original, candidate, first_dump=None):
+def summarize_pair(original, candidate, first_dump=None, expected_updates=None):
+    limit = UPDATE_COUNT if expected_updates is None else expected_updates
+    require(type(limit) is int and 1 <= limit <= 65535, 'video frame limit')
     rows, first, count, differing_frames = {}, None, 0, 0
     raw_gdc_differing_frames = 0
     for (frame, left), (other_frame, right) in zip(original, candidate, strict=True):
@@ -118,7 +120,7 @@ def summarize_pair(original, candidate, first_dump=None):
                         path.write_bytes(block)
                         first[name+'_dump'] = dict(path=str(path), sha256=sha(block))
         count += 1
-    require(count == UPDATE_COUNT, 'incomplete paired video extent')
+    require(count == limit, 'incomplete paired video extent')
     for row in rows.values():
         row.update(passed=row['first_difference'] is None,
                    original_sha256=row.pop('original_hash').hexdigest(),

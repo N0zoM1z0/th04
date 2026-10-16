@@ -74,6 +74,17 @@ class VideoComparisonTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.compare(self.original[:2])
 
+    def test_explicit_ordinary_extent_preserves_default_and_rejects_truncation(self):
+        extended = [*self.original, (4, self.block)]
+        self.assertTrue(compare.summarize_pair(extended, extended, expected_updates=4)['passed'])
+        with self.assertRaisesRegex(ValueError, 'incomplete'):
+            compare.summarize_pair(extended, extended)
+        with self.assertRaisesRegex(ValueError, 'incomplete'):
+            compare.summarize_pair(self.original, self.original, expected_updates=4)
+        for limit in (0, -1, 65536, True):
+            with self.subTest(limit=limit), self.assertRaisesRegex(ValueError, 'frame limit'):
+                compare.summarize_pair([], [], expected_updates=limit)
+
     def test_frame_boundary_and_block_truncation_rejected(self):
         with self.assertRaisesRegex(ValueError, 'frame boundary'):
             self.compare([(2, self.block), *self.original[1:]])
