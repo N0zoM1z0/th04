@@ -168,6 +168,7 @@ class Boundary:
                 3000,
                 self.profile["stage2_updates"],
             ]
+            or frame in self.profile.get("extra_memory_frames", [])
         ):
             memory = m.ram.read_range(0, 655360)[0]
             memory_name = f"{self.count}-memory.bin.gz"

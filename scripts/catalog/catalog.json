@@ -616,6 +616,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/compare_th04_midboss_reset.py",
+    "category": "matching",
+    "role": "command",
+    "purpose": "Require an observed Stage2 Midboss defeat and callback reset on a bounded route.",
+    "purpose_source": "source-docstring"
+  },
+  {
     "path": "scripts/probes/compare_th04_native_maine_link.py",
     "category": "matching",
     "role": "command",
