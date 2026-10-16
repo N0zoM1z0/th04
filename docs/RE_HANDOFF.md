@@ -21,6 +21,25 @@ describe recorded historical evidence, not a fresh availability guarantee.
 Recover original frozen inputs or create a newly attested producer from Git;
 do not rewrite old receipts. Both development goals remain active.
 
+## Original second-MAIN initialization and updates (v1442)
+
+The original route now completes 600 actual second-MAIN updates after the real
+Quit/MAINE/fresh OP handoff. Its first pre-update sample has frame0, score0,
+power1 and invincibility64, with resident seed70. Two trace partitions preserve
+actual generation1/2 IDs and reconstruct the complete observer stream byte for
+byte. Generation2 has its own profile, full DGROUP records and actual terminal;
+twelve full RAM checkpoints preserve resident allocation. No gameplay state,
+RNG, frame counter or process ID is assigned by the controller.
+
+Replay: `.analysis/reconstruction/probes/dos-second-main-updates-v1442/`.
+Original admission and27 actual counterexamples pass; CI548 passes after a
+reader scope repair. The frozen first reader mistakenly included second-MAIN
+Shot in its initial OP validation, thereby rejecting Quit Escape events. That
+negative is retained and reproduced on the same unchanged captured clock. The
+new public regression bounds initial input before the second-MAIN action start.
+Candidate capture uses a separate namespace and paired admission remains pending.
+Supporting products remain original; this is not a full campaign or exact claim.
+
 ## Resident allocation and paired second MAIN (v1441)
 
 Both original/candidate routes now execute MAIN Quit -> original MAINE -> fresh

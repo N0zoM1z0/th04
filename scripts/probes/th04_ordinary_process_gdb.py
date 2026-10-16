@@ -143,10 +143,10 @@ class ProcessRecorder(gdb.Breakpoint):
         self.finished = True
         (self.output / 'process-events.json').write_text(json.dumps(dict(schema_version=1,
             complete_capture=not self.error,
-            complete_route=not self.error and boundary in ('fresh-op-menu', 'second-main-entry') and
+            complete_route=not self.error and boundary in ('fresh-op-menu', 'second-main-entry', 'second-main-prefix') and
                            [self.rows[i]['artifact'] for i in self.entry_records] ==
                            (['th04-main', 'th04-maine', 'th04-op', 'th04-main'] if
-                            boundary == 'second-main-entry' else ['th04-main', 'th04-maine', 'th04-op']), boundary=boundary,
+                            boundary in ('second-main-entry', 'second-main-prefix') else ['th04-main', 'th04-maine', 'th04-op']), boundary=boundary,
             events=len(self.rows), pending=self.pending_exec, error=self.error,
             entries=self.entry_records,
             scope='Booted guest DOS, with internal DOS kernel disabled: actual software INT21 requests and subsequent MCB/PSP-owned activity; requests alone are not successful exec or natural exit'), indent=2) + '\n')

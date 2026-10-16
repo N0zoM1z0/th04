@@ -7,7 +7,7 @@ MAGIC = b'TH04OG1\n'
 BOUNDARY = 'ordinary stage_frame write, before mod counters and score update'
 
 
-def records(path, load, dgroup, fields, cr0, cr3, frames=None):
+def records(path, load, dgroup, fields, cr0, cr3, frames=None, generation=1):
     limit = UPDATE_COUNT if frames is None else frames
     if not isinstance(limit, int) or not 1 <= limit <= 65535:
         raise ValueError('ordinary DGROUP frame limit')
@@ -21,7 +21,7 @@ def records(path, load, dgroup, fields, cr0, cr3, frames=None):
             if len(header) != HEADER.size:
                 raise ValueError('truncated ordinary DGROUP header')
             process, observed, module, data_segment, pg0, pg4, pg3 = HEADER.unpack(header)
-            if (process != 1 or observed != frame or module != load or data_segment != dgroup
+            if (process != generation or observed != frame or module != load or data_segment != dgroup
                     or pg0 != cr0 or pg3 != cr3 or pg4 & 0x20):
                 raise ValueError('ordinary DGROUP order/load/CPU mismatch')
             delta = stream.read(DGROUP_SIZE)

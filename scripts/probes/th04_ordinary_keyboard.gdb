@@ -38,6 +38,9 @@ continue_frame = int(os.environ.get('TH04_ORDINARY_CONTINUE_FRAME', 0))
 quit_frame = int(os.environ.get('TH04_ORDINARY_QUIT_FRAME', 0))
 restart_main = os.environ.get('TH04_ORDINARY_RESTART_MAIN') == '1'
 restart_cue = None
+restart_updates = int(os.environ.get('TH04_ORDINARY_RESTART_UPDATES', 0))
+followup_active = False
+followup = None
 post_main = False
 post_main_tick = None
 escape_down = False
@@ -71,6 +74,8 @@ def save():
         record['waits'] = waits
     if restart_main:
         record['restart'] = restart_cue
+    if restart_updates:
+        record['second_main'] = followup
     (out / 'clock-input.json').write_text(json.dumps(record, indent=2) + '\n')
 
 class Seed(gdb.Breakpoint):
@@ -261,6 +266,27 @@ while gdb.selected_inferior().pid:
             schedule = []
             process_recorder.entry_requested = None
             save()
+            if restart_updates:
+                before, before_tick = snapshot(), tick()
+                second = out / 'second-main'
+                second.mkdir()
+                profile = json.loads((out/'profile.json').read_text())
+                profile['end_after'] = restart_updates
+                (second/'profile.json').write_text(json.dumps(profile,indent=2)+'\n')
+                monitor = Monitor(second, ram, generation=2, end_after=restart_updates)
+                assert before == snapshot() and before_tick == tick()
+                event = process_recorder.record('second-main-observer-armed', process_recorder.context(),
+                    entry_sequence=entry['sequence'], expected_generation=2,
+                    observer_generation=ram.integer(monitor.process,4), unchanged_guest=before)
+                followup = dict(entry_sequence=entry['sequence'], armed_sequence=event['sequence'],
+                                requested_updates=restart_updates, action_start=len(actions), tick=tick())
+                schedule = [(tick(),'KBD_enter',False)] if enter_down else []
+                schedule.append((tick()+200,'KBD_z',True))
+                followup_active = True
+                post_main_tick = tick()
+                clock.enabled = True
+                save()
+                continue
             process_recorder.finish('second-main-entry')
             gdb.write('TH04_ORDINARY_ROUTE_COMPLETE\n')
             gdb.execute('kill')
@@ -295,9 +321,19 @@ while gdb.selected_inferior().pid:
         gdb.execute('call (int)fflush((void *)0x%x)' % trace_file, to_string=True)
         assert before_flush == snapshot() and before_tick == tick()
         monitor.finish()
-        monitor = None
-        if process_recorder is not None:
+        if followup_active:
+            event = process_recorder.record('second-main-prefix', process_recorder.context(),
+                entry_sequence=followup['entry_sequence'], generation=2,
+                completed_updates=restart_updates, unchanged_guest=before_flush)
+            (out/'second-main-prefix.json').write_text(json.dumps(event,indent=2)+'\n')
+            followup.update(action_end=len(actions), completed_updates=restart_updates,
+                            prefix_sequence=event['sequence'], prefix_tick=tick())
+            save()
+            process_recorder.finish('second-main-prefix')
+            gdb.write('TH04_ORDINARY_SECOND_MAIN_COMPLETE\nTH04_ORDINARY_ROUTE_COMPLETE\n')
+        elif process_recorder is not None:
             process_recorder.finish('observed-main-prefix')
+        monitor = None
         gdb.execute('kill')
         break
     if monitor is not None and (monitor.dialog_requested or monitor.continue_requested or monitor.quit_requested):
@@ -379,7 +415,9 @@ while gdb.selected_inferior().pid:
                 seedwatch = None
         todo = None
         if held:
-            if post_main:
+            if followup_active:
+                clock.enabled = bool(schedule)
+            elif post_main:
                 clock.enabled = True
             elif not dialog_frame and not stall_ms:
                 clock.delete()

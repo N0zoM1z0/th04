@@ -23,6 +23,8 @@ CATEGORIES = {
 }
 EXTENSIONS = {'.py', '.sh', '.ps1', '.cmd', '.bat', '.java', '.asm', '.gdb'}
 OVERRIDES = {
+    'th04_ordinary_generation.py': ('runtime', 'Partition actual MAIN generations without relabeling and validate frame/RNG provenance.'),
+    'th04_ordinary_second_main.py': ('runtime', 'Validate second MAIN initialization, actual input, complete DGROUP pools and terminal state.'),
     'verify_dos_smem_page_copy.py': ('runtime', 'Compare original and linked DOS SMEM allocation, release, shared HMEM boundaries and complete page-copy memory with seeded DOS/I/O replies.'),
     'verify_dos_text_gaiji.py': ('runtime', 'Compare original and linked DOS text Gaiji memory, store order, wrapped attribute counts and far-call return state.'),
     'verify_dos_gaiji.py': ('runtime', 'Compare original and linked DOS Gaiji writes, port order and far-call return state across WORD address boundaries.'),

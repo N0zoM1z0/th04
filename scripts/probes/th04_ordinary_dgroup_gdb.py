@@ -11,21 +11,22 @@ from th04_ordinary_dgroup import BOUNDARY, MAGIC
 
 
 class Monitor:
-    def __init__(self, output, ram):
+    def __init__(self, output, ram, generation=1, end_after=None):
         self.output, self.ram = Path(output), ram
         self.profile = json.loads((self.output / 'profile.json').read_text())
+        self.generation = generation
         self.current = None
         self.error = None
-        self.end_after = int(os.environ.get('TH04_ORDINARY_END_AFTER', UPDATE_COUNT))
-        self.bounded = os.environ.get('TH04_ORDINARY_END_AFTER') is not None
+        self.end_after = int(os.environ.get('TH04_ORDINARY_END_AFTER', UPDATE_COUNT)) if end_after is None else end_after
+        self.bounded = end_after is not None or os.environ.get('TH04_ORDINARY_END_AFTER') is not None
         self.terminal = None
-        self.dialog_frame = int(os.environ.get('TH04_ORDINARY_DIALOG_FRAME', 0))
+        self.dialog_frame = int(os.environ.get('TH04_ORDINARY_DIALOG_FRAME', 0)) if generation == 1 else 0
         self.dialog_requested = False
         self.dialog_observed = False
-        self.continue_frame = int(os.environ.get('TH04_ORDINARY_CONTINUE_FRAME', 0))
+        self.continue_frame = int(os.environ.get('TH04_ORDINARY_CONTINUE_FRAME', 0)) if generation == 1 else 0
         self.continue_requested = False
         self.continue_observed = False
-        self.quit_frame = int(os.environ.get('TH04_ORDINARY_QUIT_FRAME', 0))
+        self.quit_frame = int(os.environ.get('TH04_ORDINARY_QUIT_FRAME', 0)) if generation == 1 else 0
         self.quit_requested = False
         self.route_prefix_terminal = None
         self.process = self.address('th04_demo_observer::process')
@@ -75,7 +76,7 @@ class Monitor:
         if self.error or self.current.sequence.frames != self.end_after:
             raise ValueError(self.error or 'incomplete ordinary DGROUP')
         record = dict(schema_version=1, complete=True, boundary=BOUNDARY,
-                      frames=self.end_after, block_bytes=DGROUP_SIZE,
+                      frames=self.end_after, generation=self.generation, block_bytes=DGROUP_SIZE,
                       load_segment=self.current.load, dgroup_segment=self.current.dgroup,
                       mappings=self.current.maps)
         (self.output / 'ordinary-dgroup.json').write_text(json.dumps(record, indent=2) + '\n')
@@ -103,7 +104,7 @@ class Load(gdb.Breakpoint):
 
     def stop(self):
         m = self.monitor
-        if m.ram.integer(m.process, 4) != 1 or m.current is not None:
+        if m.ram.integer(m.process, 4) != m.generation or m.current is not None:
             m.error = 'unexpected ordinary MAIN process'
             return True
         m.current = Frame(m, m.ram.integer(m.load, 4))
@@ -148,7 +149,7 @@ class Frame(gdb.Breakpoint):
                     state[0] + m.ram.physical(self.linear + self.offset, state) != self.host):
                 raise ValueError('ordinary frame mapping changed')
             _, cr0, cr4, cr3 = state
-            self.stream.write(HEADER.pack(1, frame, self.load, self.dgroup, cr0, cr4, cr3))
+            self.stream.write(HEADER.pack(m.generation, frame, self.load, self.dgroup, cr0, cr4, cr3))
             value = int.from_bytes(data, 'little')
             self.stream.write((value ^ self.previous).to_bytes(DGROUP_SIZE, 'little'))
             self.previous = value
@@ -156,7 +157,7 @@ class Frame(gdb.Breakpoint):
                 from th04_demo_video import BLOCK_SIZE
                 stage = next(offset for name, offset, _ in m.profile['fields'] if name == 'stage')
                 block, video_map = m.video.capture(data[stage])
-                self.video_stream.write(HEADER.pack(1, frame, self.load, self.dgroup, cr0, cr4, cr3))
+                self.video_stream.write(HEADER.pack(m.generation, frame, self.load, self.dgroup, cr0, cr4, cr3))
                 value = int.from_bytes(block, 'little')
                 self.video_stream.write((value ^ self.video_previous).to_bytes(BLOCK_SIZE, 'little'))
                 self.video_previous = value
@@ -182,7 +183,7 @@ class Frame(gdb.Breakpoint):
                 ip = int.from_bytes(registers[32:36], 'little') & 65535
                 opcode = m.ram.read_range(cs * 16 + ip, 16)[0]
                 snapshot = dict(schema_version=1, boundary=BOUNDARY, complete_prefix=True,
-                    natural_game_exit=False, frame=frame, load_segment=self.load,
+                    natural_game_exit=False, generation=m.generation, frame=frame, load_segment=self.load,
                     dgroup_segment=self.dgroup, cr0=cr0, cr4=cr4, cr3=cr3, values=values,
                     resident=m.ram.read_range(resident, 80)[0].hex(), cs=cs, ip=ip,
                     opcode=opcode.hex(), cpu_regs=registers.hex(), segments=segments.hex(),

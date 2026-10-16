@@ -5,6 +5,36 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Original generation-2 update observation (v1442)
+
+`--restart-updates 600` extends the verified entry route through second-MAIN
+initialization and actual updates. It requires `--restart-main` and excludes
+video for this bounded contract. The existing emulator observer naturally emits
+literal `L 2` and resets its own RNG observation counters at that entry. A fresh
+Monitor waits for the new frame sequence, writes generation2 DGROUP headers and
+closes a real after-update terminal. Observer arming asserts unchanged guest
+RAM/registers/PIC at the independently verified second entry. Ordinary Enter
+release and held Shot are recorded separately from restart-menu actions.
+
+The original completes 600 updates. Initial frame0/score0/power1/invincibility64
+and resident seed70 are directly observed; complete raw fields remain in
+`original-admission.json`. The full observer trace is retained as
+`raw-observer-all.txt`. Its two derived pieces (`raw.txt`, `second-main/raw.txt`)
+retain every byte and original generation IDs; they must concatenate exactly.
+The first piece has 7,547 completed updates and one unfinished pre-update sample.
+Twelve complete conventional RAM checkpoints preserve the resident allocation.
+The reader now cross-checks full entry PSP/MCB bytes against those actual dumps.
+
+The first consumer selected the last Shot across both generations, passing real
+Quit Escape events to initial OP validation. Its actual failure, frozen source
+and replay remain under `first-reader-*` and `reader-rejection-replay.json`.
+Current admission uses the explicit second-MAIN action start; a public regression
+catches the old scope. No capture/producer receipt is restamped. Eight protocol
+controls plus this regression pass; full CI548 and27 actual trace/DGROUP/PSP/
+observer/keyboard/terminal counterexamples pass. Candidate capture is separate
+and paired comparison remains pending. Replay namespace:
+`.analysis/reconstruction/probes/dos-second-main-updates-v1442/`.
+
 ## Paired resident MCB checkpoints and second MAIN (v1441)
 
 Original and MAIN 778641ab now both execute real Quit -> original MAINE -> fresh

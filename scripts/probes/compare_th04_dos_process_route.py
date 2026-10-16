@@ -75,7 +75,7 @@ def compare_route(original_dir, candidate_dir, original, source_snapshot=None):
     b, bp, br = read_side(candidate_dir, original, source_snapshot)
     require(a['receipt']['role'] == 'original' and b['receipt']['role'] == 'candidate', 'route pair roles')
     for key in ('end_after', 'dialog_at_frame', 'quit_at_frame', 'main_frames', 'termination',
-                'natural_game_exit', 'restart_main', 'resident_ownership', 'emulator_sha256', 'emulator_receipt_sha256', 'debugger_sha256',
+                'natural_game_exit', 'restart_main', 'restart_updates', 'resident_ownership', 'emulator_sha256', 'emulator_receipt_sha256', 'debugger_sha256',
                 'adapter_sha256', 'walker_sha256', 'font_sha256', 'process_host_inputs', 'source_files'):
         require(a['receipt'].get(key) == b['receipt'].get(key), 'route pair identity/contract: ' + key)
     require(a['receipt']['files']['dosbox-x.conf'] == b['receipt']['files']['dosbox-x.conf'] and
@@ -121,6 +121,10 @@ def compare_route(original_dir, candidate_dir, original, source_snapshot=None):
                   second_main_entry_verified=a['route']['restart_main'],
                   scope='Actual MAIN Quit -> original MAINE -> fresh original OP, optional second MAIN entry and checkpoint resident allocation proof; MAIN-only reconstruction, no continuous allocation lifetime, second-MAIN gameplay, complete campaign, native, UI-frame or physical timing acceptance',
                   receipts={str(path): sha((path / 'receipt.json').read_bytes()) for path in (original_dir, candidate_dir)})
+    if a['receipt'].get('restart_updates'):
+        from th04_ordinary_second_main import compare_second
+        result['second_main'] = compare_second(original_dir, candidate_dir, a, b, original, pools, symbols, states)
+        result['passed'] &= result['second_main']['passed']
     result['passed'] &= all(row['passed'] for row in residents.values()) and all(row['raw_equal'] for row in file_results.values())
     return result
 

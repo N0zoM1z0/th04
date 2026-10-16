@@ -130,59 +130,13 @@ def load(directory: Path, original: bytes, source_snapshot: Path | None = None) 
     if not map_path:
         actual.pop('witnesses', None)
     require(actual == json.loads(json.dumps(expected)), 'profile differs from attested instructions')
+    from th04_ordinary_generation import parse_trace
+    parsed = parse_trace((directory / 'raw.txt').read_text(), main, expected)
     fields = expected['fields']
     names = [field[0] for field in fields]
-    rows, resident_rows, events, pending = [], [], [], []
-    sample_counts = []
-    counts = Counter()
-    load_segment = None
-    terminal = False
-    for line in (directory / 'raw.txt').read_text().splitlines():
-        cells = line.split()
-        kind = cells[0]
-        require(not terminal, 'events after terminal')
-        if kind == 'L':
-            require(load_segment is None and len(cells) == 6 and cells[1] == '1', 'MAIN process extent')
-            load_segment = int(cells[2], 16)
-            require(bytes.fromhex(cells[-1]) == relocated_module(main, load_segment), 'loaded module drift')
-        elif kind == 'R':
-            require(load_segment is not None and len(cells) == 9 and cells[1] == '1', 'RNG event shape')
-            index = int(cells[2])
-            require(2 <= index < len(expected['hooks']), 'RNG hook index')
-            hook, segment, offset = expected['hooks'][index]
-            require(int(cells[3], 16) == load_segment + segment and int(cells[4], 16) == offset,
-                    'RNG hook address')
-            counts['lcg' if hook == 3 else 'ring'] += 1
-            pending.append([index, int(cells[8], 16) if index in (4, 5, 7, 8) else None])
-        elif kind in ('I', 'T'):
-            require(load_segment is not None and len(cells) == len(fields) + 8 and cells[1] == '1',
-                    'frame shape/process')
-            _, segment, offset = expected['hooks'][0 if kind == 'I' else 1]
-            require([int(x, 16) for x in cells[2:5]] ==
-                    [load_segment + segment, offset, load_segment + expected['dgroup']], 'frame address')
-            require([int(x) for x in cells[5:7]] == [counts['lcg'], counts['ring']], 'RNG event counters')
-            values = {}
-            for (name, _, size), value in zip(fields, cells[7:-1]):
-                require(len(value) == size * 2 and len(bytes.fromhex(value)) == size, f'field width: {name}')
-                values[name] = value
-            resident = bytes.fromhex(cells[-1])
-            require(len(resident) == 80 and resident[:11] == b'HUMAConfig\0' and resident[0x3e] == 0,
-                    'ordinary resident identity')
-            frame = int.from_bytes(bytes.fromhex(values['frame']), 'little')
-            if kind == 'I':
-                require(frame == len(rows), 'noncontiguous ordinary prefix')
-                rows.append(values)
-                sample_counts.append(dict(counts))
-                resident_rows.append(resident.hex())
-                events.append(pending)
-                pending = []
-            else:
-                require(bounded is None, 'Demo terminal in bounded ordinary run')
-                require(frame == 3996 and len(rows) == 3997 and values == rows[-1] and not pending,
-                        'ordinary terminal extent')
-                terminal = True
-        else:
-            raise ValueError('unknown trace event')
+    rows, resident_rows, events = (parsed[key] for key in ('rows', 'resident', 'events'))
+    pending, sample_counts, counts = (parsed[key] for key in ('pending', 'sample_counts', 'counts'))
+    load_segment, terminal = parsed['load_segment'], parsed['terminal']
     bounded_terminal = None
     route_terminal = None
     if bounded is None:
@@ -191,7 +145,8 @@ def load(directory: Path, original: bytes, source_snapshot: Path | None = None) 
         count = receipt['main_frames']
         require('ordinary-terminal.json' in receipt['files'] and not terminal and
                 type(count) is int and 0 < count == receipt['quit_at_frame'] < bounded and
-                len(rows) == count + 1 and receipt['termination'] == ('observed-second-main-entry' if receipt.get('restart_main') else 'observed-fresh-op-menu') and
+                len(rows) == count + 1 and receipt['termination'] == ('observed-second-main-prefix' if receipt.get('restart_updates') else
+                    'observed-second-main-entry' if receipt.get('restart_main') else 'observed-fresh-op-menu') and
                 receipt['natural_game_exit'] is False, 'route completed prefix/partial sample extent')
         route_terminal = json.loads((directory / 'ordinary-terminal.json').read_text())
         validate_bounded_terminal(route_terminal, main, dict(expected, end_after=count), load_segment,

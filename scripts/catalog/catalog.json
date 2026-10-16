@@ -3507,6 +3507,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/th04_ordinary_generation.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Partition actual MAIN generations without relabeling and validate frame/RNG provenance.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/th04_ordinary_keyboard.gdb",
     "category": "runtime",
     "role": "fixture",
@@ -3518,6 +3525,13 @@
     "category": "runtime",
     "role": "support",
     "purpose": "Observe actual guest software INT21 requests and subsequent MCB/PSP-owned activity without guest service calls.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_ordinary_second_main.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Validate second MAIN initialization, actual input, complete DGROUP pools and terminal state.",
     "purpose_source": "maintained-description"
   },
   {

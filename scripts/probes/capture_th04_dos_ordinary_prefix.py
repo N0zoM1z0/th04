@@ -49,6 +49,8 @@ def main() -> int:
                         help='Release Shot, send ordinary Escape pulses, then observe MAINE and fresh OP menu')
     parser.add_argument('--restart-main', action='store_true',
                         help='After verified fresh OP menu, use ordinary keys to observe a second MAIN entry')
+    parser.add_argument('--restart-updates', type=int,
+                        help='Observe this many actual second-MAIN updates after restart (1..3995)')
     parser.add_argument('--stall-diagnostic-ms', type=int,
                         help='Record actual guest PC/RAM after this much virtual no-frame progress')
     parser.add_argument('--process-events', action='store_true',
@@ -76,6 +78,9 @@ def main() -> int:
         parser.error('stall diagnostics require a bounded prefix and at least1000 virtual milliseconds')
     if args.restart_main and args.quit_at_frame is None:
         parser.error('Restart requires a configured Quit route')
+    if args.restart_updates is not None and (not args.restart_main or args.video_stream or
+            not 1 <= args.restart_updates <= 3995):
+        parser.error('Restart updates require restart, no video, and 1..3995 updates')
     output = args.output_dir.resolve()
     if output.exists() or not output.is_relative_to(ROOT / '.analysis/runtime/candidates'):
         parser.error('use a fresh private capture directory')
@@ -198,6 +203,8 @@ def main() -> int:
         env['TH04_ORDINARY_QUIT_FRAME'] = str(args.quit_at_frame)
     if args.restart_main:
         env['TH04_ORDINARY_RESTART_MAIN'] = '1'
+    if args.restart_updates is not None:
+        env['TH04_ORDINARY_RESTART_UPDATES'] = str(args.restart_updates)
     if args.stall_diagnostic_ms is not None:
         env['TH04_ORDINARY_STALL_MS'] = str(args.stall_diagnostic_ms)
     if args.dgroup_stream:
@@ -216,7 +223,7 @@ def main() -> int:
         env.update(TH04_ORDINARY_VIDEO='1', TH04_ORDINARY_VIDEO_LAYOUT=str(args.video_layout.resolve()))
         stream_sources += [adapter.with_name(name) for name in ('th04_demo_video.py', 'th04_ordinary_video.py')]
     if args.process_events:
-        stream_sources += [adapter.with_name(name) for name in ('th04_dos_process.py', 'th04_ordinary_process_gdb.py')]
+        stream_sources += [adapter.with_name(name) for name in ('th04_dos_process.py', 'th04_ordinary_process_gdb.py', 'th04_ordinary_generation.py')]
     started = time.monotonic()
     timeout = False
     with (output / 'boot.log').open('wb') as stream:
@@ -257,6 +264,17 @@ def main() -> int:
         complete = complete and (output / 'process-events.json').is_file() and not (output / 'process-error.txt').exists()
     if args.quit_at_frame is not None:
         names += ['main-handoff.json', 'handoff-dgroup.bin', 'fresh-op-menu.json']
+    if args.restart_updates is not None and complete:
+        from th04_ordinary_generation import split_generations
+        full = (output / 'raw.txt').read_bytes()
+        first, second = split_generations(full)
+        (output / 'raw.txt').rename(output / 'raw-observer-all.txt')
+        (output / 'raw.txt').write_bytes(first)
+        (output / 'second-main/raw.txt').write_bytes(second)
+        names += ['raw-observer-all.txt', 'second-main/profile.json', 'second-main/raw.txt',
+                  'second-main/ordinary-dgroup.json', 'second-main/ordinary-dgroup.bin.gz',
+                  'second-main/ordinary-terminal.json', 'second-main-prefix.json']
+        complete = complete and b'TH04_ORDINARY_SECOND_MAIN_COMPLETE\n' in (output / 'boot.log').read_bytes()
     receipt = dict(schema_version=1, complete=complete, timeout=timeout, exit=code,
                    role='original' if args.original else 'candidate', elapsed=time.monotonic() - started,
                    command=command, main_path=str(main_path.resolve()), main_sha256=sha(main_bytes),
@@ -281,11 +299,13 @@ def main() -> int:
     if args.continue_at_frame is not None:
         receipt['continue_at_frame'] = args.continue_at_frame
     if args.quit_at_frame is not None:
-        receipt.update(quit_at_frame=args.quit_at_frame, restart_main=args.restart_main, termination='observed-second-main-entry' if args.restart_main else 'observed-fresh-op-menu',
+        receipt.update(quit_at_frame=args.quit_at_frame, restart_main=args.restart_main, termination='observed-second-main-prefix' if args.restart_updates else 'observed-second-main-entry' if args.restart_main else 'observed-fresh-op-menu',
                        natural_game_exit=False)
         metadata = output / 'ordinary-dgroup.json'
         if metadata.is_file():
             receipt['main_frames'] = json.loads(metadata.read_text())['frames']
+    if args.restart_updates is not None:
+        receipt['restart_updates'] = args.restart_updates
     if args.video_stream:
         receipt['video_layout'] = dict(path=str(args.video_layout.resolve()),
                                        sha256=sha(args.video_layout.read_bytes()))
