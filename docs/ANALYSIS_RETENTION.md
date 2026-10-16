@@ -1,5 +1,16 @@
 # Private build and analysis retention
 
+## Current availability audit (2026-10-16)
+
+The old `.analysis/worktrees/` directory is currently absent, despite stale Git
+worktree registrations. Historical statements below about live frozen files
+describe their original producer closures, not current local availability.
+Native v1432's 94 protected files are missing; its archive cannot restore the
+complete tree. DOS v1437 captures/recovery remain, but the candidate MAIN/MAP
+referenced by their receipts are missing. See [new-agent handoff](NEXT_AGENT_HANDOFF.md)
+before restoring or replaying. Do not count this unexplained absence as verified
+cleanup, weaken protected-file checks or substitute a new build into old receipts.
+
 ## Native palette fade join (v1414)
 
 Current native head is `6b0e1ba`, producer 530/4dc27bde. Source, selected

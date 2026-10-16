@@ -5,8 +5,14 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-Updated 2026-10-12. The full native goal remains active on `port/modern-64`, with the latest verified route snapshot in
-`.analysis/worktrees/native-natural-clear-v1432/`. Root `main` keeps the standalone DOS
+Updated 2026-10-16. The full native goal remains active on `port/modern-64`.
+The latest verified route snapshot was recorded under
+`.analysis/worktrees/native-natural-clear-v1432/`, but the 2026-10-16 audit
+found the entire old worktree directory absent. Root-level reports/archives and
+published source remain; frozen programs and 94 protected route files need
+recovery before complete replay. See [new-agent handoff](NEXT_AGENT_HANDOFF.md).
+Historical sections below retain their producer scope and original paths.
+Root `main` keeps the standalone DOS
 product and indexes native findings. A root `git push` does not commit or push
 native worktree changes.
 
@@ -293,7 +299,7 @@ title movement, release/press, Continue menu and final black-out4. Every
 frame_delay clears only Count1. Keyboard reset follows the five menu drawing
 requests; subsequent menu loops retain pre/post OR and a new press. Shared
 Animation handles input_wait(0) and all eighteen fade4 palette publications.
-MAIN actor/STD/player/RNG work remains paused. Continue saves before resetting
+MAIN actor/STD/player/RNG updates stay suspended during this scene. Continue saves before resetting
 resources and resumes the suspended frame once. Quit publishes ES_SCORE and
 song fade0204 before black-out4, then passes unused time to fresh MAINE delay100.
 MAIN now initializes its own counter BSS while retaining raster phase.

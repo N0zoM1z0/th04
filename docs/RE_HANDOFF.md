@@ -3,7 +3,22 @@
 Development and the full reconstruction/native goal are active. The user is
 using Windows: keep launches muted, use Linux headless/private Xvfb, and do
 not open Windows GUI, change focus or inject host keys. Windows acceptance
-remains open. Updated 2026-10-12.
+remains open. Updated 2026-10-16.
+
+## Next-agent entry and current file availability
+
+Start with [the actionable handoff](NEXT_AGENT_HANDOFF.md) for both published
+branches, startup commands, claim limits, next comparisons and cleanup rules.
+At this audit main/origin were 83c94d1 and native remote was c0a1060.
+The old `.analysis/worktrees/` directory is absent although Git still registers
+its trees. This includes frozen native route programs/results and the DOS
+v1437 candidate MAIN/MAP. Root-level reports, compressed DOS captures and
+recovery archives remain, but complete historical replay is currently blocked
+on missing producer files. Native v1432 has 94 missing protected files; its
+retention archive alone does not restore the whole tree. The entries below
+describe recorded historical evidence, not a fresh availability guarantee.
+Recover original frozen inputs or create a newly attested producer from Git;
+do not rewrite old receipts. Both development goals remain active.
 
 ## Bounded ordinary Boss combat and natural Game Over (v1437)
 
@@ -333,8 +348,9 @@ candidate-local-attested; pristine-dump provenance is unresolved.
 
 Retained original/reconstructed DOS bundled demos agree on consumed input,
 score/RNG, nine complete pools, 22 state blocks and every configured video
-region at 3996 updates each. These paths exercise Midboss; Boss combat,
-death/respawn and complete process transitions still need paired checks.
+region at 3996 updates each. These Demo paths exercise Midboss. Separate
+ordinary captures above cover death/respawn and bounded Boss combat; Boss
+pictures/defeat and complete process transitions still need paired checks.
 Native selected-state/pool/shake/splash and sampled game-area results retain
 their original frozen producers; default route hash equality here is scoped
 regression, not new complete-picture acceptance.

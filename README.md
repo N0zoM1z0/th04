@@ -17,7 +17,9 @@ Lotus Land Story**. The active goal is to build `MAIN.EXE`, `OP.EXE`,
 Native builds need not reproduce the original executable bytes. MAIN's two
 remaining historical exactness cases are deferred.
 
-[Current state and remaining work](docs/RE_HANDOFF.md) is the working entrypoint.
+[New-agent handoff](docs/NEXT_AGENT_HANDOFF.md) records both branch baselines,
+comparison limits, next tasks and the current missing-worktree recovery issue.
+[Current state and remaining work](docs/RE_HANDOFF.md) indexes retained evidence.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
@@ -26,8 +28,9 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 Development is active. All four DOS products build from maintained local source.
 Retained original/reconstructed DOS comparisons agree across all four bundled
 demos on consumed input, score and RNG, nine complete actor/effect pools, and 22
-Boss/Midboss/player state blocks. These demos exercise Midboss fights; Boss
-combat and complete process transitions still need paired validation. Complete
+Boss/Midboss/player state blocks. These demos exercise Midboss fights; ordinary
+Boss combat has a separate bounded comparison below. Complete process
+transitions remain open. Complete
 Demo video captures cover both graphics pages, all four
 planes, text, palettes and selected GDC display fields. Text, palettes and the
 compared display fields agree. Cold builds and complete replays verify repairs
@@ -90,7 +93,11 @@ VSync recovery remain accepted with their own frozen producers. Prior complete
 Demo/pool/video acceptance retains its source identity. These comparisons do
 not establish byte exactness or physical CPU/IRQ timing.
 
-CI passes 451 DOS tests; retained native CI passes 345.
+Latest recorded root CI passes 486 tests; retained native CI passes 354.
+The 2026-10-16 file audit found the old `.analysis/worktrees/` directory missing,
+including frozen native programs and the DOS candidate MAIN/MAP. Git source and
+root-level reports remain available; complete historical replay first requires
+recovering those files. See the [new-agent handoff](docs/NEXT_AGENT_HANDOFF.md).
 
 Physical CPU/loading/ISR costs, other scene wait adapters, complete pictures,
 broader Boss/death/process routes and Windows input/audio remain open. Native scene wait adapters and hardware owners are the next bounded work.
