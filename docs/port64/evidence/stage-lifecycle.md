@@ -1,5 +1,36 @@
 # Stage Lifecycle evidence
 
+## Original/reconstructed DOS Boss suffix (v1456)
+
+The primary DOS comparison now reaches **9836 after-actor checkpoints**, with
+loop samples I0..I9835 and 9835 complete update boundaries. Both independent
+no-video and video pairs agree on configured scalar fields, all 5052 ordered RNG
+calls (354 LCG/4698 ring), nine complete pools and 22 state blocks. The video
+pair agrees on all 38 configured regions across all 9836 checkpoints: both
+pages/all four graphics planes, full TRAM, palettes, modes and programmed GDC
+fields. Each side's complete pool/state digests match its no-video control.
+
+**Aggregate acceptance remains false:** no-video retains 302 post-reset input
+differences, video retains 312, and complete raw GDC differs on all 9836 video
+checkpoints. Across all four captures, complete initial/final CFG/SCR bytes agree; all ten
+full 16-bit score checksums validate and real Continue changes decoded section 1.
+The original and candidate use their own files/MAP/CS/DS. This is MAIN-only
+replacement with original OP/MAINE/ZUN/assets, not a full four-product campaign.
+Complete update 9836, Stage2 transitions, interior UI, physical timing, NP2,
+Windows, pristine provenance and historical exactness remain open.
+
+This is a separate root-owned DOS comparison;native code/acceptance retain their v1455 producer.
+
+Sixteen owned capture image/font/raw aliases are archived in six blobs. Net
+release is 157.621 MiB after archive, gzip and both journal files. The chain
+verifies 24890 distinct protected hashes, including all 21663 parent
+hashes and the two old public capture paths. New protected recipes use private
+immutable copies. Actual archive restoration and fresh-output reducer replays
+reproduce both failed state aggregates and the passing video regions before
+SHA/mode/nsmtime verification and retirement of all sixteen aliases. No borrowed
+files or duplicate cleanup credit. Use `replay_restored_v2.py --output-dir NEW`
+for repeatable recovery; initial receipts, snapshots and replay remain unchanged.
+
 ## Recorded elapsed display fixture (v1455)
 
 Native `d22e190` adds an optional recorded-time replay through the existing
@@ -880,7 +911,6 @@ pre-loop20h is not the actual player-entry2000h. Retained comparisons establish
 selected state/pool/Boss agreement only. The following records the disproved
 v1446 inference and its historical producers; use the corrected witness above.
 
-
 Source `13e6676` preserves Stage1's gameplay input across blocking dialogue
 refreshes. Target MAIN `0AAF:00F1` calls player_update at `0AAF:5FCF` before the
 Boss callback through `DGROUP 2134:432C` at `0AAF:0113`; load `10FC` is recorded.
@@ -908,7 +938,6 @@ Intermediate dialogue/player-prefix pictures, remaining globals/Game Over/
 Continue, Boss defeat, whole routes, scanout/timing, Windows and historical
 exactness remain open. Next extend the actual FrontEnd through Game Over and
 Continue using original captured inputs and separate blocking-owner evidence.
-
 
 Eight actual reader controls pass, including independent sampled-input/Boss
 mutations and strict default/configured extents. Compiler dependencies cover 350
@@ -1974,7 +2003,6 @@ byte-readback verified request streams share immutable hardlinks. Current
 original inputs, final references, pinned tools and three active caches stay.
 All runs are muted; no audio backend/device is opened.
 
-
 ## Live Game Over frontend
 
 v1307 joins the Game Over renderer, held input and refresh clock to ordinary
@@ -2055,7 +2083,6 @@ Cleanup reclaims123,744,256 allocated bytes with3,926 protected files unchanged.
 Completed independent scene files share immutable hardlinks after byte readback;
 never replay a writer in place. Pinned inputs, original references, receipts and
 three active caches remain. Every launch is muted and opens no audio device.
-
 
 ## Live Bomb graphics and shared palette
 

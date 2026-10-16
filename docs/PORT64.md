@@ -5,6 +5,25 @@ The primary requested differential is original DOS versus reconstructed DOS;
 native x64 also needs state/effect parity. Successful native gameplay routes
 and native-host equality do not establish original complete-game parity.
 
+## Original/reconstructed DOS Boss suffix (v1456)
+
+The primary DOS comparison now reaches **9836 after-actor checkpoints**, with
+loop samples I0..I9835 and 9835 complete update boundaries. Both independent
+no-video and video pairs agree on configured scalar fields, all 5052 ordered RNG
+calls (354 LCG/4698 ring), nine complete pools and 22 state blocks. The video
+pair agrees on all 38 configured regions across all 9836 checkpoints: both
+pages/all four graphics planes, full TRAM, palettes, modes and programmed GDC
+fields. Each side's complete pool/state digests match its no-video control.
+
+**Aggregate acceptance remains false:** no-video retains 302 post-reset input
+differences, video retains 312, and complete raw GDC differs on all 9836 video
+checkpoints. Across all four captures, complete initial/final CFG/SCR bytes agree; all ten
+full 16-bit score checksums validate and real Continue changes decoded section 1.
+The original and candidate use their own files/MAP/CS/DS. This is MAIN-only
+replacement with original OP/MAINE/ZUN/assets, not a full four-product campaign.
+Complete update 9836, Stage2 transitions, interior UI, physical timing, NP2,
+Windows, pristine provenance and historical exactness remain open.
+
 ## Recorded elapsed display fixture (v1455)
 
 Native `d22e190` adds an optional recorded-time replay through the existing
@@ -19,8 +38,7 @@ without fitting a phase. Only frame numbers and elapsed nanoseconds enter native
 Default logical timing still fails three samples by 407 pixels each on this new
 capture; the old v1454 two-sample failure remains unchanged. This fixture accepts
 completed display boundaries, not natural OP/loader/UI-interior or CPU/I/O timing,
-every frame, physical scanout or campaigns. Primary original/reconstructed DOS
-beyond 8000, native Stage2 update 9836, NP2, Windows, pristine provenance and
+every frame, physical scanout or campaigns. Primary DOS beyond this bounded suffix, native Stage2 update 9836, NP2, Windows, pristine provenance and
 historical exactness remain open. Both full development goals remain active.
 
 All game launches remain muted. No Windows host GUI, focus activation or key
@@ -206,7 +224,6 @@ sources, private inputs and replay/failure references remain.
   full v1308..v1320 source/evidence recovery: native
   `.analysis/port64/op-ranking-v1320/`. Lossless640-display compaction reclaims
   792883200allocatedbytes (about756MiB); decompressed SHA-256 agrees.
-
 
 - v1317 joins physical saved-score reading at startup and every fresh OP.
   GNU and optimized UBSan each pass 39 contracts, 556 original OP instruction

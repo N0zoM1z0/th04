@@ -1,394 +1,88 @@
-# TH04 native branch handoff
+# TH04 native branch current handoff
 
-## Recorded elapsed display fixture (v1455)
+Updated 2026-10-17. Both reconstruction/native goals remain active. Use the DOS
+root `docs/NEXT_AGENT_HANDOFF.md` for both branches, current producers and commands.
+Keep all code/docs English, heavy work on one low-priority CPU, and launches
+muted/headless. No Windows GUI, focus changes or host-key injection.
 
-Native `d22e190` adds an optional recorded-time replay through the existing
-elapsed display interface. Both cold GNU and optimized UBSan programs match
-**all 59 complete 640x400 RGB pictures and all 59 active TRAM samples** at their
-recorded score-return times. All 9835 selected updates, nine pools, four Boss
-blocks, homing, consumed input, Continue/save, popup/title rows and 2665 actual
-BB calls still pass. Source closure: 565/533075c0; GNU 87 programs/83 CTests pass.
+## Original/reconstructed DOS Boss suffix (v1456)
 
-The independent raw PIC clock predicts all 9896 original phase/count observations
-without fitting a phase. Only frame numbers and elapsed nanoseconds enter native.
-Default logical timing still fails three samples by 407 pixels each on this new
-capture; the old v1454 two-sample failure remains unchanged. This fixture accepts
-completed display boundaries, not natural OP/loader/UI-interior or CPU/I/O timing,
-every frame, physical scanout or campaigns. Primary original/reconstructed DOS
-beyond 8000, native Stage2 update 9836, NP2, Windows, pristine provenance and
-historical exactness remain open. Both full development goals remain active.
+The primary DOS comparison now reaches **9836 after-actor checkpoints**, with
+loop samples I0..I9835 and 9835 complete update boundaries. Both independent
+no-video and video pairs agree on configured scalar fields, all 5052 ordered RNG
+calls (354 LCG/4698 ring), nine complete pools and 22 state blocks. The video
+pair agrees on all 38 configured regions across all 9836 checkpoints: both
+pages/all four graphics planes, full TRAM, palettes, modes and programmed GDC
+fields. Each side's complete pool/state digests match its no-video control.
 
-See the [stage lifecycle evidence](port64/evidence/stage-lifecycle.md).
+**Aggregate acceptance remains false:** no-video retains 302 post-reset input
+differences, video retains 312, and complete raw GDC differs on all 9836 video
+checkpoints. Across all four captures, complete initial/final CFG/SCR bytes agree; all ten
+full 16-bit score checksums validate and real Continue changes decoded section 1.
+The original and candidate use their own files/MAP/CS/DS. This is MAIN-only
+replacement with original OP/MAINE/ZUN/assets, not a full four-product campaign.
+Complete update 9836, Stage2 transitions, interior UI, physical timing, NP2,
+Windows, pristine provenance and historical exactness remain open.
 
-Verified recovery restores eight owned capture aliases and the actual compiled
-ignored-time counterexample, replays it and both cold 9835-update producers, then
-checks SHA/mode/nsmtime and retires all nine aliases. All 177 picture/index/TRAM
-identities reproduce per program; the counterexample still rejects all 9836
-clock boundaries while its selected gameplay gates pass. No borrowed files.
+This DOS observation does not change native code or renew native acceptance.
+See [stage lifecycle evidence](port64/evidence/stage-lifecycle.md) and the DOS
+root `docs/reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md`.
 
-The closed retention journal preserves all 18400 parent hashes and verifies
-21663 protected hashes. It retires 1214 owned files into 129 blobs:
-500.203 MiB after archive/gzip, or 482.402 MiB after the three journal files too.
-The initial journal mistakenly froze its still-open console log; preserve it and
-use `closed-retention.json` for the explicit one-log metadata correction and
-`recover_closed.py` / `replay_restored_v2.py` for recovery. No target, source,
-producer, capture, old failure or parent journal was rewritten.
+## Native recorded elapsed display fixture (v1455)
 
-## Boss circle clipping and complete sampled pictures (v1452)
+Current semantic source is `d22e190`, closure 565/533075c0, in the fresh checkout
+`.analysis/native/port64-recovery-v1445/` relative to the DOS root. Frozen current
+programs/cache are native `.analysis/port64/clock-phase-v1455-final/{gnu,ubsan}`.
+GNU 87 programs/83 CTests and optimized UBSan 2 programs passed.
 
-Native `a8e0165` fixes the seven remaining v1451 score-area graphics samples.
-Actual private pixel-write traces identify the Orange entrance circle at
-center (232,40), radius 326, color 9 as the writer of (557,64) at update 6740.
-Both trace programs reproduce the frozen producer's selected 8000-update state
-and all 38 complete BMP/index/TRAM observations before the repair.
+Both match 9835 selected ordinary updates, input/homing/nine pools/four Boss
+blocks, Continue/full CFG-SCR, title/popup/2665 BB calls and all 59 complete
+RGB/TRAM samples at recorded score-return times. Independent raw PIC time and
+first display initialization predict all 9896 original phase/count observations;
+only frame/ns enter native. An actual producer that ignores the elapsed calls
+is rejected even while selected gameplay gates pass.
 
-Original MAIN far `0000:11EC` reads DGROUP clipping words 032C..033A.
-All 38 captured after-score DGROUPs retain `(32,16)-(415,383)`, with zoom 0;
-the native circle helper had assumed the default whole-screen rectangle.
-The helper now accepts a clip rectangle,and the common Boss-circle call supplies
-that observed stage rectangle. This preserves the target's clipped-bottom-row
-asymmetry. Isolated original execution and both compiler profiles verify
-900 render vectors and 1053 circle vectors,including 135 stage-clip cases.
-Other Boss/disc/rectangle and actor rendering paths are outside this repair.
+Default logical timing still fails 9349/9600/9700 by 407 pixels each on the v1455
+capture. The v1454 two-sample failure remains immutable. Natural OP/loader/UI
+interiors and CPU/I/O timing, every-frame rendering, physical scanout and full
+original/native campaigns remain open. Keep the earlier palette/back-page/circle
+repairs and their original writer/page/negative evidence.
 
-Both fresh GNU and optimized UBSan programs now match **all 38 complete 640x400
-RGB pictures** at actual score return `0AAF:0207`:zero differing pixels,
-including the seven previously failing frames6740,6741,6753,6765,6772,6773,6774.
-The uncorrected real producer still reproduces 1377 differing pixels;changing
-one complete-picture pixel independently fails the same comparator.
-Both profiles preserve selected 21 scalar/RNG/input fields,nine complete pools,
-four Boss blocks,Continue,CFG/SCR,popup state/rows and title state/three rows
-over 8000 updates,plus 2665 actual BB calls over 7999 intervals. Repeat paints
-preserve pools/RNG/input and full pixels. All 15988 native Demo state boundaries
-stay equal. GNU 87 programs and 83 CTests pass;source closure 565/394e53f4.
+## Next bounded work and limits
 
-Evidence: `.analysis/reconstruction/probes/native-score-pixels-v1452/`.
-Original capture remains the immutable DOSBox-X v1451 score capture with live
-font/video/DGROUP;the v1450 constructed-BB Oracle remains refuted. The correct
-pre-scroll title phase from `a8a67af` is retained. Old negative reports and
-retention journals remain unchanged. Restore the v1451 score capture's four
-archived aliases before strict original readers,and verify/retire them afterward
-without counting borrowed files as new cleanup.
+Measure the actual original/source MAIN suffix after actor 9836, stage/frame
+reset and STD rebind before extending native Stage2. Use each artifact's own
+MAP/CS/DS and actual player-prefix/STD/Continue/post-Boss ordering. Do not alter
+gameplay or observers to fit a guessed boundary. The primary DOS 302/312 input
+and raw-GDC failures remain separate unresolved requirements.
 
-Verified retention archives 640 owned aliases/intermediates in 255 blobs,
-releasing 254.469 MiB after archive and new gzip recipes; all 13102 protected
-hashes remain equal. Current GNU87/cache, UBSan game/Orange/cold cores, all38
-GNU pictures, complete original compressed font/video/memory and the old failed
-producer remain recoverable or live. `recover.py` verifies SHA/mode/nsmtime.
-`replay_restored.py` restores one owned archived actual writer, borrows four
-v1451 original aliases and reruns it plus both repaired8000-update programs.
-Every selected state/entry/popup gate and all38 BMP identities reproduce;
-the old writer still fails1377 pixels and both current profiles pass. All five
-aliases verify and retire afterward. The four borrowed aliases receive no new
-cleanup credit; previous journals and failed attempts remain unchanged.
+Complete original/source/native campaigns, full four-product process routes,
+NP2, Windows, raw native plane identity, physical audio/input/rendering and
+pristine target provenance remain open. Historical exactness is a separate
+ledger; the two deferred MAIN cases stay deferred. Previous natural native
+four-route results retain their historical producers and are not original full
+campaign parity. Old v1432 has 94 missing protected files and older frozen
+worktree paths remain absent; never recreate or rebind them.
 
-Next extend the original/native comparison beyond 8000 toward Boss defeat and
-process/campaign completion. These 38 samples establish programmed-display
-agreement,not every frame or physical scanout. Other globals,full routes,NP2,
-Windows,canonicality and historical exactness remain open. Both full goals
-remain active.
+## Recovery and checks
 
-## Historical title gates (v1450; BB phase inference withdrawn)
+Sixteen owned capture image/font/raw aliases are archived in six blobs. Net
+release is 157.621 MiB after archive, gzip and both journal files. The chain
+verifies 24890 distinct protected hashes, including all 21663 parent
+hashes and the two old public capture paths. New protected recipes use private
+immutable copies. Actual archive restoration and fresh-output reducer replays
+reproduce both failed state aggregates and the passing video regions before
+SHA/mode/nsmtime verification and retirement of all sixteen aliases. No borrowed
+files or duplicate cleanup credit. Use `replay_restored_v2.py --output-dir NEW`
+for repeatable recovery; initial receipts, snapshots and replay remain unchanged.
 
-Clock/string/row and complete primitive observations remain valid. The old
-constructed natural-BB interpretation and its source preview are refuted by
-v1451 actual entries/pictures. The archived first "negative" uses the correct
-pre-scroll phase. Old receipts/source/programs/journals remain immutable; use
-the focused differential note for the correction and replay context.
+The new DOS evidence lives under the root-owned
+`.analysis/reconstruction/probes/dos-boss-extent-v1456/`; this checkout links it
+privately for ledger validation. Recovery is a captured-data reducer replay,
+not a fresh emulator execution. Native v1455 uses its distinct closed journal,
+`recover_closed.py` and `replay_restored_v2.py`; see its focused subject note.
+Preserve current GNU/cache, UBSan cores and complete compressed original evidence.
 
-## Retained popup result (v1449)
-
-Native `da4ee5f` remains the replayable popup/score-tail producer. Its BGM334
-aggregate failure, score-tail0/25000 counterexample, source closure and both
-retention journals are preserved in the focused differential note. V1450
-supersedes only the newly built title producer and its configured gates.
-
-## Native Continue and full-power pickup repaired (v1448)
-
-Native source `7bdcd60` now applies item collection's clear effect to the real
-bullet owner. An actual ordinary Game Over/Continue reaches a full-power pickup
-at update 7640. The old executable leaves bullets active; original MAIN instead
-sets DGROUP2134:BCBA to20, then19 next update. Its first visible state/pool
-failure is boundary 7642. The failed executable, source and reports remain.
-
-A fresh original 8001 capture and complete cold GNU/optimized UBSan builds pass
-8000 updates: 21 selected state/RNG fields, actual player input, nine complete
-pools, four Boss blocks and complete CFG/SCR bytes. GNU 85 programs / 82 CTests pass.
-Five original code-fetch/caller/memory checkpoints at frame7547 establish that
-player0AAF:5FCF consumes20h before Game Over0AAF:3A51; the later menu2000h resumes
-that same call through5FCA/00F4. Keep this distinct from STD dialogue before
-player_update. The real ranked Continue changes only decoded score section 1;
-all ten full 16-bit checksums and the complete encoded file agree.
-
-Producer 557/8284f2cd freezes every maintained source before both cold builds.
-Final consumer 557/3e985ee3 changes only the Python save-scope text/reporting;
-all compiled inputs are unchanged. Five real negative reader controls pass.
-Replay/source: `.analysis/reconstruction/probes/native-continue-v1448/`,
-`result.json`, `cold_build.py`, `finalize_consumer.py`, `continue-witness.json`.
-Public original reader: `scripts/probes/attest_th04_continue_checkpoints.py`.
-Native save/UI controls are component stimuli; blocking timing, complete
-pictures/TRAM/scanout, other globals, full process/campaign, Windows and exact
-promotion remain open. Continue these comparisons; both development goals stay active.
-
-Verified retention archives 243 owned aliases/intermediates into 243 content blobs:
-21.612 MiB archive,54.297 MiB net released,2338 protected hashes checked. Restore/
-CRC/SHA/mode/nsmtime checks pass. Restoring five original/prototype aliases and
-rerunning three real 8000-update programs reproduces the old 7642 failure and both
-current successes, including full selected output/save/GO traces. The five aliases
-are checked and retired again. Current GNU programs/cache,UBSan game,both new
-cold cores and complete compressed captures remain. Use recover.py to restore
-capture aliases, or replay_restored.py for restore/run/retirement. The old 94
-missing files are unrelated and no historical receipt is rebound.
-
-## Original dialogue/player input boundary corrected (v1447)
-
-The v1446 input interpretation and the `13e6676` latch are withdrawn. Actual
-original MAIN code-fetch/caller checkpoints at load `10FC` show STD `0AAF:2454`,
-dialog `0AAF:2BFB/2A7C`, then player `0AAF:5FCF`, all at frame 6548. Dialogue occurs
-before player_update. The loop sample contains `20h` (Shot), but player entry
-contains `2000h` (Enter). The old comparator confused these boundaries. Its state/
-pool/Boss results remain; player-input acceptance is withdrawn. Old receipts
-are unchanged and affected evidence/knowledge is explicitly reclassified.
-
-Native `a7f9bea` removes that latch and keeps live dialogue keys. Public capture
---dialog-checkpoints and attest_th04_dialog_checkpoints.py bind target code,
-CPU/stack, conventional/DGROUP memory, raw video and observer sources. Native
---frontend requires this witness for blocked frames. A fresh public original
-capture of 7,501 updates supports GNU/UBSan 7,500-update comparisons: 21 state/RNG
-fields, actual player input, nine full pools and four Boss blocks agree.
-The real old executable fails only player input at 6548 (`20h` versus `2000h`).
-
-One pre-script sample also matches player/RNG fields, all nine pools and all
-141,312 pixels of the instantaneous programmed-GDC playfield graphics projection.
-Box subregions overlap that playfield; they are not extra samples. Independent
-emulator rendering source matches its pinned archive and corroborates GRB/DAC
-conversion. TRAM, full pictures/scanout and physical timing remain open.
-Eight real inner controls check PC/frame/code/caller/memory/input ownership.
-
-Source closure557/f6c6e393 has fresh main/view/audio builds against unchanged attested
-cold GNU/UBSan cores. Fresh dependencies cover 130 own files; 231 reused core
-dependencies/library hashes and 82 unchanged core contracts pass. This is a
-leaf rebuild, not a fresh complete cold-core build. Final root CI 573 with live
-MAIN database/mutation checks and native CI 354 pass. Native private Ghidra
-skips because its project is absent; the real database replay is in DOS root.
-
-Verified archival retires 26 owned aliases in 17 blobs: 346.137 MiB net after a
-39.959 MiB archive. SHA/CRC/mode/nsmtime and 258 protected hashes pass. Four
-restored 7,500-update FrontEnds reproduce two old input failures and two current
-passes, with complete selected state/pool/Boss/file/prefix outputs. Five aliases
-are verified and retired again. Current GNU cache/programs, selected UBSan game/
-cold cores and full compressed capture/RAM/video/source evidence remain. Failed
-layout and 6549-stop captures stay distinct. Old missing 94 files are unrelated.
-
-Replay/source/recovery: `.analysis/reconstruction/probes/native-dialog-prefix-v1447/`.
-Original: `native-dialog-prefix-v1447-public-original`; use recover.py before
-readers, or replay_restored.py for restore/replay/retirement. Native tree:
-`.analysis/native/port64-recovery-v1445/`. The closed retirement log is pinned
-only in a separate final closure; no old journal or receipt is rebound.
-Continue Game Over/Continue input/resident/score ownership and complete pictures.
-Broader process/campaign, Windows and historical exactness remain open.
-
-## Historical v1446 state/pool result; player-input interpretation superseded
-
-Source13e6676's Stage1 latch was based on the wrong callback ordering. V1447
-removes it and replaces the loop-sample comparison with actual player-entry
-evidence. The old557/d246f71f producer and557/7c4b8576 Python consumer still
-reproduce their7500-update selected state/full-pool/Boss results, but their
-player-input acceptance is withdrawn. Failed/successful receipts and recovery
-archives remain unchanged; the ledgers record this correction explicitly.
-
-## Ordinary MAIN collision-latch publication (v1445)
-
-Source8a2092b fixes an observable shared-hit latch: collision owners previously
-fed Lifecycle only at the next player prefix, which immediately consumed the
-flag. Original MAIN DGROUP2134:4669 (load10FC) was1 at before-update3078/3284,
-while native life().hit was0. Publish pending collisions before completed-frame
-observers/rendering. Existing next-prefix consumption remains; death timing and
-all nine pool streams were already equal in the predecessor.
-
-Fresh cold GNU85 programs/82 CTests and optimized UBSan entire-core/ordinary
-tracer pass the original Normal/ReimuA seed64, lives6/bombs0 component:3996
-complete updates,3997 before-update/prefix boundaries,21 fields including full
-LCG/ring bytes and post-initialization draw counts, and nine complete pools.
-Two natural deaths/respawns end at lives4. GNU/UBSan state and pool outputs are
-byte-identical. Fresh cold c0a1060 is retained as a compiled negative: only the
-two hit fields fail, with all nine pools equal. Seven actual reader controls
-reject malformed prefixes, fake Demo terminal, wrong hit/resident/RNG data and
-an inactive pool byte. Four-Demo old/new native regression is byte-identical
-at15988 boundaries; this does not renew original Demo/picture acceptance.
-
-Current source closure556/49984d82 and all new proof files are independent of
-the missing old worktrees. The writable checkout is the DOS root's
-`.analysis/native/port64-recovery-v1445/`; canonical proof lives at DOS-root
-`.analysis/reconstruction/probes/native-recovery-v1445/`, also symlinked below
-this checkout. Native CI354 passes with borrowed target files and the pinned
-ReC98 Tupfile as a read-only CI Oracle; native compilation completed without
-that reference directory. Root CI573/live MAIN Ghidra replay/mutations pass.
-Historical native paths/94 protected files remain missing; do not restamp their
-receipts or claim this new producer restores their complete replay.
-
-Use port64/verify_ordinary_state.py with the current DOS checkout's original
-route readers, a restored original capture and the newly built ordinary tracer.
-The native start is an explicit typed component fixture, not a naturally timed
-native OP route. Other globals, dialogue/Boss/Game Over, full pictures, broader
-campaigns, physical timing, Windows and historical exactness remain open.
-Continue the ordinary comparison through actual FrontEnd blocking owners.
-See [the focused lifecycle evidence](port64/evidence/stage-lifecycle.md).
-
-Verified retention retires742 owned files into619 content blobs, releasing
-245.527 MiB net after a13.660 MiB archive. Full SHA/CRC/mode/nsmtime checks
-and3087 protected hashes pass. Restored four ordinary component executables
-and both native Demo executables reproduce complete retained outputs and
-pool digests; nine owned aliases are verified and retired again. Six borrowed
-original aliases return to their older archived state and are not counted as
-new cleanup. Current GNU programs/cache and selected UBSan programs remain.
-The first journal bound a still-empty redirected log and correctly rejects;
-its bytes and reader remain unchanged. A distinct retention-final.json and
-recover_final.py bind the closed terminal log. replay_restored_v2.py also
-restores borrowed original aliases and requires the identical first replay
-report, so the recovery is repeatable. Historical missing94 files remain open.
-
-## Historical native natural routes and strict clear gate (v1432)
-
-The route reader now requires the requested character/rank/shot partition's
-actual physical clear mask below4 plus its shot bit, all ten full16-bit score
-checksums, complete stage coverage, correct Ending and registration/fresh OP
-without Continue.0x19 and high-bit masks remain unplayed even when bit0 is set.
-Easy's five-stage Bad Ending and Extra's separate stage6 process are checked
-against their own extents; Normal requires six stages and Good Ending.
-
-Current unchanged cold554/31e6b3d7 GNU and optimized UBSan each pass
-Easy ReimuA, Normal ReimuA, Normal MarisaA and earned Extra ReimuA. All use
-ordinary key-only advice in Mode::ordinary, legal six-life/two-bomb setup,
-physical configuration/scores and no actor/hit/life/score/stage/clock writes.
-Extra starts from the same-run Normal-earned file in a new process. Each route
-has clear mask1 and returns to fresh OP, with no Continue. GNU/UBSan complete
-key/19-field MAIN-state/startup/menu/capture and save files agree for all four routes:
-72434, 88914, 79214, 29611 admissions, 270,173 per compiler.
-These are logical headless routes with render_every0 and retained checkpoints,
-not complete pictures, original full-game parity, OS delivery or timing claims.
-
-The executed consumer is554/a79f199f. All553 other maintained inputs,
-including every compiled source/header/CMake input and the C++ route helper,
-match the frozen producer. Only verify_natural_routes.py changed; no C++ build
-or parent producer restamp. The reader explicitly records both identities and
-rejects compiled-input differences. Nine public tests and a real complete
-Normal trace/file control plus six full-checksum-valid counterexamples reject
-missing/wrong-shot/sentinel/high masks, Bad Ending and omitted stages.
-
-Prior failed UBSan/window Normal acceptance stays revoked in its own producer
-scope. Current headless GNU/UBSan clear evidence is new and separate. Broader
-shots/ranks/death/Continue, original/reconstructed DOS/native campaign parity,
-full pictures, physical CPU/I/O/scanout, active-PMD timing and Windows remain
-open. Historical exact stays661/663; full reconstruction/migration is active.
-
-Replay: `.analysis/reconstruction/probes/native-natural-clear-v1432/`;
-results: `.analysis/worktrees/native-natural-clear-v1432/.analysis/port64/native-natural-clear-v1432/`.
-The frozen programs remain under `native-main-pause-v1431-v5`. `comparison.py`
-verifies all complete captures and saves; `mutations.py` owns actual-file
-counterexamples. Verified content/CRC/mode/nsmtime/temp-restore retirement
-saves81.78 MiB net; route/state/input captures recover with
-`verify_retention.py --restore --prefix`. All source, programs, saves, plans,
-receipts and archive remain retained. Continue paired ordinary-game behavior.
-
-## Native elapsed registration and all three callers (v1428)
-
-Actual registration now uses shared elapsed Animation for black-in2,
-input_wait0 and black-out1, and live Count1-only frame_delay1 for editing.
-Alphabet/cursor and accepted command drawing precede keyboard reset. Sense
-ORs the pre-wait and post-wait samples; BYTE repeat keeps its30/even/wrap rule.
-File operations are consumed one at a time, with writer-close before free/
-clear/fade. A failed host operation freezes the scene and Score/Extra parent;
-later admissions neither retry I/O nor advance registration ticks/RNG/route.
-The outer clock can continue. Successful completion returns unused time.
-
-Normal Ending begins registration on its delay100 completion admission;
-Score and Extra pass time directly to registration and then verdict or
-Congratulations. Clock/audio service occurs once, and new process counter BSS
-keeps raster phase. Legacy no-clock helpers remain separate logical models.
-
-Pinned MAINE decoded0A05:27C4..2B5F menu, score0A05:20F9..24B5 and process
-RNG0000:1C5A..1C83 execute unchanged. Fades0000:0622..06A3, frame_delay
-0CC7:0033..0047, input_wait0CC7:020A..025F and full0000:2206..222B wait execute
-with DGROUP0E53/live0EFA/0EFC/0F02 and ideal IRQ at loads1000/3333.
-The62414-byte decompressor payload/559 relocation observations retain their
-candidate-derived container topology gap; target canonicality remains
-candidate-local-attested. Graphics, keyboard, successful file/sound have
-guarded ABI seams; CPU/I/O/audio/loader costs and physical scanout are unmeasured.
-
-Cold545/b4519b50 GNU Release and optimized UBSan/bounds each build84 programs
-and pass82 CTests. Each agrees with544 original controls and272 coarse plus
-272 one-ms partitions: full E/K/palette/edit-loop/file/RNG/counter/time streams,
-ranked/unranked/Extra, WORD wrap/carry skips, held-repeat BYTE wrap, chords,
-missing/partial/corrupt file recreation and blocked input. Each actual frontend
-passes24 score-return routes/four writer failures,30 seeded saves/restarts,
-8 Extra actor-control routes and24 Ending-to-registration/fresh OP/second MAIN
-routes. Independent checks retain576 Ending pages/288 original-DAC RGB frames
-and48 pages each for Staff/verdict/Congratulations. Existing432 Game Over and
-576 MAINE controls pass. Eight default Demo profiles preserve129 prior hashes
-each, original selected states and GNU/UBSan parity. No general-game or exact
-promotion follows; historical exact stays661/663.
-
-Compiled actual Scene fade-counter clear, pre-draw reset and lost-remainder
-mutations reject whole original streams; unchanged compiled control passes.
-Native CI345 passes. First probe omitted constructor tone0 palette-show; its
-short137 input also let zero HI pass checksum after an empty read, producing
-invalid numeral indices rejected by the native renderer. Original core/control
-continued with drawing as an adapter; actual unsafe drawing is unmeasured.
-This remains an explicit renderer/input boundary, not accepted equivalence.
-Valid partial and corrupt selected sections separately recreate and pass.
-Second development passed272 controls but the failed Score owner threw on its
-next elapsed admission; the new frozen failure matches the retained native
-no-retry policy. All failed source/program/trace/journals remain distinct.
-
-Replay: `.analysis/reconstruction/probes/native-registration-elapsed-v1428/`;
-producer: `.analysis/worktrees/native-registration-elapsed-v1428/.analysis/port64/native-registration-elapsed-v1428/`.
-`verify_registration_elapsed.py` owns full original/candidate streams;
-`focused.py` owns actual parent routes and image commands. Verified journal/
-SHA/CRC/content/mode/nsmtime/temp-restore retirement saves2435.09 MiB net,
-plus42.04 MiB from three preliminary caches. Source/all programs/
-fixtures/receipts/failures remain live; archived raw aliases/captures restore
-with `verify_retention.py --restore --prefix`. Stage reader is under
-`native-registration-stage-retention-v1428`. Only owned intermediates retired.
-
-Other wait owners, malformed-score unsafe graphics, real active-PMD paired
-timing, physical CPU/I/O/scanout, broader gameplay and Windows remain open.
-Continue source recovery and migration; the full goal stays active.
-
-## Retained native producer routing
-
-Earlier Cutscene, Staff, MAINE, Demo, palette, IRQ and text producers
-retain their original source/evidence identities. See the [VSync note](reconstruction/product/TH04_NATIVE_VSYNC_V864.md), [porting status](PORT64.md), and the subject index. Prior handoff detail remains in Git;
-current open owners are listed above. Archives restore into fresh paths.
-
-## Comparison priority for the next agent
-
-The user's primary comparison is **original Japanese DOS versus reconstructed
-DOS**, both through the PC-98 game route. Native x64 must also preserve gameplay
-state and effects. Native-host equality and successful native clears do not
-replace either comparison. Start with the four bundled demos, then bounded
-recorded ordinary play; compare score, consumed input, RNG and actor state at
-the same logical boundary, followed by VRAM/palette/effects and process/save
-transitions. See [paired demo evidence](port64/evidence/demo.md).
-
-TH08 is a read-only workflow reference, not TH04 evidence. Its active worktree
-is dirty; do not edit it, run its builds, change its database or launch its game.
-Complete trace/end/input-consumption guards and first-divergence diagnostics
-are the useful parts to adapt. Retained DOS demos accept complete selected scalar/pool/video comparisons.
-Retained native producers accept selected scalar/RNG/count fields and nine
-complete pools. v1385 preserves the six parent trace/save hashes and 40 entire
-index/TRAM samples; whole pictures, original display epoch and broader
-gameplay/process routes remain open.
-
-## Replay and finish
-
-```sh
-python3 scripts/preflight.py
-python3 scripts/ci.py
-git diff --check
-```
-
-Use [status](PORT64.md), [host-window evidence](port64/evidence/host-window.md)
-and [retention](ANALYSIS_RETENTION.md). Source/program/profile archives retain
-producer identities; restore into fresh paths. One Borland/Wine writer at a
-time. Never open an audio backend/device in these validations.
+Finish relevant focused comparisons, `python3 scripts/ci.py` and `git diff --check`.
+Commit/push this branch with `git push origin HEAD:port/modern-64`, then verify
+its remote head and clean status. Root commits do not publish native changes.
