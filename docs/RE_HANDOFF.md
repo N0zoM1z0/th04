@@ -1,5 +1,27 @@
 # TH04 native branch handoff
 
+## Boss defeat, post-Boss dialogue and bonus event integration (v1453)
+
+Native `791203f` extends the actual original/native comparison to **9835
+updates**, through Orange defeat, post-Boss dialogue, stage bonus and leave.
+Both cold GNU and optimized UBSan programs pass selected state/RNG/input,
+global homing, nine pools, four Boss blocks, Continue/save, popup/title rows
+and 2665 actual BB calls over 9834 intervals. Source565/3cf3900b.
+All59 active-TRAM samples pass; the complete-picture gate retains 4
+whole RGB failures at frames 9284, 9349, 9600, 9700. Keep these failures.
+Stage2 update9836, complete campaigns, raw graphics-plane identity, physical
+scanout, NP2, Windows and historical exactness remain open.
+
+See [stage lifecycle evidence](port64/evidence/stage-lifecycle.md) for target
+ownership, failed attempts, replay and the remaining picture gates.
+
+v1453 recovery replays the archived missing-TRAM producer and both corrected
+9835-update programs, preserving all177 picture observations and the retained
+RGB failures. SHA/mode/nsmtime retirement totals 1481.680 MiB net over two disjoint
+journals;all16595 protected hashes remain equal. Five owned restored aliases
+and eight borrowed aliases verify and retire;borrowed bytes receive no new
+cleanup credit. See the focused note for exact recovery selection and failures.
+
 ## Boss circle clipping and complete sampled pictures (v1452)
 
 Native `a8e0165` fixes the seven remaining v1451 score-area graphics samples.

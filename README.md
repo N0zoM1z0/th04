@@ -34,15 +34,17 @@ complete pictures, physical timing and Windows remain open; see the
 
 ## Build and run
 
-Native `a8e0165` applies the original stage clipping to Boss circles. Both new
-cold GNU/UBSan programs now match all38 complete640x400 sampled pictures:
-the previous seven score-area failures (1377 pixels) are resolved. Selected
-8000-update state/input/RNG/pools/Boss/Continue/save,title/popup rows and2665
-actual BB calls remain equal. Original capture is DOSBox-X;full campaigns,
-unsampled pictures,physical timing,NP2 and Windows remain open. Source565/394e53f4;
-see the [current handoff](docs/RE_HANDOFF.md) for replay and cleanup rules.
-Actual archived-writer/current-producer recovery passes; 254.469 MiB of owned
-duplicates/intermediates are reclaimed with protected hashes unchanged.
+Native `791203f` extends the actual original/native comparison to **9835
+updates**, through Orange defeat, post-Boss dialogue, stage bonus and leave.
+Both cold GNU and optimized UBSan programs pass selected state/RNG/input,
+global homing, nine pools, four Boss blocks, Continue/save, popup/title rows
+and 2665 actual BB calls over 9834 intervals. Source565/3cf3900b.
+All59 active-TRAM samples pass; the complete-picture gate retains 4
+whole RGB failures at frames 9284, 9349, 9600, 9700. Keep these failures.
+Stage2 update9836, complete campaigns, raw graphics-plane identity, physical
+scanout, NP2, Windows and historical exactness remain open.
+See the [current handoff](docs/RE_HANDOFF.md) for replay and recovery.
+
 
 With local inputs and the toolchain installed:
 

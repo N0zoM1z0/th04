@@ -1,5 +1,20 @@
 # TH04 native 64-bit bring-up
 
+## Boss defeat, post-Boss dialogue and bonus event integration (v1453)
+
+Native `791203f` extends the actual original/native comparison to **9835
+updates**, through Orange defeat, post-Boss dialogue, stage bonus and leave.
+Both cold GNU and optimized UBSan programs pass selected state/RNG/input,
+global homing, nine pools, four Boss blocks, Continue/save, popup/title rows
+and 2665 actual BB calls over 9834 intervals. Source565/3cf3900b.
+All59 active-TRAM samples pass; the complete-picture gate retains 4
+whole RGB failures at frames 9284, 9349, 9600, 9700. Keep these failures.
+Stage2 update9836, complete campaigns, raw graphics-plane identity, physical
+scanout, NP2, Windows and historical exactness remain open.
+
+See [stage lifecycle evidence](../docs/port64/evidence/stage-lifecycle.md)
+for actual original boundaries and the retained picture failures.
+
 ## Boss circle clipping and complete sampled pictures (v1452)
 
 Native `a8e0165` fixes the seven remaining v1451 score-area graphics samples.
