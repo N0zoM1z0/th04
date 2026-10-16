@@ -553,10 +553,24 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/compare_th04_dos_title_entries.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Compare title state and whole rows with actual original BB code-entry arguments; supersedes after-scroll reconstruction.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/compare_th04_dos_title_pictures.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Compare complete declared native RGB pictures with original live font and raw video at an explicit actor or score-return phase.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/compare_th04_dos_titles.py",
     "category": "runtime",
     "role": "command",
-    "purpose": "Compare all ordinary title state, three complete text rows and original BB calls with strict stream boundaries.",
+    "purpose": "Historical v1450 callback replay: BB calls reconstructed from after-scroll state are invalidated; use actual entry reader. State/row observations remain scoped.",
     "purpose_source": "maintained-description"
   },
   {
@@ -3521,6 +3535,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/th04_font_checkpoints_gdb.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Observe declared same-boundary live PC-98 font, video and DGROUP without changing CPU context.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/th04_main_fault_trace.py",
     "category": "source-review",
     "role": "support",
@@ -3595,6 +3616,27 @@
     "category": "runtime",
     "role": "support",
     "purpose": "Attest a same-run four-product source cohort and derive OP counter hooks from its own MAP and bytes.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_score_video_checkpoints_gdb.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Observe original complete video, font and DGROUP at the actual score-return instruction boundary.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_title_draw_checkpoints_gdb.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Record original BB code-entry registers, caller and scroll state on declared updates.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_title_draw_stream_gdb.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Stream actual original BB entry arguments across all armed ordinary update intervals.",
     "purpose_source": "maintained-description"
   },
   {

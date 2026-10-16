@@ -24,7 +24,9 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/compare_th04_dos_ordinary_prefix.py](../probes/compare_th04_dos_ordinary_prefix.py) | command | Admit ordinary DOS prefixes by input and entry RNG before reporting state differences. |
 | [probes/compare_th04_dos_popup.py](../probes/compare_th04_dos_popup.py) | command | Compare complete popup and BGM text rows and popup state at ordinary boundaries with separate owner verdicts. |
 | [probes/compare_th04_dos_process_route.py](../probes/compare_th04_dos_process_route.py) | command | Compare MAIN Quit, original MAINE and fresh OP menu entries, prefix pools, resident bytes and physical saves. |
-| [probes/compare_th04_dos_titles.py](../probes/compare_th04_dos_titles.py) | command | Compare all ordinary title state, three complete text rows and original BB calls with strict stream boundaries. |
+| [probes/compare_th04_dos_title_entries.py](../probes/compare_th04_dos_title_entries.py) | command | Compare title state and whole rows with actual original BB code-entry arguments; supersedes after-scroll reconstruction. |
+| [probes/compare_th04_dos_title_pictures.py](../probes/compare_th04_dos_title_pictures.py) | command | Compare complete declared native RGB pictures with original live font and raw video at an explicit actor or score-return phase. |
+| [probes/compare_th04_dos_titles.py](../probes/compare_th04_dos_titles.py) | command | Historical v1450 callback replay: BB calls reconstructed from after-scroll state are invalidated; use actual entry reader. State/row observations remain scoped. |
 | [probes/compare_th04_ordinary_pools.py](../probes/compare_th04_ordinary_pools.py) | command | Compare complete ordinary actor pools against pinned scalar controls and target/MAP owners. |
 | [probes/compare_th04_ordinary_video.py](../probes/compare_th04_ordinary_video.py) | command | Compare complete ordinary VRAM/palettes/display state with independent scalar controls. |
 | [probes/inspect_th04_cpu_fault_trace.py](../probes/inspect_th04_cpu_fault_trace.py) | command | Decode private MAIN exception frames without claiming normal gameplay. |
@@ -66,6 +68,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_dos_boot.py](../probes/th04_dos_boot.py) | support | Validate actual DOS load-and-go entries, complete entry images, parent PSP and OP counter ownership. |
 | [probes/th04_dos_process.py](../probes/th04_dos_process.py) | support | Resolve conventional DOS process ownership from complete MCB, PSP and environment evidence. |
 | [probes/th04_dos_route.py](../probes/th04_dos_route.py) | support | Validate actual overlay images/generations, real Quit keys, shared resident use and full score checksums. |
+| [probes/th04_font_checkpoints_gdb.py](../probes/th04_font_checkpoints_gdb.py) | support | Observe declared same-boundary live PC-98 font, video and DGROUP without changing CPU context. |
 | [probes/th04_ordinary_continue.py](../probes/th04_ordinary_continue.py) | support | Attest Continue counter ownership and verify release-first input, natural last-life restoration and resumed gameplay. |
 | [probes/th04_ordinary_dgroup.py](../probes/th04_ordinary_dgroup.py) | support | Decode every ordinary DGROUP record with strict framing, stage and gzip integrity. |
 | [probes/th04_ordinary_dgroup_gdb.py](../probes/th04_ordinary_dgroup_gdb.py) | support | Observe full ordinary DGROUP after actor updates through read-only mapped host RAM. |
@@ -76,6 +79,9 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_ordinary_video.py](../probes/th04_ordinary_video.py) | support | Decode full ordinary video blocks with strict frame/load/stage and gzip checks. |
 | [probes/th04_primary_cpu_fault.gdb](../probes/th04_primary_cpu_fault.gdb) | fixture | Run the primary-emulator fault observer with configured symbols/event inputs. |
 | [probes/th04_product_surface.py](../probes/th04_product_surface.py) | support | Attest a same-run four-product source cohort and derive OP counter hooks from its own MAP and bytes. |
+| [probes/th04_score_video_checkpoints_gdb.py](../probes/th04_score_video_checkpoints_gdb.py) | support | Observe original complete video, font and DGROUP at the actual score-return instruction boundary. |
+| [probes/th04_title_draw_checkpoints_gdb.py](../probes/th04_title_draw_checkpoints_gdb.py) | support | Record original BB code-entry registers, caller and scroll state on declared updates. |
+| [probes/th04_title_draw_stream_gdb.py](../probes/th04_title_draw_stream_gdb.py) | support | Stream actual original BB entry arguments across all armed ordinary update intervals. |
 | [runtime/fixtures/good_ending.asm](../runtime/fixtures/good_ending.asm) | fixture | Private resident seed for real MAINE Ending tests; bypasses OP/gameplay initialization. |
 | [runtime/verify_dos_gaiji.py](../runtime/verify_dos_gaiji.py) | command | Compare original and linked DOS Gaiji writes, port order and far-call return state across WORD address boundaries. |
 | [runtime/verify_dos_hud_popup.py](../runtime/verify_dos_hud_popup.py) | command | Execute original MAIN popup, CRT and text instructions at two load segments with complete TRAM and ABI observations. |
