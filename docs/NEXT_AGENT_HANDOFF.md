@@ -8,7 +8,7 @@ whole-game completion metrics. Keep all new code and documentation in English.
 
 | Purpose | Published baseline | Availability |
 | --- | --- | --- |
-| DOS reconstruction, comparison tools and ledgers | `main: a29ef83` | Current checkout; later evidence commits follow this baseline |
+| DOS reconstruction, comparison tools and ledgers | `main: a574dd7` | Current checkout; later evidence commits follow this baseline |
 | Native x64 source | `port/modern-64: c0a1060371c5f8ba758ca8b10f6cbc99063ba3d6` | Remote and local Git objects exist; old working directories are missing |
 
 The old `.analysis/worktrees/` directory was absent at the 2026-10-16 audit,
@@ -91,6 +91,27 @@ Root CI506/private gates passed for v1439. The later bounded Quit route is
 below; complete resident lifecycle, full reconstructed process routes and
 native/cross-emulator/Windows acceptance remain open.
 
+## Paired resident ownership checkpoints and second MAIN (v1441)
+
+The new original/candidate route executes MAIN Quit -> original MAINE -> fresh
+original OP -> second MAIN. Four full load images are attested to their own
+pinned files at actual 10FC:0000, retaining PSP 10EC. Ten complete conventional
+RAM checkpoints per side verify resident MCB 9FEE, data 9FEF, 256 bytes, owner word
+FFFF. This raw DOS field does not attest a live PSP FFFF or continuous lifetime.
+Both actual second MAIN entries retain counter 70 after observed fresh menu 65.
+The second MAIN has no admitted gameplay updates yet; supporting products remain
+original and the MAIN producer remains 778641ab.
+
+The first MAIN's7,547 complete updates plus unfinished final pre-update sample
+agree on consumed input/scalar/RNG/pools/states. All 256 resident bytes agree at
+five checkpoints. Physical CFG/SCR and all ten complete 16-bit checksums agree.
+The new aggregate fails for 286 post-reset input samples, distinct from v1440's 284.
+CI 539, thirteen public controls and 45 actual counterexamples pass. Replay and
+frozen source: `.analysis/reconstruction/probes/dos-process-restart-v1441/`.
+Restore route-retention aliases before the process-route comparator. Its verified
+archive releases 96.895 MiB net from eight owned paths. Existing missing native
+worktrees and94 protected files remain outside this cleanup.
+
 ## Actual bounded DOS Quit route (v1440)
 
 Real original/candidate MAIN Quit -> original MAINE -> fresh original OP menu
@@ -143,9 +164,9 @@ The two deferred carpet/checkerboard exact cases remain deferred.
 ## Next tasks
 
 1. Finish new-producer full Demo pool/video and intermediate Game Over UI
-   checks. Extend the verified v1440 Quit/MAINE/fresh OP route with resident
-   allocation-owner MCB and second MAIN evidence, then the reconstructed
-   supporting products. Preserve the actual Continue repair and its failed
+   checks. Extend the verified v1441 second-MAIN entry into actual initialization
+   and update state, plus resident allocation creation/release and the
+   reconstructed supporting products. Preserve the actual Continue repair and its failed
    predecessor. Do not change lives/RNG/clock or mistake an overlay request,
    reused PSP or environment name for actual executing-image identity.
 2. Recover native development and historical replay inputs. Search for the

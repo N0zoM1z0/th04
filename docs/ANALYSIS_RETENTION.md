@@ -20,6 +20,25 @@ compilation's wrapper refusal and subsequent verified cache publication are
 retained separately. This does not restore the old working directories or the
 94 missing native protected files. See the v1438 focused differential note.
 
+## Second MAIN and resident MCB retention (v1441)
+
+`.analysis/reconstruction/probes/dos-process-restart-v1441/route-retention/`
+retires eight terminal owned image/font/raw aliases from the new original/
+candidate pair. Twenty-one blobs form a 1.044 MiB archive against the pinned
+base HDI, releasing 96.895 MiB net. Full archive SHA/CRC, reconstructed SHA/size,
+temporary mode/nsmtime and all protected hashes pass before and after removal.
+Its `recover.py` verifies without expansion; add `--restore` or a selected
+`--restore --prefix .analysis/runtime/candidates/dos-process-restart-v1441-candidate/`.
+
+Ten complete conventional RAM dumps and four full entry images per side,
+7,547-record DGROUP streams, resident/input/process/clock reports, original
+admission, physical-file pair, 45 actual counterexamples, 539-test CI, 1,549-input
+source archive, producer snapshot and MAIN/MAP remain protected. Restored pair
+comparison produces the same report digest before the aliases are retired again.
+This batch does not remove other historical evidence or missing native trees.
+Keep the archive, base image and retention journal together; `finish.json` binds
+pair comparison, restored replay, controls, CI and recovery verification.
+
 ## Actual DOS process-route retention (v1440)
 
 Under `.analysis/reconstruction/probes/dos-process-route-v1440/`, two independent

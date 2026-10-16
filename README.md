@@ -75,7 +75,11 @@ and complete routes remain separate requirements. A new real Quit -> original
 MAINE -> fresh original OP route verifies all three full entry images and
 resident use. Its 7,547 complete MAIN updates, all pools/states and physical
 CFG/SCR agree; 284 post-reset input samples differ. The resident allocation-owner
-MCB, second MAIN and complete reconstructed-product chain remain open.
+MCB and second MAIN entry are now checked in a later paired route: ten complete
+RAM checkpoints per side retain the 256-byte allocation with raw owner FFFF, and
+both second MAIN entries retain counter 70. Its aggregate retains 286 input
+differences. Continuous allocation lifetime, second-MAIN gameplay and the
+complete reconstructed-product chain remain open.
 
 Native x64 source lives on `port/modern-64`. Scoped Linux Reimu A runs cover
 Normal, Lunatic and Extra clears with registration, physical saves and fresh

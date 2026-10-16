@@ -5,30 +5,67 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
-## Resident MCB checkpoints and original second MAIN (v1441)
+## Paired resident MCB checkpoints and second MAIN (v1441)
 
-`--restart-main` extends the configured Quit route: after the actual fresh OP
-counter65 store, ordinary Enter pulses are scheduled at100/1100/2100 milliseconds,
-with120ms releases. The original enters a second MAIN with counter70. The stop
-is the actual entry at10FC:0000, before second-MAIN gameplay acceptance. Pending
-restart keys are explicitly cancelled and recorded at that bounded stop.
+Original and MAIN 778641ab now both execute real Quit -> original MAINE -> fresh
+original OP -> second MAIN. All four complete relocated entry images match
+their respective pinned files at actual 10FC:0000; PSP 10EC is retained. Supporting
+OP/MAINE/ZUN remain original. `--restart-main` requires a configured Quit route.
+After the actual fresh OP counter 65 store, ordinary Enter pulses are scheduled
+at 100/1100/2100ms with 120ms releases. Both second MAIN entries have counter 70.
+Pending restart keys are explicitly cancelled and recorded at that entry stop.
+No second-MAIN gameplay update is admitted, and natural_game_exit remains false.
 
-The observer captures complete conventional RAM at ten request/entry/retirement/
-menu checkpoints. The reader verifies each dump against the receipt, its complete
-RAM digest, resident bytes, entry module and a fresh MCB walk. Program MCB10EB
-links through9FE9 to final resident MCB9FEE; data9FEF has16 paragraphs (256 bytes),
-raw header `5affff10000000000000000000000000`, owner wordFFFF. Metadata calls
-this raw DOS field `owner_psp`; FFFF does not identify a verified live PSP.
-All ten original checkpoints retain the same allocated extent/header. This is
-checkpoint evidence, not proof that no free/reallocate could occur between them.
+Ten complete conventional RAM snapshots per side cover the first MAIN request,
+four actual entries, MAIN retirement, MAINE/OP/second-MAIN requests and fresh
+menu. The independent reader checks each receipt-bound compressed dump, complete
+RAM digest, resident bytes, entry module and a fresh linked MCB walk. Program
+MCB 10EB links through 9FE9 to final resident MCB 9FEE; data 9FEF has 16 paragraphs
+(256 bytes), raw header `5affff10000000000000000000000000`, owner word FFFF.
+Metadata calls the raw DOS owner field `owner_psp`; FFFF does not identify a
+verified live PSP. All ten checkpoints retain that allocated extent/header on
+both sides. No continuous allocation lifetime or creation/release is inferred.
 
-Original-only admission and frozen producer scripts live under
-`.analysis/reconstruction/probes/dos-process-restart-v1441/`. Candidate capture is
-separate and paired comparison is pending. Seven public MCB-chain controls reject
-freed/split/unlinked/out-of-RAM/early-Z/invalid-anchor states; six restart controls
-reject missing keys, stale seed, old MAIN frame ownership, missing cancellation,
-actions after entry and wrong held-key state. Full CI539 passes. No product
-source, exact ledgers or compiler identities change in this control-plane batch.
+The first MAIN closes at 7,547 completed updates plus 7,548 pre-update samples,
+including the unfinished final update. Consumed inputs, 36 fields/RNG, nine whole
+pools and 22 state blocks agree. All 256 resident bytes agree at MAIN handoff,
+MAINE entry, OP entry, fresh menu and second MAIN entry. Physical MIKO.CFG is
+unchanged and equal. GENSOU.SCR changes identically only in decoded section 1;
+all ten full 16-bit checksums pass initial/final. The aggregate fails for 286
+post-reset input samples. Keep this separate from v1440's 284, without timing
+or aggregate promotion. This remains a bounded Quit/save comparison, not a
+campaign-clear, reconstructed supporting-product or native acceptance claim.
+
+```sh
+python3 .analysis/reconstruction/probes/dos-process-restart-v1441/route-retention/recover.py --restore
+python3 scripts/probes/compare_th04_dos_process_route.py \
+  .analysis/runtime/candidates/dos-process-restart-v1441-original \
+  .analysis/runtime/candidates/dos-process-restart-v1441-candidate \
+  --original-main .analysis/targets/th04/main.exe --output /tmp/th04-restart.json
+```
+
+Exit1 is expected for the retained input failure. Replay/source/evidence namespace
+is `.analysis/reconstruction/probes/dos-process-restart-v1441/`. The 1,549-input
+source archive pins a574dd7; `producer-source/` separately freezes the five
+changed producer files. Historical v1440 receipts use their original producer
+snapshot as shown below, rather than being rewritten to accept new scripts.
+
+Seven public MCB controls reject freed/split/unlinked/out-of-RAM/early-Z/invalid-
+anchor states; six restart controls reject missing keys, stale seed, old MAIN
+frame ownership, missing cancellation, actions after entry and wrong held state.
+Full CI 539 passes. Forty-five actual counterexamples reject four entry images/
+PCs, twelve first/second-MAIN full-RAM MCB mutations, four restart-key mutants,
+seven route/owner-claim mutants and all ten high checksum bytes. Inner semantic
+controls deliberately bypass outer hashes only in temporary copies; real
+captures/receipts remain unchanged. `controls.json` binds original admission;
+`finish.json` binds controls, pair comparison, restored replay, CI and retention.
+
+Eight recoverable image/font/raw aliases release96.895 MiB net after a 1.044 MiB
+archive. Complete conventional/entry/DGROUP streams, input/process/clock proofs,
+resident samples, physical-file report, source and failures remain live. Next
+admit second-MAIN initialization/updates and explicit creation/release, then the
+reconstructed supporting products. Intermediate UI, full campaigns, native,
+cross-emulator and physical timing remain separate requirements.
 
 ## Actual Quit -> MAINE -> fresh OP route (v1440)
 

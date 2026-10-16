@@ -21,24 +21,34 @@ describe recorded historical evidence, not a fresh availability guarantee.
 Recover original frozen inputs or create a newly attested producer from Git;
 do not rewrite old receipts. Both development goals remain active.
 
-## Resident allocation and original second MAIN (v1441)
+## Resident allocation and paired second MAIN (v1441)
 
-The original route now reaches a second MAIN through real Quit/MAINE/fresh OP
-and ordinary restart keys. Four complete relocated images and actual entries
-at10FC:0000 retain PSP10EC. Ten complete conventional RAM snapshots independently
-walk program MCB10EB ->9FE9 -> resident MCB9FEE, data9FEF, exactly16 paragraphs.
-Its raw owner word isFFFF at every checkpoint. The metadata key `owner_psp`
-mirrors that DOS field; it does not attest a live PSPFFFF. Fresh menu counter65
-advances to70 at actual second MAIN entry. The second MAIN has not yet run a
-validated gameplay update; no continuous allocation lifetime is claimed.
+Both original/candidate routes now execute MAIN Quit -> original MAINE -> fresh
+original OP -> second MAIN using ordinary keys. Each of four complete relocated
+loads matches its own pinned file at actual entry 10FC:0000, retaining PSP 10EC.
+The candidate MAIN remains 778641ab; OP/MAINE/ZUN remain original. Ten complete
+conventional RAM snapshots per side independently walk program MCB 10EB -> 9FE9 ->
+resident MCB 9FEE, data 9FEF, exactly 16 paragraphs (256 bytes). Its raw owner word
+is FFFF throughout. The metadata key `owner_psp` mirrors that DOS field; it does
+not attest a live PSP FFFF. These are checkpoint observations, not continuous
+allocation-lifetime proof. Fresh menu counter 65 advances to 70 at second MAIN
+entry on both sides. Second-MAIN gameplay has not been admitted.
 
-Original admission: `.analysis/reconstruction/probes/dos-process-restart-v1441/original-admission.json`.
-The new optional `--restart-main` requires a Quit route. Producer scripts are
-frozen under `producer-source/`; CI539 and thirteen new public allocation/key
-controls pass. Candidate capture has its own `dos-process-restart-v1441-candidate`
-namespace; paired admission remains pending until its actual receipt is terminal.
-The first MAIN retains 7,547 completed updates plus one unfinished pre-update
-sample. Supporting products remain original; exact ledgers are unchanged.
+The first MAIN has 7,547 completed updates plus one unfinished pre-update sample.
+Consumed inputs, all 36 fields/RNG, nine pools and 22 states agree. All 256 resident
+bytes agree at five handoff/entry/menu checkpoints. Physical CFG/SCR agree,
+including all ten complete 16-bit checksums; only decoded score section 1 changes.
+The aggregate fails for 286 post-reset input samples, separate from v1440's 284.
+CI 539, thirteen new public controls and 45 actual evidence counterexamples pass.
+
+Replay/source/receipts: `.analysis/reconstruction/probes/dos-process-restart-v1441/`.
+Captures are `dos-process-restart-v1441-{original,candidate}`; use
+`compare_th04_dos_process_route.py` after selected `route-retention/recover.py`
+restoration. Verified retirement releases 96.895 MiB net from eight image/font/raw
+aliases. Full memory/entry/DGROUP streams, source, MAIN/MAP, negative evidence
+and historical receipts remain. Next: second-MAIN initialization/update state,
+allocation creation/release and the reconstructed supporting products. Full
+campaign/UI/physical timing/native/cross-emulator acceptance remains open.
 
 ## Actual Quit, MAINE and fresh OP route (v1440)
 
