@@ -178,7 +178,10 @@ retirement of old MAIN observers before reuse, and shared resident content/use.
 The paired v1441 extension captures ten complete conventional RAM checkpoints
 per side, verifies the linked resident MCB 9FEE/data 9FEF/owner FFFF extent, and
 observes actual second MAIN entry. The owner field does not attest a live
-PSP FFFF. Continuous lifetime and second-MAIN gameplay remain separate.
+PSP FFFF. The admitted v1442 extension follows 600 second-MAIN actor updates,
+with a new observer generation and literal unmodified process IDs. Shot is tied
+to its first actual actor-update store and CPU/DGROUP snapshot. The timed-input
+negative remains separate; physical timing and continuous lifetime are open.
 
 ## Private and generated state
 

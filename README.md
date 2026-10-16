@@ -78,8 +78,13 @@ CFG/SCR agree; 284 post-reset input samples differ. The resident allocation-owne
 MCB and second MAIN entry are now checked in a later paired route: ten complete
 RAM checkpoints per side retain the 256-byte allocation with raw owner FFFF, and
 both second MAIN entries retain counter 70. Its aggregate retains 286 input
-differences. Continuous allocation lifetime, second-MAIN gameplay and the
-complete reconstructed-product chain remain open.
+differences. A later admitted pair now follows 600 second-MAIN actor updates:
+consumed inputs, state/RNG, all configured pools, terminal, full resident and
+physical files agree. Shot is sent at an actual actor-update boundary. Its
+aggregate retains 291/24 post-reset differences across the two MAIN generations;
+the earlier entry-timed Shot pair remains inadmissible and retained. Continuous
+allocation lifetime, complete second-MAIN gameplay and the reconstructed-product
+chain remain open.
 
 Native x64 source lives on `port/modern-64`. Scoped Linux Reimu A runs cover
 Normal, Lunatic and Extra clears with registration, physical saves and fresh

@@ -8,7 +8,7 @@ whole-game completion metrics. Keep all new code and documentation in English.
 
 | Purpose | Published baseline | Availability |
 | --- | --- | --- |
-| DOS reconstruction, comparison tools and ledgers | `main: a574dd7` | Current checkout; later evidence commits follow this baseline |
+| DOS reconstruction, comparison tools and ledgers | `main: 73424f3` | Current checkout; later evidence commits follow this baseline |
 | Native x64 source | `port/modern-64: c0a1060371c5f8ba758ca8b10f6cbc99063ba3d6` | Remote and local Git objects exist; old working directories are missing |
 
 The old `.analysis/worktrees/` directory was absent at the 2026-10-16 audit,
@@ -91,6 +91,25 @@ Root CI506/private gates passed for v1439. The later bounded Quit route is
 below; complete resident lifecycle, full reconstructed process routes and
 native/cross-emulator/Windows acceptance remain open.
 
+## Admitted second-MAIN update comparison (v1442)
+
+New `dos-second-main-updates-v1442-boundary-{original,candidate}` captures agree
+through 600 second-MAIN actor updates on consumed input,36 fields/ordered RNG,
+nine pools, 22 state blocks, terminal fields, six full resident samples and
+physical CFG/SCR. Twelve complete RAM allocation checkpoints per side retain
+resident MCB 9FEE/data 9FEF/owner FFFF. The first MAIN has 7,547 complete updates and
+one unfinished pre-update sample. New Shot uses the actual first actor-update
+boundary, not an entry-relative delay. The aggregate preserves291/24 post-reset
+input differences. The earlier timed pair is not admitted (initial Shot 2000/0000,
+post-reset292/17); its later pool differences are not a confirmed product defect.
+
+Replay/source/recovery: `.analysis/reconstruction/probes/dos-second-main-updates-v1442/`.
+CI 551, twelve public controls and 32 actual boundary controls pass; the earlier
+reader failure and 27 timed controls remain. Two journals release 229.992 MiB net
+from 24 owned aliases; full compressed streams, source/producers and MAIN/MAP
+remain. The MAIN producer remains778641ab; supporting executables remain original.
+No complete campaign, pixel, native, exact or physical timing claim follows.
+
 ## Paired resident ownership checkpoints and second MAIN (v1441)
 
 The new original/candidate route executes MAIN Quit -> original MAINE -> fresh
@@ -163,12 +182,14 @@ The two deferred carpet/checkerboard exact cases remain deferred.
 
 ## Next tasks
 
-1. Finish new-producer full Demo pool/video and intermediate Game Over UI
-   checks. Extend the verified v1441 second-MAIN entry into actual initialization
-   and update state, plus resident allocation creation/release and the
-   reconstructed supporting products. Preserve the actual Continue repair and its failed
-   predecessor. Do not change lives/RNG/clock or mistake an overlay request,
-   reused PSP or environment name for actual executing-image identity.
+1. Extend the admitted second-MAIN scenario to a newly attested build of all
+   four reconstructed products. Derive candidate OP menu/entry hooks from its
+   own MAP and bytes; the current capture still preserves original supports.
+   Retain the first-MAIN unfinished sample, actual generation IDs and first-
+   actor input boundary. Keep the timed-input negative and all post-reset/raw-GDC
+   failures. Full new-producer Demo pool/video, intermediate UI and allocation
+   creation/release remain separate checks; a bounded600-update pass is not a
+   campaign or continuous-lifetime acceptance.
 2. Recover native development and historical replay inputs. Search for the
    original missing storage; otherwise build published source under a new
    namespace and collect independent new evidence. The new root MAIN/MAP does

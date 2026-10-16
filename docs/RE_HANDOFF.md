@@ -21,31 +21,43 @@ describe recorded historical evidence, not a fresh availability guarantee.
 Recover original frozen inputs or create a newly attested producer from Git;
 do not rewrite old receipts. Both development goals remain active.
 
-## Original second-MAIN initialization and updates (v1442)
+## Paired second-MAIN initialization and 600 updates (v1442)
 
-The original route now completes 600 actual second-MAIN updates after the real
-Quit/MAINE/fresh OP handoff. Its first pre-update sample has frame0, score0,
-power1 and invincibility64, with resident seed70. Two trace partitions preserve
-actual generation1/2 IDs and reconstruct the complete observer stream byte for
-byte. Generation2 has its own profile, full DGROUP records and actual terminal;
-twelve full RAM checkpoints preserve resident allocation. No gameplay state,
-RNG, frame counter or process ID is assigned by the controller.
+Both original and MAIN 778641ab now pass the admitted second-MAIN comparison:
+initial state, consumed inputs, 36 fields/ordered RNG, nine full actor pools,
+22 state blocks and actual terminal fields agree across 600 actor updates.
+The first MAIN retains 7,547 completed updates plus one unfinished pre-update
+sample. Six complete resident 256 checkpoints, twelve allocation checkpoints
+per side and physical CFG/SCR agree; all ten full 16-bit score checksums pass.
+Supporting OP/MAINE/ZUN remain original. This is not a four-reconstructed-product
+chain, complete campaign, pixel, native or exact acceptance claim.
+
+The new `--restart-shot-boundary` injects ordinary Shot at the first actual
+actor-update store, verified against its full DGROUP/CPU snapshot. Original
+MAIN relative 0AAF:01B3 and candidate relative 0708:0769 use load 10FC; the actual
+candidate address is retained in `second-main/first-update.json` for replay.
+No game state/RNG/frame/generation ID is assigned. Actual generation 1/2 trace
+pieces concatenate byte for byte to the full observer stream. Second-MAIN
+initial frame 0/score 0/power 1/invincibility 64 and resident seed 70 agree.
 
 Replay: `.analysis/reconstruction/probes/dos-second-main-updates-v1442/`.
-Original admission and27 actual counterexamples pass; CI548 passes after a
-reader scope repair. The frozen first reader mistakenly included second-MAIN
-Shot in its initial OP validation, thereby rejecting Quit Escape events. That
-negative is retained and reproduced on the same unchanged captured clock. The
-new public regression bounds initial input before the second-MAIN action start.
-The timed-input candidate is now terminal but the pair is not admitted: first
-second-MAIN consumed input is2000 versus0000 despite matching seed/RNG. Later
-pool/score differences cannot be classified as a product defect. The failed pair
-retains292/17 post-reset differences across first/second MAIN. New optional
-`--restart-shot-boundary` sends Shot at the first actual actor-update store,
-bound to its CPU/DGROUP snapshot; new boundary captures are in progress.
-CI551 and three new boundary controls pass. The rejected pair's12 recoverable
-aliases release114.992 MiB net; its original reports/streams/receipts remain.
-Supporting products remain original; this is not a full campaign or exact claim.
+Accepted component captures are `dos-second-main-updates-v1442-boundary-{original,candidate}`.
+The aggregate still fails for 291 first-MAIN and 24 second-MAIN post-reset input
+samples. The earlier entry+200ms pair is not admitted: initial Shot 2000 versus
+0000 despite equal seed/RNG; its later pool/score differences are not an admitted
+product defect. That startup/input-timing difference remains open, with its own
+292/17 counts and original receipts. Boundary-run agreement does not solve it.
+
+The frozen first reader's cross-generation Shot-selection failure remains
+reproducible. CI 551, twelve new public controls and 32 actual boundary-run
+counterexamples pass; the timed run keeps its 27 actual controls. Separate
+recovery journals retire 24 owned HDI/font/raw aliases in 50 blobs, releasing
+229.992 MiB net. Full RAM/DGROUP/entry streams, both source archives, final
+reader overlay, failures, MAIN/MAP and receipts remain. Restoring the boundary
+aliases reproduces the identical full comparison digest before retirement again.
+Next use this admitted scenario with a newly attested four-product source build,
+then recover native development in a fresh namespace. Complete Demo pool/video,
+intermediate UI, continuous allocation lifetime and physical timing remain open.
 
 ## Resident allocation and paired second MAIN (v1441)
 

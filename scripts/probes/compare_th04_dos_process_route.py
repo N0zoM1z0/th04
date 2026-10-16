@@ -106,6 +106,11 @@ def compare_route(original_dir, candidate_dir, original, source_snapshot=None):
         x, y = (bytes.fromhex(c['route']['entries'][-1]['resident_hex']) for c in (a,b))
         residents['second_main_entry'] = dict(passed=x == y, original_sha256=sha(x), candidate_sha256=sha(y),
                                              differing_offsets=[i for i, (u,v) in enumerate(zip(x,y)) if u != v])
+    if a['receipt'].get('restart_updates'):
+        x, y = (bytes.fromhex(json.loads((directory/'second-main-prefix.json').read_text())['resident_hex'])
+                for directory in (original_dir,candidate_dir))
+        residents['second_main_prefix'] = dict(passed=x == y, original_sha256=sha(x), candidate_sha256=sha(y),
+                                              differing_offsets=[i for i,(u,v) in enumerate(zip(x,y)) if u != v])
     af, bf = file_state(original_dir), file_state(candidate_dir)
     file_results = {name: dict(original=af[name], candidate=bf[name],
                               raw_equal=af[name]['final_hex'] == bf[name]['final_hex']) for name in af}

@@ -20,6 +20,31 @@ compilation's wrapper refusal and subsequent verified cache publication are
 retained separately. This does not restore the old working directories or the
 94 missing native protected files. See the v1438 focused differential note.
 
+## Second-MAIN initialization and input-boundary retention (v1442)
+
+Two journals under `.analysis/reconstruction/probes/dos-second-main-updates-v1442/`
+retire only terminal owned HDI/font/raw aliases:
+
+| Journal | Paths / blobs | Archive MiB | Net released MiB |
+| --- | ---: | ---: | ---: |
+| `route-retention/retention.json` (rejected timed input) | 12 / 25 | 1.844 | 114.992 |
+| `boundary-retention/retention.json` (admitted actor-boundary input) | 12 / 25 | 1.844 | 115.000 |
+
+Total verified release is 229.992 MiB from 24 paths in 50 blobs. Complete archive
+SHA/CRC, reconstructed SHA/size, temporary mode/nsmtime and protected checks pass.
+Each `recover.py` verifies without expansion; add `--restore` or a selected
+`--restore --prefix .analysis/runtime/candidates/dos-second-main-updates-v1442-boundary-candidate/`.
+The boundary pair's restored report has the identical digest before those
+aliases are verified and retired again. Keep both journals/archives and the
+pinned base together.
+
+Full first/second-MAIN DGROUP streams, four entry images and twelve full RAM
+dumps per capture, real first-actor snapshots, original/fixed reader evidence,
+input rejection,27/32 actual controls, 551-test CI, two 1,551-input source archives,
+producer freezes, final reader overlay and MAIN/MAP remain live. `finish.json`
+binds this closure and both failed/admitted reports. Missing historical native
+worktrees and their 94 protected files are outside this cleanup.
+
 ## Second MAIN and resident MCB retention (v1441)
 
 `.analysis/reconstruction/probes/dos-process-restart-v1441/route-retention/`

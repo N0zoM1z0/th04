@@ -5,43 +5,74 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
-## Original generation-2 update observation (v1442)
+## Admitted second-MAIN initialization and 600 actor updates (v1442)
 
-`--restart-updates 600` extends the verified entry route through second-MAIN
-initialization and actual updates. It requires `--restart-main` and excludes
-video for this bounded contract. The existing emulator observer naturally emits
-literal `L 2` and resets its own RNG observation counters at that entry. A fresh
-Monitor waits for the new frame sequence, writes generation2 DGROUP headers and
-closes a real after-update terminal. Observer arming asserts unchanged guest
-RAM/registers/PIC at the independently verified second entry. Ordinary Enter
-release and held Shot are recorded separately from restart-menu actions.
+The new boundary-input pair executes actual MAIN Quit -> original MAINE ->
+fresh original OP -> second MAIN. Four complete entry images match their own
+pinned files, retaining PSP 10EC and load 10FC. MAIN remains778641ab; supporting
+products remain original. The first MAIN closes at 7,547 complete actor updates
+plus its unfinished final pre-update sample. The second MAIN has 600 complete
+actor-update records and a real after-update terminal, with no synthetic T.
 
-The original completes 600 updates. Initial frame0/score0/power1/invincibility64
-and resident seed70 are directly observed; complete raw fields remain in
-`original-admission.json`. The full observer trace is retained as
-`raw-observer-all.txt`. Its two derived pieces (`raw.txt`, `second-main/raw.txt`)
-retain every byte and original generation IDs; they must concatenate exactly.
-The first piece has 7,547 completed updates and one unfinished pre-update sample.
-Twelve complete conventional RAM checkpoints preserve the resident allocation.
-The reader now cross-checks full entry PSP/MCB bytes against those actual dumps.
+`--restart-shot-boundary` requires `--restart-main --restart-updates N` with
+N>=2. A fresh generation-2 Monitor waits for the new frame sequence. At the first
+actual actor-update store it records full DGROUP/CPU state and injects ordinary
+Shot with asserted unchanged guest RAM/registers/PIC. The input action must match
+that exact frame, tick and CPU context. Both pre-update input sequences begin
+0,0,20h,20h,...; no input value is assigned directly. The original first boundary
+is MAIN relative 0AAF:01B3 at load 10FC; candidate addresses are in its attested
+profile/first-update snapshot. The complete observer stream is retained as
+`raw-observer-all.txt`; `raw.txt` and `second-main/raw.txt` preserve literal
+process 1/2 IDs and concatenate exactly to it.
 
-The first consumer selected the last Shot across both generations, passing real
-Quit Escape events to initial OP validation. Its actual failure, frozen source
-and replay remain under `first-reader-*` and `reader-rejection-replay.json`.
-Current admission uses the explicit second-MAIN action start; a public regression
-catches the old scope. No capture/producer receipt is restamped. Eight protocol
-controls plus this regression pass; full CI548 and27 actual trace/DGROUP/PSP/
-observer/keyboard/terminal counterexamples pass. The candidate timed-input
-capture completes but is not admitted: original initial consumed input2000,
-candidate0000, with equal seed70/initial RNG. Subsequent score/pool differences
-are not a reproduced game defect. Preserve this actual negative; first/second
-post-reset counts are292/17. `--restart-shot-boundary` now binds ordinary Shot to
-the first actual actor-update store (frame1), its full DGROUP/CPU snapshot and
-unchanged guest proof. It requires at least two updates and uses a new namespace.
-Three public boundary guards and CI551 pass; new paired evidence is pending.
-The old timed pair retires12 owned aliases in25 blobs (114.992 MiB net after a
-1.844 MiB archive); all compressed streams, sources, failures and receipts remain. Replay namespace:
-`.analysis/reconstruction/probes/dos-second-main-updates-v1442/`.
+Both admitted runs agree on initial frame 0/score 0/power 1/invincibility 64, seed 70,
+all 36 pre-update fields/ordered RNG calls, nine whole actor pools, 22 state blocks
+and terminal fields through 600 updates. All 256 resident bytes agree at six
+handoff/entry/menu/prefix checkpoints. Twelve complete conventional RAM snapshots
+per side verify the linked resident allocation and complete entry PSP/MCB
+readback. Raw owner FFFF is an observed DOS field, not a verified live PSP FFFF.
+Physical MIKO.CFG is unchanged and equal; GENSOU.SCR changes identically only in
+decoded section 1, with all ten complete 16-bit checksums valid before and after.
+The aggregate remains failed for 291/24 post-reset input samples in first/second
+MAIN. No physical timing, complete campaign, pixels, native or exact promotion.
+
+The prior entry-relative200ms pair is separately retained and not admitted:
+original first consumed input 2000, candidate 0000, despite equal seed 70/initial
+RNG. Its subsequent score/pool/RNG-cursor differences are not an admitted game
+defect. Its first/second post-reset counts are 292/17. New boundary input is a
+separate falsifiable scenario; it does not resolve that startup/input-timing
+negative. The first reader also wrongly extended initial OP keyboard validation
+to the last Shot across both MAIN generations; frozen source and actual-clock
+rejection replay remain, with a public regression. No receipt is restamped.
+
+```sh
+python3 .analysis/reconstruction/probes/dos-second-main-updates-v1442/boundary-retention/recover.py --restore
+python3 scripts/probes/compare_th04_dos_process_route.py \
+  .analysis/runtime/candidates/dos-second-main-updates-v1442-boundary-original \
+  .analysis/runtime/candidates/dos-second-main-updates-v1442-boundary-candidate \
+  --original-main .analysis/targets/th04/main.exe --output /tmp/th04-second-main.json
+```
+
+Exit1 is expected for the preserved post-reset failures. Timed-run replay uses
+`route-retention/recover.py`, its original capture names, and
+`--source-snapshot .analysis/reconstruction/probes/dos-second-main-updates-v1442/producer-source`.
+The namespace preserves the original 7f3a7c1 source archive, 73424f3 boundary-source
+archive (1,551 maintained inputs each), both producer freezes and final reader
+overlay. `finish.json` binds the rejected/admitted reports, byte-identical
+restored replay, current CI 551,27/32 actual controls and both recovery journals.
+
+Twelve new public tests cover generation partition/parser/header ownership,
+keyboard-phase selection and real actor-boundary Shot. Thirty-two actual
+boundary-run mutants reject stale/missing generation/PSP/observer/DGROUP/input/
+terminal ownership plus first-actor snapshot and CPU/tick changes. Inner semantic
+mutants bypass outer hashes only on temporary copies; real captures are intact.
+Two journals retire 24 owned aliases in 50 blobs:114.992 MiB timed plus115.000 MiB
+boundary,229.992 MiB net after3.688 MiB archives. Complete compressed streams,
+source, negative evidence, MAIN/MAP and receipts remain; missing native trees
+are untouched. Next extend the source-product surface to freshly built supporting
+executables with their own MAP/instruction hooks, then native parity. Full Demo
+pool/video, intermediate UI, continuous allocation lifetime and complete routes
+remain separate requirements.
 
 ## Paired resident MCB checkpoints and second MAIN (v1441)
 
