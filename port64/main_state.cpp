@@ -820,21 +820,8 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     }
     title_draws_.clear();
     if(before_overlay==transition::Callback::enter && overlay_.callback==transition::Callback::titles)titles_.frame=0;
-    else if(!application_->resident().demo_number) {
-        auto title_scroll=scroll_line_;
-        if(background && !background->streams_released() && life_.state().scroll_active &&
-           (overlay_.callback==transition::Callback::titles || overlay_.callback==transition::Callback::boss_titles)) {
-            // FrontEnd commits this background update after State returns.
-            // Original overlay1 runs after scroll_driver. Replay the same
-            // update on a private value to read its resulting scroll origin;
-            // do not advance the live ring or change the actors' input phase.
-            auto rendered_background=*background;
-            rendered_background.update(true);
-            title_scroll=std::int16_t(rendered_background.scroll_line());
-        }
-        title_draws_=titles::update(titles_,overlay_.callback,hud_text_,
-            stage_id_,std::uint8_t(playchar_),title_scroll,life_.state().scroll_active!=0);
-    }
+    else if(!application_->resident().demo_number)title_draws_=titles::update(titles_,overlay_.callback,hud_text_,
+        stage_id_,std::uint8_t(playchar_),scroll_line_,life_.state().scroll_active!=0);
     popup::update(popup_,hud_text_);
     playfield_shift_=playfield::update(playfield_shake_,std::uint8_t(frames_&1u),std::uint8_t(frames_&3u));
     run_frames_.complete(0,static_cast<std::uint16_t>(slowdown()));

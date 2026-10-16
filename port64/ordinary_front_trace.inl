@@ -77,6 +77,25 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
         const std::uint32_t observed_frame=frame;popup_rows.write(reinterpret_cast<const char*>(&observed_frame),4);
         for(unsigned row:{2u,23u})for(unsigned bank:{0u,0x2000u})
             popup_rows.write(reinterpret_cast<const char*>(text.data()+bank+row*160u),160);
+        {
+            constexpr unsigned title_frames[]{74,90,98,99,100,105,106,107,110,192,265,266,270,280,290,296,297,298,299,6549,6573,6574,6581,6582,6583,6740,6741,6753,6765,6772,6773,6774,7639,7641,7648,7657,7705,7770};
+            if(std::find(std::begin(title_frames),std::end(title_frames),frame)!=std::end(title_frames)) {
+                const auto random=scene.process_random_state();const auto samples=main.random_samples();
+                const auto cursor=main.random_cursor();
+                std::ostringstream before;th04::portable::demo_wire::pools(before,0,main,program);
+                scene.repaint();const auto pictured=scene.frame();scene.repaint();
+                std::ostringstream after;th04::portable::demo_wire::pools(after,0,main,program);
+                require_view(main.frames()==frame && scene.process_random_state()==random && main.random_samples()==samples &&
+                    main.random_cursor()==cursor && before.str()==after.str() && pictured.pixels==scene.frame().pixels &&
+                    pictured.indices==scene.frame().indices,"title repaint advanced state or changed the picture");
+                write_bmp((output/("title-"+std::to_string(frame)+".bmp")).string(),pictured);
+                require_view(pictured.indices.size()==640*400,"title graphics observation extent");
+                std::ofstream graphics(output/("title-"+std::to_string(frame)+"-graphics.bin"),std::ios::binary);
+                graphics.write(reinterpret_cast<const char*>(pictured.indices.data()),pictured.indices.size());
+                std::ofstream tram(output/("title-"+std::to_string(frame)+"-text.bin"),std::ios::binary);
+                tram.write(reinterpret_cast<const char*>(text.data()),text.size());
+            }
+        }
         if(frame==7639 || frame==7641 || frame==7648 || frame==7657 || frame==7705 || frame==7770) {
             scene.repaint();write_bmp((output/("popup-"+std::to_string(frame)+".bmp")).string(),scene.frame());
             std::ofstream snapshot(output/("popup-"+std::to_string(frame)+"-text.bin"),std::ios::binary);
