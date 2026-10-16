@@ -101,15 +101,18 @@ def parse_raw(raw, main, profile, load_segment):
 
 def records(capture):
     summary = json.loads((capture / "stage-boundary-summary.json").read_text())
-    meta = [
-        json.loads(line)
-        for line in (capture / "stage-boundary.jsonl").read_text().splitlines()
-    ]
-    require(len(meta) == summary["records"], "epoch record count")
+    metadata_path = capture / "stage-boundary.jsonl"
+    with metadata_path.open("rb") as metadata:
+        require(sum(1 for _ in metadata) == summary["records"], "epoch record count")
     prior_group = prior_video = 0
-    with gzip.open(capture / "stage-boundary.bin.gz", "rb") as stream:
+    with (
+        metadata_path.open() as metadata,
+        gzip.open(capture / "stage-boundary.bin.gz", "rb") as stream,
+    ):
         require(stream.read(8) == b"TH04SB1\n", "epoch wire header")
-        for index, row in enumerate(meta):
+        observed = 0
+        for index, line in enumerate(metadata):
+            row = json.loads(line)
             header = stream.read(4)
             require(
                 len(header) == 4
@@ -130,7 +133,9 @@ def records(capture):
                 (sha(group), sha(video)) == (row["dgroup_sha256"], row["video_sha256"]),
                 "epoch raw wire identity",
             )
+            observed += 1
             yield row, group, video
+        require(observed == summary["records"], "epoch complete streamed metadata")
         require(stream.read(1) == b"", "epoch trailing wire data")
 
 
@@ -474,6 +479,16 @@ def attest(
     )
     if resources is not None:
         report["watchpoint_resources"] = resources
+    require(
+        ("stage2_waits" in profile) == ("stage2_waits_sha256" in summary),
+        "epoch blocking observation declaration",
+    )
+    if "stage2_waits" in profile:
+        from th04_stage_waits import attest_waits
+
+        report["stage2_waits"] = attest_waits(
+            capture, main, target, profile, load_segment, raw_rows
+        )
     return report, rows, raw_rows, events
 
 
@@ -492,6 +507,7 @@ if __name__ == "__main__":
     p.add_argument("--source-snapshot", type=Path)
     p.add_argument("--stage2-updates", type=int, default=600)
     p.add_argument("--require-bounded-watchpoints", action="store_true")
+    p.add_argument("--require-stage2-waits", action="store_true")
     args = p.parse_args()
     report, *_ = attest(
         args.capture.resolve(),
@@ -499,6 +515,10 @@ if __name__ == "__main__":
         args.source_snapshot,
         args.stage2_updates,
         args.require_bounded_watchpoints,
+    )
+    require(
+        not args.require_stage2_waits or "stage2_waits" in report,
+        "required Stage2 wait observations",
     )
     with args.output.open("x") as stream:
         json.dump(report, stream, indent=2)

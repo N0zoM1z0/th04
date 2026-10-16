@@ -3696,6 +3696,20 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/th04_stage_waits.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Attest own-file Stage2 Continue/dialogue calls, CPU/full-memory and actual player-input ownership.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_stage_waits_gdb.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Capture Stage2 blocking call/return/player checkpoints with five persistent read-only watchpoints.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/th04_title_draw_checkpoints_gdb.py",
     "category": "runtime",
     "role": "support",

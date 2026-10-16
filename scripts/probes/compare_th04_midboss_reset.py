@@ -201,6 +201,9 @@ def lifecycle(actors, complete_updates):
 
 def compare(original, candidate, paired_path, native_frontend, native_receipt, updates):
     paired = json.loads(paired_path.read_text())
+    expected_files = {"stage-native.jsonl", "stage2-pools.bin"}
+    if "stage2_waits" in paired["original_attestation"]:
+        expected_files |= {"stage2-consumed.txt", "stage2-blocks.txt"}
     require(
         paired["passed"]
         and paired["compared_scalar_records"] == 2 * updates + 3
@@ -210,8 +213,7 @@ def compare(original, candidate, paired_path, native_frontend, native_receipt, u
         and not paired["homing_errors"]
         and len(paired["pools"]) == 9
         and all(v["passed"] for v in paired["pools"].values())
-        and set(paired["native_input_files"])
-        == {"stage-native.jsonl", "stage2-pools.bin"},
+        and set(paired["native_input_files"]) == expected_files,
         "Midboss complete paired native comparison",
     )
     require(

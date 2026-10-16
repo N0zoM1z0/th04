@@ -91,6 +91,9 @@ class Boundary:
         ]
         assert len(matches) == 1
         self.profile = matches[0]
+        self.waits = self.scope.get("stage_waits")
+        if self.waits is not None:
+            self.waits.begin(self)
         self.output = m.output
         self.checkpoints = self.output / "stage-boundary"
         self.checkpoints.mkdir()
@@ -262,6 +265,8 @@ class Boundary:
             row = self.record("stage2-actor")
             assert row["stage"] == 1 and row["frame"] == self.loop + 1
             self.arm("score")
+            if self.waits is not None and self.waits.cue(row):
+                return True
         else:
             assert label == "score"
             row = self.record("stage2-score")
@@ -274,6 +279,13 @@ class Boundary:
 
     def finish(self):
         assert self.complete and self.loop == self.profile["stage2_updates"]
+        if self.waits is not None and self.waits.active:
+            assert self.waits.complete
+            waits = self.waits.scope["waits"][self.waits.prefix_waits :]
+            assert len(waits) == len(self.waits.cues) and all(
+                "action_end" in row for row in waits
+            )
+            self.waits.save()
         self.wire.close()
         self.raw.close()
         self.stream.close()
@@ -301,6 +313,10 @@ class Boundary:
             reader_sha256=sha(Path(__file__).read_bytes()),
             scope=f"Own-file read-only instruction-fetch observations after actualactor9836 andthrough{self.loop}completedStage2updates. Prefixraw/DGROUP remainsits original bounded extent;complete extendedraw andbridge/Stage2 wire/CPU/memory/video remainseparate. Exactlyone boundarywatcher isenabled atatime;thesevenfixedown-fileaddresses reusepersistenthardwarewatchpoints;no guest-state/clock/code writes orhost function calls bythisreader. Keyboard andtraceflush remainexplicit baseadapteroperations. No physicalscanout/campaign/exactclaim.",
         )
+        if self.waits is not None and self.waits.active:
+            summary["stage2_waits_sha256"] = sha(
+                (self.output / "stage2-waits.json").read_bytes()
+            )
         (self.output / "stage-boundary-summary.json").write_text(
             json.dumps(summary, indent=2) + "\n"
         )

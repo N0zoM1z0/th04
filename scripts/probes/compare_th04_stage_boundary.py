@@ -2,8 +2,9 @@
 """Replay the bounded DOS stage-epoch comparison and optional native observations.
 
 Raw GDC and post-reset key differences remain explicit failures of the DOS
-aggregate. Native consumed inputs are checked against preceding loop samples;
-post-reset DOS key_det has separate ownership. Native pictures and physical
+aggregate. With blocking observations, the actual player-input sidecar is
+checked against preceding loop samples and own-file player-entry exceptions.
+Post-reset DOS key_det has separate ownership. Native pictures and physical
 clock behavior are outside this comparison.
 """
 
@@ -26,6 +27,7 @@ p.add_argument("--source-snapshot", type=Path)
 p.add_argument("--stage2-updates", type=int, default=600)
 p.add_argument("--require-midboss", action="store_true")
 p.add_argument("--require-bounded-watchpoints", action="store_true")
+p.add_argument("--require-stage2-waits", action="store_true")
 args = p.parse_args()
 root = args.dos_root.resolve()
 r = args.output_dir.resolve()
@@ -58,6 +60,12 @@ br, bm, braw, bevents = attest(
     args.stage2_updates,
     args.require_bounded_watchpoints,
 )
+has_waits = "stage2_waits" in ar or "stage2_waits" in br
+require(
+    not has_waits or "stage2_waits" in ar and "stage2_waits" in br,
+    "paired blocking observation owners",
+)
+require(not args.require_stage2_waits or has_waits, "required Stage2 wait observations")
 assert [(x["label"], x["stage"], x["frame"]) for x in am] == [
     (x["label"], x["stage"], x["frame"]) for x in bm
 ]
@@ -140,6 +148,73 @@ video = summarize_pair(
     expected_updates=3 * args.stage2_updates + 7,
 )
 (r / "dos-video.json").write_text(json.dumps(video, indent=2) + "\n")
+wait_comparison = None
+if has_waits:
+    require(
+        ar["stage2_waits"]["cues"] == br["stage2_waits"]["cues"],
+        "paired wait cue sequence",
+    )
+    docs = [json.loads((c / "stage2-waits.json").read_text()) for c in [a, b]]
+    changes = []
+    pool_changes = []
+    images = [[], []]
+    import gzip
+
+    for index, (ma, mb) in enumerate(
+        zip(docs[0]["rows"], docs[1]["rows"], strict=True)
+    ):
+        require(
+            (ma["label"], ma["frame"], ma["cue_kind"])
+            == (mb["label"], mb["frame"], mb["cue_kind"]),
+            "paired wait actual observation order",
+        )
+        changed = {
+            name: dict(original=value, candidate=mb["fields"][name])
+            for name, value in ma["fields"].items()
+            if name != "resident_pointer" and value != mb["fields"][name]
+        }
+        if changed:
+            changes.append(
+                dict(index=index, label=ma["label"], frame=ma["frame"], fields=changed)
+            )
+        groups = [
+            gzip.decompress((c / "stage2-waits" / m["dgroup"]).read_bytes())
+            for c, m in zip([a, b], [ma, mb], strict=True)
+        ]
+        for name, oa, ob, count, stride in extents:
+            if (
+                groups[0][oa : oa + count * stride]
+                != groups[1][ob : ob + count * stride]
+            ):
+                pool_changes.append(
+                    dict(index=index, label=ma["label"], frame=ma["frame"], owner=name)
+                )
+        for side, (capture, meta) in enumerate(zip([a, b], [ma, mb], strict=True)):
+            images[side].append(
+                (
+                    index + 1,
+                    gzip.decompress(
+                        (capture / "stage2-waits" / meta["video"]).read_bytes()
+                    ),
+                )
+            )
+    wait_video = summarize_pair(
+        iter(images[0]), iter(images[1]), expected_updates=len(docs[0]["rows"])
+    )
+    wait_comparison = dict(
+        passed=not changes
+        and not pool_changes
+        and wait_video["passed"]
+        and wait_video["raw_gdc_differing_frames"] == 0,
+        scalar_differences=changes,
+        pools_and_states_differences=pool_changes,
+        player_inputs_passed=ar["stage2_waits"]["player_inputs"]
+        == br["stage2_waits"]["player_inputs"],
+        video=wait_video,
+        scope="Six additional own-file blocking CPU/full-memory observations;volatile key and raw-GDC differences remain explicit. No UI timing or native picture acceptance.",
+    )
+    wait_comparison["passed"] &= wait_comparison["player_inputs_passed"]
+    (r / "dos-waits.json").write_text(json.dumps(wait_comparison, indent=2) + "\n")
 dos = dict(
     passed=not scalar_bad
     and all(v["passed"] for v in rows.values())
@@ -155,6 +230,9 @@ dos = dict(
     raw_gdc_differing_records=video["raw_gdc_differing_frames"],
     scope=f"Same own-file bridge and{args.stage2_updates}Stage2updates;all35 comparable rawprofilefields/orderedRNG,9pools/22states,38configuredvideo regions. Postresetinput/rawGDC differences remain separate;not fullcampaign/timing/exactness.",
 )
+if wait_comparison is not None:
+    dos["stage2_waits"] = wait_comparison
+    dos["passed"] &= wait_comparison["passed"]
 (r / "dos-comparison.json").write_text(json.dumps(dos, indent=2) + "\n")
 print(
     "ACTUAL DOS EPOCH VECTOR",
@@ -177,6 +255,32 @@ require(
     sha(exe.read_bytes()) == native_receipt["program_sha256"],
     "native stage executable identity",
 )
+consumed = None
+native_files = ["stage-native.jsonl", "stage2-pools.bin"]
+loop_input_counterfactual = []
+if has_waits:
+    native_files += ["stage2-consumed.txt", "stage2-blocks.txt"]
+    require(
+        set(native_receipt["diagnostic_files"]) == set(native_files)
+        and all(
+            sha((frontend / name).read_bytes()) == digest
+            for name, digest in native_receipt["diagnostic_files"].items()
+        ),
+        "native blocking/consumed-input producer identity",
+    )
+    samples = [
+        list(map(int, line.split()))
+        for line in (frontend / "stage2-consumed.txt").read_text().splitlines()
+    ]
+    require(
+        len(samples) == args.stage2_updates
+        and all(
+            len(row) == 2 and row[0] == i + 1 and 0 <= row[1] <= 65535
+            for i, row in enumerate(samples)
+        ),
+        "native actual player-input extent/order/width",
+    )
+    consumed = {frame: value.to_bytes(2, "little").hex() for frame, value in samples}
 native = [
     json.loads(s) for s in (frontend / "stage-native.jsonl").read_text().splitlines()
 ]
@@ -291,13 +395,25 @@ for m in metadata:
             post_reset_inputs.append(dict(label=label, frame=frame, **changed["input"]))
         changed.pop("input", None)
         expected_input = raw[(1, frame - 1)]["fields"]["input"]
-        if nn["fields"]["input"] != expected_input:
+        if has_waits:
+            actual_owner = ar["stage2_waits"]["player_inputs"].get(
+                str(frame), expected_input
+            )
+            if actual_owner != expected_input and label == "stage2-actor":
+                loop_input_counterfactual.append(
+                    dict(frame=frame, loop=expected_input, player_entry=actual_owner)
+                )
+            expected_input = actual_owner
+        native_consumed = (
+            consumed[frame] if consumed is not None else nn["fields"]["input"]
+        )
+        if native_consumed != expected_input:
             consumed_input_errors.append(
                 dict(
                     label=label,
                     frame=frame,
                     original=expected_input,
-                    native=nn["fields"]["input"],
+                    native=native_consumed,
                 )
             )
     group = group_by_label[(label, frame)]
@@ -385,8 +501,7 @@ report = dict(
     and not homing_errors
     and all(v["passed"] for v in pools.values()),
     native_input_files={
-        name: sha((frontend / name).read_bytes())
-        for name in ["stage-native.jsonl", "stage2-pools.bin"]
+        name: sha((frontend / name).read_bytes()) for name in native_files
     },
     native_producer_receipt_sha256=sha(args.native_receipt.read_bytes()),
     extra_state_fields=sorted(extra_fields),
@@ -394,6 +509,12 @@ report = dict(
     candidate_attestation=br,
     compared_scalar_records=2 * args.stage2_updates + 3,
     consumed_input_errors=consumed_input_errors,
+    loop_input_counterfactual=loop_input_counterfactual,
+    player_input_source=(
+        "Per-actor State::player_input, with independent original player-entry owners at blocking frames"
+        if consumed is not None
+        else "Legacy pre-blocking Stage2 last-input observations versus preceding loop samples"
+    ),
     homing_errors=homing_errors,
     post_reset_input_differences=len(post_reset_inputs),
     post_reset_input_first_differences=post_reset_inputs[:8],

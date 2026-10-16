@@ -23,6 +23,8 @@ CATEGORIES = {
 }
 EXTENSIONS = {'.py', '.sh', '.ps1', '.cmd', '.bat', '.java', '.asm', '.gdb'}
 OVERRIDES = {
+    'th04_stage_waits.py': ('runtime', 'Attest own-file Stage2 Continue/dialogue calls, CPU/full-memory and actual player-input ownership.'),
+    'th04_stage_waits_gdb.py': ('runtime', 'Capture Stage2 blocking call/return/player checkpoints with five persistent read-only watchpoints.'),
     'th04_product_surface.py': ('runtime', 'Attest a same-run four-product source cohort and derive OP counter hooks from its own MAP and bytes.'),
     'th04_dos_boot.py': ('runtime', 'Validate actual DOS load-and-go entries, complete entry images, parent PSP and OP counter ownership.'),
     'th04_ordinary_generation.py': ('runtime', 'Partition actual MAIN generations without relabeling and validate frame/RNG provenance.'),
