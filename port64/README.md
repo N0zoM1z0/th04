@@ -1,38 +1,34 @@
 # TH04 native 64-bit bring-up
 
-## Ordinary FrontEnd dialogue and Boss prefix (v1446)
+## Ordinary dialogue/player boundary (v1447)
 
-Current source13e6676 keeps Stage1's gameplay sample across blocking dialogue
-refreshes. GNU and optimized UBSan are independently cold-built from557 inputs.
-The real FrontEnd now compares7500 ordinary updates with original DOS, including
-actual sampled gameplay keys,21 state/RNG fields, nine full actor pools and
-four full Boss blocks (45 bytes). Five natural deaths end at lives1; Boss
-phases0/1/2 execute. Initialization counter/menu calls and dialogue release/
-Enter keys are explicit component adapters, not natural OP or timing acceptance.
+Source a7f9bea removes v1446's incorrect Stage1 input latch. Original checkpoints
+show STD dialogue before player_update: frame6548's loop sample is Shot20h,
+while the actual player entry sees Enter2000h. The verifier now requires original
+instruction-fetch/caller/memory evidence for every blocking frame. Loop and
+player inputs have separate reference boundaries.
 
 ```sh
 python3 port64/verify_ordinary_state.py --frontend --updates 7500 \
-  --dos-root DOS_CHECKOUT --original RESTORED_ORIGINAL_CAPTURE \
-  --exe .analysis/port64/current/th04-port64 --output-dir FRESH_OUTPUT
+  --dos-root DOS_CHECKOUT --original RESTORED_CHECKPOINT_CAPTURE \
+  --exe CURRENT_GAME --output-dir FRESH_OUTPUT
 ```
 
-The public `--ordinary-trace-checks DIR` executable entry reads
-`ordinary-inputs.txt` in `--save-dir`: header `seed updates character shot`,
-then `frame raw_gameplay_keys shift` for every update and final prefix.
-It requires a muted headless component, original-data HDI/font and physical
-CFG/SCR. The verifier prepares and attests these inputs. State, actual sampled
-input, full Boss blocks and blocked-dialogue admissions have separate files.
-The default direct component and Demo readers still require3996 updates unless
-an ordinary caller explicitly names a different extent. Full dialogue pictures,
-remaining globals/Game Over/Continue, Boss defeat, campaign and Windows remain open.
+Create that original with the DOS checkout's capture_th04_dos_ordinary_prefix.py
+using --dialog-checkpoints --dialog-at-frame 6548 --end-after 7501 and an attested
+--video-layout. The standard capture publishes dialog-checkpoint-sources.json.
+The verifier binds it automatically; an explicitly frozen older observer may
+supply --dialog-observer-profile FILE. A blocked capture without player-entry
+evidence rejects. The first6549-stop capture remains inadmissible to the generic
+keyboard reader because it ends before the gameplay-Shot restoration.
 
-Cold C++ producer13e6676 remains557/d246f71f. Current Python consumer48db31c
-is557/7c4b8576: only verify_demo_pools.py restores the default Demo truncation
-diagnostic after the first native CI found its message regression. All350
-compiled own inputs and cold executables are unchanged. Fresh separate GNU/
-UBSan consumer replays and eight current-reader controls reproduce all admitted
-results. The first failed CI and every old producer/runtime receipt remain
-unchanged; current-consumer.json and consumer-replay.json bind both identities.
+GNU/UBSan7500 updates match actual player input,21 state/RNG fields,nine full
+pools and four Boss blocks. One pre-script state/pool checkpoint and141312
+programmed-GDC playfield graphics pixels also match. Fresh game translation
+units link unchanged attested cold cores; this is not a full new cold-core build.
+TRAM/full pictures/scanout, Game Over/Continue and whole-game/Windows remain open.
+The old v1446 state/pool/Boss receipts remain; their player-input inference is
+withdrawn. See [current handoff](../docs/RE_HANDOFF.md).
 
 ## Ordinary collision-latch recovery (v1445)
 

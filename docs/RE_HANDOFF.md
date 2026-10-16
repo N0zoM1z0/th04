@@ -1,62 +1,61 @@
 # TH04 native branch handoff
 
-## Ordinary native dialogue and Boss prefix (v1446)
+## Original dialogue/player input boundary corrected (v1447)
 
-Source `13e6676` preserves Stage1's gameplay input across blocking dialogue
-refreshes. Target MAIN `0AAF:00F1` calls player_update at `0AAF:5FCF` before the
-Boss callback through `DGROUP 2134:432C` at `0AAF:0113`; load `10FC` is recorded.
-The executed predecessor consumed 0 at update 6548 instead of original `20h`.
-Its 21 selected fields and nine pools still matched: the held-shot interval
-made this input error invisible to that earlier comparison. The fixed real
-FrontEnd retains the selected gameplay key/Shift while dialogue owns its
-separate release/Enter samples. It does not edit game state or original captures.
+The v1446 input interpretation and the `13e6676` latch are withdrawn. Actual
+original MAIN code-fetch/caller checkpoints at load `10FC` show STD `0AAF:2454`,
+dialog `0AAF:2BFB/2A7C`, then player `0AAF:5FCF`, all at frame 6548. Dialogue occurs
+before player_update. The loop sample contains `20h` (Shot), but player entry
+contains `2000h` (Enter). The old comparator confused these boundaries. Its state/
+pool/Boss results remain; player-input acceptance is withdrawn. Old receipts
+are unchanged and affected evidence/knowledge is explicitly reclassified.
 
-Fresh source closure of 557 files (d246f71f) builds 85 GNU programs, passes 82 CTests and
-also builds an optimized UBSan core/game. The ordinary Normal/ReimuA seed64/lives6/bombs0 comparison
-now covers 7,500 completed updates and 7,501 boundaries through real dialogue and
-Boss phases 0/1/2: actual gameplay inputs, 21 fields/full RNG state and counts,
-nine complete pools, and four complete Boss blocks (45 bytes, including spare
-state bytes) agree with original DOS. Dialogue has 803 frozen admissions and
-804 advances under declared component keys; these are not original timing.
-Five natural losses end with one life. Native initialization uses an explicit
-OP counter of 64 and menu API; natural startup/input delivery is not accepted.
+Native `a7f9bea` removes that latch and keeps live dialogue keys. Public capture
+--dialog-checkpoints and attest_th04_dialog_checkpoints.py bind target code,
+CPU/stack, conventional/DGROUP memory, raw video and observer sources. Native
+--frontend requires this witness for blocked frames. A fresh public original
+capture of 7,501 updates supports GNU/UBSan 7,500-update comparisons: 21 state/RNG
+fields, actual player input, nine full pools and four Boss blocks agree.
+The real old executable fails only player input at 6548 (`20h` versus `2000h`).
 
-Public replay: native port64/verify_ordinary_state.py --frontend --updates 7500
-with --dos-root, --original, --exe and a fresh --output-dir. Canonical proof/source/recovery:
-`.analysis/reconstruction/probes/native-ordinary-front-v1446/`. The writable
-native tree remains `.analysis/native/port64-recovery-v1445/`.
-Intermediate dialogue/player-prefix pictures, remaining globals/Game Over/
-Continue, Boss defeat, whole routes, scanout/timing, Windows and historical
-exactness remain open. Next extend the actual FrontEnd through Game Over and
-Continue using original captured inputs and separate blocking-owner evidence.
+One pre-script sample also matches player/RNG fields, all nine pools and all
+141,312 pixels of the instantaneous programmed-GDC playfield graphics projection.
+Box subregions overlap that playfield; they are not extra samples. Independent
+emulator rendering source matches its pinned archive and corroborates GRB/DAC
+conversion. TRAM, full pictures/scanout and physical timing remain open.
+Eight real inner controls check PC/frame/code/caller/memory/input ownership.
 
-Eight actual reader controls pass, including independent sampled-input/Boss
-mutations and strict default/configured extents. Compiler dependencies cover 350
-actual own files; fresh GNU core and ymfm archives equal v1445 byte for byte.
-Verified archival retires 249 owned files in 244 blobs, releasing544.664 MiB net
-after a 9.607 MiB archive. SHA/CRC/mode/nsmtime and 2,296 protected hashes pass.
-Restored predecessor/fixed prototype and current GNU/UBSan FrontEnds reproduce
-the complete 7,500-update outputs; only the predecessor repeats its actual-input
-failure. Two restored executable aliases retire again; six borrowed original
-aliases return to their older archive state without counting as new cleanup.
-Current GNU cache/85 programs, selected UBSan game/libraries, all sources and
-complete original/current compressed captures remain. Use recover.py and
-replay_restored.py in this batch's namespace. The active retirement log is
-explicitly excluded until the final closure; no journal/log receipt is restamped.
-Missing old 94 files remain a separate historical gap.
+Source closure557/f6c6e393 has fresh main/view/audio builds against unchanged attested
+cold GNU/UBSan cores. Fresh dependencies cover 130 own files; 231 reused core
+dependencies/library hashes and 82 unchanged core contracts pass. This is a
+leaf rebuild, not a fresh complete cold-core build. Final root CI 573 with live
+MAIN database/mutation checks and native CI 354 pass. Native private Ghidra
+skips because its project is absent; the real database replay is in DOS root.
 
-Cold C++ producer13e6676 remains557/d246f71f. Current Python consumer48db31c
-is557/7c4b8576: only verify_demo_pools.py restores the default Demo truncation
-diagnostic after the first native CI found its message regression. All350
-compiled own inputs and cold executables are unchanged. Fresh separate GNU/
-UBSan consumer replays and eight current-reader controls reproduce all admitted
-results. The first failed CI and every old producer/runtime receipt remain
-unchanged; current-consumer.json and consumer-replay.json bind both identities.
+Verified archival retires 26 owned aliases in 17 blobs: 346.137 MiB net after a
+39.959 MiB archive. SHA/CRC/mode/nsmtime and 258 protected hashes pass. Four
+restored 7,500-update FrontEnds reproduce two old input failures and two current
+passes, with complete selected state/pool/Boss/file/prefix outputs. Five aliases
+are verified and retired again. Current GNU cache/programs, selected UBSan game/
+cold cores and full compressed capture/RAM/video/source evidence remain. Failed
+layout and 6549-stop captures stay distinct. Old missing 94 files are unrelated.
 
-Final gates pass: root CI573 with live MAIN database and Ghidra mutation
-checks, native CI354, and both tracking/diff checks. Native private Ghidra is
-skipped because this checkout has no project; the actual database replay is
-in the DOS root. Keep the initial native message-regression CI as a negative.
+Replay/source/recovery: `.analysis/reconstruction/probes/native-dialog-prefix-v1447/`.
+Original: `native-dialog-prefix-v1447-public-original`; use recover.py before
+readers, or replay_restored.py for restore/replay/retirement. Native tree:
+`.analysis/native/port64-recovery-v1445/`. The closed retirement log is pinned
+only in a separate final closure; no old journal or receipt is rebound.
+Continue Game Over/Continue input/resident/score ownership and complete pictures.
+Broader process/campaign, Windows and historical exactness remain open.
+
+## Historical v1446 state/pool result; player-input interpretation superseded
+
+Source13e6676's Stage1 latch was based on the wrong callback ordering. V1447
+removes it and replaces the loop-sample comparison with actual player-entry
+evidence. The old557/d246f71f producer and557/7c4b8576 Python consumer still
+reproduce their7500-update selected state/full-pool/Boss results, but their
+player-input acceptance is withdrawn. Failed/successful receipts and recovery
+archives remain unchanged; the ledgers record this correction explicitly.
 
 ## Ordinary MAIN collision-latch publication (v1445)
 
