@@ -1,6 +1,57 @@
 # TH04 native branch handoff
 
-## Current native natural routes and strict clear gate (v1432)
+## Ordinary MAIN collision-latch publication (v1445)
+
+Source8a2092b fixes an observable shared-hit latch: collision owners previously
+fed Lifecycle only at the next player prefix, which immediately consumed the
+flag. Original MAIN DGROUP2134:4669 (load10FC) was1 at before-update3078/3284,
+while native life().hit was0. Publish pending collisions before completed-frame
+observers/rendering. Existing next-prefix consumption remains; death timing and
+all nine pool streams were already equal in the predecessor.
+
+Fresh cold GNU85 programs/82 CTests and optimized UBSan entire-core/ordinary
+tracer pass the original Normal/ReimuA seed64, lives6/bombs0 component:3996
+complete updates,3997 before-update/prefix boundaries,21 fields including full
+LCG/ring bytes and post-initialization draw counts, and nine complete pools.
+Two natural deaths/respawns end at lives4. GNU/UBSan state and pool outputs are
+byte-identical. Fresh cold c0a1060 is retained as a compiled negative: only the
+two hit fields fail, with all nine pools equal. Seven actual reader controls
+reject malformed prefixes, fake Demo terminal, wrong hit/resident/RNG data and
+an inactive pool byte. Four-Demo old/new native regression is byte-identical
+at15988 boundaries; this does not renew original Demo/picture acceptance.
+
+Current source closure556/49984d82 and all new proof files are independent of
+the missing old worktrees. The writable checkout is the DOS root's
+`.analysis/native/port64-recovery-v1445/`; canonical proof lives at DOS-root
+`.analysis/reconstruction/probes/native-recovery-v1445/`, also symlinked below
+this checkout. Native CI354 passes with borrowed target files and the pinned
+ReC98 Tupfile as a read-only CI Oracle; native compilation completed without
+that reference directory. Root CI573/live MAIN Ghidra replay/mutations pass.
+Historical native paths/94 protected files remain missing; do not restamp their
+receipts or claim this new producer restores their complete replay.
+
+Use port64/verify_ordinary_state.py with the current DOS checkout's original
+route readers, a restored original capture and the newly built ordinary tracer.
+The native start is an explicit typed component fixture, not a naturally timed
+native OP route. Other globals, dialogue/Boss/Game Over, full pictures, broader
+campaigns, physical timing, Windows and historical exactness remain open.
+Continue the ordinary comparison through actual FrontEnd blocking owners.
+See [the focused lifecycle evidence](port64/evidence/stage-lifecycle.md).
+
+Verified retention retires742 owned files into619 content blobs, releasing
+245.527 MiB net after a13.660 MiB archive. Full SHA/CRC/mode/nsmtime checks
+and3087 protected hashes pass. Restored four ordinary component executables
+and both native Demo executables reproduce complete retained outputs and
+pool digests; nine owned aliases are verified and retired again. Six borrowed
+original aliases return to their older archived state and are not counted as
+new cleanup. Current GNU programs/cache and selected UBSan programs remain.
+The first journal bound a still-empty redirected log and correctly rejects;
+its bytes and reader remain unchanged. A distinct retention-final.json and
+recover_final.py bind the closed terminal log. replay_restored_v2.py also
+restores borrowed original aliases and requires the identical first replay
+report, so the recovery is repeatable. Historical missing94 files remain open.
+
+## Historical native natural routes and strict clear gate (v1432)
 
 The route reader now requires the requested character/rank/shot partition's
 actual physical clear mask below4 plus its shot bit, all ten full16-bit score

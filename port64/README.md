@@ -1,5 +1,22 @@
 # TH04 native 64-bit bring-up
 
+## Ordinary collision-latch recovery (v1445)
+
+Current source8a2092b publishes collision hits before completed-frame observers.
+Fresh GNU and optimized UBSan agree with original DOS on3996 ordinary Normal
+ReimuA updates,21 fields/LCG-ring state and counts, and nine complete actor pools,
+including two natural deaths/respawns. GNU builds85 programs and passes82 CTests;
+native CI354 passes. This is an explicitly initialized MAIN component, not
+natural OP timing, full pictures or a complete game comparison.
+
+Build with `cmake -S port64 -B .analysis/port64/current -DCMAKE_BUILD_TYPE=Release`
+and `cmake --build .analysis/port64/current --parallel 1`. The target
+`th04-port64-ordinary-state-trace` and `port64/verify_ordinary_state.py` replay
+the component from a current DOS checkout's attested original route. Restore
+that capture's image/raw aliases before verification. Use fresh output paths.
+The old missing frozen worktrees remain a historical replay gap; new source,
+builds and receipts have separate identities. See [current handoff](../docs/RE_HANDOFF.md).
+
 ## Native OP palette VSync wait recovery (v1407)
 
 Fixed native base48e05da now separates palette VSYNC_WAIT from frame_delay.

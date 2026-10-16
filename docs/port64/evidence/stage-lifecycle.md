@@ -1180,3 +1180,65 @@ Scoped cleanup reclaims173,391,872 allocated bytes (about165MiB), retires27
 prototype/mutant files and shares227 immutable score regression files. All5,118
 protected file hashes remain unchanged. Cleanup recipe/receipt stays with the
 final references; previous v1308 recovery patches remain intact.
+
+## Ordinary collision-latch boundary recovery (v1445)
+
+Original MAIN's hit BYTE at DGROUP2134:4669, load10FC, is1 before updates3078
+and3284 in the attested Normal/ReimuA seed64 ordinary prefix. Fresh c0a1060
+native LifeState reports0 there, while its separate collision snapshots cause
+the correct next-update death. All nine pools and every other selected scalar
+already agree. The first reader incorrectly used resident48 (end_sequence37h)
+for misses; the accepted reader uses49/50 and guards the initial layout.
+
+main_state.cpp now aggregates the existing pending-collision owners at both
+the player-consumption boundary and the completed collision/render boundary.
+Lifecycle's visible hit latch therefore agrees before the next update without
+changing the two deaths or any actor records. This is a maintained model change,
+not a trace-field substitution or original guest-state write.
+
+Source8a2092b has556 maintained inputs, manifest49984d82. Separate fresh GNU85-
+program and optimized UBSan full-core/ordinary-tracer builds agree at3997
+pre-update/prefix boundaries on21 fields, complete LCG/ring bytes and exact
+post-initialization draw counts. Nine complete pools compare3996 updates,
+including inactive slots and spare bytes. Only enemy script identifiers use
+the existing proved STD-relative address translation. End state is lives4,
+misses2. Both variants produce identical state and pool streams. The original
+complete7547-record source stream is drained through CRC/metadata validation
+after selecting this3996-update extent.
+
+The new trace has its own TH04OP1 pool header and P prefix marker, never a
+synthetic Demo terminal. Explicit seed/options/assets and consumed inputs
+initialize a native MAIN component through ordinary application APIs; no
+natural native OP input timing is claimed. The cold predecessor remains an
+executed negative with exactly the two hit differences and equal pools.
+Seven actual reader counterexamples reject missing/duplicate boundaries,
+fake Demo terminal, cleared hit, wrong resident interpretation, changed RNG
+count and a changed inactive custom slot. Four complete old/new native Demo
+state streams match at15988 boundaries; this is a regression, not renewed
+original-DOS Demo/pixel acceptance.
+
+Replay: DOS-root `.analysis/reconstruction/probes/native-recovery-v1445/`.
+Fresh checkout: DOS-root `.analysis/native/port64-recovery-v1445/`.
+Native build paths: `.analysis/port64/ordinary-v1445/{gnu,ubsan}/`.
+Use port64/verify_ordinary_state.py with --dos-root, --original, --exe and a
+fresh --output-dir. Native CI354/82 GNU CTests pass; actual root MAIN database
+attestation passes. A fixed reference-tree symlink is used only for CI's
+Tupfile Oracle, after compilation. Existing reference documentation edits
+are retained. Missing historical native worktrees are not restored or restamped.
+
+Other globals, ordinary dialogue/Boss/Game Over/Continue, natural process
+timing, complete pictures, campaigns, Windows and historical exactness remain
+outside this result. Continue source recovery and the original/native comparison.
+
+Verified retention retires742 owned files into619 content blobs, releasing
+245.527 MiB net after a13.660 MiB archive. Full SHA/CRC/mode/nsmtime checks
+and3087 protected hashes pass. Restored four ordinary component executables
+and both native Demo executables reproduce complete retained outputs and
+pool digests; nine owned aliases are verified and retired again. Six borrowed
+original aliases return to their older archived state and are not counted as
+new cleanup. Current GNU programs/cache and selected UBSan programs remain.
+The first journal bound a still-empty redirected log and correctly rejects;
+its bytes and reader remain unchanged. A distinct retention-final.json and
+recover_final.py bind the closed terminal log. replay_restored_v2.py also
+restores borrowed original aliases and requires the identical first replay
+report, so the recovery is repeatable. Historical missing94 files remain open.
