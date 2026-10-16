@@ -743,27 +743,25 @@ void put_reimu_sprite(Frame& frame,const PiImage& palette,const sprite::Sheet& s
 }
 
 Frame render_main(const MainSprites& sprites, const gameplay::State& state,
-                  application::Playchar playchar,std::optional<int> displayed_tone={}) {
+                  application::Playchar playchar,std::optional<int> displayed_tone={},const Bytes* retained_background=nullptr) {
     Frame frame{640, 400, std::vector<std::uint32_t>(640 * 400, 0xff000000u)};
     const bool npc_active=state.reimu_active() || state.marisa_active();
-    frame.indices.assign(640*400,0);
     PiImage palette=sprites.palette;
-    if(state.bomb_frame().active) {
-        sprites.require_cdg(0);
-        // The current native HUD margin is initialized black. Give that
-        // adapter an actual palette index before retaining physical pages;
-        // index0 is the stage's overridden yellow, not the black margin.
-        bool black=false;
-        for(unsigned color=0;color<16;++color)if(!(palette.palette[color*3]>>4) &&
-            !(palette.palette[color*3+1]>>4) && !(palette.palette[color*3+2]>>4)) {
-            std::fill(frame.indices.begin(),frame.indices.end(),std::uint8_t(color));black=true;break;
-        }
-        require_view(black,"native Bomb margin has no black palette entry");
-    }
+    if(state.bomb_frame().active)sprites.require_cdg(0);
     if(state.boss_active()) for(unsigned i=0;i<3;++i)palette.palette[i]=state.boss_snapshot().palette_zero[i];
     for(unsigned i=0;i<3;++i)palette.palette[42+i]=state.life().palette14[i];
+    // The blank graphics beneath HUD text still use the live palette.
+    // Select a black source entry before applying fades or explosion flashes.
+    unsigned background_index=0;bool has_black=false;
+    for(unsigned color=0;color<16;++color)if(!(palette.palette[color*3]>>4) &&
+        !(palette.palette[color*3+1]>>4) && !(palette.palette[color*3+2]>>4)) {
+        background_index=color;has_black=true;break;
+    }
+    require_view(has_black,"MAIN palette has no black graphics entry");
+    frame.indices.assign(640*400,std::uint8_t(background_index));
     palette.palette=th04::portable::pc98_palette::shown_palette(palette.palette,
         displayed_tone.value_or(state.life().palette_tone));
+    std::fill(frame.pixels.begin(),frame.pixels.end(),palette_color(palette,background_index));
     const auto& bomb_frame=state.bomb_frame();
     const unsigned display_line=sprites.background.display_line();
     const unsigned bomb_page=state.frames()%2;
@@ -905,6 +903,15 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
             sprites.second->star_plane->raster(d.left,d.physical_top,sprites.background.display_line(),
                 [&](unsigned x,unsigned y) { return frame.indices[y*640+x]; },
                 [&](unsigned x,unsigned y,std::uint8_t color) { put_indexed_pixel(frame,palette,int(x),int(y),0,0,color); });
+    }
+    // A dialogue can suspend after the background prefix. Its copied back
+    // page remains the base for this suffix, before Bomb and actor drawing.
+    if(retained_background) {
+        require_view(retained_background->size()==640*400,"retained dialogue graphics extent");
+        for(unsigned at=0;at<frame.indices.size();++at)if((*retained_background)[at]!=255) {
+            frame.indices[at]=(*retained_background)[at];
+            frame.pixels[at]=palette_color(palette,frame.indices[at]);
+        }
     }
     if(bomb_frame.active) {
         auto physical=physical_page(frame.indices,display_line);
@@ -1222,6 +1229,8 @@ public:
         }
         script_.advance(held,[&](const dialog::Event& event) { events_.push_back(event);apply(event); });
     }
+    // dialog_pre copies this page before portraits modify the visible front.
+    const Bytes& copied_background() const { return back_; }
     bool finished() const { return intro_==36 && script_.status()==dialog::Status::stopped; }
     dialog::Status status() const { return intro_==36 ? script_.status() : dialog::Status::delay; }
     unsigned glyph_count() const { return static_cast<unsigned>(glyphs_.size()); }
@@ -1822,13 +1831,20 @@ public:
             if(!diagnostic_ && !dialog_scene_ && main_->stage1_dialog_ready(sprites_->background)) begin_dialog(false);
             if(!diagnostic_ && !dialog_scene_ && !post_started_ && !main_->yuuka6_active() && !main_->mugetsu_active() && !main_->gengetsu_active() && main_->boss_active() && main_->boss_snapshot().phase==255 && main_->boss_snapshot().phase_frame==0) {
                 capture_gameover_graphics();
+                const auto dialog_front=render_live_main();
                 main_->update(held_input,shift,false,0,&sprites_->background);
                 gameover_started_in_gate=bool(main_->game_over());
-                if(!gameover_started_in_gate)begin_dialog(true);
+                if(!gameover_started_in_gate)begin_dialog(true,&dialog_front);
             }
             if(dialog_scene_) {
                 dialog_scene_->advance(held_input);
                 if(dialog_scene_->finished()) {
+                    if(post_started_) {
+                        // Original MAIN0AAF:2C19 saved the boxed front before
+                        // dialog_run;2C29 returns drawing to that copied back.
+                        dialog_resume_indices_=dialog_scene_->copied_background();
+                        dialog_resume_frame_=main_->frames()+1;
+                    }
                     completed_dialog_events_=dialog_scene_->events();
                     if(loaded_stage_==6)finish_extra_dialog_resources();
                     if(loaded_stage_==6 && main_->extra_final_dialog_blocked()) {
@@ -1870,6 +1886,7 @@ public:
                 } else { if(repaint) frame_=render();return; }
             }
             }
+            if(main_->frames()==dialog_resume_frame_)dialog_resume_indices_.clear();
             const auto before=main_->frames();
             capture_gameover_graphics();
             if(!gameover_started_in_gate)
@@ -2100,7 +2117,7 @@ private:
            main_->score_registration_requested() || main_->next_stage_requested())return;
         if(!pause_requested_ && !(held&0x2000u))return;
         pause_requested_=false;
-        pause_graphics_=render_main(*sprites_,*main_,application_.resident().playchar);
+        pause_graphics_=render_live_main();
         pause_text_=main_text_plane(*main_,application_.resident().demo_number);
         pause_.emplace(startup_clock_,std::uint16_t(pause::input_from_host(held)|0x1000u),[this](const pause::Event& event) {
             main_->apply_pause_text(event);
@@ -2172,6 +2189,7 @@ private:
     }
     void release_sound() {sound_timeline_->leave();sound_.reset();}
     void install_main_scene() {
+        dialog_resume_indices_.clear();dialog_resume_frame_=0;
         pause_.reset();pause_requested_=pause_quit_pending_=false;pause_graphics_=Frame{};pause_text_=registration::TextPlane{};
         if(!sprites_ && assets_ && !assets_->reimu.empty())sprites_=std::make_unique<MainSprites>(*assets_);
         if(!sprites_)return;
@@ -2227,7 +2245,7 @@ private:
         if(gameover_renderer_ || main_->life().miss_time!=1 || main_->score().remaining_lives!=1)return;
         // Last completed software display, independently of repaint cadence,
         // before the player/STD prefix advances. Keep graphics and TRAM apart.
-        auto frozen=render_main(*sprites_,*main_,application_.resident().playchar);
+        auto frozen=render_live_main();
         auto palette=sprites_->palette.palette;
         if(main_->boss_active())for(unsigned channel=0;channel<3;++channel)
             palette[channel]=main_->boss_snapshot().palette_zero[channel];
@@ -2334,7 +2352,12 @@ private:
     void finish_extra_dialog_resources() {
         apply_extra_dialog_resources(extra_dialog_resources_.finish(unsigned(application_.resident().playchar)));
     }
-    void begin_dialog(bool post) {
+    Frame render_live_main(std::optional<int> tone={}) const {
+        const auto* retained=!dialog_resume_indices_.empty() && main_->frames()==dialog_resume_frame_
+            ? &dialog_resume_indices_ : nullptr;
+        return render_main(*sprites_,*main_,application_.resident().playchar,tone,retained);
+    }
+    void begin_dialog(bool post,const Frame* front=nullptr) {
         if(loaded_stage_==6)
             apply_extra_dialog_resources(extra_dialog_resources_.begin(unsigned(application_.resident().playchar)));
         // Easy uses a newly loaded _DM04B/_DM14B script, not the normal
@@ -2343,7 +2366,7 @@ private:
             require_view(assets_ && !assets_->stage5.bad_dialog_scripts[unsigned(application_.resident().playchar)].empty(),"Yuuka5 bad dialogue missing");
             script_=std::make_unique<dialog::Script>(assets_->stage5.bad_dialog_scripts[unsigned(application_.resident().playchar)]);
         }
-        post_started_=post;dialog_scene_=std::make_unique<DialogScene>(*sprites_,*script_,render_main(*sprites_,*main_,application_.resident().playchar,main_->palette_tone_before_frame()),unsigned(application_.resident().playchar),[this](const sound::Action& a){if(sound_)sound_->handle(a);});
+        post_started_=post;dialog_scene_=std::make_unique<DialogScene>(*sprites_,*script_,front ? *front : render_live_main(main_->palette_tone_before_frame()),unsigned(application_.resident().playchar),[this](const sound::Action& a){if(sound_)sound_->handle(a);});
     }
     // Immutable decoded archive inputs survive native scenes. Rebuild their
     // active menu owners after Music Room's original cdg_free_all boundary.
@@ -2387,7 +2410,7 @@ private:
         }
         case Screen::demo_end: {
             if(!demo_fade_->published())return demo_frozen_;
-            auto frame=render_main(*sprites_,*main_,application_.resident().playchar,demo_fade_->tone());
+            auto frame=render_live_main(demo_fade_->tone());
             put_main_text(frame,*sprites_,*main_,application_.resident().demo_number,text_blink_visible());return frame;
         }
         case Screen::music: {
@@ -2420,7 +2443,7 @@ private:
         case Screen::maine:
             if(extra_route_) {
                 if(extra_route_->phase()==maine::ExtraPhase::main_fade) {
-                    auto frame=render_main(*sprites_,*main_,application_.resident().playchar,extra_route_->main_tone());
+                    auto frame=render_live_main(extra_route_->main_tone());
                     put_main_text(frame,*sprites_,*main_,application_.resident().demo_number,text_blink_visible());return frame;
                 }
                 Frame frame{640,400,std::vector<std::uint32_t>(640*400,0xff000000u)};
@@ -2465,7 +2488,7 @@ private:
                 return frame;
             }
             if(ending_->phase()==maine::Phase::main_fade) {
-                auto frame=render_main(*sprites_,*main_,application_.resident().playchar,ending_->main_tone());
+                auto frame=render_live_main(ending_->main_tone());
                 put_main_text(frame,*sprites_,*main_,application_.resident().demo_number,text_blink_visible());
                 return frame;
             } else {
@@ -2498,7 +2521,7 @@ private:
             }
             if(dialog_scene_) { auto frame=dialog_scene_->render();put_main_text(frame,*sprites_,*main_,application_.resident().demo_number,text_blink_visible());return frame; }
             if(main_) {
-                auto frame=render_main(*sprites_,*main_,application_.resident().playchar);
+                auto frame=render_live_main();
                 put_main_text(frame,*sprites_,*main_,application_.resident().demo_number,text_blink_visible());
                 return frame;
             }
@@ -2511,6 +2534,7 @@ private:
 
     std::optional<pause::Scene> pause_;bool pause_requested_=false,pause_quit_pending_=false;
     Frame pause_graphics_;registration::TextPlane pause_text_;
+    Bytes dialog_resume_indices_;unsigned dialog_resume_frame_=0;
     const MainAssets* assets_=nullptr;
     demo::Idle demo_idle_;
     std::optional<bool> menu_frame_options_;

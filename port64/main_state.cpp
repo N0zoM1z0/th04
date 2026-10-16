@@ -806,6 +806,9 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     else if(elly_active_) elly_->prepare_render(static_cast<std::uint16_t>(frames_));
     else if(kurumi_active_) kurumi_->prepare_render(static_cast<std::uint16_t>(frames_));
     else if (orange_active_) orange_.prepare_render(static_cast<std::uint16_t>(frames_));
+    // Boss foreground explosions write the same palette global after Bomb
+    // rendering. Publish their result before the completed display is consumed.
+    if(boss_active())life_.synchronize_graphics(boss_snapshot().palette_tone,boss_snapshot().circle_color);
     if (midboss_state().active && !stage5_ && !stage6_) {
         if(midbossx_) midbossx_->prepare_render(midboss_context);else if(midboss4_) midboss4_->prepare_render(midboss_context);else if(midboss3_) midboss3_->prepare_render(midboss_context);else if(midboss2_) midboss2_->prepare_render(midboss_context);else midboss_.prepare_render(midboss_context);
     }
