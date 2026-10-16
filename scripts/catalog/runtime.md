@@ -57,10 +57,12 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_demo_host_ram.py](../probes/th04_demo_host_ram.py) | support | Read conventional emulator host RAM with an independent read-only VM86 page walk. |
 | [probes/th04_demo_snapshot.gdb](../probes/th04_demo_snapshot.gdb) | fixture | Observe stage-frame writes in host RAM and take read-only DGROUP diagnostic snapshots. |
 | [probes/th04_demo_video.py](../probes/th04_demo_video.py) | support | Read/decode complete two-page PC-98 VRAM, palettes and GDC without guest memory accessors. |
+| [probes/th04_dos_process.py](../probes/th04_dos_process.py) | support | Resolve conventional DOS process ownership from complete MCB, PSP and environment evidence. |
 | [probes/th04_ordinary_continue.py](../probes/th04_ordinary_continue.py) | support | Attest Continue counter ownership and verify release-first input, natural last-life restoration and resumed gameplay. |
 | [probes/th04_ordinary_dgroup.py](../probes/th04_ordinary_dgroup.py) | support | Decode every ordinary DGROUP record with strict framing, stage and gzip integrity. |
 | [probes/th04_ordinary_dgroup_gdb.py](../probes/th04_ordinary_dgroup_gdb.py) | support | Observe full ordinary DGROUP after actor updates through read-only mapped host RAM. |
 | [probes/th04_ordinary_keyboard.gdb](../probes/th04_ordinary_keyboard.gdb) | fixture | Queue keyboard device events after observed original OP menu ticks with guest-state preservation checks. |
+| [probes/th04_ordinary_process_gdb.py](../probes/th04_ordinary_process_gdb.py) | support | Observe actual guest software INT21 requests and subsequent MCB/PSP-owned activity without guest service calls. |
 | [probes/th04_ordinary_video.py](../probes/th04_ordinary_video.py) | support | Decode full ordinary video blocks with strict frame/load/stage and gzip checks. |
 | [probes/th04_primary_cpu_fault.gdb](../probes/th04_primary_cpu_fault.gdb) | fixture | Run the primary-emulator fault observer with configured symbols/event inputs. |
 | [runtime/fixtures/good_ending.asm](../runtime/fixtures/good_ending.asm) | fixture | Private resident seed for real MAINE Ending tests; bypasses OP/gameplay initialization. |

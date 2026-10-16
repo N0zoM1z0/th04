@@ -167,6 +167,13 @@ products. The `port/modern-64` branch replaces segmentation and hardware access
 with typed owners and explicit adapters, guarded by independent original
 runtime comparisons. Native acceptance never promotes a historical exact unit.
 
+The original booted-DOS v1440 probe observes OP's MAIN transition through
+INT21 AX4B03 overlay loading with a retained PSP. The environment filename is
+updated before transfer. Model executable generations separately from PSP
+addresses and require actual entry/image evidence when identifying a new
+owner; a new filename or reused PSP is insufficient. Full process/resident
+lifecycle validation remains separate from the observed single MAIN entry.
+
 ## Private and generated state
 
 `.tools/` contains the ignored pinned Ghidra/JDK downloads and versioned

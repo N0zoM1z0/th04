@@ -143,6 +143,10 @@ monitor = None
 if os.environ.get('TH04_ORDINARY_DGROUP') == '1':
     from th04_ordinary_dgroup_gdb import Monitor
     monitor = Monitor(out, ram)
+process_recorder = None
+if os.environ.get('TH04_ORDINARY_PROCESS_EVENTS') == '1':
+    from th04_ordinary_process_gdb import ProcessRecorder
+    process_recorder = ProcessRecorder(out, ram, lambda name: int(gdb.parse_and_eval("(void *)&'" + name + "'")), read, tick, lambda: resident)
 save()
 while gdb.selected_inferior().pid:
     gdb.execute('continue')
@@ -150,6 +154,19 @@ while gdb.selected_inferior().pid:
         break
     if monitor is not None and monitor.error:
         raise ValueError(monitor.error)
+    if process_recorder is not None and process_recorder.error:
+        raise ValueError(process_recorder.error)
+    if process_recorder is not None and process_recorder.at_entry():
+        process_recorder.capture_event()
+        if process_recorder.error:
+            raise ValueError(process_recorder.error)
+        continue
+    if process_recorder is not None and process_recorder.transfer.at_entry():
+        process_recorder.transfer.capture_transfer()
+        continue
+    if process_recorder is not None and process_recorder.entry_requested:
+        process_recorder.entry_requested = None
+        continue
     if monitor is not None and monitor.terminal is not None:
         before_flush = snapshot()
         before_tick = tick()
@@ -159,6 +176,8 @@ while gdb.selected_inferior().pid:
         assert before_flush == snapshot() and before_tick == tick()
         monitor.finish()
         monitor = None
+        if process_recorder is not None:
+            process_recorder.finish('observed-main-prefix')
         gdb.execute('kill')
         break
     if monitor is not None and (monitor.dialog_requested or monitor.continue_requested):
@@ -247,4 +266,6 @@ while gdb.selected_inferior().pid:
         break
 if monitor is not None:
     monitor.finish()
+if process_recorder is not None:
+    process_recorder.finish('inferior-stopped')
 end

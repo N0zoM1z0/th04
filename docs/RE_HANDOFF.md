@@ -21,6 +21,23 @@ describe recorded historical evidence, not a fresh availability guarantee.
 Recover original frozen inputs or create a newly attested producer from Git;
 do not rewrite old receipts. Both development goals remain active.
 
+## Actual DOS overlay-entry observer (v1440)
+
+The original short boot/OP/one-update MAIN probe now records actual guest
+INT21 AX4B03 overlay loading, retaining PSP10EC and load/relocation factor10FC.
+Complete relocated MAIN bytes match both before transfer and at actual guest
+CS:IP10FC:0000 after CPU_JMP returns; the existing MAIN L stream cross-checks
+the same image. This is one MAIN entry, not a complete process route.
+Environment names change before the overlay, so they cannot identify executing
+code alone. New MCB/PSP/environment guards have nine passing public controls.
+The optional capture flag is `--process-events`; old defaults remain unchanged.
+
+Replay: `.analysis/reconstruction/probes/dos-process-route-v1440/owner-entry.json`
+and `owner-sixth-source/`. Retain earlier failed probes. IRQ8/type0 can reach a
+Python GDB stop callback before `.condition` filtering; use explicit argument
+guards or native conditional stops. Next retire the MAIN frame watcher at a
+verified handoff and observe MAINE/fresh OP with full image and resident proof.
+
 ## Natural Continue score alias repaired (v1439)
 
 The product score BSS now aliases `_continues_used` to the first score byte.

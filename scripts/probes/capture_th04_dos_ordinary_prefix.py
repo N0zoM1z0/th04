@@ -20,6 +20,7 @@ import subprocess
 import sys
 import time
 import tomllib
+import tarfile
 
 from capture_th04_dos_demos import ARCHIVE_SHA256, COMMIT, PRIVATE, ROOT, sha
 from compare_th04_dos_ordinary_prefix import ordinary_profile
@@ -46,6 +47,9 @@ def main() -> int:
                         help='Release Shot and operate the real Continue wait after this later observed frame')
     parser.add_argument('--stall-diagnostic-ms', type=int,
                         help='Record actual guest PC/RAM after this much virtual no-frame progress')
+    parser.add_argument('--process-events', action='store_true',
+                        help='Observe actual guest INT21 requests and MCB/PSP process activity')
+    parser.add_argument('--emulator-archive', type=Path, default=PRIVATE / 'dosbox-x-199aa35f.tar.gz')
     args = parser.parse_args()
     if args.video_stream:
         if args.video_layout is None:
@@ -84,6 +88,19 @@ def main() -> int:
     if (sha((source / 'src/cpu/core_normal.cpp').read_bytes()) != emulator['core_after_sha256']
             or sha((source / 'config.h').read_bytes()) != emulator['config_header_sha256']):
         raise ValueError('compiled observer source/config drift')
+    process_inputs = {}
+    if args.process_events:
+        elf = binary.read_bytes()[:20]
+        if elf[:6] != b'\x7fELF\x02\x01' or int.from_bytes(elf[18:20], 'little') != 62:
+            raise ValueError('process observer host ELF/ABI')
+        if sha(args.emulator_archive.read_bytes()) != ARCHIVE_SHA256:
+            raise ValueError('process observer pinned archive')
+        with tarfile.open(args.emulator_archive) as archive:
+            for name in ('src/cpu/cpu.cpp', 'include/cpu.h'):
+                data = (source / name).read_bytes()
+                if archive.extractfile(source.name + '/' + name).read() != data:
+                    raise ValueError('process observer CPU source identity')
+                process_inputs[str(source / name)] = sha(data)
     targets = tomllib.loads((ROOT / 'config/targets.toml').read_text())['artifacts']
     products = {target['id'].removeprefix('th04-'): target for target in targets
                 if target['id'].startswith('th04-')}
@@ -113,6 +130,11 @@ def main() -> int:
         capture_profile['terminal_bytes'] = guarded['terminal_bytes']
         capture_profile['end_after'] = args.end_after
     output.mkdir(parents=True)
+    if args.process_events:
+        process_targets = {'th04-' + name: dict(path=str((ROOT / row['private_path']).resolve()),
+                           size=row['size'], sha256=row['sha256']) for name, row in products.items()}
+        process_targets['th04-main'] = dict(path=str(main_path.resolve()), size=len(main_bytes), sha256=sha(main_bytes))
+        (output / 'process-targets.json').write_text(json.dumps(process_targets, indent=2) + '\n')
     prepare = [sys.executable, str(ROOT / 'scripts/prepare_product_hdi.py'), '--output-dir',
                str(output / 'prepared'), '--products', 'main', '--rank', '1', '--lives', '6', '--bombs', '0']
     prepare += ['--original'] if args.original else ['--build-dir', str(args.build_dir.resolve())]
@@ -155,6 +177,8 @@ def main() -> int:
                '-defaultconf', '-defaultmapper', '-conf', str(config), '-fastlaunch', '-nogui',
                '-nomenu', '-exit', '-c', f'imgmount 2 "{image}" -t hdd -fs none', '-c', 'boot -l c']
     stream_sources = []
+    if args.process_events:
+        env['TH04_ORDINARY_PROCESS_EVENTS'] = '1'
     if args.end_after is not None:
         env['TH04_ORDINARY_END_AFTER'] = str(args.end_after)
     if args.dialog_at_frame is not None:
@@ -178,6 +202,8 @@ def main() -> int:
             raise ValueError('ordinary video ABI/source/binary drift')
         env.update(TH04_ORDINARY_VIDEO='1', TH04_ORDINARY_VIDEO_LAYOUT=str(args.video_layout.resolve()))
         stream_sources += [adapter.with_name(name) for name in ('th04_demo_video.py', 'th04_ordinary_video.py')]
+    if args.process_events:
+        stream_sources += [adapter.with_name(name) for name in ('th04_dos_process.py', 'th04_ordinary_process_gdb.py')]
     started = time.monotonic()
     timeout = False
     with (output / 'boot.log').open('wb') as stream:
@@ -209,6 +235,9 @@ def main() -> int:
         names += ['ordinary-terminal.json']
     if args.stall_diagnostic_ms is not None:
         names += ['ordinary-stall.json', 'ordinary-stall-dgroup.bin']
+    if args.process_events:
+        names += ['process-events.json', 'process-events.jsonl', 'process-targets.json']
+        complete = complete and (output / 'process-events.json').is_file() and not (output / 'process-error.txt').exists()
     receipt = dict(schema_version=1, complete=complete, timeout=timeout, exit=code,
                    role='original' if args.original else 'candidate', elapsed=time.monotonic() - started,
                    command=command, main_path=str(main_path.resolve()), main_sha256=sha(main_bytes),
@@ -235,6 +264,8 @@ def main() -> int:
     if args.video_stream:
         receipt['video_layout'] = dict(path=str(args.video_layout.resolve()),
                                        sha256=sha(args.video_layout.read_bytes()))
+    if args.process_events:
+        receipt.update(process_events=True, process_host_inputs=process_inputs)
     (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
     print(json.dumps(dict(complete=complete, output=str(output))))
     return 0 if complete else 1

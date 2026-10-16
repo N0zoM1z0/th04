@@ -5,6 +5,38 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Guest DOS overlay-entry observation (v1440)
+
+The new optional `--process-events` observer uses the retained emulator binary
+and actual guest software INT21 dispatch. It checks the pinned AMD64 host ABI,
+CPU source/archive and disabled internal DOS kernel before interpreting the
+caller's `CD 21`. A unique PSP-owned initial MCB plus its environment block
+records ownership. The raw environment path is evidence, not the executing
+image identity: Borland changes it before loading an overlay.
+
+The original short boot/OP/one-update MAIN probe observes `AX=4B03` for
+`main.EXE`, not `4B00` load-and-go. PSP10EC is retained, with overlay load and
+relocation factor10FC. The copied runtime stub ends in a far jump. The observer
+checks the entire relocated MZ image before that host CPU_JMP and again after
+its return, when actual guest CS:IP is10FC:0000. The complete RAM digest also
+matches the existing MAIN L stream and pinned Japanese MAIN. This establishes
+one real MAIN entry; it does not establish Quit, MAINE or fresh OP.
+
+Replay namespace: `.analysis/reconstruction/probes/dos-process-route-v1440/`.
+The successful capture is `dos-process-route-v1440-owner-probe-v6`; its current
+reader/producers are frozen under `owner-sixth-source/`. `owner-entry.json`
+binds actual entry, complete image, request and receipt. Earlier construction
+and dispatch probes remain failed. In particular, the third probe records host
+IRQ8/type0 reaching a Python Breakpoint.stop despite `.condition`; apply actual
+argument filters in callbacks or use native conditional stops outside Python.
+Do not misclassify that transport failure as a game/DOS IRQ fault.
+
+Nine public MCB/PSP/environment counterexamples pass. Complete source/bytes,
+frame, target provenance and timing requirements remain unchanged. Next record
+the real MAIN overlay handoff, retire its frame watch before memory reuse, and
+prove MAINE/fresh OP entries and resident ownership. A reused PSP or changed
+environment filename alone cannot satisfy those boundaries.
+
 ## Natural Continue and score-counter ownership (v1439)
 
 The new `--continue-at-frame 7547` cue follows the existing dialogue cue at

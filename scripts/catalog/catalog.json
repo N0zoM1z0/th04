@@ -3458,6 +3458,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/th04_dos_process.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Resolve conventional DOS process ownership from complete MCB, PSP and environment evidence.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/th04_main_fault_trace.py",
     "category": "source-review",
     "role": "support",
@@ -3490,6 +3497,13 @@
     "category": "runtime",
     "role": "fixture",
     "purpose": "Queue keyboard device events after observed original OP menu ticks with guest-state preservation checks.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_ordinary_process_gdb.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Observe actual guest software INT21 requests and subsequent MCB/PSP-owned activity without guest service calls.",
     "purpose_source": "maintained-description"
   },
   {
