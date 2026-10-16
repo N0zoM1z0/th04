@@ -539,6 +539,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/compare_th04_dos_popup.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Compare complete popup and BGM text rows and popup state at ordinary boundaries with separate owner verdicts.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/compare_th04_dos_process_route.py",
     "category": "runtime",
     "role": "command",
@@ -3633,11 +3640,25 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/runtime/verify_dos_hud_popup.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Execute original MAIN popup, CRT and text instructions at two load segments with complete TRAM and ABI observations.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/runtime/verify_dos_palette_show.py",
     "category": "support",
     "role": "command",
     "purpose": "Compare original and rebuilt palette_show port transcripts, including LCD.",
     "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/runtime/verify_dos_popup_score.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Execute original popup and following score drain to observe retained bonus ownership at the return boundary.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/runtime/verify_dos_smem_page_copy.py",

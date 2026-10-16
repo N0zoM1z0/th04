@@ -22,6 +22,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/compare_th04_demo_video.py](../probes/compare_th04_demo_video.py) | command | Compare complete raw video streams and programmed GDC state with ordinary trace controls. |
 | [probes/compare_th04_dos_demos.py](../probes/compare_th04_dos_demos.py) | command | Reject incomplete/reset-mismatched demo traces and report the first logical divergence. |
 | [probes/compare_th04_dos_ordinary_prefix.py](../probes/compare_th04_dos_ordinary_prefix.py) | command | Admit ordinary DOS prefixes by input and entry RNG before reporting state differences. |
+| [probes/compare_th04_dos_popup.py](../probes/compare_th04_dos_popup.py) | command | Compare complete popup and BGM text rows and popup state at ordinary boundaries with separate owner verdicts. |
 | [probes/compare_th04_dos_process_route.py](../probes/compare_th04_dos_process_route.py) | command | Compare MAIN Quit, original MAINE and fresh OP menu entries, prefix pools, resident bytes and physical saves. |
 | [probes/compare_th04_ordinary_pools.py](../probes/compare_th04_ordinary_pools.py) | command | Compare complete ordinary actor pools against pinned scalar controls and target/MAP owners. |
 | [probes/compare_th04_ordinary_video.py](../probes/compare_th04_ordinary_video.py) | command | Compare complete ordinary VRAM/palettes/display state with independent scalar controls. |
@@ -76,6 +77,8 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_product_surface.py](../probes/th04_product_surface.py) | support | Attest a same-run four-product source cohort and derive OP counter hooks from its own MAP and bytes. |
 | [runtime/fixtures/good_ending.asm](../runtime/fixtures/good_ending.asm) | fixture | Private resident seed for real MAINE Ending tests; bypasses OP/gameplay initialization. |
 | [runtime/verify_dos_gaiji.py](../runtime/verify_dos_gaiji.py) | command | Compare original and linked DOS Gaiji writes, port order and far-call return state across WORD address boundaries. |
+| [runtime/verify_dos_hud_popup.py](../runtime/verify_dos_hud_popup.py) | command | Execute original MAIN popup, CRT and text instructions at two load segments with complete TRAM and ABI observations. |
+| [runtime/verify_dos_popup_score.py](../runtime/verify_dos_popup_score.py) | command | Execute original popup and following score drain to observe retained bonus ownership at the return boundary. |
 | [runtime/verify_dos_smem_page_copy.py](../runtime/verify_dos_smem_page_copy.py) | command | Compare original and linked DOS SMEM allocation, release, shared HMEM boundaries and complete page-copy memory with seeded DOS/I/O replies. |
 | [runtime/verify_dos_text_gaiji.py](../runtime/verify_dos_text_gaiji.py) | command | Compare original and linked DOS text Gaiji memory, store order, wrapped attribute counts and far-call return state. |
 | [runtime/verify_dos_vsync_lifecycle.py](../runtime/verify_dos_vsync_lifecycle.py) | command | Compare relocated original and linked DOS START/IRQ instructions, including a seeded IRQ during BIOS query. |
