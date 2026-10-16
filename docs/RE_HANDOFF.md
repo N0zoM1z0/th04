@@ -1,5 +1,42 @@
 # TH04 native branch handoff
 
+## Native Continue and full-power pickup repaired (v1448)
+
+Native source `7bdcd60` now applies item collection's clear effect to the real
+bullet owner. An actual ordinary Game Over/Continue reaches a full-power pickup
+at update 7640. The old executable leaves bullets active; original MAIN instead
+sets DGROUP2134:BCBA to20, then19 next update. Its first visible state/pool
+failure is boundary 7642. The failed executable, source and reports remain.
+
+A fresh original 8001 capture and complete cold GNU/optimized UBSan builds pass
+8000 updates: 21 selected state/RNG fields, actual player input, nine complete
+pools, four Boss blocks and complete CFG/SCR bytes. GNU 85 programs / 82 CTests pass.
+Five original code-fetch/caller/memory checkpoints at frame7547 establish that
+player0AAF:5FCF consumes20h before Game Over0AAF:3A51; the later menu2000h resumes
+that same call through5FCA/00F4. Keep this distinct from STD dialogue before
+player_update. The real ranked Continue changes only decoded score section 1;
+all ten full 16-bit checksums and the complete encoded file agree.
+
+Producer 557/8284f2cd freezes every maintained source before both cold builds.
+Final consumer 557/3e985ee3 changes only the Python save-scope text/reporting;
+all compiled inputs are unchanged. Five real negative reader controls pass.
+Replay/source: `.analysis/reconstruction/probes/native-continue-v1448/`,
+`result.json`, `cold_build.py`, `finalize_consumer.py`, `continue-witness.json`.
+Public original reader: `scripts/probes/attest_th04_continue_checkpoints.py`.
+Native save/UI controls are component stimuli; blocking timing, complete
+pictures/TRAM/scanout, other globals, full process/campaign, Windows and exact
+promotion remain open. Continue these comparisons; both development goals stay active.
+
+Verified retention archives 243 owned aliases/intermediates into 243 content blobs:
+21.612 MiB archive,54.297 MiB net released,2338 protected hashes checked. Restore/
+CRC/SHA/mode/nsmtime checks pass. Restoring five original/prototype aliases and
+rerunning three real 8000-update programs reproduces the old 7642 failure and both
+current successes, including full selected output/save/GO traces. The five aliases
+are checked and retired again. Current GNU programs/cache,UBSan game,both new
+cold cores and complete compressed captures remain. Use recover.py to restore
+capture aliases, or replay_restored.py for restore/run/retirement. The old 94
+missing files are unrelated and no historical receipt is rebound.
+
 ## Original dialogue/player input boundary corrected (v1447)
 
 The v1446 input interpretation and the `13e6676` latch are withdrawn. Actual
