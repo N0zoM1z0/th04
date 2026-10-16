@@ -1,62 +1,73 @@
-# TH04 native current handoff
+# TH04 current handoff
 
-Updated2026-10-17. Both full goals remain active. Use the DOS root's
-NEXT_AGENT_HANDOFF.md for both branches. Keep code/docs English,heavy jobs
-on one low-priority CPU and launches muted/headless. No Windows GUI,focus
-changes,host keys or concurrent Borland/Wine writers.
+Updated2026-10-17. Both full reconstruction/native goals remain active.
+Use [the actionable handoff](NEXT_AGENT_HANDOFF.md). Keep code/docs English,
+heavy jobs on one low-priority CPU, launches muted/headless and one Borland/
+Wine writer. No Windows GUI, focus changes or host-key injection.
 
-## Midboss frontier (v1458)
+## Current Midboss defeat/reset frontier (v1459)
 
-Original/reconstructed DOS complete3200 Stage2 updates, with Midboss activation
-at actor2601 and600 battle updates. The NPC remainsactive at3200 withHP100,
-phase1/frame39; defeat is not accepted. Comparable loop fields and7787 ordered
-RNG calls (707 LCG/7080 ring), nine full pools,22 states and38 configured video
-regions agree across9607 bridge/actor/score/loop snapshots. Own MZ/MAP/CPU/DS/
-opcode, full DGROUP/video/resident and conventional-memory witnesses bind each
-producer. Aggregate remainsfalse for248 post-reset input and9607 raw-GDC records.
-Older v1457 18/1807 and v1456 302/312/9836 vectors remain independent failures.
-These are MAIN-only replacements with original OP/MAINE/ZUN/assets.
+Original and reconstructed DOS now complete 3500 Stage2 updates in the same
+process. The observed Midboss activates at 2601, enters defeat at 3349,
+reaches phase3/HP0 at 3413 and resets at 3414; 86 further updates retain
+its inactive raw state. All comparable loop fields, 7861 ordered RNG calls
+(707 LCG/7154 ring), nine complete pools, 22 states and 38 configured video
+regions agree across 10507 bridge/actor/score/loop snapshots. Each side binds its
+own MZ/MAP/CS/DS, opcode, DGROUP, video and full conventional-memory witnesses.
+Aggregate remains false for 174 post-reset key and 10507 raw-GDC records.
+Older v1458 248/9607, v1457 18/1807 and v1456 302/312/9836 failures remain separate.
+These are MAIN replacements with original OP/MAINE/ZUN/assets.
 
-Native code8cd826e adds direct22-byte Midboss/active telemetry and a16-bit
-extent guard; no gameplay repair was needed in this span. Complete566-file
-3747e671 closure, coldGNU87 programs/83CTests and optimizedUBSan2 match6403
-selected bridge/init/actor-score records,3201 complete9-pool snapshots, consumed
-inputs, homing, Boss/Midboss and continuous RNG. Full state/pool wires agree
-across programs. Native116 volatile post-reset samples remain separately
-measured. Both programs also reproduce the distinct9835 selected-update,
-59 full640x400 RGB/TRAM elapsed pairs/177 observations, with real Continue,
-physical saves,title/popup and actor gates. Stage2 native pictures and natural
-OP/loader/UI/CPU clocks are not accepted by this component.
+Retained native 8cd826e telemetry and complete 566-file/3747e671 cold programs
+match 7003 selected records and 3501 full nine-pool snapshots in both GNU and
+optimized UBSan. Consumed inputs, homing, Boss/Midboss state and continuous RNG
+agree; 144 volatile post-reset key samples are measured separately. No gameplay
+repair was needed. Existing cold GNU 87 programs/83 CTests and UBSan2 remain the
+producers. The separate v1458 replay of 9835 selected updates and 59 full RGB/TRAM
+elapsed pairs remains valid for these unchanged programs. This new component
+accepts the observed Midboss lifecycle, not native Stage2 pictures or natural
+OP/loader/UI/CPU clocks.
 
-The initial reader created and disabled a new watchpoint per checkpoint;
-standalone GDB confirms disabled objects remain registered. Its controlled
-stop at1709 remainsincomplete. The replacement reuses seven own-file boundary
-watchpoints; actual original/source maxima are10 including3 baseline across
-all9607 snapshots. The public class survives3200 realGDB switches atseven
-cached points. Six resource-data mutations,ten new capture-data mutations and
-eight earlier extent/observation guards reject. Old600 semantic vectors remain
-identical. Complete physical CFG/SCR bytes match; allten16-bit score checksums
-validate and ranked Continue changes decoded section1.
+The lifecycle gate requires actual activation, attack, nonpositive HP, defeat,
+exit, reset and at least 64 post-reset updates. Original reset13A9:642C and
+source reset157C:661B each have independently decoded callback/active/HP stores
+and their own far relocation. Full-memory witnesses immediately around each
+transition verify the near invalidate/render and far update null callbacks;
+addresses are never normalized across executables. Thirteen lifecycle/MZ and
+ten actual original/source callback mutations reject. The bounded debugger
+still uses seven cached points, with ten total registered objects on each side.
+Complete initial/final CFG/SCR bytes match, all ten full 16-bit score checksums
+validate, and Continue changes decoded section1.
 
-Current programs/cache: `.analysis/port64/stage2-midboss-v1458-final/{gnu,ubsan}`.
-Root-owned privately linked bundle:
-`.analysis/reconstruction/probes/dos-stage2-midboss-v1458/`.
-Use paired-final-{gnu,ubsan},native-final-result,files,midboss-lifecycle and
-legacy-regressions. Subject note: docs/port64/evidence/stage-lifecycle.md.
+Current root-owned bundle: `.analysis/reconstruction/probes/dos-midboss-reset-v1459/`.
+Use paired-{gnu,ubsan}, lifecycle-{gnu,ubsan}, result.json, files.json and
+reset-callback-controls.json. Programs stay in native
+`.analysis/port64/stage2-midboss-v1458-final/{gnu,ubsan}`.
+
+## Current products and targets
+
+Native checkout: `.analysis/native/port64-recovery-v1445/`; programs/cache inside
+it: `.analysis/port64/stage2-midboss-v1458-final/{gnu,ubsan}`. Full source closure:
+3747e67195391032e6f8a1bbd0eea2ef68fdcc4f59be01adb344b47af8b76c72.
+DOS cohort stays `.analysis/build/dos-four-products-v1443/`: MAIN200279 bytes,
+SHA778641ab...,1183 relocations; own MAP42d7d2c7... at
+`.analysis/reconstruction/probes/product-20261016-065147-3427b48f-main/source/obj/main-native.map`.
+Original MAIN156258/SHA077440a3..., header6144,1136 relocations,entry0000:0000.
+Manifest-pinned Japanese targets stay candidate-local-attested. Run preflight
+and full database/MZ/header/module/relocation/sample attestation before target work.
 
 ## Next bounded work
 
-Continue through actual Midboss reset/defeat from the verified3200 frontier;
-do not infer death from a fixed stop. Consider a recorded lifecycle stop with
-an independently checked bound, preserving continuous raw inputs/RNG and each
-own CS/DS/MAP. Add native Stage2 pictures only with actual original checkpoints
-and elapsed ownership. Resolve reset/IRQ/read timing behind248 and older key
-failures; equal consumed input does not waive GDC or physical timing.
-Full original/source/native campaigns, four-product routes, NP2, native Windows,
-every-frame/raw-plane rendering, audio/input clocks, pristine provenance and
-historical exactness remain open. Do not reopen the two deferred MAIN cases.
+Extend the verified 3500 frontier toward Stage2 Boss/clear, preserving actual
+inputs/RNG and each executable's own segment/layout ownership. Add native
+Stage2 pictures only with independent original elapsed checkpoints. Resolve
+the 174 post-reset key and raw-GDC failures; equal consumed inputs do not
+accept IRQ/CPU/display timing. Full original/source/native campaigns, four-product
+routes, NP2, native Windows, every-frame/raw-plane rendering, audio/input clocks,
+pristine provenance and historical exactness remain open. Keep both full goals
+active and leave the two deferred MAIN exactness cases alone.
 
-## Recovery
+## Verified recovery
 
 Archive311 owned generated files into125 content blobs,
 releasing1288.430 MiB after archive, gzip and both journal files. All32386
@@ -71,9 +82,18 @@ size,mode and nsmtime before retirement. Earlier borrowed13 reader-control
 aliases and4 elapsed-fixture aliases receive no cleanup credit. Keep current
 final GNU/cache/UBSan cores and all compressed complete/incomplete evidence.
 
-From the DOS root run v1458 replay_restored.py --output-dir NEW. Preserve
-current/older journals and finish.late_protected. No new emulator execution is
-claimed by captured-data replay. Old missing94 protected files/worktrees and
-v1437 MAIN/MAP stay explicit gaps;do not recreate,rebind or count their absence.
-Finish focused checks,python3 scripts/ci.py and git diff --check;push this branch
-with git push origin HEAD:port/modern-64 and verify remote/clean state.
+```sh
+python3 .analysis/reconstruction/probes/dos-stage2-midboss-v1458/replay_restored.py \
+  --output-dir .analysis/reconstruction/probes/NEW-midboss-recovery
+```
+
+This re-executes actual native programs and replays captured DOS reducers;
+it is not a new emulator run. Use fresh output names. Manual recovery supports
+recover.py --restore --path EXACT. New backing paths are private immutable
+snapshots. Preserve finish.json late_protected too when chaining future journals.
+The two old public capture/keyboard files remain frozen backing inputs.
+
+Historical missing worktrees, native v1432's94 protected files and old v1437
+MAIN/MAP remain missing. Do not recreate frozen paths, rebind receipts, prune
+registrations to conceal loss or count missing files as cleanup. Finish focused
+comparisons,both CIs and diff checks; commit/push both branches separately.
