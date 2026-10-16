@@ -8,8 +8,8 @@ whole-game completion metrics. Keep all new code and documentation in English.
 
 | Purpose | Published baseline | Availability |
 | --- | --- | --- |
-| DOS reconstruction, comparison tools and ledgers | `main: da501cb` | Current checkout; later evidence commits follow this baseline |
-| Native x64 source | `port/modern-64: c0a1060371c5f8ba758ca8b10f6cbc99063ba3d6` | Remote and local Git objects exist; old working directories are missing |
+| DOS reconstruction, comparison tools and ledgers | `main: b370639` | Current checkout; later evidence commits follow this baseline |
+| Native x64 source | `port/modern-64: 8a2092b` | Fresh writable `.analysis/native/port64-recovery-v1445/`; old frozen working directories remain missing |
 
 The old `.analysis/worktrees/` directory was absent at the 2026-10-16 audit,
 although Git retains its registrations. This includes `native-natural-clear-v1432`,
@@ -48,16 +48,42 @@ Target preflight passes; provenance remains `candidate-local-attested`, not proo
 of an official pristine dump. Before using target disassembly, also run
 `python3 scripts/ghidra.py ARTIFACT check`.
 
-After verifying no competing writer, restore native development into a fresh
-branch/directory rather than reusing a missing frozen tree. For example:
+The native source is now restored into a fresh namespace, without altering
+old registrations or receipts. Use this writable checkout for native work:
 
 ```sh
-git worktree add -b work/port64-next .analysis/worktrees/port64-next origin/port/modern-64
-git -C .analysis/worktrees/port64-next status --short
+git -C .analysis/native/port64-recovery-v1445 status --short
+git -C .analysis/native/port64-recovery-v1445 log -n 3 --oneline
 ```
 
-Choose another name if it exists. Main commits do not publish native changes;
+Avoid recreating a missing frozen directory. Main commits do not publish native changes;
 commit and push each branch separately and verify its remote head.
+
+## Current native ordinary component and source repair (v1445)
+
+Fresh native GNU85 programs/82 CTests and optimized UBSan entire-core/tracer
+match original Normal/ReimuA seed64,6 lives/0 bombs at3997 boundaries/3996
+complete updates:21 fields/LCG-ring state and counts plus nine full pools,
+including inactive bytes. Two deaths/respawns end with4 lives/2 misses.
+main_state.cpp now publishes pending collision hits before completed-frame
+observers, fixing original MAIN DGROUP2134:4669 mismatches at3078/3284. The old
+cold c0a1060 negative retains only those two field failures and equal pools.
+GNU/UBSan state/pool outputs and15988 old/new native Demo regression boundaries
+are byte-identical; the latter does not renew original Demo/picture acceptance.
+
+Source closure556/49984d82, native CI354 and root CI573/live MAIN Ghidra
+replay/mutations pass. Public native tool:
+port64/verify_ordinary_state.py, requiring the current DOS checkout's readers
+and a restored original capture. Canonical proof/source/recovery is
+`.analysis/reconstruction/probes/native-recovery-v1445/` in this DOS checkout,
+also symlinked under the fresh native tree. Do not inherit missing old producers.
+The native start is an explicit component fixture. Continue actual FrontEnd
+ordinary dialogue/Boss/Game Over and remaining globals/pictures; natural process
+timing, broader campaigns, Windows and historical exactness remain open.
+
+Current v1445 retention releases245.527 MiB net; recovery/re-execution and
+3087 protected hashes pass. Use replay_restored_v2.py in the v1445 private
+namespace for repeatable restore/replay/retirement. Old missing files are unchanged.
 
 ## Current OP input diagnosis (v1444)
 

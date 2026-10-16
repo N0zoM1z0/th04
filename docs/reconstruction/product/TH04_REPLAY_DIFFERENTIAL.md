@@ -5,6 +5,61 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Native ordinary MAIN shared-hit latch (v1445)
+
+A fresh native checkout from c0a1060 cold-builds84 programs and passes82 CTests,
+but its original-paired ordinary component misses the visible player-hit BYTE
+at before-update3078/3284. Original MAIN DGROUP2134:4669, load10FC, is1;
+native LifeState.hit is0. Separate native collision snapshots already trigger
+the correct next-update deaths, and all nine actor pools match. Do not turn
+this into a missed-death or general collision-algorithm claim.
+
+Source8a2092b aggregates the existing collision owners before completed-frame
+observers/rendering as well as at the existing next-player consumption point.
+Fresh GNU85-program/82CTest and optimized UBSan full-core/tracer builds match
+3996 ordinary Normal/ReimuA updates and3997 before-update/prefix boundaries:
+21 fields, complete LCG/ring bytes and exact post-initialization draw counts,
+plus all nine complete actor/effect pools. Inactive/spare bytes remain included;
+only the proved STD-relative enemy script-address translation is used. Two
+natural deaths/respawns finish with lives4/misses2. GNU/UBSan state/pool outputs
+are identical. The original complete7547-record DGROUP stream is drained through
+CRC/metadata validation after selecting this bounded prefix.
+
+The trace uses TH04OP1/tag0 and a real P prefix boundary, never a synthetic
+Demo terminal. Native initialization is an explicit typed seed64/legal-option
+component fixture over original assets and consumed inputs; no natural native
+OP timing follows. A fresh compiled c0a1060 negative still fails exactly the
+two hit fields with equal pools. Seven actual reader controls reject truncated/
+duplicate prefixes, fake Demo terminal, cleared hit, wrong resident/RNG fields
+and an inactive custom-slot byte. The initial reader's resident48=end_sequence
+mislabel is retained; accepted readers use49/50 and guard the initial layout.
+Four-Demo old/new native selected-state regression agrees at15988 boundaries,
+which does not renew original Demo/picture acceptance.
+
+Writable native tree: `.analysis/native/port64-recovery-v1445/`. Source556/
+49984d82 and all new builds/reports have new identities, independent of missing
+old worktrees/94 protected files. Public tool: native
+port64/verify_ordinary_state.py. Canonical proof/source/recovery:
+`.analysis/reconstruction/probes/native-recovery-v1445/`. Native CI354 passes;
+root CI573/live MAIN Ghidra replay/mutations pass. A read-only pinned Tupfile symlink
+is a CI Oracle dependency, added after standalone native compilation; existing
+reference documentation edits remain untouched. Other globals, actual FrontEnd
+dialogue/Boss/Game Over/Continue, pictures, campaigns, physical timing, Windows
+and historical exactness remain open. Continue the ordinary comparison.
+
+Verified retention retires742 owned files into619 content blobs, releasing
+245.527 MiB net after a13.660 MiB archive. Full SHA/CRC/mode/nsmtime checks
+and3087 protected hashes pass. Restored four ordinary component executables
+and both native Demo executables reproduce complete retained outputs and
+pool digests; nine owned aliases are verified and retired again. Six borrowed
+original aliases return to their older archived state and are not counted as
+new cleanup. Current GNU programs/cache and selected UBSan programs remain.
+The first journal bound a still-empty redirected log and correctly rejects;
+its bytes and reader remain unchanged. A distinct retention-final.json and
+recover_final.py bind the closed terminal log. replay_restored_v2.py also
+restores borrowed original aliases and requires the identical first replay
+report, so the recovery is repeatable. Historical missing94 files remain open.
+
 ## OP confirmation loss at the first character poll (v1444)
 
 New read-only keyboard-event RAM captures isolate the initial source OP's lost

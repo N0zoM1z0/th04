@@ -10,7 +10,7 @@ remains open. Updated 2026-10-16.
 Start with [the actionable handoff](NEXT_AGENT_HANDOFF.md) for both published
 branches, startup commands, claim limits, next comparisons and cleanup rules.
 Published branch baselines and fresh MAIN paths are indexed there; the native
-remote remains c0a1060.
+source baseline is now8a2092b, with later evidence commits following it.
 The old `.analysis/worktrees/` directory is absent although Git still registers
 its trees. This includes frozen native route programs/results and the DOS
 v1437 candidate MAIN/MAP. Root-level reports, compressed DOS captures and
@@ -20,6 +20,47 @@ retention archive alone does not restore the whole tree. The entries below
 describe recorded historical evidence, not a fresh availability guarantee.
 Recover original frozen inputs or create a newly attested producer from Git;
 do not rewrite old receipts. Both development goals remain active.
+
+## Native ordinary MAIN comparison and hit-latch repair (v1445)
+
+A new writable native checkout exists at `.analysis/native/port64-recovery-v1445/`,
+from c0a1060; source8a2092b is pushed to port/modern-64. Old missing worktrees/
+94 protected files remain a historical gap. Fresh c0a1060 builds84 programs/
+82 CTests and reproduces a real observable defect: original MAIN DGROUP2134:
+4669 (load10FC) is1 before updates3078/3284, while native life().hit is0.
+Separate collision flags already cause the correct deaths. The fixed model
+publishes the shared latch before completed-frame observers/rendering.
+
+Fresh GNU85-program and optimized UBSan entire-core/tracer builds both match
+original Normal/ReimuA seed64/lives6/bombs0 on3996 complete updates,3997
+boundaries,21 fields/LCG-ring state and draw counts, and nine complete pools.
+Two natural deaths/respawns end at lives4/misses2. GNU/UBSan outputs are byte-
+identical; the cold predecessor fails only those two hit fields, with equal
+pools. Four-Demo old/new native regression matches15988 boundaries without
+renewing original Demo/picture acceptance. Seven actual reader controls pass.
+
+Replay/source: `.analysis/reconstruction/probes/native-recovery-v1445/` and the
+public native port64/verify_ordinary_state.py. Source closure556/49984d82,
+native CI354 and82 GNU CTests pass; root CI573, live MAIN database replay
+and Ghidra Oracle mutations pass.
+Native compilation precedes the borrowed read-only reference-tree CI Oracle.
+This uses explicit native component initialization and recorded original inputs;
+natural OP timing, other globals, dialogue/Boss/Game Over, full pictures,
+campaigns, Windows and exact acceptance remain open. Next extend the ordinary
+comparison through actual FrontEnd blocking owners and remaining globals.
+
+Verified retention retires742 owned files into619 content blobs, releasing
+245.527 MiB net after a13.660 MiB archive. Full SHA/CRC/mode/nsmtime checks
+and3087 protected hashes pass. Restored four ordinary component executables
+and both native Demo executables reproduce complete retained outputs and
+pool digests; nine owned aliases are verified and retired again. Six borrowed
+original aliases return to their older archived state and are not counted as
+new cleanup. Current GNU programs/cache and selected UBSan programs remain.
+The first journal bound a still-empty redirected log and correctly rejects;
+its bytes and reader remain unchanged. A distinct retention-final.json and
+recover_final.py bind the closed terminal log. replay_restored_v2.py also
+restores borrowed original aliases and requires the identical first replay
+report, so the recovery is repeatable. Historical missing94 files remain open.
 
 ## OP confirmation-loss mechanism isolated (v1444)
 
