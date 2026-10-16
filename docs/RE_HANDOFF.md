@@ -21,6 +21,23 @@ describe recorded historical evidence, not a fresh availability guarantee.
 Recover original frozen inputs or create a newly attested producer from Git;
 do not rewrite old receipts. Both development goals remain active.
 
+## Fresh four-product cold build (v1443)
+
+Frozen3ca7b96 source passes a serial complete cold publication without requested
+object caches: MAIN200279/778641ab, OP80194/7ca38942, MAINE73068/3b562840,
+ZUN7723/d6043dce. MAIN reproduces the earlier cached product; ZUN includes two
+cold component and packed-output passes. The source fingerprint stayed stable.
+New manifest/products: `.analysis/build/dos-four-products-v1443/`. Complete
+source/receipt proof: `.analysis/reconstruction/probes/dos-four-product-route-v1443/cold-build.json`.
+No product exact state or four-source runtime acceptance follows from the build.
+
+Current OP's MAP/raw bytes locate its menu-counter store at0700:035B, DS0FF2,
+resident offset2626; original uses0A74:0D2F, DS0F34. The actual saved EIP at a
+memory watchpoint names the INC instruction, not its next instruction. Runtime
+extension will bind each artifact to its own file/MAP and verify actual DOS4B00
+boot entries as well as4B03 overlay entries. Supporting products in all older
+v1442 comparisons remain original; the new runtime is still pending.
+
 ## Paired second-MAIN initialization and 600 updates (v1442)
 
 Both original and MAIN 778641ab now pass the admitted second-MAIN comparison:

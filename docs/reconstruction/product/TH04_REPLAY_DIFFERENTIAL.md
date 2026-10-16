@@ -5,6 +5,27 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Four-source product cold baseline and OP counter ownership (v1443)
+
+One serial cold build from frozen3ca7b96 source publishes all four products under
+`.analysis/build/dos-four-products-v1443/`: MAIN200279/778641ab, OP80194/7ca38942,
+MAINE73068/3b562840 and ZUN7723/d6043dce. OP/MAINE report zero object reuse; no
+cache options were passed for MAIN. ZUN's two cold component builds and packed
+outputs agree. MAIN exactly reproduces the prior product778641ab, which remains
+different from the original target. Full source fingerprint,1,551-input archive,
+producer receipts and command output are retained under
+`.analysis/reconstruction/probes/dos-four-product-route-v1443/`. No original
+raw-exact or four-product runtime claim is made by this build result.
+
+The cold OP MAP owns main0700:0263..038B and resident0FF2:2626. Its unique LES BX,
+[resident] plus INC DWORD ES:[BX+14h] sequence locates the store at0700:035B.
+A naive post-instruction address would be0360. An attested original fresh-menu
+RAM snapshot independently shows the INC32 bytes at the observed saved EIP
+0A74:0D2F, preceded by LES BX,[1A64]. Hooks must use the observed executing-store
+site and each product's own MAP/bytes. The existing fixed original OP hook
+cannot stand in for candidate identity. Runtime extension is pending and will
+also distinguish actual DOS4B00 entries from environment-name activity.
+
 ## Admitted second-MAIN initialization and 600 actor updates (v1442)
 
 The new boundary-input pair executes actual MAIN Quit -> original MAINE ->
