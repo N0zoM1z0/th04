@@ -93,6 +93,17 @@ not a new run. Evidence lives under
 `compare_th04_dos_title_entries.py` and `compare_th04_dos_title_pictures.py`.
 The old `compare_th04_dos_titles.py` is a historical refuted-BB diagnostic.
 
+Verified retention retires559 newly owned aliases/intermediates in
+287 blobs, releasing257.988MiB after archive and new gzip recipes;
+10590 protected hashes stay equal. `recover.py` verifies/restores SHA/mode/nsmtime.
+`replay_restored.py` restores5 owned aliases,reruns the actual wrong-phase and
+both current8000-update programs,and reproduces all38 BMPs per program.
+The seven whole-picture failures also reproduce. Those5 aliases verify and
+retire again;no borrowed/missing old file is counted. Current GNU87/cache,
+UBSan game/title/cold cores,complete original compressed data/font/entries and
+GNU38 scene pictures remain live. Restore aliases before strict capture readers
+or archived UBSan/baseline picture paths;new title/popup row readers use `.gz`.
+
 Next resolve the7 actual full-picture samples,then extend beyond8000 toward
 Boss defeat/process/campaign completion. Complete pictures outside these samples,
 other globals,physical scanout/timing,NP2 cross-emulator,Windows,canonicality and
