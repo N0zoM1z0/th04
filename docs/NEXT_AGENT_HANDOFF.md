@@ -8,8 +8,8 @@ whole-game completion metrics. Keep all new code and documentation in English.
 
 | Purpose | Published baseline | Availability |
 | --- | --- | --- |
-| DOS reconstruction, comparison tools and ledgers | `main: 585392f` | Current checkout; later evidence commits follow this baseline |
-| Native x64 source | `port/modern-64: 791203f` | Fresh writable `.analysis/native/port64-recovery-v1445/`; old frozen working directories remain missing |
+| DOS reconstruction, comparison tools and ledgers | `main: 8ce9916` | Current checkout; later evidence commits follow this baseline |
+| Native x64 source | `port/modern-64: 4b3bf1d` | Fresh writable `.analysis/native/port64-recovery-v1445/`; old frozen working directories remain missing |
 
 The old `.analysis/worktrees/` directory was absent at the 2026-10-16 audit,
 although Git retains its registrations. This includes `native-natural-clear-v1432`,
@@ -59,27 +59,25 @@ git -C .analysis/native/port64-recovery-v1445 log -n 3 --oneline
 Avoid recreating a missing frozen directory. Main commits do not publish native changes;
 commit and push each branch separately and verify its remote head.
 
-## Boss defeat, post-Boss dialogue and bonus event integration (v1453)
+## Explosion palette and dialogue back-page repairs (v1454)
 
-Native `791203f` extends the actual original/native comparison to **9835
-updates**, through Orange defeat, post-Boss dialogue, stage bonus and leave.
-Both cold GNU and optimized UBSan programs pass selected state/RNG/input,
-global homing, nine pools, four Boss blocks, Continue/save, popup/title rows
-and 2665 actual BB calls over 9834 intervals. Source565/3cf3900b.
-All59 active-TRAM samples pass; the complete-picture gate retains 4
-whole RGB failures at frames 9284, 9349, 9600, 9700. Keep these failures.
-Stage2 update9836, complete campaigns, raw graphics-plane identity, physical
-scanout, NP2, Windows and historical exactness remain open.
+Native `4b3bf1d` fixes the measured full-picture failures at 9284 and 9349.
+Both fresh GNU and optimized UBSan programs retain all 9835 selected ordinary
+updates, nine pools, four Boss blocks, homing, player input, Continue/save,
+popup/title rows and 2665 actual BB calls. All 59 complete pictures are compared:
+**57 RGB samples pass; 9600 and 9700 still differ 407 pixels each**. All 59 active
+TRAM samples pass. Source closure: 565/b23a708a; GNU 87 programs/83 CTests pass.
+Stage2 update 9836, full campaigns, raw graphics-plane identity, elapsed/scanout
+parity, NP2, Windows, pristine provenance and historical exactness remain open.
 
-See [the bounded evidence note](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md)
-for target addresses, falsified approaches, replay and remaining picture gates.
+See [bounded differential evidence](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md)
+for target addresses, independent page controls, replay and remaining clocks.
 
-v1453 recovery replays the archived missing-TRAM producer and both corrected
-9835-update programs, preserving all177 picture observations and the retained
-RGB failures. SHA/mode/nsmtime retirement totals 1481.680 MiB net over two disjoint
-journals;all16595 protected hashes remain equal. Five owned restored aliases
-and eight borrowed aliases verify and retire;borrowed bytes receive no new
-cleanup credit. See the focused note for exact recovery selection and failures.
+Verified recovery replays the actual wrong-front program and both corrected
+9835-update producers, including all 177 picture/index/TRAM identities. Two
+disjoint owned journals release 666.617 MiB net; all 18400 protected hashes
+remain equal. One restored owned executable and four borrowed aliases verify
+SHA/mode/nsmtime then retire; borrowed bytes receive no new cleanup credit.
 
 ## Boss circle clipping and complete sampled pictures (v1452)
 
@@ -460,13 +458,13 @@ The two deferred carpet/checkerboard exact cases remain deferred.
 
 ## Next tasks
 
-1. Resolve v1453 complete RGB failures at9284,9349,9600,9700. All59 active
-   TRAM samples and selected9835 ordinary updates pass. The first two failures
-   include substantial graphics differences;the last two differ407 pixels,
-   matching the independently measured blink footprint. Record the actual native
-   clock/writers and compare captured original GDC phase without fitting it.
-   The former seven v1451 failures are repaired in v1452;do not restart that
-   finished circle investigation or revive the refuted constructed BB Oracle.
+1. Resolve the two measured clock/blink differences at9600 and9700,407 pixels
+   each. Both final profiles compare all59 full RGB/TRAM samples:57 RGB/all59
+   activeTRAM pass after independently repairing explosion tone9284 and copied
+   dialogue back page9349. Bind the actual elapsed origin/work/reset scenario
+   before changing native timing;do not fit a phase,mask pixels,or revive the
+   finished circle/palette/page investigations. The primary original/source DOS
+   comparison beyond8000 remains a separate required surface.
 2. The v1443 four-source nine-entry/second-MAIN extension and fresh native
    recovery are completed bounded steps. Continue DOS OP renderer/readiness
    diagnosis or new-producer Demo pool/video checks; retain post-reset/raw-GDC

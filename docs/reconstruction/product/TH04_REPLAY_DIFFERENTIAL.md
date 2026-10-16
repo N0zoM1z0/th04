@@ -5,6 +5,109 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Explosion palette and dialogue back-page repairs (v1454)
+
+Native `4b3bf1d` fixes the measured full-picture failures at 9284 and 9349.
+Both fresh GNU and optimized UBSan programs retain all 9835 selected ordinary
+updates, nine pools, four Boss blocks, homing, player input, Continue/save,
+popup/title rows and 2665 actual BB calls. All 59 complete pictures are compared:
+**57 RGB samples pass; 9600 and 9700 still differ 407 pixels each**. All 59 active
+TRAM samples pass. Source closure: 565/b23a708a; GNU 87 programs/83 CTests pass.
+Stage2 update 9836, full campaigns, raw graphics-plane identity, elapsed/scanout
+parity, NP2, Windows, pristine provenance and historical exactness remain open.
+
+The original remains the pinned candidate-local-attested Japanese MAIN. Fresh
+preflight and full Ghidra/MZ attestation pass. Original DOSBox-X capture remains
+the immutable v1453 post-Boss-v2 input at load10FC/DGROUP3230. Four archived
+capture aliases are borrowed by exact journal ownership; they are not new cleanup.
+
+Palette observation and repair:
+
+- Actual after-score9284 DGROUP 03A4 contains150; the old native completed display
+  reads100. A private observer of producer 565/3cf3900b reproduces all 204 old
+  frontend outputs, including 177 complete BMP/index/TRAM files, before its new
+  clock/State observations are used. Original MAIN 0AAF:6FA3 calls big explosion
+  renderer MAIN 0AAF:2E65; its actual 2F21 store writes150 to shared PaletteTone03A4.
+- Seven isolated original Unicorn2.1.4 cases reproduce150/100 and the148..106
+  decay, plus an inactive case preserving incoming73. The real polar/aging/
+  palette instructions run; only existing sprite draw ABI seams are intercepted.
+  Each final compiler also passes all 900 original foreground/explosion vectors.
+- Native State now publishes Boss foreground palette writes after preparation.
+  The blank graphics beneath TRAM select a black source palette entry and use
+  the live toned DAC, so they also brighten during the flash. This replaces a
+  literal black RGB fill; it is not a fitted pixel region. Old158776-pixel9284
+  failure becomes zero across the complete640x400 picture.
+
+Dialogue page observation and repair:
+
+- Actual original 9348 player/animate/run/return CPU, stack, code and full memory
+  contexts retain their v1453 independent witness. Original MAIN 0AAF:2C19 copies
+  front to back before 2C1C enters dialog_run; 2C29 selects DGROUP46FC back.
+  At run entry all 70,656 physical playfield bytes across four planes agree
+  between pages. During the script that back stays unchanged; front differs
+  in9,928 bytes from portrait drawing. Actual9349 displays the copied back.
+- Native dialogue now starts from the completed front snapshot before the
+  blocked player/Boss prefix. Its pre-portrait boxed copy survives the resumed
+  suffix; Bomb and actors draw over that base. Repaints, pause/GameOver snapshots
+  and fades share the same frame owner. The next ordinary update releases it;
+  new MAIN installation clears ownership. Native indexed-plane identity is
+  still unproved; the claim here is observed page ownership and full RGB.
+- The first compiled prototype incorrectly retained the portrait-bearing
+  front and still failed19351 pixels. Switching only its copied-page accessor
+  to the pre-script back makes the complete9349 picture equal. The actual
+  failed producer, source and result remain. Eleven real raw-context negatives
+  reject copy/back/portrait/CPU-page/display/role/frame/extent corruption.
+  vramop17 includes flags above page bit0; the first unmasked-byte assertion
+  failure remains, and the public reader correctly interprets that page bit.
+- Review restored the existing Bomb require_cdg(0) resource check before
+  publication. Initial candidate cold programs/results remain immutable; the
+  final checked directories bind the restored guard to a new source closure.
+  The initial direct-alias pin lookup and doubled-v2 executable-path failures
+  are also retained as failed attempts, not successful observations.
+
+Remaining clock gate:
+
+The unchanged old observer records native refresh 10808/visible1 at 9600, versus
+original master GDC phase 0, and native11008/visible0 at 9700, versus original phase3.
+TRAM is equal. A diagnostic copy of original projection changes only blink
+visibility and accounts for all 407 pixels at each boundary. This is a
+counterfactual explanation, never acceptance or a target phase fed into native.
+Final checked programs still reject those two actual complete pictures. Window
+elapsed-time handling and this logical headless admission path are separate;
+measure the actual elapsed origin/work/reset scenario before changing clocks.
+Do not fit an offset, mask blink pixels, or waive the59-sample whole-picture gate.
+
+Replay index: `.analysis/reconstruction/probes/native-defeat-pixels-v1454/`.
+`final/cold-source.json` freezes the565-file source; checked GNU 87/cache and
+optimized UBSan game/Orange/cold cores live under native
+`.analysis/port64/defeat-pixels-v1454-checked-final/`. `final/validate.py` records
+all 9835 state/entry/popup and 59 full RGB/TRAM gates in `final/result.json`.
+`probe_palette_writer.py`, `page_controls.py`, `display-diagnosis.json` and
+`dialog-pages-witness.json` retain separate original/compiler/native evidence.
+Public reader: `scripts/probes/attest_th04_dialog_pages.py`. Restore journaled
+capture aliases before strict original readers; use fresh outputs and preserve
+all earlier receipts. Initial89.664MiB observer retirement is separate from
+final retention. Both complete reconstruction/native goals remain active.
+
+Verified retirement preserves 18400 protected hashes. The final journal
+retires 2164 owned files in 136 blobs and releases
+576.953 MiB after archive and new gzip recipes. The earlier observer journal, covering206 files, separately releases 89.664 MiB; disjoint total 666.617 MiB.
+Final checked GNU 87/cache, UBSan game/Orange/cold cores, all 59 GNU pictures,
+original compressed captures/live fonts and all source/failed/clock/page proofs
+remain live or losslessly recoverable. `recover_initial.py` restores the
+retired display observer/duplicate frontend inputs;`recover.py` handles final
+owned intermediates. Both verify SHA/CRC/mode/nsmtime. Use fresh replay outputs.
+
+`replay_restored.py` selects the one archived wrong-front executable by equality,
+then actually reruns old/GNU/UBSan 9835-update programs. All 177 complete native
+picture/index/TRAM observations and selected state/entry/popup results reproduce.
+Old9349 still differs 19351 pixels; corrected9349 is zero. Actual9600/9700 retain
+407 pixels each. Hash-identical complete comparison inputs reproduce the same
+verdicts; no target phase is substituted. The restored owned executable and four
+borrowed capture aliases verify metadata then retire. Borrowed bytes receive
+no new cleanup credit. Earlier v1453 journals and missing historical94 files
+remain unchanged and outside the current owned accounting.
+
 ## Boss defeat, post-Boss dialogue and bonus event integration (v1453)
 
 Native `791203f` extends the actual original/native comparison to **9835
