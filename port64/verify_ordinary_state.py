@@ -3,7 +3,9 @@
 
 The caller supplies the recorded seed/options/assets and actual consumed inputs.
 This does not accept natural native OP timing, other globals, pictures, blocking
-scenes, complete process routes, or historical executable bytes.
+scene timing, complete process routes, or historical executable bytes.
+--frontend drives the real dialogue owner with separately declared release/Enter
+controls and checks actual gameplay input; --updates names the bounded extent.
 """
 from __future__ import annotations
 
@@ -29,16 +31,17 @@ FIELDS = ('frame', 'input', 'shift_raw', 'stage', 'score_digits', 'score_delta',
           'lcg_calls', 'ring_calls')
 
 
-def parse_native(raw: bytes) -> list[dict]:
+def parse_native(raw: bytes, updates: int = UPDATES) -> list[dict]:
+    require(0 < updates <= 65535, 'ordinary configured extent')
     lines = raw.decode('ascii').splitlines()
-    require(len(lines) == UPDATES + 2 and
-            lines[0] == f'TH04_ORDINARY_STATE 1 {UPDATES}', 'ordinary trace extent/header')
+    require(len(lines) == updates + 2 and
+            lines[0] == f'TH04_ORDINARY_STATE 1 {updates}', 'ordinary trace extent/header')
     result = []
     previous = (0, 0)
     for frame, line in enumerate(lines[1:]):
         c = line.split()
         require(len(c) == 23 and int(c[0]) == frame, 'ordinary scalar field/frame order')
-        require(c[1] == ('P' if frame == UPDATES else 'I'), 'ordinary prefix decision')
+        require(c[1] == ('P' if frame == updates else 'I'), 'ordinary prefix decision')
         require(len(c[5]) == 16 and len(c[9]) == 512 and
                 bytes.fromhex(c[5]).hex() == c[5] and
                 bytes.fromhex(c[9]).hex() == c[9], 'ordinary byte-field extent')
@@ -63,7 +66,7 @@ def parse_native(raw: bytes) -> list[dict]:
 
 
 def compare_scalar(capture: dict, profile: dict, native: list[dict]) -> dict:
-    require(len(native) == UPDATES + 1 and len(capture['rows']) >= len(native),
+    require(len(native) > 1 and len(capture['rows']) >= len(native),
             'ordinary paired boundary extent')
     counts = Counter()
     differences = []
@@ -90,11 +93,54 @@ def compare_scalar(capture: dict, profile: dict, native: list[dict]) -> dict:
                 differing_boundaries=len(differences), differences=differences)
 
 
+def compare_consumed(capture: dict, raw: bytes, updates: int) -> dict:
+    lines = raw.decode('ascii').splitlines()
+    require(len(lines) == updates, 'ordinary consumed input extent')
+    differences = []
+    for frame, line in enumerate(lines):
+        columns = line.split()
+        require(len(columns) == 3 and int(columns[0]) == frame, 'ordinary consumed input frame order')
+        _, keys, shift = map(int, columns)
+        require(0 <= keys <= 65535 and shift in (0, 1), 'ordinary consumed input width')
+        original = capture['rows'][frame]
+        expected = (int.from_bytes(bytes.fromhex(original['input']), 'little'), int(original['shift_raw'], 16))
+        if (keys, shift) != expected:
+            differences.append(dict(frame=frame, original=list(expected), native=[keys, shift]))
+    return dict(passed=not differences, updates=updates, differences=differences)
+
+
+def compare_owners(capture: dict, raw: bytes, updates: int) -> dict:
+    fields = (('boss', 24), ('boss_statebyte', 16), ('boss_hitbox_radius', 4), ('boss_phase_timed_out', 1))
+    lines = raw.decode('ascii').splitlines()
+    require(len(lines) == updates + 1, 'ordinary Boss owner extent')
+    differences = []
+    for frame, line in enumerate(lines):
+        columns = line.split()
+        require(len(columns) == 2 and int(columns[0]) == frame, 'ordinary Boss owner frame order')
+        data = bytes.fromhex(columns[1])
+        require(len(data) == 45 and data.hex() == columns[1], 'ordinary Boss owner wire extent')
+        cursor = 0
+        changed = {}
+        for name, size in fields:
+            native = data[cursor:cursor + size].hex()
+            original = capture['rows'][frame][name]
+            if native != original:
+                changed[name] = dict(original=original, native=native)
+            cursor += size
+        if changed:
+            differences.append(dict(frame=frame, fields=changed))
+    return dict(passed=not differences, fields=[name for name, _ in fields], boundaries=len(lines),
+                differing_boundaries=len(differences), differences=differences)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('dos-root', 'original', 'exe', 'output-dir'):
         parser.add_argument('--' + name, required=True, type=Path)
+    parser.add_argument('--updates', type=int, default=UPDATES)
+    parser.add_argument('--frontend', action='store_true')
     args = parser.parse_args()
+    require(0 < args.updates <= 65535, 'ordinary requested extent')
     root = Path(__file__).resolve().parents[1]
     dos = args.dos_root.resolve()
     sys.path.insert(0, str(dos / 'scripts/probes'))
@@ -109,7 +155,7 @@ def main() -> int:
     require(sha(target) == TARGET_SHA256, 'ordinary pinned target')
     capture = load(original, target)
     require(capture['receipt']['role'] == 'original' and
-            len(capture['rows']) > UPDATES, 'ordinary original capture extent/role')
+            len(capture['rows']) > args.updates, 'ordinary original capture extent/role')
     owner = target[6144 + 0x11ecb:6144 + 0x11f96]
     require(sha(owner) == 'f41ff21e0254ae8050f35b00c514db046b74b4ae2b02538dd7856715a15dfed7',
             'ordinary pool-clear owner')
@@ -131,8 +177,8 @@ def main() -> int:
     require(resident[17] == 0 and resident[18] in b'01' and resident[25] < 2,
             'ordinary stage/character/shot start')
     seed = int.from_bytes(resident[20:24], 'little')
-    plan = [f'{seed} {UPDATES} {resident[18] - 48} {resident[25]}']
-    for frame, row in enumerate(capture['rows'][:UPDATES + 1]):
+    plan = [f'{seed} {args.updates} {resident[18] - 48} {resident[25]}']
+    for frame, row in enumerate(capture['rows'][:args.updates + 1]):
         require(int.from_bytes(bytes.fromhex(row['frame']), 'little') == frame,
                 'ordinary original input frame order')
         plan.append(f'{frame} {int.from_bytes(bytes.fromhex(row["input"]), "little")} '
@@ -140,20 +186,34 @@ def main() -> int:
     (inputs / 'inputs.txt').write_text('\n'.join(plan) + '\n')
     raw_path = output / 'pools.bin'
     command = [str(args.exe.resolve()), str(inputs), str(raw_path)]
+    if args.frontend:
+        font = original / 'FREECG98.BMP'
+        require(sha(font.read_bytes()) == capture['receipt']['font_sha256'], 'ordinary font identity')
+        (inputs/'save/MIKO.CFG').write_bytes((inputs/'MIKO.CFG').read_bytes())
+        (inputs/'save/ordinary-inputs.txt').write_bytes((inputs/'inputs.txt').read_bytes())
+        frontend = output/'frontend'
+        raw_path = frontend/'pools.bin'
+        command = [str(args.exe.resolve()), '--hdi', str(original/'prepared/diagnostic.hdi'),
+                   '--font-bmp', str(font), '--save-dir', str(inputs/'save'),
+                   '--ordinary-trace-checks', str(frontend), '--mute']
     run = subprocess.run(command, capture_output=True, timeout=120,
                          env=dict(os.environ, SDL_VIDEODRIVER='dummy', SDL_AUDIODRIVER='dummy'))
-    (output / 'state.txt').write_bytes(run.stdout)
+    (output / 'stdout.txt').write_bytes(run.stdout)
     (output / 'stderr.txt').write_bytes(run.stderr)
     run.check_returncode()
+    state_raw = (frontend/'state.txt').read_bytes() if args.frontend else run.stdout
+    (output / 'state.txt').write_bytes(state_raw)
+    consumed = compare_consumed(capture, (frontend/'consumed.txt').read_bytes(), args.updates) if args.frontend else dict(passed=True, adapter='direct update arguments')
+    owners = compare_owners(capture, (frontend/'owners.txt').read_bytes(), args.updates) if args.frontend else dict(passed=True, scope='not configured')
     profile = json.loads((original / 'profile.json').read_text())
-    scalar = compare_scalar(capture, profile, parse_native(run.stdout))
+    scalar = compare_scalar(capture, profile, parse_native(state_raw, args.updates))
     terminal = json.loads((original / 'ordinary-terminal.json').read_text())
     iterator = records(original / 'ordinary-dgroup.bin.gz', terminal['load_segment'],
         terminal['dgroup_segment'], profile['fields'], terminal['cr0'], terminal['cr3'],
         capture['receipt']['main_frames'])
     with raw_path.open('rb') as stream:
         require(stream.read(8) == b'TH04OP1\n', 'ordinary pool protocol')
-        pools = compare_demo(islice(iterator, UPDATES), stream, 0)
+        pools = compare_demo(islice(iterator, args.updates), stream, 0, args.updates)
         require(stream.read(1) == b'', 'ordinary pool trailing bytes')
     for _ in iterator:
         pass  # Finish the complete original stream, including CRC/metadata checks.
@@ -171,9 +231,9 @@ def main() -> int:
     require(restored_hash.digest() == raw_hash.digest(), 'ordinary pool retention readback')
     raw_path.unlink()
     require(source_manifest(root)[0] == manifest, 'ordinary native source drift')
-    report = dict(passed=scalar['passed'] and pools['passed'], accepts_exact=False,
-        natural_game_exit=False, updates=UPDATES, scalar=scalar, actor_pools=pools,
-        command=command, source_manifest_sha256=manifest, source_files=sources,
+    report = dict(passed=scalar['passed'] and pools['passed'] and consumed['passed'] and owners['passed'], accepts_exact=False,
+        natural_game_exit=False, updates=args.updates, scalar=scalar, actor_pools=pools,
+        command=command, frontend=args.frontend, consumed_input=consumed, boss_owners=owners, source_manifest_sha256=manifest, source_files=sources,
         executable_sha256=sha(args.exe.read_bytes()), original_receipt_sha256=sha((original/'receipt.json').read_bytes()),
         input_files={str(p.relative_to(inputs)):sha(p.read_bytes()) for p in inputs.rglob('*') if p.is_file()},
         pools_raw_sha256=raw_hash.hexdigest(), pools_gzip_sha256=sha(packed.read_bytes()),

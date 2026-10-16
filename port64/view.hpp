@@ -32,6 +32,7 @@ struct MainAssets {
     bool full_startup=false;
     std::string startup_checks;
     std::string natural_route_checks;
+    std::string ordinary_trace_checks;
     std::string pause_checks;
     std::array<Bytes,4> replays;
     Bytes point_number_main;

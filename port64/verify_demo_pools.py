@@ -31,7 +31,8 @@ def read_frame(stream, demo, frame):
     require(struct.unpack('<HH',raw[:4])==(demo,frame),'native pool frame order')
     return raw[4:]
 
-def compare_demo(original, native, demo):
+def compare_demo(original, native, demo, expected_frames=3996):
+    require(0 < expected_frames <= 65535, 'configured pool extent')
     result={name:dict(differing_frames=0,first_difference=None,
         original_hash=hashlib.sha256(),native_hash=hashlib.sha256()) for name,*_ in POOLS}
     frames=0
@@ -50,7 +51,7 @@ def compare_demo(original, native, demo):
                         differing_bytes=len(indices),changes=[dict(offset=i,slot=i//stride,
                             record_offset=i%stride,original=a[i],native=b[i]) for i in indices[:24]])
         frames+=1
-    require(frames==3996,'original complete demo pool extent')
+    require(frames==expected_frames,'original complete configured pool extent')
     for name,_,count,stride in POOLS:
         row=result[name];row.update(passed=row['first_difference'] is None,updates=frames,
             bytes_per_frame=count*stride,original_sha256=row.pop('original_hash').hexdigest(),

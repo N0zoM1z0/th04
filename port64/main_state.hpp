@@ -125,6 +125,8 @@ public:
     const shot::System& shots() const { return shots_; }
     // Read-only checkpoint at the original stage_frame increment, before
     // periodic performance and score/extend processing.
+    // The last update argument after host-key translation; this never polls.
+    std::uint16_t consumed_input() const { return last_input_; }
     void set_actor_observer(std::function<void(const State&)> observer) {actor_observer_=std::move(observer);}
     const bullet::System& bullets() const { return bullets_; }
     // Score/extend runs after foreground rendering. Its clear request belongs

@@ -252,7 +252,7 @@ int main(int argc, char** argv) {
         bool title_window = false,muted=true,audio_requested=false,mute_requested=false,offline_requested=false;
         std::string pmd_driver="pmd",opna_rom,resident_sound_checks,window_trace;
         std::string configuration_checks,setup_checks,sound_checks,sound_scene_checks,startup_checks,natural_route_checks;
-        std::string pause_checks;
+        std::string pause_checks,ordinary_trace_checks;
         std::string save_directory,registration_checks,gameover_checks,score_route_checks,bomb_checks,extra_checks,mugetsu_checks,gengetsu_checks,extra_clear_checks,extra_maine_checks,op_score_checks,op_ranking_checks,op_music_checks,demo_checks;
         for (int i = 1; i < argc; ++i) {
             const std::string arg = argv[i];
@@ -271,6 +271,7 @@ int main(int argc, char** argv) {
             else if(arg=="--resident-sound-checks")resident_sound_checks=value;
             else if(arg=="--startup-checks")startup_checks=value;
             else if(arg=="--natural-route-checks")natural_route_checks=value;
+            else if(arg=="--ordinary-trace-checks")ordinary_trace_checks=value;
             else if(arg=="--save-dir")save_directory=value;
             else if(arg=="--configuration-checks")configuration_checks=value;
             else if(arg=="--setup-checks")setup_checks=value;
@@ -320,7 +321,7 @@ int main(int argc, char** argv) {
             else if (arg == "--font-bmp") font_bitmap = value;
             else throw std::runtime_error("unknown option: " + arg);
         }
-        const bool title = title_window || !pause_checks.empty() || !natural_route_checks.empty() || !startup_checks.empty() || !resident_sound_checks.empty() || !sound_checks.empty() || !sound_scene_checks.empty() || !setup_checks.empty() || !configuration_checks.empty() || ((!demo_checks.empty() || !op_music_checks.empty()) || !op_ranking_checks.empty()) || !op_score_checks.empty() || !extra_maine_checks.empty() || !extra_clear_checks.empty() || !gengetsu_checks.empty() || !mugetsu_checks.empty() || !extra_checks.empty() || !bomb_checks.empty() || !score_route_checks.empty() || !gameover_checks.empty() || !registration_checks.empty() || !title_screenshot.empty() ||
+        const bool title = !ordinary_trace_checks.empty() || title_window || !pause_checks.empty() || !natural_route_checks.empty() || !startup_checks.empty() || !resident_sound_checks.empty() || !sound_checks.empty() || !sound_scene_checks.empty() || !setup_checks.empty() || !configuration_checks.empty() || ((!demo_checks.empty() || !op_music_checks.empty()) || !op_ranking_checks.empty()) || !op_score_checks.empty() || !extra_maine_checks.empty() || !extra_clear_checks.empty() || !gengetsu_checks.empty() || !mugetsu_checks.empty() || !extra_checks.empty() || !bomb_checks.empty() || !score_route_checks.empty() || !gameover_checks.empty() || !registration_checks.empty() || !title_screenshot.empty() ||
             !options_screenshot.empty() || !character_screenshot.empty() ||
             !shot_screenshot.empty() || !handoff_screenshot.empty() || !main_screenshot.empty() ||
             !shooting_screenshots.empty() || !combat_screenshots.empty() || !midboss_screenshots.empty() || !orange_screenshots.empty() || !dialog_screenshots.empty() || !stage2_screenshots.empty() || !kurumi_screenshots.empty() || !stage3_screenshots.empty() || !elly_screenshots.empty() || !stage4_screenshots.empty() || !reimu_screenshots.empty() || !marisa_screenshots.empty() || !stage5_screenshots.empty() || !yuuka5_screenshots.empty() || !stage6_screenshots.empty() || !ending_screenshots.empty();
@@ -330,9 +331,11 @@ int main(int argc, char** argv) {
                 "[--member NAME --output BMP | --title "
                 "[--title-screenshot BMP] [--options-screenshot BMP] [--demo-pictures DIR] "
                 "[--character-screenshot BMP] [--shot-screenshot BMP] "
-                "[--handoff-screenshot BMP] [--main-screenshot BMP] [--shooting-screenshots DIR] [--combat-screenshots DIR] [--midboss-screenshots DIR] [--orange-screenshots DIR] [--dialog-screenshots DIR] [--stage2-screenshots DIR] [--kurumi-screenshots DIR] [--stage3-screenshots DIR] [--elly-screenshots DIR] [--stage4-screenshots DIR] [--reimu-screenshots DIR] [--marisa-screenshots DIR] [--stage5-screenshots DIR] [--yuuka5-screenshots DIR] [--stage6-screenshots DIR] [--ending-screenshots DIR] [--font-bmp FILE] [--save-dir DIR] [--registration-checks DIR] [--gameover-checks DIR] [--sound-checks DIR] [--score-route-checks DIR] [--resident-sound-checks DIR] [--startup-checks DIR] [--natural-route-checks DIR] [--pmd-driver pmd|pmd86|pmdb2|none] [--opna-rom FILE] [--window-trace DIR] [--window-route-advice] [--audio] [--mute]]");
+                "[--handoff-screenshot BMP] [--main-screenshot BMP] [--shooting-screenshots DIR] [--combat-screenshots DIR] [--midboss-screenshots DIR] [--orange-screenshots DIR] [--dialog-screenshots DIR] [--stage2-screenshots DIR] [--kurumi-screenshots DIR] [--stage3-screenshots DIR] [--elly-screenshots DIR] [--stage4-screenshots DIR] [--reimu-screenshots DIR] [--marisa-screenshots DIR] [--stage5-screenshots DIR] [--yuuka5-screenshots DIR] [--stage6-screenshots DIR] [--ending-screenshots DIR] [--font-bmp FILE] [--save-dir DIR] [--registration-checks DIR] [--gameover-checks DIR] [--sound-checks DIR] [--score-route-checks DIR] [--resident-sound-checks DIR] [--startup-checks DIR] [--natural-route-checks DIR] [--ordinary-trace-checks DIR] [--pmd-driver pmd|pmd86|pmdb2|none] [--opna-rom FILE] [--window-trace DIR] [--window-route-advice] [--audio] [--mute]]");
         require(natural_route_checks.empty() || (!title_window && startup_checks.empty() && !hdi.empty() && !save_directory.empty()),
                 "natural routes require headless --hdi and --save-dir without --startup-checks");
+        require(ordinary_trace_checks.empty() || (!title_window && !hdi.empty() && !save_directory.empty() && natural_route_checks.empty() && startup_checks.empty()),
+                "ordinary trace requires headless --hdi and --save-dir without other route controls");
         muted=!audio_requested || mute_requested;
         require(muted || (title_window && !offline_requested),"--audio requires an interactive --title; diagnostics must remain --mute");
         require(window_trace.empty() || (title_window && muted && !offline_requested && !std::filesystem::exists(window_trace)),"--window-trace requires an interactive muted window and fresh output");
@@ -350,7 +353,7 @@ int main(int argc, char** argv) {
             main_assets.sound_checks=sound_checks;main_assets.sound_scene_checks=sound_scene_checks;
             main_assets.resident_sound_checks=resident_sound_checks;
             main_assets.full_startup=title_window || demo_pictures || !startup_checks.empty() || !natural_route_checks.empty();main_assets.startup_checks=startup_checks;
-            main_assets.natural_route_checks=natural_route_checks;
+            main_assets.natural_route_checks=natural_route_checks;main_assets.ordinary_trace_checks=ordinary_trace_checks;
             if(main_assets.full_startup) {
                 auto& startup=main_assets.startup;startup.logo=decode_pi(archive_member(par,"ZUN00.PI"));startup.menu=decode_pi(archive_member(par,"OP1.PI"));
                 for(unsigned i=0;i<6;++i)startup.slides[i]=decode_pi(archive_member(par,"OP"+std::to_string(5-i)+"B.PI"));
@@ -391,7 +394,7 @@ int main(int argc, char** argv) {
                 for(const std::string name:{"ST00.BB1","ST00.BB2","ST02.BB1","ST02.BB2","ST03.BBT","ST03B.BBT","ST03B21.BBT","ST03B22.BBT","ST04.BB1","ST04.BB2","ST05.BB1","ST05.BB2","ST05.BB3","ST05.BB4","ST05.BB5","ST05.BB6","ST05.BB7","ST05.BB9","ST06.BB1","ST06.BB2","ST06.BB3"}) main_assets.dialog_sprites.emplace(name,archive_member(game,name));
                 if(!font_bitmap.empty()) main_assets.font_bitmap=read_file(font_bitmap);
                 else { std::ifstream font("FREECG98.bmp",std::ios::binary);if(font) main_assets.font_bitmap={std::istreambuf_iterator<char>(font),{}}; }
-                if(title_window || !pause_checks.empty() || !natural_route_checks.empty() || !startup_checks.empty() || !resident_sound_checks.empty() || !sound_checks.empty() || !sound_scene_checks.empty() || !setup_checks.empty() || !configuration_checks.empty() || ((!demo_checks.empty() || !op_music_checks.empty()) || !op_ranking_checks.empty()) || !op_score_checks.empty() || !extra_maine_checks.empty() || !ending_screenshots.empty() || !registration_checks.empty() || !gameover_checks.empty() || !score_route_checks.empty()) {
+                if(!ordinary_trace_checks.empty() || title_window || !pause_checks.empty() || !natural_route_checks.empty() || !startup_checks.empty() || !resident_sound_checks.empty() || !sound_checks.empty() || !sound_scene_checks.empty() || !setup_checks.empty() || !configuration_checks.empty() || ((!demo_checks.empty() || !op_music_checks.empty()) || !op_ranking_checks.empty()) || !op_score_checks.empty() || !extra_maine_checks.empty() || !ending_screenshots.empty() || !registration_checks.empty() || !gameover_checks.empty() || !score_route_checks.empty()) {
                     auto& ending=main_assets.ending;
                     ending.font_bitmap=main_assets.font_bitmap;
                     ending.gaiji=archive_member(par,"GAMEFT.BFT");
