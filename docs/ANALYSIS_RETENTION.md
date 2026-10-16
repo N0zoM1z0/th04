@@ -1,5 +1,23 @@
 # Private build and analysis retention
 
+## Stage2 boundary and native reset retention (v1457)
+
+Verified retention archives2732 owned generated files into1676 content blobs,
+releasing1385.176 MiB after archive, gzip and both journal files. All28575
+protected hashes verify, including all24890 parent identities. Actual recovery
+restores12 owned capture aliases and the pre-fix executable, executes it and
+both retained repaired GNU/UBSan programs from fresh input-only fixtures, then
+replays the frozen DOS/native consumers. The old native failure remains false;
+both repaired vectors remain true. All13 restored aliases verify SHA, size,
+mode and nsmtime before retirement. Four borrowed v1455 aliases were separately
+verified and retired without cleanup credit. Current final GNU/cache/UBSan
+cores and all complete compressed original evidence remain live. New backing
+paths are immutable private files; older journals and missing-file gaps remain.
+
+The root-owned bundle contains retention/retention.json, recover.py and
+replay_restored.py. Every replay uses fresh output names; old journals,
+initial source-list gap evidence and failed vectors remain unchanged.
+
 ## DOS Boss suffix retention (v1456)
 
 Sixteen owned capture image/font/raw aliases are archived in six blobs. Net

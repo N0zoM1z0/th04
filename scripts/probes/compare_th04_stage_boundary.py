@@ -15,6 +15,7 @@ from pathlib import Path
 
 root = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser(description=__doc__)
+p.add_argument("--dos-root", type=Path, default=root)
 p.add_argument("--original", type=Path, required=True)
 p.add_argument("--candidate", type=Path, required=True)
 p.add_argument("--native-root", type=Path, required=True)
@@ -23,6 +24,7 @@ p.add_argument("--native-receipt", type=Path, required=True)
 p.add_argument("--output-dir", type=Path, required=True)
 p.add_argument("--source-snapshot", type=Path)
 args = p.parse_args()
+root = args.dos_root.resolve()
 r = args.output_dir.resolve()
 r.mkdir()
 n = args.native_root.resolve()

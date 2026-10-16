@@ -5654,7 +5654,36 @@ writes no guest state, code or clock and calls no guest/host function.
 Initial native observation exposed two independently bounded problems: missing
 point-number pool reset (601 differing snapshots) and a query returning the old
 inactive Orange instead of prepared Kurumi (1201 differing records). Natural
-source fixes pass the diagnostic GNU vector. Final complete-source build,
-UBSan and old elapsed display regressions are tracked separately before renewal.
+source fixes now pass the complete566-file187b574f cold GNU/UBSan vectors:
+1203 selected bridge/init/actor-score records and all nine full pools at init
+and600 updates, actual consumed input/homing, Boss fields and continuous RNG.
+Fresh GNU87 programs/83CTests and optimized UBSan2 pass. Both current programs
+also reproduce the distinct9835 elapsed fixture and all59 complete RGB/TRAM
+pairs/177 observations. Initial565-file build omitted the new diagnostic include
+from the explicit closure; it remains diagnostic only. The repeated cold build
+includes that body. Sixteen volatile native/post-reset key snapshots remain
+separately measured.
 No Stage2 pictures, physical timing, full campaigns, NP2, Windows, pristine
 provenance or historical byte exactness are accepted by this fragment.
+
+
+### Closed v1457 recovery
+
+Verified retention archives2732 owned generated files into1676 content blobs,
+releasing1385.176 MiB after archive, gzip and both journal files. All28575
+protected hashes verify, including all24890 parent identities. Actual recovery
+restores12 owned capture aliases and the pre-fix executable, executes it and
+both retained repaired GNU/UBSan programs from fresh input-only fixtures, then
+replays the frozen DOS/native consumers. The old native failure remains false;
+both repaired vectors remain true. All13 restored aliases verify SHA, size,
+mode and nsmtime before retirement. Four borrowed v1455 aliases were separately
+verified and retired without cleanup credit. Current final GNU/cache/UBSan
+cores and all complete compressed original evidence remain live. New backing
+paths are immutable private files; older journals and missing-file gaps remain.
+
+`replay_restored.py --output-dir NEW` actually executes the archived pre-fix
+program and both retained repaired programs from fresh input-only fixtures,
+then uses frozen consumers to reproduce both failed DOS vectors and native
+failure/pass results. Full target initializer decodes replay through
+`replay_target_owners.py --output-dir NEW` in the bundle. Static target evidence
+is classified separately from runtime observations; no exact promotion follows.
