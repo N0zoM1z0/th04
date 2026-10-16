@@ -195,6 +195,16 @@ input differences. Source fresh OP needs four confirmations versus original
 three; an earlier fixed three-pulse source route remains incomplete. Bounded
 state agreement does not establish UI/input timing or whole-game fidelity.
 
+The v1444 OP diagnosis demonstrates a context dependency: both target and
+maintained character-menu code leave an input byte uninitialized. Later source
+render completion exposes a held confirmation to that nonzero stack latch,
+which ignores it until a no-input sample. Equivalent configured MAIN state
+after additional keys does not settle that menu behavior. Preserve the target's
+undefined behavior in historical reconstruction and measure helper/render costs
+before changing product semantics. An input-plan experiment with matching
+declared inputs still has152 pre-change raw RAM differences; it supports the
+observed gate mechanism without proving identical-state causality.
+
 ## Private and generated state
 
 `.tools/` contains the ignored pinned Ghidra/JDK downloads and versioned

@@ -21,6 +21,41 @@ describe recorded historical evidence, not a fresh availability guarantee.
 Recover original frozen inputs or create a newly attested producer from Git;
 do not rewrite old receipts. Both development goals remain active.
 
+## OP confirmation-loss mechanism isolated (v1444)
+
+Actual initial and fresh source OP key-event RAM now shows why the second
+confirmation is missed. At1000ms it is still in character-menu black-in,
+tone84. At1120ms before Enter release it has reached the character loop with
+key_det2000h, BIOS Return held and input_prev2Eh at SS:[menu_BP-1]. The real
+branch ignores that held key until INPUT_NONE clears the byte. Original OP is
+character-ready/input_prev0 at1000 and shot-ready at2000. Both original/source
+leave the byte uninitialized; do not conceal it with an initializer or blame
+input_s.asm. The initial renderer's individual cost owner is still unknown.
+
+A source input-plan variation delays only the second Enter by250ms and reaches
+MAIN at2343ms versus baseline2751/original2341. It confirms character/shot with
+input_prev0. Declared inputs match, but initial complete RAM differs in152 bytes;
+the full differences remain. This supports the mechanism, not strict single-
+variable causality or physical timing parity. New diagnostic nine-entry routes
+still admit first7547/second600-update input/state/RNG/pools and resident/files;
+their aggregate retains282/13 post-reset input differences, separate from
+v1443's270/10. Do not infer complete observer timing inertness from immediate
+unchanged-context assertions.
+
+Replay: `.analysis/reconstruction/probes/dos-op-menu-input-v1444/`. Five captures
+and four actual controls pin full key-event RAM, own-file relocated menu/input/
+delay code and caller frame/backedge ownership. Original804 relocation entries
+also reproduce both unpack digests. The first trampoline-reader failure remains.
+No product source, historical exact state or native branch changed.
+
+Retention journals24 owned terminal HDI/font/raw aliases in37 blobs, releasing
+239.785 MiB net after a2.193 MiB archive. All SHA/CRC/temporary mode/nsmtime and
+388 protected inputs pass. Full restoration reproduces all five analysis
+reports and the complete route report byte for byte before verified retirement
+again. Full key-event/process RAM, DGROUP/entry streams, diagnostics, frozen
+source (1566 inputs), products/MAPs and receipts remain. replay_restored.py
+handles restore/comparison/retirement. The old missing native trees are untouched.
+
 ## Four-source boot, Quit and restarted MAIN components (v1443)
 
 The new `--all-products` surface pins one complete normal same-run build,

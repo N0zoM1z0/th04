@@ -8,7 +8,7 @@ whole-game completion metrics. Keep all new code and documentation in English.
 
 | Purpose | Published baseline | Availability |
 | --- | --- | --- |
-| DOS reconstruction, comparison tools and ledgers | `main: 27e474e` | Current checkout; later evidence commits follow this baseline |
+| DOS reconstruction, comparison tools and ledgers | `main: da501cb` | Current checkout; later evidence commits follow this baseline |
 | Native x64 source | `port/modern-64: c0a1060371c5f8ba758ca8b10f6cbc99063ba3d6` | Remote and local Git objects exist; old working directories are missing |
 
 The old `.analysis/worktrees/` directory was absent at the 2026-10-16 audit,
@@ -59,6 +59,34 @@ git -C .analysis/worktrees/port64-next status --short
 Choose another name if it exists. Main commits do not publish native changes;
 commit and push each branch separately and verify its remote head.
 
+## Current OP input diagnosis (v1444)
+
+Initial/fresh source OP misses its second Enter because rendering is still
+black-in at1000ms/tone84 and its first character poll sees Enter held with
+uninitialized input_prev2Eh. At1120ms key_det2000h and BIOS Return are set;
+the real branch waits for INPUT_NONE to clear the latch. Original is already
+character-ready/input_prev0 at1000 and shot-ready at2000. Preserve original
+undefined stack behavior; an initializer or input_s.asm change would conceal
+this mechanism. Measure initial-renderer subcall costs next if continuing DOS
+timing work. Native development can resume in a newly attested checkout.
+
+New read-only diagnostic nine-entry routes admit the same first7547/second600
+state components but retain282/13 post-reset input differences (old270/10
+unchanged). A separate delayed-second-Enter variation reaches MAIN at2343ms
+versus source2751/original2341, with latch0 at both selection confirmations.
+It has152 pre-change raw RAM differences, so it supports the diagnosis without
+proving strict identical-state single-variable causality or timing parity.
+
+Replay/producers/full key-event RAM: `.analysis/reconstruction/probes/dos-op-menu-input-v1444/`.
+Use analyze.py and verify_result.py after selected retention/recover.py restores.
+Four actual inner controls and the retained first-reader rejection replay pass.
+No product source, exact unit or native branch changes follow from this probe.
+Twenty-four aliases are recoverably retired in37 blobs (239.785 MiB net after
+2.193 MiB archive);388 protected inputs and full temporary metadata restore pass.
+replay_restored.py reproduces five analysis reports and the fresh route report
+byte for byte, then verifies and retires aliases again. Full compressed RAM/
+entry/DGROUP,1566-input source archive, products/MAPs and receipts remain live.
+
 ## Current four-source cold build and process route (v1443)
 
 All four products cold-build serially from frozen3ca7b96 without requested
@@ -92,8 +120,9 @@ replay_restored.py for boundary restore/comparison/retirement. The restored
 comparison reproduces the identical report digest and expected exit1. Full
 compressed evidence, diagnostics, cold/current source, products/MAPs and
 receipts stay live; missing old native trees are outside this cleanup.
-Prioritize isolating OP input/confirmation latency or new-producer Demo pool/
-video comparisons, then resume native work in a fresh attested checkout. Avoid
+The v1444 section above isolates the held-confirmation mechanism. Continue with
+renderer costs, new-producer Demo pool/video comparisons, or native work in a
+fresh attested checkout. Avoid
 expanding control-plane tests as a substitute for source/runtime progress.
 Full campaign, pixels, timing, native and exact acceptance remain open.
 

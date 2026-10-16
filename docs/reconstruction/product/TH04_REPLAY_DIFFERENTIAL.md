@@ -21,8 +21,28 @@ The original and source both read the uninitialized byte at SS:[menu_BP-1].
 Do not add an initializer or call this an input_s.asm defect. The reproduced
 mechanism combines later renderer completion with a key already held at the
 first poll. Exact readiness time between snapshots and the individual renderer
-cost responsible for the delay remain unmeasured. Fresh-OP confirmation and
-one-variable input-schedule experiments are separate follow-ups.
+cost responsible for the delay remain unmeasured.
+
+Fresh source OP now reproduces the same tone84/held Return/key_det2000h/
+input_prev2Eh sequence at1000/1120ms after counter65. Original fresh OP is
+character-ready at1000 and shot-ready at2000; source needs the fourth pulse at
+3000 to confirm its shot choice. Three versus four confirmations still take
+2338 versus3345 emulated ticks. New nine-entry diagnostic routes retain equal
+admitted first7547/second600-update consumed input,36 fields/RNG,nine pools,
+22 states, actual second terminal, six resident256 checkpoints and physical
+CFG/SCR. Their aggregate fails282/13 post-reset input samples, distinct from
+v1443's270/10. Immediate unchanged-context assertions do not establish complete
+observer timing inertness; retain both runs.
+
+A separate source input-plan variation moves only the second Enter press/
+release from1000/1120ms to1250/1370ms. Other events, product bytes, prepared
+image, emulator/config and seed remain fixed. It sees input_prev0 in character
+selection at1250 and shot selection at2000; MAIN entry moves from2751 to2343ms
+(original2341). However, complete RAM at the first seed checkpoint differs in
+152 bytes despite matching CPU registers/segments/tick. Every raw difference
+and range is retained in input-variation-limit.json. This supports the observed
+gate mechanism; it is not a strict identical-state single-variable causal proof,
+product fix or timing-parity pass. No old input plan is rewritten.
 
 The diagnostic variant preserves the public producer and adds complete RAM at
 actual OP keyboard events, bound to each event's unchanged guest context and
@@ -32,13 +52,30 @@ also reproduce both independently recorded unpack-load digests. Candidate
 ownership comes from its cold MAP. Loop backedges, including the shot-loop JMP
 trampoline, derive the actual caller return PCs; the first reader's incorrect
 direct-edge requirement is retained as a separate reader failure. Raw stack
-call witnesses alone are not a complete unwind. No source, guest RAM, RNG,
+call witnesses alone are not a complete unwind. Four actual temporary inner
+controls reject wrong BP/code and invalidate the ignored-confirmation claim
+when its latch or input is cleared; the first reader failure still reproduces.
+No source, guest RAM, RNG,
 clock, register, old receipt or historical exact state is changed.
 
 Replay: `.analysis/reconstruction/probes/dos-op-menu-input-v1444/` with
 materialize.py, capture.py and analyze.py. Initial names are
 `dos-op-menu-input-v1444-initial-{original,candidate}`. Captures use the unchanged
-v1443 cold cohort and emulator, CPU1/nice19, serial and muted.
+v1443 cold cohort and emulator, CPU1/nice19, serial and muted. Full route names
+use fresh-{original,candidate}; the input variant uses second-pulse-1250.
+verify_result.py checks the scoped diagnosis and the raw initial-state limit.
+The next source investigation should measure initial-renderer subcall costs;
+blanket input initialization would conceal the original stack behavior.
+
+Verified retention journals24 terminal HDI/font/raw aliases in37 blobs,
+releasing239.785 MiB net after2.193 MiB archive. All SHA/CRC/temporary mode/
+nsmtime and388 protected inputs pass. Restoring all aliases reproduces the five
+analysis reports and complete fresh comparison byte for byte (aggregate exit1,
+282/13 retained), then verifies and retires aliases again. Full key-event and
+process RAM, entry/DGROUP streams, diagnostics, source archive1566, product/MAP/
+receipt inputs remain. Use replay_restored.py for the complete focused replay;
+retention/recover.py supports narrower restoration. No missing old native files
+are counted as this batch's cleanup.
 
 ## Actual four-product boot, restarted MAIN and fixed-menu negative (v1443)
 
