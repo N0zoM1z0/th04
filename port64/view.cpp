@@ -1498,6 +1498,7 @@ public:
     const op_ranking::Scene* ranking_scene() const {return ranking_.get();}
     const op_ranking::Renderer* ranking_renderer() const {return ranking_renderer_.get();}
     void set_ranking_observer(op_ranking::Sink sink) {ranking_observer_=std::move(sink);}
+    void set_stage_init_observer(std::function<void(const gameplay::State&)> observer) { stage_init_observer_=std::move(observer); }
     void enable_stage2() { continue_stage2_=true; }
     void enable_kurumi() { continue_stage2_=true;continue_kurumi_=true; }
     void enable_stage3() { enable_kurumi();continue_stage3_=true; }
@@ -1807,6 +1808,7 @@ public:
                 loaded_stage_=next_id;post_started_=post_finished_=false;
                 application_.publish_main_resource_stage(static_cast<std::uint8_t>(next_id));
                 load_stage_song();
+                if(stage_init_observer_)stage_init_observer_(*main_);
             }
             if(loaded_stage_==6 && !dialog_scene_ && main_->gengetsu_dialog_pending()) {
                 capture_gameover_graphics();main_->update(held_input,shift,false,0,&sprites_->background);
@@ -2567,6 +2569,7 @@ private:
     bool extra_selection_control_=false;
     bool continue_registration_=false;
     cutscene::Sink ending_observer_;
+    std::function<void(const gameplay::State&)> stage_init_observer_;
     bool continue_stage2_=false,continue_kurumi_=false,second_pre_finished_=false;
     bool continue_stage3_=false,third_pre_finished_=false,continue_elly_=false;
     bool continue_stage4_=false,fourth_pre_finished_=false,continue_reimu_=false,continue_marisa_=false;

@@ -2207,3 +2207,53 @@ its bytes and reader remain unchanged. A distinct retention-final.json and
 recover_final.py bind the closed terminal log. replay_restored_v2.py also
 restores borrowed original aliases and requires the identical first replay
 report, so the recovery is repeatable. Historical missing94 files remain open.
+
+
+## Actual Stage1 to Stage2 initialization ownership (v1457)
+
+Original/reconstructed DOS returns from gameplay at9837, after the earlier
+actor9836 stop. Original0AAF:0207 at9836 has quit0;0AAF:0081 at9837 has quit2.
+Both initialize Stage2 in the same process and reset its local frame to0.
+LCG calls rise354 to707 during actual initialization; ring calls remain4698.
+First MAIN initialization consumed353 LCG calls, the existing native relative
+counter origin. Ring counts accumulate native per-fill counters. The fixture
+assigns no gameplay state, RNG value, clock phase or stage/frame.
+
+The first actual native producer has601 differing point-number snapshots and
+1201 differing Boss query records across init and600 complete Stage2 updates.
+Original0AAF:7470/7473/7476 supplies DGROUP9634 and640 dwords to the clear
+helper. Native stage initialization now clears all400 records, including
+inactive bytes, and separately resets allocation cursors. The external alive
+list retains its distinct update ownership. The existing session contract
+seeds inactive bytes and checks that clear/preservation split. Kurumi setup
+was correct; `boss_snapshot()` now selects the prepared optional stage owner
+before activation instead of returning stale Orange.
+
+The optional `stage-epoch-plan.txt` fixture advances the real scene through
+its actual request/resource-install/init boundaries and600 Stage2 updates.
+`stage_epoch_trace.inl` observes actual owners; it does not replace simulation
+or rendering. Initial565-file diagnostic build omitted this new include from
+PORT_FILES. It remains diagnostic; final acceptance uses a new cold566-file
+187b574f closure that includes it.
+
+Fresh GNU87 programs/83CTests and optimized UBSan2 pass. Both actual programs
+match1203 selected bridge/init/actor-score records, nine complete pools at init
+and600 updates, consumed inputs, homing, Boss fields and continuous RNG. Their
+complete Stage2 state/pool wires are identical. Sixteen volatile post-reset
+key snapshots remain measured separately. DOS still fails18 post-reset input
+and1807 raw-GDC snapshots despite equal9pools/22states/38configured video regions.
+
+Both current programs reproduce the distinct v1455 elapsed fixture:9835
+selected updates, all59 complete RGB/TRAM pairs and177 full observations,
+with real input/homing/Boss/pools/Continue/save/title/popup gates. Four borrowed
+historical aliases verify SHA/mode/nsmtime before retirement, without new
+cleanup credit. Stage2 pictures, natural loader/UI/CPU timing, full original
+campaigns, NP2, Windows, physical input/audio/rendering and exactness remain open.
+Historical default-logical failures remain unresolved.
+
+Current programs/cache: `.analysis/port64/stage-epoch-v1457-final/{gnu,ubsan}`.
+Root-owned proof bundle, privately linked here:
+`.analysis/reconstruction/probes/dos-stage2-boundary-v1457/`.
+Use `native-final-result.json`, `public-final-{gnu,ubsan}` and
+`legacy-regressions/receipt.json`. The root's maintained boundary tools replay
+actual original/source/native observations; keep every failed vector.

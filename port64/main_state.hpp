@@ -168,6 +168,8 @@ public:
     bool bad_ending_requested() const { return bad_ending_requested_; }
     bool bad_yuuka5_dialog() const { return yuuka5_active_ && th04::portable::yuuka5::bad_ending_after_defeat(stage_id_,rank_,0); }
     bool boss_active() const { return gengetsu_.has_value() || mugetsu_.has_value() || yuuka6_active_ || yuuka5_active_ || marisa_active_ || reimu_active_ || orange_active_ || kurumi_active_ || elly_active_; }
+    // Stage setup installs the next boss before its update callback becomes
+    // active. Queries must observe that prepared owner during the stage intro.
     const orange::Snapshot& boss_snapshot() const {
         if(gengetsu_)return gengetsu_->snapshot().boss;
         if(mugetsu_)return mugetsu_->snapshot().boss;
@@ -176,10 +178,10 @@ public:
         if(stage6_)return stage6_->boss;
         if(yuuka5_active_)return yuuka5_->snapshot().boss;
         if(stage5_)return stage5_->boss;
-        if(marisa_active_)return marisa_->snapshot().boss;
-        if(reimu_active_)return reimu_->snapshot().boss;
-        if(elly_active_)return elly_->snapshot().boss;
-        if(kurumi_active_)return kurumi_->snapshot().boss;
+        if(marisa_)return marisa_->snapshot().boss;
+        if(reimu_)return reimu_->snapshot().boss;
+        if(elly_)return elly_->snapshot().boss;
+        if(kurumi_)return kurumi_->snapshot().boss;
         return orange_.snapshot();
     }
     const std::vector<orange::Draw>& boss_draws() const { return mugetsu_ ? mugetsu_->draws() : marisa_active_ ? marisa_->draws() : (reimu_active_ ? reimu_->draws() : (elly_active_ ? elly_->draws() : (kurumi_active_ ? kurumi_->draws() : orange_.draws()))); }

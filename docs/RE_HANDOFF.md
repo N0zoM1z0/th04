@@ -5,6 +5,24 @@ root `docs/NEXT_AGENT_HANDOFF.md` for both branches, current producers and comma
 Keep all code/docs English, heavy work on one low-priority CPU, and launches
 muted/headless. No Windows GUI, focus changes or host-key injection.
 
+## Current Stage2 repair (v1457)
+
+Current source closure566/187b574f includes the optional epoch diagnostic.
+Fresh GNU87 programs/83CTests and optimized UBSan2 pass. Both actual programs
+complete Stage1 at9837 and match Stage2init+600updates:1203 selected bridge/
+actor-score records,9 complete pools, input/homing/Boss fields and continuous
+RNG. Repair the missing400-record point-number clear and query the prepared
+inactive Boss. The initial565-file build omitted the new source-list entry
+and is diagnostic only. Current GNU/cache/UBSan cores:
+`.analysis/port64/stage-epoch-v1457-final/{gnu,ubsan}`.
+
+Both current programs also reproduce9835 selected updates and59 complete
+RGB/TRAM elapsed pairs. New Stage2 pictures/natural timing remain open. DOS
+Stage2 fails18 post-reset input and1807 raw-GDC snapshots despite equal9pools/
+22states/38configured video regions. Older302/312 vectors remain valid.
+Extend actual Stage2 from frame600 next; do not infer a one-frame gameplay
+bug from the old9836 stop. Recovery is being closed in the root v1457 bundle.
+
 ## Original/reconstructed DOS Boss suffix (v1456)
 
 The primary DOS comparison now reaches **9836 after-actor checkpoints**, with
@@ -21,7 +39,7 @@ checkpoints. Across all four captures, complete initial/final CFG/SCR bytes agre
 full 16-bit score checksums validate and real Continue changes decoded section 1.
 The original and candidate use their own files/MAP/CS/DS. This is MAIN-only
 replacement with original OP/MAINE/ZUN/assets, not a full four-product campaign.
-Complete update 9836, Stage2 transitions, interior UI, physical timing, NP2,
+The v1456 fixture alone does not accept later Stage2, interior UI, physical timing, NP2,
 Windows, pristine provenance and historical exactness remain open.
 
 This DOS observation does not change native code or renew native acceptance.
@@ -30,7 +48,7 @@ root `docs/reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md`.
 
 ## Native recorded elapsed display fixture (v1455)
 
-Current semantic source is `d22e190`, closure 565/533075c0, in the fresh checkout
+Historical v1455 source is `d22e190`, closure565/533075c0, in the fresh checkout
 `.analysis/native/port64-recovery-v1445/` relative to the DOS root. Frozen current
 programs/cache are native `.analysis/port64/clock-phase-v1455-final/{gnu,ubsan}`.
 GNU 87 programs/83 CTests and optimized UBSan 2 programs passed.

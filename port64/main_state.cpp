@@ -227,7 +227,7 @@ void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
     const auto preceding_boss=boss_snapshot();
     auto boss=next_id==1 ? kurumi::prepare_stage2(orange_.snapshot(),rank_) : kurumi::Snapshot{};
     session::initialize_actors({player_,shots_,enemies_,bullets_,sparks_,gathers_,
-        circles_,items_,score_,scoreboard_,ring_,drops_},[this] {
+        circles_,items_,point_numbers_,score_,scoreboard_,ring_,drops_},[this] {
             return static_cast<std::uint8_t>(application_->next_process_random());
         });
     // Stage initialization arms the scratch LINE flag/radius before add().

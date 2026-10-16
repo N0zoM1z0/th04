@@ -7,6 +7,7 @@
 #include "circles.hpp"
 #include "item_pool.hpp"
 #include "score.hpp"
+#include "point_numbers.hpp"
 #include "midboss.hpp"
 
 namespace th04::portable::session {
@@ -21,6 +22,7 @@ struct Actors {
     gather::System& gathers;
     circle::System& circles;
     item::Pool& items;
+    pointnum::System& point_numbers;
     item::ScoreState& awards;
     score::Snapshot& scoreboard;
     randring::SharedRandomRing& random;

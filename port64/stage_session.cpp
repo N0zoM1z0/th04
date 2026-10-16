@@ -22,6 +22,11 @@ void initialize_actors(Actors o,const std::function<std::uint8_t()>& next_byte) 
     o.gathers=gather::System(gathers);
     auto circles=o.circles.snapshot();circles.entities={};circles.color=13;
     o.circles=circle::System(circles);o.items.reset_stage();
+    // stage_state_init clears all 400 records, including inactive bytes.
+    // pointnums_init separately resets the two allocation cursors; the alive
+    // list has its own update owner and lies outside the cleared extent.
+    auto points=o.point_numbers.snapshot();points.entities={};
+    o.point_numbers=pointnum::System(points);o.point_numbers.initialize();
     o.awards.stage_point_items_collected=0;o.awards.dream_items_collected=0;
     o.awards.dream_score=0;
     o.random.fill(next_byte);

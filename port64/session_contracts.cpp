@@ -25,16 +25,28 @@ void reset(std::uint32_t seed,unsigned marker,std::uint32_t pending,unsigned cle
     gather::System gathers(gs);circle::Snapshot cs;
     for(auto& e:cs.entities) { e.flag=1;e.center={123,-456}; }
     circle::System circles(cs);item::Pool items;items.add({123,456},item::Type::point);
+    pointnum::Snapshot ps;ps.white_cursor=19;ps.yellow_cursor=37;
+    ps.alive[0]=53;ps.first_yellow=211;
+    for(auto& e:ps.entities) {e.age=marker;e.center={123,-456};e.padding=127;}
+    pointnum::System points(ps);
     item::ScoreState awards;awards.power=marker;awards.score_delta=pending;
     awards.stage_point_items_collected=marker;awards.dream_items_collected=marker;awards.dream_score=65535;
     score::Snapshot score;score.delta=pending;score.performance=marker;
     score.digits.fill(marker);score.hiscore.fill(static_cast<std::uint8_t>(marker+1));
     randring::SharedRandomRing random;item::EnemyDropSequence drops(255);rng::Lcg32 process(seed);
-    for(unsigned stage=0;stage<repeats;++stage) session::initialize_actors({p,shots,enemies,bullets,sparks,gathers,circles,items,awards,score,random,drops},[&]{return process.next_byte();});
+    for(unsigned stage=0;stage<repeats;++stage) session::initialize_actors({p,shots,enemies,bullets,sparks,gathers,circles,items,points,awards,score,random,drops},[&]{return process.next_byte();});
     if(p.previous_input()!=latch || awards.score_delta!=pending || awards.power!=marker)
         throw std::runtime_error("stage reset changed process-wide input/score/power");
     if(items.spawned()!=1)
         throw std::runtime_error("stage reset erased the run's cumulative item count");
+    const auto& point_state=points.snapshot();
+    if(point_state.white_cursor || point_state.yellow_cursor ||
+       point_state.alive!=ps.alive || point_state.first_yellow!=ps.first_yellow)
+        throw std::runtime_error("stage reset changed point-number list/cursor ownership");
+    for(const auto& e:point_state.entities)
+        if(e.flag || e.age || e.center.x || e.center.y || e.previous_y || e.width ||
+           e.times_two || e.padding || e.decimal!=std::array<std::uint8_t,4>{})
+            throw std::runtime_error("stage reset retained inactive point-number bytes");
     if(!print) return;
     point(p.position().current);point(p.position().previous);point(p.position().velocity);
     const auto& s=shots.snapshot();out(s.time);out(s.laser.time);out(unsigned(s.laser.style));out(s.reimu_cycle);out(s.spark_cycle);
@@ -90,6 +102,11 @@ void replay(char** paths) {
         if(main.score().power!=awards.power || main.score().power_overflow!=awards.power_overflow || main.score().score_delta!=awards.score_delta || main.scoreboard().digits!=board.digits || main.scoreboard().hiscore!=board.hiscore || main.scoreboard().performance!=board.performance) throw std::runtime_error("stage2 reset persistent gameplay awards");
         if(main.score().stage_point_items_collected || main.score().dream_items_collected || main.score().dream_score || main.bullets().snapshot().graze || main.orange_active()) throw std::runtime_error("stage2 retained old stage owners");
         if(main.player().position().current.x!=3072 || main.player().position().current.y!=5120 || main.midboss_state().hp!=750 || main.midboss_state().start_frame!=2600 || main.midboss_state().position.current.y!=-512) throw std::runtime_error("stage2 position/midboss seed differs");
+        const auto& prepared_boss=main.boss_snapshot();
+        if(main.boss_active() || prepared_boss.position.current.y!=1296 ||
+           prepared_boss.hitbox_radius.y!=384 || prepared_boss.timed_out!=1 ||
+           prepared_boss.additional[0]!=(rank==1 ? 128 : 8))
+            throw std::runtime_error("stage2 query returned the preceding inactive boss");
         stage::Background next_background(map1,second);
         bool activated=false,completed=false;unsigned draws=0,gather_requests=0,bomb_requests=0;
         for(unsigned tick=0;tick<20000 && !main.stage2_dialog_ready(next_background);++tick) {
