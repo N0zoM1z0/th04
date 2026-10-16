@@ -14,6 +14,8 @@ import sys
 
 
 PORT_FILES = (
+    "port64/ordinary_state_trace.cpp",
+    "port64/verify_ordinary_state.py",
     "port64/verify_main_exit_fade.py",
     "port64/verify_gameover_elapsed.py",
     "port64/verify_registration_elapsed.py",

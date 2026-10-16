@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.16)
 project(th04_port64 LANGUAGES CXX)
 
+add_executable(th04-port64-ordinary-state-trace ordinary_state_trace.cpp)
+target_link_libraries(th04-port64-ordinary-state-trace PRIVATE th04-portable-core)
+target_compile_features(th04-port64-ordinary-state-trace PRIVATE cxx_std_17)
+
 add_executable(th04-port64-palette-animation-contracts palette_animation_contracts.cpp maine_animation.cpp)
 target_compile_features(th04-port64-palette-animation-contracts PRIVATE cxx_std_17)
 

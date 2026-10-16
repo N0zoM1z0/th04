@@ -380,6 +380,11 @@ void State::apply_pause_text(const pause::Event& event) {
         hud_text_.put_character(26+int(i),event.row,std::uint8_t(event.text[i]),std::uint16_t(event.attribute));
 }
 void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion::Subpixel scroll_delta,stage::Background* background) {
+    const auto collision_hit=[this] {
+        return bullets_.snapshot().player_hit || enemies_.snapshot().player_hit ||
+            thick_lasers_.snapshot().player_hit || (gengetsu_ && gengetsu_->snapshot().lasers.player_hit) ||
+            (reimu_active_ && reimu_->snapshot().player_hit) || (marisa_active_ && marisa_->snapshot().player_hit);
+    };
     if(demo_exit_requested_)return;
     if(demo_ && !gameover_ && !player_frame_suspended_ && !frame_suspended_) {
         const auto physical=std::uint16_t(player::input_from_host_actions(held_input)|(held_input&0x4000u));
@@ -469,10 +474,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         circles_.update();sparks_.update();
         life_.set_clear_time(bullets_.snapshot().clear_time);
         life_.set_bombing_disabled(boss_active() ? boss_snapshot().bombing_disabled : 0);
-        const bool hit=bullets_.snapshot().player_hit || enemies_.snapshot().player_hit ||
-            thick_lasers_.snapshot().player_hit || (gengetsu_ && gengetsu_->snapshot().lasers.player_hit) || (reimu_active_ && reimu_->snapshot().player_hit) ||
-            (marisa_active_ && marisa_->snapshot().player_hit);
-        life_.latch_hit(mode_==Mode::ordinary && hit);
+        life_.latch_hit(mode_==Mode::ordinary && collision_hit());
         bullets_.set_player_hit(false);enemies_.set_player_hit(false);thick_lasers_.set_player_hit(0);
         if(gengetsu_)gengetsu_->set_player_hit(0);
         if(reimu_active_)reimu_->set_player_hit(0);
@@ -771,6 +773,9 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     }
     enemies_.prepare_render();
     point_numbers_.prepare_render(life_.state().scroll_active!=0,scroll_line_);
+    // Collision producers write the original shared BYTE during this update.
+    // Publish it before observers/rendering; the next player prefix consumes it.
+    life_.latch_hit(mode_==Mode::ordinary && collision_hit());
     // Retain the actual pre-increment rendering phase. Blocking scenes and
     // repeated host paints consume this cache without advancing the player.
     player_draws_=player::render_requests(life_.state(),player_.position(),
