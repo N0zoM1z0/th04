@@ -5,7 +5,7 @@
         std::ifstream epoch_plan(fs::path(assets.save_directory)/"stage-epoch-plan.txt");
         std::string magic;unsigned version,extent,final_keys,final_shift;
         require_view(bool(epoch_plan>>magic>>version>>extent>>final_keys>>final_shift) &&
-            magic=="TH04_STAGE_EPOCH" && version==1 && extent>0 && extent<=3996 && final_keys<=65535 && final_shift==0,"epoch fixture header/input");
+            magic=="TH04_STAGE_EPOCH" && version==1 && extent>0 && extent<=65535 && final_keys<=65535 && final_shift==0,"epoch fixture header/input");
         std::ofstream epoch(output/"stage-native.jsonl"),epoch_pools(output/"stage2-pools.bin",std::ios::binary),tail_pools(output/"stage1-tail-pools.bin",std::ios::binary);
         require_view(bool(epoch)&&bool(epoch_pools)&&bool(tail_pools),"epoch output unavailable");
         epoch_pools.write("TH04OP1\n",8);tail_pools.write("TH04OP1\n",8);
@@ -23,6 +23,11 @@
             th04::portable::demo_wire::Writer position;position.point(s.player().position().current);field("player_pos",position.data);
             integer("power",s.score().power,1);integer("hit",life.hit,1);integer("invincibility",life.invincibility,1);integer("respawn",life.respawn_time,1);
             const auto& boss=s.boss_snapshot();th04::portable::demo_wire::Writer owner;owner.movement(boss.position);owner.word(boss.hp);owner.byte(boss.sprite);owner.byte(boss.phase);owner.word(boss.phase_frame);owner.byte(boss.damage);owner.byte(boss.mode);owner.byte(boss.angle);owner.byte(boss.patterns_or_bonus);owner.word(boss.end_hp);field("boss",owner.data);field("boss_statebyte",boss.additional);th04::portable::demo_wire::Writer hitbox;hitbox.point(boss.hitbox_radius);field("boss_hitbox_radius",hitbox.data);integer("boss_phase_timed_out",boss.timed_out,1);
+            const auto& mid=s.midboss_state();th04::portable::demo_wire::Writer midboss_wire;
+            midboss_wire.movement(mid.position);midboss_wire.word(mid.start_frame);midboss_wire.word(mid.hp);
+            midboss_wire.byte(mid.sprite);midboss_wire.byte(mid.phase);midboss_wire.word(mid.phase_frame);
+            midboss_wire.byte(mid.damaged);midboss_wire.byte(mid.unused_angle);
+            field("midboss",midboss_wire.data);integer("midboss_active",mid.active,1);
             const auto target=s.homing_target().value_or(th04::portable::motion::Point{-15984,-15984});th04::portable::demo_wire::Writer homing;homing.point(target);field("homing",homing.data);
             epoch<<"},\"lives\":"<<+s.score().remaining_lives<<",\"bombs\":"<<+s.score().remaining_bombs<<",\"misses\":"<<+resident.miss_count<<",\"bombs_used\":"<<+resident.bombs_used<<",\"lcg_calls\":"<<scene.process_random_draws()-base_draws<<",\"ring_samples_since_fill\":"<<s.random_samples()<<",\"ring_calls\":"<<ring_offset+s.random_samples()-base_samples<<"}\n";
         };
