@@ -15,6 +15,8 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
     std::ofstream state(output/"state.txt"),consumed(output/"consumed.txt"),blocks(output/"blocks.txt"),pools(output/"pools.bin",std::ios::binary);
     require_view(bool(go_blocks) && bool(go_events) && bool(owners) && bool(state) && bool(consumed) && bool(blocks) && bool(pools),"ordinary FrontEnd output unavailable");
     pools.write("TH04OP1\n",8);
+    std::ofstream popup_rows(output/"popup-rows.bin",std::ios::binary);
+    require_view(bool(popup_rows),"ordinary popup rows unavailable");popup_rows.write("TH04PU1\n",8);
     FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&assets,gameplay::Mode::ordinary);
     scene.enable_configuration();scene.enable_registration();
     for(unsigned i=0;i<seed;++i)scene.advance(0,false,false);
@@ -27,7 +29,15 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
             <<event.value<<' '<<event.attribute<<' '<<std::quoted(event.text)<<'\n';
     });
     const stage::Program program(assets.standard);
-    scene.main_state().set_actor_observer([&](const gameplay::State& s){th04::portable::demo_wire::pools(pools,0,s,program);});
+    std::ofstream popup_state(output/"popup-state.txt");require_view(bool(popup_state),"ordinary popup state unavailable");
+    scene.main_state().set_actor_observer([&](const gameplay::State& s){
+        th04::portable::demo_wire::pools(pools,0,s,program);
+        const auto& p=s.popup_state();
+        popup_state<<s.frames()<<' '<<+p.frame<<' '<<p.length<<' '<<+p.current<<' '<<p.reached<<' '
+            <<p.left<<' '<<p.destination<<' '<<+p.requested<<' '<<(p.active ? 0x67e8 : 0x11be)<<' '<<p.bonus<<' ';
+        for(auto b:p.shift)popup_state<<std::hex<<std::setfill('0')<<std::setw(2)<<+b;
+        popup_state<<std::dec<<'\n';
+    });
     const auto base_draws=scene.process_random_draws(),base_samples=scene.main_state().random_samples();
     const auto hex=[&](const auto& bytes){constexpr char digits[]="0123456789abcdef";for(auto value:bytes)state<<digits[unsigned(value)>>4]<<digits[unsigned(value)&15];};
     state<<"TH04_ORDINARY_STATE 1 "<<updates<<'\n';
@@ -54,6 +64,16 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
         owners<<frame<<' ';constexpr char owner_digits[]="0123456789abcdef";
         for(auto byte:owner.data)owners<<owner_digits[byte>>4]<<owner_digits[byte&15];
         owners<<'\n';
+        const auto text=main_text_plane(main).physical_bytes(0xa0000,0x4000);
+        const std::uint32_t observed_frame=frame;popup_rows.write(reinterpret_cast<const char*>(&observed_frame),4);
+        for(unsigned row:{2u,23u})for(unsigned bank:{0u,0x2000u})
+            popup_rows.write(reinterpret_cast<const char*>(text.data()+bank+row*160u),160);
+        if(frame==7639 || frame==7641 || frame==7648 || frame==7657 || frame==7705 || frame==7770) {
+            scene.repaint();write_bmp((output/("popup-"+std::to_string(frame)+".bmp")).string(),scene.frame());
+            std::ofstream snapshot(output/("popup-"+std::to_string(frame)+"-text.bin"),std::ios::binary);
+            snapshot.write(reinterpret_cast<const char*>(text.data()),text.size());
+            require_view(main.frames()==frame,"popup observation advanced the simulation");
+        }
         if(frame==updates)break;
         const auto held=std::uint16_t((keys&0x2fu)|(keys&0x10u ? 0x800u : 0)|(keys&0x1000u ? 0x2000u : 0)|(keys&0x2000u ? 0x1000u : 0));
         require_view(player::input_from_host_actions(held)==keys,"ordinary FrontEnd host input translation");

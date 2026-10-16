@@ -14,6 +14,10 @@ import sys
 
 
 PORT_FILES = (
+    "port64/hud_popup.hpp",
+    "port64/hud_popup.cpp",
+    "port64/popup_contracts.cpp",
+    "port64/verify_popup.py",
     "port64/ordinary_state_trace.cpp",
     "port64/verify_ordinary_state.py",
     "port64/verify_main_exit_fade.py",

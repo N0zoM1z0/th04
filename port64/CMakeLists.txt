@@ -126,6 +126,7 @@ add_library(
   stage_bonus.cpp
   score.cpp
   stage_transition.cpp
+  hud_popup.cpp
   stage_session.cpp
   menu_state.cpp
   random_lcg.cpp
@@ -238,6 +239,10 @@ target_link_libraries(th04-port64-bonus-contracts PRIVATE th04-portable-core)
 add_executable(th04-port64-score-contracts score_contracts.cpp)
 target_link_libraries(th04-port64-score-contracts PRIVATE th04-portable-core)
 
+add_executable(th04-port64-popup-contracts popup_contracts.cpp)
+target_link_libraries(th04-port64-popup-contracts PRIVATE th04-portable-core)
+target_compile_features(th04-port64-popup-contracts PRIVATE cxx_std_17)
+
 add_executable(th04-port64-transition-contracts transition_contracts.cpp)
 target_link_libraries(th04-port64-transition-contracts PRIVATE th04-portable-core)
 
@@ -304,7 +309,7 @@ target_link_libraries(th04-port64-registration-scene-contracts PRIVATE th04-port
 add_executable(th04-port64-player-lifecycle-contracts player_lifecycle_contracts.cpp gameover_contracts.cpp player_bomb_contracts.cpp player_render_contracts.cpp)
 target_link_libraries(th04-port64-player-lifecycle-contracts PRIVATE th04-portable-core)
 
-foreach(target th04-port64-player-lifecycle-contracts th04-portable-core th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts th04-port64-dialog-contracts th04-port64-cutscene-contracts th04-port64-bonus-contracts th04-port64-score-contracts th04-port64-transition-contracts th04-port64-session-contracts th04-port64-midboss2-contracts th04-port64-kurumi-contracts th04-port64-midboss3-contracts th04-port64-elly-contracts th04-port64-midboss4-contracts th04-port64-reimu-contracts th04-port64-marisa-contracts th04-port64-stage5-contracts th04-port64-laser-contracts th04-port64-yuuka5-contracts th04-port64-yuuka6-contracts th04-port64-yuuka6-entity-contracts th04-port64-yuuka6-attack-contracts th04-port64-yuuka6-core-contracts th04-port64-yuuka6-render-contracts th04-port64-yuuka6-background-contracts th04-port64-score-file-contracts th04-port64-registration-contracts th04-port64-registration-scene-contracts)
+foreach(target th04-port64-popup-contracts th04-port64-player-lifecycle-contracts th04-portable-core th04-port64 th04-port64-contracts th04-port64-live-contracts th04-port64-shot-contracts th04-port64-enemy-contracts th04-port64-bullet-contracts th04-port64-effect-contracts th04-port64-midboss-contracts th04-port64-orange-contracts th04-port64-dialog-contracts th04-port64-cutscene-contracts th04-port64-bonus-contracts th04-port64-score-contracts th04-port64-transition-contracts th04-port64-session-contracts th04-port64-midboss2-contracts th04-port64-kurumi-contracts th04-port64-midboss3-contracts th04-port64-elly-contracts th04-port64-midboss4-contracts th04-port64-reimu-contracts th04-port64-marisa-contracts th04-port64-stage5-contracts th04-port64-laser-contracts th04-port64-yuuka5-contracts th04-port64-yuuka6-contracts th04-port64-yuuka6-entity-contracts th04-port64-yuuka6-attack-contracts th04-port64-yuuka6-core-contracts th04-port64-yuuka6-render-contracts th04-port64-yuuka6-background-contracts th04-port64-score-file-contracts th04-port64-registration-contracts th04-port64-registration-scene-contracts)
   if(MSVC)
     target_compile_options(${target} PRIVATE /W4)
   else()
@@ -353,6 +358,7 @@ add_test(NAME dialog-contracts COMMAND th04-port64-dialog-contracts)
 add_test(NAME stage-bonus-contracts COMMAND th04-port64-bonus-contracts)
 add_test(NAME score-contracts COMMAND th04-port64-score-contracts)
 
+add_test(NAME popup-contracts COMMAND th04-port64-popup-contracts)
 add_test(NAME stage-transition-contracts COMMAND th04-port64-transition-contracts)
 
 add_test(NAME stage-session-contracts COMMAND th04-port64-session-contracts)

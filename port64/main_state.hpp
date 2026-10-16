@@ -40,6 +40,7 @@
 #include "main_pause.hpp"
 #include "host_score.hpp"
 #include "hud.hpp"
+#include "hud_popup.hpp"
 #include "demo.hpp"
 #include "sound_runtime.hpp"
 #include <memory>
@@ -225,6 +226,7 @@ public:
     void start_yuuka6_after_dialog(std::array<std::uint8_t,3> palette_zero);
     void finish_post_boss_dialog();
     bool next_stage_requested() const { return next_stage_requested_; }
+    const popup::Snapshot& popup_state() const { return popup_; }
     const transition::Overlay& overlay() const { return overlay_; }
     const transition::Text& overlay_cell() const { return overlay_cell_; }
     bool bonus_text_visible() const { return clear_bonus_.has_value() && !leave_text_replaced_; }
@@ -254,6 +256,7 @@ private:
     std::uint32_t observed_frame_=0;
     void apply_clear_bonus(bool all_clear=false);
     application::State* application_;
+    popup::Snapshot popup_{};
     transition::Overlay overlay_{};
     transition::Text overlay_cell_{transition::TextKind::character,4,1,32,5};
     std::optional<transition::Departure> departure_;

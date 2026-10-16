@@ -145,6 +145,8 @@ void main_contracts() {
     pickup.update(0,false);
     require(pickup.score().power==i::power_max && pickup.bullets().snapshot().clear_time==20 &&
             pickup.life().clear_time==20,"full-power pickup publishes its clear timer after bullets update");
+    require(pickup.popup_state().active && pickup.popup_state().current==3 && pickup.popup_state().frame==1,
+            "full-power pickup renders its first popup before the completed-frame boundary");
     pickup.update(0,false);
     require(pickup.bullets().snapshot().clear_time==19 && pickup.life().clear_time==19,
             "pickup clear advances once in the next bullet update");

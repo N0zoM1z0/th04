@@ -1213,13 +1213,6 @@ void put_text_requests(Frame& frame,const MainSprites& sprites,const std::vector
 
 registration::TextPlane main_text_plane(const gameplay::State& state,unsigned demo_number=0) {
     auto text=state.hud_text_plane();
-    const auto& cell=state.overlay_cell();
-    for(unsigned row=1;row<24;++row)for(unsigned col=4;col<52;col+=2) {
-        if(cell.kind==th04::portable::transition::TextKind::gaiji)
-            text.put(int(col),int(row),std::uint8_t(cell.value),std::uint16_t(cell.attribute));
-        else for(unsigned half=0;half<2;++half)
-            text.put_character(int(col+half),int(row),std::uint8_t(cell.value),std::uint16_t(cell.attribute));
-    }
     if(demo_number && state.overlay().callback==th04::portable::transition::Callback::titles) {
         // Original MAIN_01_TEXT0AAF:62B3 writes these nine gaiji at18,12
         // after the enter timer reaches72. Keep yellow/blink TRAM attribute.

@@ -74,6 +74,7 @@ void State::initialize_hud() {
     values.graze=bullets_.snapshot().graze;values.power=score_.power;
     values.shot_level=shot::level_for_power(score_.power);values.score=scoreboard_;
     hud::apply(hud_text_,hud::initialize(values));scoreboard_.hud=values.score.hud;
+    for(int row=1;row<24;++row)for(int col=4;col<52;++col)hud_text_.put_character(col,row,32,5);
     // hud_put clears the display, preserving the process-global HP animator.
 }
 void State::apply_score_hud(const std::vector<score::Event>& events) {
@@ -121,6 +122,7 @@ void State::load_stage(const stage::Program::Bytes& standard) {
     orange_active_=false;post_boss_dialog_pending_=false;
     clear_bonus_.reset();departure_.reset();overlay_={};
     overlay_cell_={transition::TextKind::character,4,1,32,5};
+    popup_.active=false;
     frame_suspended_=false;dialog_finished_=false;next_stage_requested_=false;leave_text_replaced_=false;
     homing_target_.reset();
     player_draws_=player::render_requests(life_.state(),player_.position(),
@@ -273,6 +275,7 @@ void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
     life_.prepare_stage();kurumi_active_=false;elly_active_=false;reimu_active_=false;marisa_active_=false;
     orange_active_=false;clear_bonus_.reset();departure_.reset();overlay_={};
     overlay_cell_={transition::TextKind::character,4,1,32,5};
+    popup_.active=false;
     frame_suspended_=false;dialog_finished_=false;post_boss_dialog_pending_=false;
     next_stage_requested_=false;leave_text_replaced_=false;
     palette_tone_before_frame_=100;
@@ -432,6 +435,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         bullet_events_.push_back(event);
         if(event.type==bullet::EventType::sparks) sparks_.add_random(event.position,event.value,event.count,ring_);
         if(event.type==bullet::EventType::gather) gathers_.request(event);
+        if(event.type==bullet::EventType::bonus_popup)popup::request(popup_,popup::Kind::bonus,bullets_.snapshot().bonus);
         if(event.type==bullet::EventType::point_number)
             point_numbers_.add(event.position,std::uint16_t(event.value),false,false);
     };
@@ -502,6 +506,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         bullet_context.graze_score=graze_scores[rank_];
         const auto score_before=bullets_.snapshot().score_delta;
         bullets_.begin_frame();bullets_.update(bullet_context,bullet_sink);
+        popup_.bonus=bullets_.snapshot().bonus;
         score_.score_delta+=bullets_.snapshot().score_delta-score_before;
         if (stage_) {
             const auto before = enemies_.snapshot().score_delta;
@@ -716,7 +721,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     }
     item_events_ = items_.update(score_, player_.position().current, pull_items, life_.state().miss_time,
         [this](const item::CollectionEffects& effects,const item::ScoreState& current) {
-            if(effects.bullets_cleared)bullets_.clear();
+            if(effects.bullets_cleared) {bullets_.clear();popup::request(popup_,popup::Kind::full_power);}
             if(effects.shot_level_changed)hud::apply(hud_text_,hud::power(current.power,shot::level_for_power(current.power)));
             if(effects.hud_bombs_changed)hud::apply(hud_text_,hud::bombs(current.remaining_bombs));
             if(effects.hud_lives_changed)hud::apply(hud_text_,hud::lives(current.remaining_lives));
@@ -799,6 +804,11 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     const bool leaving=overlay_.callback==transition::Callback::leave;
     const auto writes=transition::update_overlay(overlay_);
     if(!writes.empty()) { overlay_cell_=writes.back();if(leaving) leave_text_replaced_=true; }
+    for(const auto& write:writes) {
+        if(write.kind==transition::TextKind::gaiji)hud_text_.put(int(write.left),int(write.row),std::uint8_t(write.value),std::uint16_t(write.attribute));
+        else hud_text_.put_character(int(write.left),int(write.row),std::uint16_t(write.value),std::uint16_t(write.attribute));
+    }
+    popup::update(popup_,hud_text_);
     playfield_shift_=playfield::update(playfield_shake_,std::uint8_t(frames_&1u),std::uint8_t(frames_&3u));
     run_frames_.complete(0,static_cast<std::uint16_t>(slowdown()));
     sound_action(sound::ActionKind::update);
@@ -811,7 +821,9 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     // raise. All actor/item awards above feed this same pending accumulator.
     scoreboard_.delta=score_.score_delta;scoreboard_.lives=score_.remaining_lives;
     scoreboard_.performance=performance_;scoreboard_.bullet_clear=bullets_.snapshot().clear_time;
+    scoreboard_.popup_id=popup_.requested;scoreboard_.popup_callback=popup_.active;
     score_events_=score::update(scoreboard_);
+    if(scoreboard_.popup_callback)popup::request(popup_,popup::Kind(scoreboard_.popup_id));
     apply_score_hud(score_events_);
     score_.score_delta=scoreboard_.delta;score_.remaining_lives=scoreboard_.lives;
     performance_=scoreboard_.performance;
