@@ -1,5 +1,17 @@
 # Private build and analysis retention
 
+## DOS Boss suffix retention (v1456)
+
+Sixteen owned capture image/font/raw aliases are archived in six blobs. Net
+release is 157.621 MiB after archive, gzip and both journal files. The chain
+verifies 24890 distinct protected hashes, including all 21663 parent
+hashes and the two old public capture paths. New protected recipes use private
+immutable copies. Actual archive restoration and fresh-output reducer replays
+reproduce both failed state aggregates and the passing video regions before
+SHA/mode/nsmtime verification and retirement of all sixteen aliases. No borrowed
+files or duplicate cleanup credit. Use `replay_restored_v2.py --output-dir NEW`
+for repeatable recovery; initial receipts, snapshots and replay remain unchanged.
+
 ## Recorded elapsed fixture retention (v1455)
 
 Verified recovery restores eight owned capture aliases and the actual compiled

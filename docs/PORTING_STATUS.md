@@ -34,6 +34,27 @@ that UI, not a confirmed IRQ fault. Boss pictures/defeat and paired process
 routes remain open. Native full-picture acceptance remains separate;
 see [current handoff](RE_HANDOFF.md).
 
+## Original/reconstructed DOS Boss suffix (v1456)
+
+The primary DOS comparison now reaches **9836 after-actor checkpoints**, with
+loop samples I0..I9835 and 9835 complete update boundaries. Both independent
+no-video and video pairs agree on configured scalar fields, all 5052 ordered RNG
+calls (354 LCG/4698 ring), nine complete pools and 22 state blocks. The video
+pair agrees on all 38 configured regions across all 9836 checkpoints: both
+pages/all four graphics planes, full TRAM, palettes, modes and programmed GDC
+fields. Each side's complete pool/state digests match its no-video control.
+
+**Aggregate acceptance remains false:** no-video retains 302 post-reset input
+differences, video retains 312, and complete raw GDC differs on all 9836 video
+checkpoints. Across all four captures, complete initial/final CFG/SCR bytes agree; all ten
+full 16-bit score checksums validate and real Continue changes decoded section 1.
+The original and candidate use their own files/MAP/CS/DS. This is MAIN-only
+replacement with original OP/MAINE/ZUN/assets, not a full four-product campaign.
+Complete update 9836, Stage2 transitions, interior UI, physical timing, NP2,
+Windows, pristine provenance and historical exactness remain open.
+
+See the [bounded differential evidence](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
+
 ## Recorded elapsed display fixture (v1455)
 
 Native `d22e190` adds an optional recorded-time replay through the existing
@@ -48,8 +69,7 @@ without fitting a phase. Only frame numbers and elapsed nanoseconds enter native
 Default logical timing still fails three samples by 407 pixels each on this new
 capture; the old v1454 two-sample failure remains unchanged. This fixture accepts
 completed display boundaries, not natural OP/loader/UI-interior or CPU/I/O timing,
-every frame, physical scanout or campaigns. Primary original/reconstructed DOS
-beyond 8000, native Stage2 update 9836, NP2, Windows, pristine provenance and
+every frame, physical scanout or campaigns. Primary DOS beyond this bounded suffix, native Stage2 update 9836, NP2, Windows, pristine provenance and
 historical exactness remain open. Both full development goals remain active.
 
 See the [bounded differential evidence](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
@@ -1103,7 +1123,6 @@ Its verified snapshot predates those renderer changes. Attest a combined
 producer when integrating the two histories. The v1401 startup implementation
 already reached `port/modern-64` through fffcc83.
 
-
 v1403 integrates remote motion recovery a0b6149 with the independently
 validated startup waits. Verified integration producer514/c2f8d689 is frozen;
 CMake's new motion contract and its verifier are now both included in the
@@ -1357,7 +1376,6 @@ All selected scalar/shake/text checks pass, all 125 captures agree between
 variants, and parent state/shake traces remain byte-identical. Only view.cpp
 changes among 509 inputs; previous whole cold/CTest/pool evidence retains its
 producer. Whole graphics/RGB/scanout and broader pairing remain open.
-
 
 v1381 restores whole-pool white/purple pellet passes from the original caller
 and actual leaf execution. All 40 overlap color differences disappear:

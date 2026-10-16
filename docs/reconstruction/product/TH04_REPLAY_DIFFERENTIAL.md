@@ -5,6 +5,107 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Original/reconstructed DOS Boss suffix (v1456)
+
+The primary DOS comparison now reaches **9836 after-actor checkpoints**, with
+loop samples I0..I9835 and 9835 complete update boundaries. Both independent
+no-video and video pairs agree on configured scalar fields, all 5052 ordered RNG
+calls (354 LCG/4698 ring), nine complete pools and 22 state blocks. The video
+pair agrees on all 38 configured regions across all 9836 checkpoints: both
+pages/all four graphics planes, full TRAM, palettes, modes and programmed GDC
+fields. Each side's complete pool/state digests match its no-video control.
+
+**Aggregate acceptance remains false:** no-video retains 302 post-reset input
+differences, video retains 312, and complete raw GDC differs on all 9836 video
+checkpoints. Across all four captures, complete initial/final CFG/SCR bytes agree; all ten
+full 16-bit score checksums validate and real Continue changes decoded section 1.
+The original and candidate use their own files/MAP/CS/DS. This is MAIN-only
+replacement with original OP/MAINE/ZUN/assets, not a full four-product campaign.
+Complete update 9836, Stage2 transitions, interior UI, physical timing, NP2,
+Windows, pristine provenance and historical exactness remain open.
+
+Runtime-observed evidence uses the pinned DOSBox-X binary `6e1a6e706d8b62ae...`
+and the same Normal/ReimuA/seed64/lives6/bombs0 start. No new product build or
+product source edit was made. Existing normal MAIN from the v1443 four-product
+cohort is 200279 bytes/SHA `778641ab845bcd67...`, with 1183 relocations; its MAP
+SHA is `42d7d2c7a93ee6d0...`. Maintained `src/` and `compat/` remain unchanged
+since the Continue-alias repair `07f69d3`. Original Japanese MAIN remains pinned,
+candidate-local-attested, 156258 bytes/1136 relocations; fresh preflight and full
+MAIN Ghidra attestation pass. No historical exact state changes.
+
+Actual terminal load is 10FC on both sides. Original relative MAIN 0AAF:01B3
+stores stage_frame at DGROUP2134:538A (loaded DS3230); reconstructed relative
+MAIN 0708:0769 stores its own MAP-owned field at DGROUP242E:CB44 (DS352A).
+Every terminal binds its own full MZ, CPU/register/segment/opcode/DGROUP context
+and RNG counts. Do not use the original CS:IP on the reconstructed executable.
+The 9836 tail is before the remaining loop suffix; the old scalar report's
+`complete_updates` label counts loop samples and is not complete-loop acceptance.
+
+Both sides record actual release-first keyboard waits at 6548->6549,
+7547->7548 and 9348->9349. The new post-Boss flag is a keyboard cue, not an
+assertion of candidate dialogue/player ABI. Existing target-specific original
+STD checkpoints are not rearmed at the second cue. No gameplay/RNG state or
+clock is assigned. All selected state/pool data and the 38 regions are compared
+without new normalization or masks; full raw GDC remains diagnostic and differs.
+The first post-reset input difference is at checkpoint 5, after update 4.
+
+The public `capture_th04_dos_boss_suffix.py` and `th04_boss_suffix_keyboard.gdb`
+keep the legacy public capture/adapter byte identities unchanged because older
+recovery recipes use those live paths. The first original no-video capture
+completed while the initial extension was in those paths. Its supervisor was
+stopped after that completed child, the legacy paths were restored, and the
+remaining three captures used the separate new entrypoint with identical adapter
+bytes. `--source-snapshot` validates exact frozen expected hashes for that first
+capture; it never rewrites a receipt or accepts a different hash. The initial
+source closure and composite replay closure remain distinct and immutable.
+
+Six CLI controls reject invalid second-dialogue schedules. Three actual-capture
+controls reject missing/changed frozen source. Five real late original samples
+(9284/9348/9349/9835/9836) support 38 region mutations and 11 original/candidate
+terminal mutations, including original code incorrectly signed as candidate.
+A separate raw scan-address mutation keeps configured regions equal while
+retaining a raw-GDC difference, demonstrating the narrower video scope.
+
+All commands/capture receipts, full compressed DGROUP/video/raw traces, own-file
+producer/MAP, original target, field witnesses, source snapshots, failed input
+vectors and controls remain under `.analysis/reconstruction/probes/dos-boss-extent-v1456/`.
+New capture entrypoint: `python3 scripts/probes/capture_th04_dos_boss_suffix.py`.
+Use fresh outputs, explicit `--end-after 9836 --dialog-at-frame 6548
+--continue-at-frame 7547 --post-boss-dialog-at-frame 9348`, pinned emulator/font,
+and candidate `--build-dir`/`--map`; add `--video-stream --video-layout` for video.
+The exact four commands and separately attributed first control are in the
+capture command/closure receipts. Restore needed aliases before strict readers.
+
+```sh
+python3 scripts/probes/compare_th04_bounded_ordinary.py \
+  .analysis/runtime/candidates/dos-boss-extent-v1456-original-video \
+  .analysis/runtime/candidates/dos-boss-extent-v1456-candidate-video \
+  --source-snapshot .analysis/reconstruction/probes/dos-boss-extent-v1456/replay-source \
+  --original-main .analysis/targets/th04/main.exe --output .analysis/NEW-suffix-states.json
+python3 scripts/probes/compare_th04_ordinary_video.py \
+  .analysis/runtime/candidates/dos-boss-extent-v1456-original-video \
+  .analysis/runtime/candidates/dos-boss-extent-v1456-candidate-video \
+  --original-baseline .analysis/runtime/candidates/dos-boss-extent-v1456-original-control \
+  --candidate-baseline .analysis/runtime/candidates/dos-boss-extent-v1456-candidate-control \
+  --baseline-sources .analysis/reconstruction/probes/dos-boss-extent-v1456/replay-source \
+  --original-main .analysis/targets/th04/main.exe --output .analysis/NEW-suffix-video.json
+```
+
+Expected exits: 1 for 312 post-reset input differences; 0 for the 38 configured
+video regions. The separate no-video pair retains 302 input differences. The
+native elapsed fixture remains its distinct v1455 producer/scenario. This DOS
+result does not accept native Stage2 or autonomously align native clocks.
+
+Sixteen owned capture image/font/raw aliases are archived in six blobs. Net
+release is 157.621 MiB after archive, gzip and both journal files. The chain
+verifies 24890 distinct protected hashes, including all 21663 parent
+hashes and the two old public capture paths. New protected recipes use private
+immutable copies. Actual archive restoration and fresh-output reducer replays
+reproduce both failed state aggregates and the passing video regions before
+SHA/mode/nsmtime verification and retirement of all sixteen aliases. No borrowed
+files or duplicate cleanup credit. Use `replay_restored_v2.py --output-dir NEW`
+for repeatable recovery; initial receipts, snapshots and replay remain unchanged.
+
 ## Recorded elapsed display fixture (v1455)
 
 Native `d22e190` adds an optional recorded-time replay through the existing
@@ -884,7 +985,6 @@ The original dialogue is in the earlier STD callback, before player_update;
 pre-loop20h is not the actual player-entry2000h. Retained comparisons establish
 selected state/pool/Boss agreement only. The following records the disproved
 v1446 inference and its historical producers; use the corrected witness above.
-
 
 Source `13e6676` preserves Stage1's gameplay input across blocking dialogue
 refreshes. Target MAIN `0AAF:00F1` calls player_update at `0AAF:5FCF` before the
@@ -3125,7 +3225,6 @@ final verification/retention in `run_finish.py`, with terminal phase journals
 and raw logs. These scoped results do not close full scanout, ordinary Boss/
 death/process, cross-emulator or native x64 acceptance.
 
-
 ## v1373 native point-number rings and foreground join
 
 This advances the native source gap observed at06922ce. The DOS v1372 package
@@ -4575,7 +4674,6 @@ scanout, paired Boss/death/process routes and Windows input/audio remain open.
 The goal stays active; candidate-local-attested provenance and deferred MAIN
 historical exactness are unchanged.
 
-
 ## Cold PMD installation and original OP timer ownership (v1392)
 
 Original `GAME.BAT` selects the resident PMD driver before unpacking OP. Two
@@ -4670,7 +4768,6 @@ CPU/file-loading elapsed time from PMD installation to first Logo playback and
 subsequent OP waits, followed by broader paired process/combat routes. Whole
 picture/default startup clocks, physical/cross-emulator scanout and Windows
 input/audio remain open. Historical exactness/provenance is unchanged.
-
 
 ## Original OP loading work and completion guards (v1393)
 
@@ -4769,7 +4866,6 @@ establish an explicit elapsed-work handoff through startup resource/draw/process
 owners. Default native clocks, full pictures, broader paired combat/process
 routes, physical/cross-emulator scanout and Windows input/audio remain open.
 
-
 ## Original Gaiji I/O elapsed work (v1394)
 
 Four fresh read-only original GAME.BAT/PMD86 captures cross fixed CPU budgets
@@ -4861,7 +4957,6 @@ Lossless retirement reclaims 604.43 MiB, retaining 49 logical members in 15
 unique blobs with full CRC/EOF/SHA/mode/nsmtime and protected proof checks.
 Both CI gates pass (root 441 / native 345), ledger/diff checks pass and another
 16.69 MiB of source-backed caches is removed after CI.
-
 
 ## Resident elapsed work through actual OP startup (v1395)
 

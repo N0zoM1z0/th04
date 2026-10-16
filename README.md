@@ -25,6 +25,13 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
+The primary original/reconstructed DOS comparison now reaches the Stage 1 Boss
+suffix: configured scalar/RNG, nine pools and 22 state blocks agree through
+9836 after-actor checkpoints (9835 complete update boundaries), and all 38
+configured video regions agree. Full CFG/SCR bytes also agree. Aggregate failure
+remains explicit for 302/312 post-reset input samples and raw GDC on every
+checkpoint. Complete Stage2/process/campaign/timing acceptance remains open.
+
 Native `d22e190` adds an optional recorded-time replay through the existing
 elapsed display interface. Both cold GNU and optimized UBSan programs match
 **all 59 complete 640x400 RGB pictures and all 59 active TRAM samples** at their
@@ -37,8 +44,7 @@ without fitting a phase. Only frame numbers and elapsed nanoseconds enter native
 Default logical timing still fails three samples by 407 pixels each on this new
 capture; the old v1454 two-sample failure remains unchanged. This fixture accepts
 completed display boundaries, not natural OP/loader/UI-interior or CPU/I/O timing,
-every frame, physical scanout or campaigns. Primary original/reconstructed DOS
-beyond 8000, native Stage2 update 9836, NP2, Windows, pristine provenance and
+every frame, physical scanout or campaigns. Primary DOS beyond this bounded suffix, native Stage2 update 9836, NP2, Windows, pristine provenance and
 historical exactness remain open. Both full development goals remain active.
 See the [current handoff](docs/RE_HANDOFF.md) for replay and recovery.
 
