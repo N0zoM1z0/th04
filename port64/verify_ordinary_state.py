@@ -199,6 +199,7 @@ def main() -> int:
         command = [str(args.exe.resolve()), '--hdi', str(original/'prepared/diagnostic.hdi'),
                    '--font-bmp', str(font), '--save-dir', str(inputs/'save'),
                    '--ordinary-trace-checks', str(frontend), '--mute']
+    starting_inputs = {str(p.relative_to(inputs)): sha(p.read_bytes()) for p in inputs.rglob("*") if p.is_file()}
     run = subprocess.run(command, capture_output=True, timeout=120,
                          env=dict(os.environ, SDL_VIDEODRIVER='dummy', SDL_AUDIODRIVER='dummy'))
     (output / 'stdout.txt').write_bytes(run.stdout)
@@ -223,8 +224,54 @@ def main() -> int:
             require(blocked_frames == {int(k) for k in witness['player_inputs']},
                     'ordinary blocking/player-entry evidence coverage')
             (output/'player-input-witness.json').write_text(json.dumps(witness, indent=2)+'\n')
+    player_inputs = dict(witness['player_inputs']) if witness else {}
+    continue_witness = None
+    continue_blocks = dict(passed=True, frames=[], rows=0)
+    if args.frontend:
+        go_path = frontend/'gameover-blocks.txt'
+        go_rows = [list(map(int, line.split())) for line in go_path.read_text().splitlines()] if go_path.is_file() else []
+        require(all(len(row) == 11 for row in go_rows), 'ordinary Game Over record width')
+        go_frames = {row[0] for row in go_rows}
+        cue = capture['receipt'].get('continue_at_frame', 0)
+        require(go_frames == ({cue} if 0 < cue < args.updates else set()),
+                'ordinary Continue capture/trace coverage')
+        if go_frames:
+            from attest_th04_continue_checkpoints import attest_capture as attest_continue
+            continue_witness = attest_continue(original, target)
+            require(go_frames == {int(k) for k in continue_witness['player_inputs']} and
+                    not go_frames.intersection(map(int, player_inputs)), 'ordinary Continue player witness coverage')
+            for index, row in enumerate(go_rows):
+                frame, attempt, before, after, host, completed, polled, consumed_key, lives, misses, credit = row
+                require(frame == cue and attempt == index and
+                        consumed_key == continue_witness['player_inputs'][str(frame)][0],
+                        'ordinary suspended player sample/order')
+                require(completed == frame + (index == len(go_rows)-1), 'ordinary Game Over frame freeze/resume')
+            require(go_rows[0][2] == -1 and go_rows[-1][3] == -1 and len(go_rows) > 1 and
+                    go_rows[-1][-1] == 1, 'ordinary Game Over actual entry/Continue return')
+            player_inputs.update(continue_witness['player_inputs'])
+            continue_blocks = dict(passed=True, frames=sorted(go_frames), rows=len(go_rows),
+                                   policy='Actual player-prefix sample is retained while release/Enter UI polls resume its suffix.')
+            (output/'continue-input-witness.json').write_text(json.dumps(continue_witness, indent=2)+'\n')
     consumed = compare_consumed(capture, (frontend/'consumed.txt').read_bytes(), args.updates,
-        witness['player_inputs'] if witness else None) if args.frontend else dict(passed=True, adapter='direct update arguments')
+        player_inputs) if args.frontend else dict(passed=True, adapter='direct update arguments')
+    physical_files = dict(passed=True, scope='not configured')
+    if continue_witness:
+        from compare_th04_dos_process_route import decode_score_sections
+        image = (original/'execution.hdi').read_bytes()
+        files = {}
+        for fat, name in ((b'MIKO    CFG', 'MIKO.CFG'), (b'GENSOU  SCR', 'GENSOU.SCR')):
+            a, b = game_file(image, fat), (inputs/'save'/name).read_bytes()
+            initial = bytes.fromhex(capture['starting_files'][fat.decode()])
+            row = dict(passed=a == b, original_sha256=sha(a), native_sha256=sha(b),
+                       initial_sha256=sha(initial), original_changed=a != initial, native_changed=b != initial)
+            if name == 'GENSOU.SCR':
+                decoded_a, decoded_b = decode_score_sections(a), decode_score_sections(b)
+                decoded_initial = decode_score_sections(initial)
+                row.update(decoded_equal=decoded_a == decoded_b, checksum_bits=16,
+                           sections=len(decoded_a), changed_decoded_sections=[i for i in range(10) if decoded_a[i] != decoded_initial[i]])
+            files[name] = row
+        physical_files = dict(passed=all(row['passed'] for row in files.values()), files=files,
+                              scope='Complete bounded CFG/SCR bytes, decoded score sections and checksums; the recorded configured Turbo Continue writes its ranked entry before resetting the live score.')
     owners = compare_owners(capture, (frontend/'owners.txt').read_bytes(), args.updates) if args.frontend else dict(passed=True, scope='not configured')
     profile = json.loads((original / 'profile.json').read_text())
     scalar = compare_scalar(capture, profile, parse_native(state_raw, args.updates))
@@ -252,9 +299,11 @@ def main() -> int:
     require(restored_hash.digest() == raw_hash.digest(), 'ordinary pool retention readback')
     raw_path.unlink()
     require(source_manifest(root)[0] == manifest, 'ordinary native source drift')
-    report = dict(passed=scalar['passed'] and pools['passed'] and consumed['passed'] and owners['passed'], accepts_exact=False,
+    report = dict(passed=scalar['passed'] and pools['passed'] and consumed['passed'] and owners['passed'] and physical_files['passed'], accepts_exact=False,
         natural_game_exit=False, updates=args.updates, scalar=scalar, actor_pools=pools,
-        command=command, frontend=args.frontend, consumed_input=consumed, player_input_boundary=witness['scope'] if witness else 'no interrupted prefix', boss_owners=owners, source_manifest_sha256=manifest, source_files=sources,
+        command=command, frontend=args.frontend, consumed_input=consumed,
+        player_input_boundary=[w['scope'] for w in (witness, continue_witness) if w],
+        continue_blocks=continue_blocks, physical_files=physical_files, starting_inputs=starting_inputs, boss_owners=owners, source_manifest_sha256=manifest, source_files=sources,
         executable_sha256=sha(args.exe.read_bytes()), original_receipt_sha256=sha((original/'receipt.json').read_bytes()),
         input_files={str(p.relative_to(inputs)):sha(p.read_bytes()) for p in inputs.rglob('*') if p.is_file()},
         pools_raw_sha256=raw_hash.hexdigest(), pools_gzip_sha256=sha(packed.read_bytes()),

@@ -11,9 +11,9 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
     require_view(bool(plan>>seed>>updates>>character>>shot_type) && seed<600 && updates>0 && updates<=65535 && character<2 && shot_type<2,
                  "ordinary FrontEnd plan header");
     fs::create_directories(output);
-    std::ofstream owners(output/"owners.txt");
+    std::ofstream owners(output/"owners.txt"),go_blocks(output/"gameover-blocks.txt"),go_events(output/"gameover-events.txt");
     std::ofstream state(output/"state.txt"),consumed(output/"consumed.txt"),blocks(output/"blocks.txt"),pools(output/"pools.bin",std::ios::binary);
-    require_view(bool(owners) && bool(state) && bool(consumed) && bool(blocks) && bool(pools),"ordinary FrontEnd output unavailable");
+    require_view(bool(go_blocks) && bool(go_events) && bool(owners) && bool(state) && bool(consumed) && bool(blocks) && bool(pools),"ordinary FrontEnd output unavailable");
     pools.write("TH04OP1\n",8);
     FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&assets,gameplay::Mode::ordinary);
     scene.enable_configuration();scene.enable_registration();
@@ -22,6 +22,10 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
     scene.input(menu::Input::confirm);if(shot_type)scene.input(menu::Input::down);scene.input(menu::Input::confirm);
     require_view(scene.live_main() && scene.main_state().mode()==gameplay::Mode::ordinary && scene.resident().random_seed_source==seed,
                  "ordinary FrontEnd MAIN start/seed");
+    scene.set_gameover_observer([&](const gameover::Event& event) {
+        go_events<<scene.main_state().frames()<<' '<<unsigned(event.kind)<<' '<<event.left<<' '<<event.row<<' '
+            <<event.value<<' '<<event.attribute<<' '<<std::quoted(event.text)<<'\n';
+    });
     const stage::Program program(assets.standard);
     scene.main_state().set_actor_observer([&](const gameplay::State& s){th04::portable::demo_wire::pools(pools,0,s,program);});
     const auto base_draws=scene.process_random_draws(),base_samples=scene.main_state().random_samples();
@@ -53,11 +57,29 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
         if(frame==updates)break;
         const auto held=std::uint16_t((keys&0x2fu)|(keys&0x10u ? 0x800u : 0)|(keys&0x1000u ? 0x2000u : 0)|(keys&0x2000u ? 0x1000u : 0));
         require_view(player::input_from_host_actions(held)==keys,"ordinary FrontEnd host input translation");
+        std::optional<std::uint16_t> suspended_player_sample;
         for(unsigned attempt=0;;++attempt) {
-            require_view(attempt<10000 && scene.live_main() && !main.game_over(),"unconfigured ordinary FrontEnd blocking owner");
+            require_view(attempt<10000 && scene.live_main() && !scene.pause_active(),"unconfigured ordinary FrontEnd blocking owner");
             const bool dialog=scene.dialog_active();const auto status=scene.dialog_status();
-            const auto input=dialog ? std::uint16_t((status==th04::portable::dialog::Status::press || status==th04::portable::dialog::Status::running) ? 0x1000 : 0) : held;
+            const auto* go=main.game_over();const int go_before=go ? int(go->phase()) : -1;
+            auto input=dialog ? std::uint16_t((status==th04::portable::dialog::Status::press || status==th04::portable::dialog::Status::running) ? 0x1000 : 0) : held;
+            if(go) {
+                const bool wait=go->phase()==gameover::Phase::press || go->phase()==gameover::Phase::menu;
+                input=std::uint16_t(wait && attempt%20<10 ? 0x1000 : 0);
+            }
             scene.advance(input,shift!=0,false);
+            if(!go && main.game_over()) {
+                // player_update consumed this argument before its miss helper
+                // entered Game Over. Later UI polls resume a suffix, not a new player prefix.
+                require_view(!suspended_player_sample,"duplicate suspended player prefix");
+                suspended_player_sample=main.consumed_input();
+            }
+            if(go_before>=0 || main.game_over()) {
+                go_blocks<<frame<<' '<<attempt<<' '<<go_before<<' '<<(main.game_over() ? int(main.game_over()->phase()) : -1)
+                    <<' '<<input<<' '<<main.frames()<<' '<<main.consumed_input()<<' '
+                    <<suspended_player_sample.value_or(main.consumed_input())<<' '<<+main.score().remaining_lives<<' '
+                    <<+scene.resident().miss_count<<' '<<+main.scoreboard().digits[0]<<'\n';
+            }
             if(dialog || scene.dialog_active()) {blocks<<frame<<' '<<attempt<<' '<<unsigned(status)<<' '<<input<<' '<<main.frames()<<' '<<scene.dialog_offset()<<'\n';++dialog_ticks;}
             if(!prefix_saved && scene.dialog_active() && scene.dialog_status()==th04::portable::dialog::Status::running && scene.dialog_offset()==0) {
                 const auto random=scene.process_random_state();const auto cursor=main.random_cursor();
@@ -76,7 +98,7 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
             if(main.frames()!=frame)break;
             ++blocked_ticks;
         }
-        consumed<<frame<<' '<<main.consumed_input()<<' '<<shift<<'\n';
+        consumed<<frame<<' '<<suspended_player_sample.value_or(main.consumed_input())<<' '<<shift<<'\n';
         require_view(main.frames()==frame+1 && scene.resident().stage==0,"ordinary FrontEnd crossed stage extent");
     }
     plan>>std::ws;require_view(plan.peek()==std::char_traits<char>::eof(),"ordinary FrontEnd trailing input");

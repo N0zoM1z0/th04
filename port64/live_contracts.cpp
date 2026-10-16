@@ -139,6 +139,15 @@ void main_contracts() {
             "MAIN updates player before item pickup");
     require(scene.score().score_delta==0 && scene.scoreboard().digits[1]==1 &&
             scene.awarded_score_units()==1,"item award drained at the end of its actual frame");
+    a::State pickup_application;pickup_application.start_normal(a::Playchar::reimu,a::ShotType::a);
+    g::State pickup(pickup_application);
+    require(pickup.add_item({192*16,323*16},i::Type::full_power),"full-power pickup fixture");
+    pickup.update(0,false);
+    require(pickup.score().power==i::power_max && pickup.bullets().snapshot().clear_time==20 &&
+            pickup.life().clear_time==20,"full-power pickup publishes its clear timer after bullets update");
+    pickup.update(0,false);
+    require(pickup.bullets().snapshot().clear_time==19 && pickup.life().clear_time==19,
+            "pickup clear advances once in the next bullet update");
     a::State score_application;score_application.start_normal(a::Playchar::reimu,a::ShotType::a);
     g::State scored(score_application);std::uint32_t awarded=0;unsigned sounds=0;
     for(unsigned frame=0;frame<900;++frame) {

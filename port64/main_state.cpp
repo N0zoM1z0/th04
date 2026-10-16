@@ -716,6 +716,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     }
     item_events_ = items_.update(score_, player_.position().current, pull_items, life_.state().miss_time,
         [this](const item::CollectionEffects& effects,const item::ScoreState& current) {
+            if(effects.bullets_cleared)bullets_.clear();
             if(effects.shot_level_changed)hud::apply(hud_text_,hud::power(current.power,shot::level_for_power(current.power)));
             if(effects.hud_bombs_changed)hud::apply(hud_text_,hud::bombs(current.remaining_bombs));
             if(effects.hud_lives_changed)hud::apply(hud_text_,hud::lives(current.remaining_lives));
