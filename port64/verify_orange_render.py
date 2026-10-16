@@ -70,6 +70,10 @@ def circles():
         yield [op,2048,1024,0,13,2,7,*circle_record(flag,age,radius,delta)]
     for x,y,radius in itertools.product((-1,0,224,639,640),(-1,0,96,398,399,400),(0,1,4,132,332)):
         yield ['P',x,y,radius]
+    # Actual ordinary MAIN clipping words observed in complete original DGROUP.
+    # Include Orange's entrance rings and both all-inside/clipped bottom edges.
+    for x,y,radius in itertools.product((32,232,415),(16,40,367,368,383),(0,1,15,16,252,264,320,326,332)):
+        yield ['C',x,y,radius,32,16,415,383]
 
 def compare(original,args,out,mode,rows):
     inputs=[];expected=[]
@@ -82,8 +86,11 @@ def compare(original,args,out,mode,rows):
             original.write(0x18d8,'h',big_frame);original.write(0x3a4,'h',tone);original.write(0x5393,'B',changed)
             original.call_args(0x6e7b,cs=0x2aaf)
             value=[original.u.mem_read(0x84298,48).hex(),*original.read(0x18d8,'h'),*original.read(0x3a4,'h'),*original.read(0x5393,'B'),*original.read(0x53dc,'B'),len(original.render_draws),*itertools.chain.from_iterable(original.render_draws)]
-        elif row[0]=='P':
-            _,x,y,radius=row;original.raw_circle=True;bits=bytearray(32000)
+        elif row[0] in ('P','C'):
+            _,x,y,radius=row[:4];original.raw_circle=True;bits=bytearray(32000)
+            if row[0]=='C':
+                left,top,right,bottom=row[4:]
+                original.write(0x32c,'8H',left,right-left,right,top,bottom-top,bottom,0xa800+top*5,bottom*80)
             def write(u,access,at,size,value,unused):
                 if 0xa8000<=at<0xa8000+32000:
                     for byte in range(size):
@@ -118,6 +125,6 @@ def main():
     for mode,rows in [('render',renders()),('circle',circles())]:
         if args.only and args.only!=mode:continue
         results[mode]=compare(original,args,out,mode,itertools.islice(rows,args.limit) if args.limit else rows)
-    receipt=dict(passed=True,controls=results,target_sha256=sha(original.target),native_sha256=sha(args.exe.read_bytes()),unicorn_version=unicorn.__version__,unicorn_engine_sha256=sha(Path(unicorn.unicorn._uc._name).read_bytes()),observed_utc=datetime.now(timezone.utc).isoformat(timespec='seconds'),scope='MAIN load2000 DS8000 main01 0AAF:6E7B/2D9C/2E65 and1B5A/1BA6/1BF2/1C28. Full explosion/circle state,aging/flash clocks,ordered sprite/circle geometry; circle pixel controls execute actual original0000:11EC GRCG algorithm with default clipping.',limits='Orange sprite pixels and GRCG color hardware intercepted at draw boundaries. Circle pixels use a write-mask shadow. Host framebuffer/page/scroll/whole-route timing remain separate; no DOS exact promotion.')
+    receipt=dict(passed=True,controls=results,target_sha256=sha(original.target),native_sha256=sha(args.exe.read_bytes()),unicorn_version=unicorn.__version__,unicorn_engine_sha256=sha(Path(unicorn.unicorn._uc._name).read_bytes()),observed_utc=datetime.now(timezone.utc).isoformat(timespec='seconds'),scope='MAIN load2000 DS8000 main01 0AAF:6E7B/2D9C/2E65 and1B5A/1BA6/1BF2/1C28. Full explosion/circle state,aging/flash clocks,ordered sprite/circle geometry; circle pixel controls execute actual original0000:11EC GRCG algorithm with default and recorded ordinary MAIN stage clipping.',limits='Orange sprite pixels and GRCG color hardware intercepted at draw boundaries. Circle pixels use a write-mask shadow. Host framebuffer/page/scroll/whole-route timing remain separate; no DOS exact promotion.')
     (out/'receipt.json').write_text(json.dumps(receipt,sort_keys=True,indent=2)+'\n');print(json.dumps(receipt))
 if __name__=='__main__':main()

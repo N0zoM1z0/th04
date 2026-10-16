@@ -22,26 +22,26 @@ void System::update() {
         // although the old DOS comment suggests it still draws that frame.
     }
 }
-std::vector<motion::Point> raster(motion::Point center,std::uint16_t radius) {
+std::vector<motion::Point> raster(motion::Point center,std::uint16_t radius,Clip clip) {
     std::vector<motion::Point> result;
     if (!radius) return result;
     int x=motion::wrap(radius),y=0,error=x;
-    const int cx=center.x,cy=center.y;
     const auto sub=[](int a,int b) { return int(motion::wrap(a-b)); };
     const auto add=[](int a,int b) { return int(motion::wrap(a+b)); };
+    const int cx=center.x,cy=sub(center.y,clip.top),height=sub(clip.bottom,clip.top);
     // Preserve the signed-word coarse rejection used before the midpoint
     // loop, including diagnostic negative/overflowing input coordinates.
-    if (sub(cy,x)>399 || add(cy,x)<0 || sub(cx,x)>639 || add(cx,x)<0) return result;
-    const bool inside=sub(cy,x)>=0 && add(cy,x)<=399 && sub(cx,x)>=0 && add(cx,x)<=639;
+    if (sub(cy,x)>height || add(cy,x)<0 || sub(cx,x)>clip.right || add(cx,x)<clip.left) return result;
+    const bool inside=sub(cy,x)>=0 && add(cy,x)<=height && sub(cx,x)>=clip.left && add(cx,x)<=clip.right;
     const auto pixel=[&](int px,int py) {
-        if (px>=0 && px<=639 && py>=0 && py<=399) result.push_back({static_cast<std::int16_t>(px),static_cast<std::int16_t>(py)});
+        if (px>=clip.left && px<=clip.right && py>=0 && py<=height) result.push_back({static_cast<std::int16_t>(px),motion::wrap(py+clip.top)});
     };
     const auto four=[&](int dx,int dy) {
         const int top=sub(cy,dy),bottom=add(cy,dy);
         if (inside || dy) {
             pixel(sub(cx,dx),top);pixel(add(cx,dx),top);
         }
-        if (inside || bottom<399) {
+        if (inside || bottom<height) {
             pixel(sub(cx,dx),bottom);pixel(add(cx,dx),bottom);
         }
     };

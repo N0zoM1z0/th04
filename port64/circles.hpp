@@ -20,7 +20,10 @@ public:
 private:
     Snapshot state_;
 };
-// Original GRCG midpoint outline with the default640x400 clipping rectangle.
-// The clipped lower half excludes row399; the all-inside path includes it.
-std::vector<motion::Point> raster(motion::Point center,std::uint16_t radius);
+struct Clip {
+    std::int16_t left=0,top=0,right=639,bottom=399;
+};
+// Original GRCG midpoint outline. Coordinates include the clipping origin.
+// The clipped lower half excludes the bottom row; all-inside includes it.
+std::vector<motion::Point> raster(motion::Point center,std::uint16_t radius,Clip clip={});
 } // namespace th04::portable::circle

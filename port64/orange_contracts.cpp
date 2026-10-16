@@ -130,9 +130,14 @@ void circle_vectors(const char* path) {
     std::ifstream in(path);require(bool(in),"cannot open circle fixtures");char op;
     while (in>>op) {
         const auto x=m::wrap(number(in)),y=m::wrap(number(in)),radius=m::wrap(number(in));
-        if (op=='P') {
+        if (op=='P' || op=='C') {
+            ci::Clip clip;
+            if(op=='C') {
+                clip.left=m::wrap(number(in));clip.top=m::wrap(number(in));
+                clip.right=m::wrap(number(in));clip.bottom=m::wrap(number(in));
+            }
             Bytes bits(32000);
-            for (auto p:ci::raster({x,y},static_cast<std::uint16_t>(radius))) bits[unsigned(p.y)*80+unsigned(p.x)/8]|=static_cast<std::uint8_t>(0x80u>>(p.x&7));
+            for (auto p:ci::raster({x,y},static_cast<std::uint16_t>(radius),clip)) bits[unsigned(p.y)*80+unsigned(p.x)/8]|=static_cast<std::uint8_t>(0x80u>>(p.x&7));
             hex(bits);std::cout << '\n';continue;
         }
         const auto color=number(in),density=number(in),slot=number(in);

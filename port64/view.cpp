@@ -935,7 +935,7 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
             for(auto p:points)
                 put_indexed_pixel(frame,palette,p.x,p.y,0,0,draw.color);
         } else if (draw.kind==orange::DrawKind::circle) {
-            for (auto p:circle::raster({draw.left,draw.top},pattern)) put_indexed_pixel(frame,palette,p.x,p.y,0,0,draw.color);
+            for (auto p:circle::raster({draw.left,draw.top},pattern,{32,16,415,383})) put_indexed_pixel(frame,palette,p.x,p.y,0,0,draw.color);
         } else if (pattern>=128 && pattern<256) {
             const auto& slot=sprites.stage_slots[pattern];require_view(slot.sheet,"Orange references an empty dynamic stage slot");
             if(state.marisa_active() && (draw.kind==orange::DrawKind::rolling_sprite || draw.kind==orange::DrawKind::white_rolling_sprite))
