@@ -45,6 +45,8 @@ def main() -> int:
                         help='After this observed frame stalls, release Shot and send ordinary Enter pulses')
     parser.add_argument('--continue-at-frame', type=int,
                         help='Release Shot and operate the real Continue wait after this later observed frame')
+    parser.add_argument('--quit-at-frame', type=int,
+                        help='Release Shot, send ordinary Escape pulses, then observe MAINE and fresh OP menu')
     parser.add_argument('--stall-diagnostic-ms', type=int,
                         help='Record actual guest PC/RAM after this much virtual no-frame progress')
     parser.add_argument('--process-events', action='store_true',
@@ -65,6 +67,9 @@ def main() -> int:
     if args.continue_at_frame is not None and (args.dialog_at_frame is None or
             not args.dialog_at_frame < args.continue_at_frame < args.end_after):
         parser.error('Continue cue requires dialog frame < Continue frame < --end-after')
+    if args.quit_at_frame is not None and (not args.process_events or args.continue_at_frame is not None or
+            args.dialog_at_frame is None or not args.dialog_at_frame < args.quit_at_frame < args.end_after):
+        parser.error('Quit route requires process events, no Continue cue, and dialog < Quit < end-after')
     if args.stall_diagnostic_ms is not None and (args.end_after is None or args.stall_diagnostic_ms < 1000):
         parser.error('stall diagnostics require a bounded prefix and at least1000 virtual milliseconds')
     output = args.output_dir.resolve()
@@ -185,6 +190,8 @@ def main() -> int:
         env['TH04_ORDINARY_DIALOG_FRAME'] = str(args.dialog_at_frame)
     if args.continue_at_frame is not None:
         env['TH04_ORDINARY_CONTINUE_FRAME'] = str(args.continue_at_frame)
+    if args.quit_at_frame is not None:
+        env['TH04_ORDINARY_QUIT_FRAME'] = str(args.quit_at_frame)
     if args.stall_diagnostic_ms is not None:
         env['TH04_ORDINARY_STALL_MS'] = str(args.stall_diagnostic_ms)
     if args.dgroup_stream:
@@ -224,6 +231,8 @@ def main() -> int:
     if args.end_after is not None:
         complete = (not timeout and code == 0 and b'TH04_ORDINARY_PREFIX_COMPLETE\n'
                     in (output / 'boot.log').read_bytes() and not (output / 'clock-input-error.txt').exists())
+    if args.quit_at_frame is not None:
+        complete = complete and b'TH04_ORDINARY_ROUTE_COMPLETE\n' in (output / 'boot.log').read_bytes()
     names = ['profile.json', 'observer-profile.txt', 'dosbox-x.conf', 'boot.log', 'raw.txt', 'clock-input.json']
     if args.dgroup_stream:
         complete = complete and b'TH04_ORDINARY_DGROUP_COMPLETE\n' in (output / 'boot.log').read_bytes()
@@ -237,7 +246,10 @@ def main() -> int:
         names += ['ordinary-stall.json', 'ordinary-stall-dgroup.bin']
     if args.process_events:
         names += ['process-events.json', 'process-events.jsonl', 'process-targets.json']
+        names += sorted(path.name for path in output.glob('process-entry-*.bin.gz'))
         complete = complete and (output / 'process-events.json').is_file() and not (output / 'process-error.txt').exists()
+    if args.quit_at_frame is not None:
+        names += ['main-handoff.json', 'handoff-dgroup.bin', 'fresh-op-menu.json']
     receipt = dict(schema_version=1, complete=complete, timeout=timeout, exit=code,
                    role='original' if args.original else 'candidate', elapsed=time.monotonic() - started,
                    command=command, main_path=str(main_path.resolve()), main_sha256=sha(main_bytes),
@@ -261,6 +273,12 @@ def main() -> int:
         receipt['dialog_at_frame'] = args.dialog_at_frame
     if args.continue_at_frame is not None:
         receipt['continue_at_frame'] = args.continue_at_frame
+    if args.quit_at_frame is not None:
+        receipt.update(quit_at_frame=args.quit_at_frame, termination='observed-fresh-op-menu',
+                       natural_game_exit=False)
+        metadata = output / 'ordinary-dgroup.json'
+        if metadata.is_file():
+            receipt['main_frames'] = json.loads(metadata.read_text())['frames']
     if args.video_stream:
         receipt['video_layout'] = dict(path=str(args.video_layout.resolve()),
                                        sha256=sha(args.video_layout.read_bytes()))

@@ -21,22 +21,41 @@ describe recorded historical evidence, not a fresh availability guarantee.
 Recover original frozen inputs or create a newly attested producer from Git;
 do not rewrite old receipts. Both development goals remain active.
 
-## Actual DOS overlay-entry observer (v1440)
+## Actual Quit, MAINE and fresh OP route (v1440)
 
-The original short boot/OP/one-update MAIN probe now records actual guest
-INT21 AX4B03 overlay loading, retaining PSP10EC and load/relocation factor10FC.
-Complete relocated MAIN bytes match both before transfer and at actual guest
-CS:IP10FC:0000 after CPU_JMP returns; the existing MAIN L stream cross-checks
-the same image. This is one MAIN entry, not a complete process route.
-Environment names change before the overlay, so they cannot identify executing
-code alone. New MCB/PSP/environment guards have nine passing public controls.
-The optional capture flag is `--process-events`; old defaults remain unchanged.
+New original/candidate runs execute real MAIN Quit -> original MAINE -> fresh
+original OP menu. All three AX4B03 overlay entries retain PSP10EC and load/factor
+10FC. Complete relocated images are checked before transfer and at actual guest
+CS:IP10FC:0000 after CPU_JMP returns. The old MAIN observer is retired at its
+verified MAINE request before memory reuse; the host observer flag changes with
+asserted unchanged guest RAM/register/PIC context. Fresh OP executes its resident
+counter store at relative0A74:0D2F, load10FC, DS2030, counter64->65.
+Environment names change before loading and cannot identify executing code.
 
-Replay: `.analysis/reconstruction/probes/dos-process-route-v1440/owner-entry.json`
-and `owner-sixth-source/`. Retain earlier failed probes. IRQ8/type0 can reach a
-Python GDB stop callback before `.condition` filtering; use explicit argument
-guards or native conditional stops. Next retire the MAIN frame watcher at a
-verified handoff and observe MAINE/fresh OP with full image and resident proof.
+There are 7,547 complete MAIN updates and 7,548 pre-update samples: the final
+update enters Game Over/Quit and does not finish. Its real prefix snapshot is
+retained; no synthetic terminal or natural exit is claimed. Consumed inputs,
+36 fields/RNG, nine pools and 22 state blocks agree. The companion aggregate
+remains failed for 284 post-reset input samples. All 256 resident bytes agree
+at MAIN handoff, MAINE entry, OP entry and fresh menu. Physical MIKO.CFG remains
+unchanged; GENSOU.SCR changes only decoded section1 (Normal Reimu), identically
+on both sides, with all ten complete 16-bit checksums valid.
+
+Replay: `.analysis/reconstruction/probes/dos-process-route-v1440/comparison.json`
+and `compare_th04_dos_process_route.py`. Captures are
+`dos-process-route-v1440-{original-first,candidate}`. The current MAIN remains
+778641ab; supporting OP/MAINE/ZUN remain original. Resident pointer/content and
+fresh OP use are verified, but the resident allocation-owner MCB is unmeasured.
+Intermediate UI frames, second MAIN, complete four-reconstructed-product chain,
+campaigns, native, cross-emulator and physical timing acceptance remain open.
+
+Public CI passes 526 tests; 24 actual entry/PC/route/checksum counterexamples
+pass. The earlier one-entry `owner-entry.json` and failed probes keep their
+identities. IRQ8/type0 can reach Python GDB stop before `.condition` filtering;
+use native conditional stops with explicit argument guards. Owned recovery
+journals under `probes-retention/` and `route-retention/` release 345.461 MiB net
+across 31 recoverable image/font/raw aliases. Complete compressed streams,
+entry dumps, source archive, both producers/MAP and negative evidence remain.
 
 ## Natural Continue score alias repaired (v1439)
 
@@ -65,8 +84,9 @@ target MAIN0AAF:3CDA increments the score's first byte at DGROUP4349. New strict
 Continue ownership/reset/cue guards reject this old producer. Preserve the
 complete failure; do not accept Continue merely because gameplay resumes.
 
-Continue with full Demo pool/video replay, intermediate Game Over UI and
-Quit/MAINE/fresh OP/resident process routes. All 438
+Continue with full Demo pool/video replay, intermediate Game Over UI,
+resident allocation-owner checks and second MAIN. The bounded v1440 route above
+now observes real Quit/MAINE/fresh OP. All 438
 historical MAIN exact inputs exclude this product-only BSS owner; historical
 accepted inputs remain unchanged. Eleven new controls and root CI 506/private
 gates pass. Evidence/source index:

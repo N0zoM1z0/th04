@@ -35,6 +35,11 @@ held = False
 found = None
 dialog_frame = int(os.environ.get('TH04_ORDINARY_DIALOG_FRAME', 0))
 continue_frame = int(os.environ.get('TH04_ORDINARY_CONTINUE_FRAME', 0))
+quit_frame = int(os.environ.get('TH04_ORDINARY_QUIT_FRAME', 0))
+post_main = False
+post_main_tick = None
+escape_down = False
+fresh_seedwatch = None
 active_dialog_frame = dialog_frame
 waits = []
 dialog_active = False
@@ -60,7 +65,7 @@ def snapshot():
 
 def save():
     record = dict(actions=actions, remaining=schedule, resident_linear=resident, found=found, requested_seed=64, pic_ticks_address=address, keyboard_function_address=function, keys=keys, scope='Original OP resident seed increment is observed, never written; keyboard API adapter only; no guest RAM/register/clock writes')
-    if continue_frame:
+    if continue_frame or quit_frame:
         record['waits'] = waits
     (out / 'clock-input.json').write_text(json.dumps(record, indent=2) + '\n')
 
@@ -79,6 +84,37 @@ class Seed(gdb.Breakpoint):
         assert value < 64 or armed, ('missed menu seed', value)
         return False
 
+class FreshMenu(gdb.Breakpoint):
+    def __init__(self):
+        super().__init__('*(unsigned int *)0x%x' % (base() + ram.physical(resident + 20)),
+                         type=gdb.BP_WATCHPOINT, wp_class=gdb.WP_WRITE, internal=True)
+
+    def stop(self):
+        global todo
+        context = process_recorder.context()
+        registers, segment_data = bytes.fromhex(context['cpu_regs']), bytes.fromhex(context['segments'])
+        load = process_recorder.last_entry['load_segment']
+        cs = int.from_bytes(segment_data[8:16], 'little')
+        ip = int.from_bytes(registers[32:36], 'little') & 65535
+        if (cs, ip) != (load + 0x0a74, 0x0d2f):
+            return False
+        ds = int.from_bytes(segment_data[24:32], 'little')
+        es = int.from_bytes(segment_data[:8], 'little')
+        bx = int.from_bytes(registers[12:16], 'little') & 65535
+        if ds != load + 0x0f34 or es * 16 + bx != resident:
+            process_recorder.error = 'fresh OP counter resident/context ownership'
+            return True
+        data = ram.read_range(resident,256)[0]
+        if data[:11] != b'HUMAConfig\0':
+            process_recorder.error = 'fresh OP resident identity'
+            return True
+        row = process_recorder.record('fresh-op-menu', context,
+            entry_sequence=process_recorder.last_entry['sequence'], cs=cs, ip=ip,
+            counter=int.from_bytes(data[20:24], 'little'))
+        (out/'fresh-op-menu.json').write_text(json.dumps(row,indent=2)+'\n')
+        todo = ('route-complete',)
+        return True
+
 class Clock(gdb.Breakpoint):
 
     def __init__(self):
@@ -87,6 +123,14 @@ class Clock(gdb.Breakpoint):
     def stop(self):
         global resident, todo, held, found, dialog_released, dialog_done, last_progress_frame, last_progress_tick
         now = tick()
+        if post_main:
+            if now - post_main_tick > 60000:
+                todo = ('route-diagnostic',)
+                return True
+            if schedule and now >= schedule[0][0]:
+                todo = ('key', *schedule.pop(0))
+                return True
+            return False
         if stall_ms and monitor is not None and monitor.current is not None:
             frame = monitor.current.sequence.frames
             if frame != last_progress_frame:
@@ -97,6 +141,9 @@ class Clock(gdb.Breakpoint):
         if dialog_active:
             current_frame = monitor.current.sequence.frames
             if current_frame > active_dialog_frame:
+                if quit_frame and active_dialog_frame == quit_frame:
+                    monitor.error = 'Quit cue unexpectedly resumed MAIN updates'
+                    return True
                 if enter_down:
                     todo = ('key', now, 'KBD_enter', False)
                 else:
@@ -160,13 +207,59 @@ while gdb.selected_inferior().pid:
         process_recorder.capture_event()
         if process_recorder.error:
             raise ValueError(process_recorder.error)
+        if process_recorder.handoff_requested is not None:
+            event = process_recorder.handoff_requested
+            if not quit_frame or monitor is None:
+                raise ValueError('unconfigured MAIN handoff')
+            before, before_tick = snapshot(), tick()
+            active_address = monitor.active
+            monitor.finish_handoff(event)
+            trace_pointer = int(gdb.parse_and_eval("(void *)&'th04_demo_observer::trace'"))
+            trace_file = int.from_bytes(read(trace_pointer,8), 'little')
+            gdb.execute('call (int)fflush((void *)0x%x)' % trace_file, to_string=True)
+            gdb.selected_inferior().write_memory(active_address, b'\0')
+            assert read(active_address,1) == b'\0' and before == snapshot() and before_tick == tick()
+            process_recorder.record('main-observer-retired', process_recorder.context(),
+                                   request_sequence=event['sequence'], completed_updates=quit_frame,
+                                   unchanged_guest=before)
+            monitor = None
+            post_main, post_main_tick = True, tick()
+            dialog_active = False
+            waits[-1].update(outcome='main-overlay', request_sequence=event['sequence'],
+                             handoff_tick=tick(), action_end=len(actions))
+            schedule = [(tick(),'KBD_esc',False)] if escape_down else []
+            process_recorder.handoff_requested = None
+            clock.enabled = True
+            save()
         continue
     if process_recorder is not None and process_recorder.transfer.at_entry():
         process_recorder.transfer.capture_transfer()
         continue
     if process_recorder is not None and process_recorder.entry_requested:
+        entry = process_recorder.entry_requested
+        if quit_frame and post_main and entry['artifact'] == 'th04-maine':
+            schedule = []
+            if escape_down:
+                schedule.append((tick(),'KBD_esc',False))
+            for delta in range(500,30001,1000):
+                schedule.extend([(tick()+delta,'KBD_enter',True),(tick()+delta+120,'KBD_enter',False)])
+            clock.enabled = True
+        elif quit_frame and post_main and entry['artifact'] == 'th04-op':
+            schedule = [(tick(),'KBD_enter',False)] if enter_down else []
+            fresh_seedwatch = FreshMenu()
+            clock.enabled = True
         process_recorder.entry_requested = None
         continue
+    if todo is not None and todo[0] in ('route-complete','route-diagnostic'):
+        save()
+        if todo[0] == 'route-diagnostic':
+            (out/'route-diagnostic.json').write_text(json.dumps(dict(context=process_recorder.context(),
+                resident=ram.read_range(resident,256)[0].hex(), natural_game_exit=False),indent=2)+'\n')
+        process_recorder.finish('fresh-op-menu' if todo[0] == 'route-complete' else 'route-incomplete')
+        if todo[0] == 'route-complete':
+            gdb.write('TH04_ORDINARY_ROUTE_COMPLETE\n')
+        gdb.execute('kill')
+        break
     if monitor is not None and monitor.terminal is not None:
         before_flush = snapshot()
         before_tick = tick()
@@ -180,18 +273,20 @@ while gdb.selected_inferior().pid:
             process_recorder.finish('observed-main-prefix')
         gdb.execute('kill')
         break
-    if monitor is not None and (monitor.dialog_requested or monitor.continue_requested):
+    if monitor is not None and (monitor.dialog_requested or monitor.continue_requested or monitor.quit_requested):
         is_continue = monitor.continue_requested
+        is_quit = monitor.quit_requested
         monitor.dialog_requested = False
         monitor.continue_requested = False
-        active_dialog_frame = continue_frame if is_continue else dialog_frame
+        monitor.quit_requested = False
+        active_dialog_frame = quit_frame if is_quit else continue_frame if is_continue else dialog_frame
         dialog_active = True
         dialog_released = False
         dialog_done = False
         dialog_tick = tick()
         schedule = []
-        if continue_frame:
-            waits.append(dict(kind='continue' if is_continue else 'dialogue', frame=active_dialog_frame,
+        if continue_frame or quit_frame:
+            waits.append(dict(kind='quit' if is_quit else 'continue' if is_continue else 'dialogue', frame=active_dialog_frame,
                               tick=dialog_tick, action_start=len(actions),
                               resident=ram.read_range(resident,80)[0].hex()))
         clock.enabled = True
@@ -227,19 +322,22 @@ while gdb.selected_inferior().pid:
             gdb.execute('call ((void (*)(int, bool))0x%x)(%d, %s)' % (function, keys[name], 'true' if down else 'false'), to_string=True)
             assert before == tick() and guest == snapshot()
             action = dict(due=due, tick=before, key=name, pressed=down, resident_seed=seed, unchanged_guest=guest)
-            if continue_frame:
-                action.update(frame=monitor.current.sequence.frames if monitor.current else None,
+            if continue_frame or quit_frame:
+                action.update(frame=monitor.current.sequence.frames if monitor is not None and monitor.current else None,
                               resident=ram.read_range(resident,80)[0].hex())
             actions.append(action)
             if name == 'KBD_enter':
                 enter_down = down
+            if name == 'KBD_esc':
+                escape_down = down
             if dialog_active and name == 'KBD_z' and not down:
                 schedule = []
+                confirmation = 'KBD_esc' if quit_frame and active_dialog_frame == quit_frame else 'KBD_enter'
                 for delta in range(500, 30001, 1000):
-                    schedule.extend([(before + delta, 'KBD_enter', True),
-                                     (before + delta + 120, 'KBD_enter', False)])
+                    schedule.extend([(before + delta, confirmation, True),
+                                     (before + delta + 120, confirmation, False)])
             if dialog_active and dialog_done:
-                if continue_frame:
+                if continue_frame or quit_frame:
                     waits[-1].update(resumed_frame=monitor.current.sequence.frames, resumed_tick=before,
                                      action_end=len(actions), resident_after=action['resident'])
                 dialog_active = False
@@ -254,7 +352,9 @@ while gdb.selected_inferior().pid:
                 seedwatch = None
         todo = None
         if held:
-            if not dialog_frame and not stall_ms:
+            if post_main:
+                clock.enabled = True
+            elif not dialog_frame and not stall_ms:
                 clock.delete()
             else:
                 clock.enabled = dialog_active or bool(stall_ms)

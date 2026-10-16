@@ -5,6 +5,68 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Actual Quit -> MAINE -> fresh OP route (v1440)
+
+The two new captures `dos-process-route-v1440-{original-first,candidate}` use
+`--end-after 8000 --dialog-at-frame 6548 --quit-at-frame 7547 --process-events`.
+The candidate uses MAIN778641ab and its v1439 MAP; OP/MAINE/ZUN remain pinned
+originals. Real release-first Shot/Escape input selects Quit; ordinary Enter
+pulses advance MAINE. There are exactly three verified executable generations,
+MAIN -> MAINE -> OP, each entered through real AX4B03 overlay loading with
+retained PSP10EC, load/relocation factor10FC and actual entry10FC:0000. Complete
+relocated RAM images are captured and compared before and after transfer.
+
+At MAIN's actual MAINE request the old frame/load watches are disabled. The
+observer flushes its real prefix and disables only its host `active` flag,
+asserting unchanged guest conventional RAM/registers/PIC/tick. MAIN has 7,547
+completed updates and 7,548 pre-update samples; update7547 is unfinished in
+Game Over/Quit. No invented T or resumed MAIN record is admitted. Both unfinished
+RNG tails are empty. The real last completed DGROUP snapshot closes the prefix.
+
+The independent reader verifies process generations, whole entry payloads,
+MCB/PSP/environment context, input ownership/order, published score, observer
+retirement and actual fresh OP resident use. Fresh menu is relative OP0A74:0D2F
+at load10FC, DS2030, with resident counter64->65. The 256-byte shared resident
+is identical between original/candidate at MAIN handoff, MAINE entry, OP entry
+and fresh menu. Only its legitimate menu seed increment changes between OP entry
+and menu. The current program MCB is checked; the separate resident
+allocation-owner MCB is not sampled. Do not promote this to complete allocation
+lifetime proof or a chain of four reconstructed products.
+
+Consumed inputs, all 36 fields/RNG, nine complete pools and 22 state blocks
+agree. The aggregate intentionally fails for 284 post-reset input samples.
+Physical MIKO.CFG is unchanged and equal. Physical GENSOU.SCR changes identically;
+only decoded section1 (Normal Reimu) changes. All ten full 16-bit checksums pass
+before and after, with complete raw final-file equality. This Quit/save result
+is not a campaign-clear or unlock claim.
+
+```sh
+python3 .analysis/reconstruction/probes/dos-process-route-v1440/route-retention/recover.py --restore
+python3 scripts/probes/compare_th04_dos_process_route.py \
+  .analysis/runtime/candidates/dos-process-route-v1440-original-first \
+  .analysis/runtime/candidates/dos-process-route-v1440-candidate \
+  --original-main .analysis/targets/th04/main.exe --output /tmp/th04-route.json
+```
+
+Exit1 is expected for the retained input failure. `comparison.json` is bound by
+`controls.json`: 24 actual counterexamples reject changed first/last image
+bytes and CPU PCs for all three entries, missing MAINE/retirement, stale menu
+entry, unchanged menu counter, false4B00 and each of ten high checksum bytes.
+Semantic metadata mutants run only on temporary copies after the outer hash
+gate; real captures and receipts remain untouched. Eleven new public controls
+and the prior nine owner controls pass; full CI passes526 tests.
+
+Replay namespace is `.analysis/reconstruction/probes/dos-process-route-v1440/`.
+`route-source.tar.gz` freezes 1,549 maintained inputs and current readers, with
+explicit dirty provenance; it is not a new compiler/exact replay. The original
+producer scripts are also frozen in `original-first-source/`. Recoverable
+image/font/raw aliases use separate probe/route journals (345.461 MiB net).
+Complete DGROUP/entry dumps, keyboard/process/clock proofs, handoff resident,
+physical-file comparison and source remain live. Intermediate Game Over/menu
+pictures, resident allocation-owner MCB, second MAIN, full reconstructed chain,
+native, cross-emulator, campaign and physical timing remain open. The capture
+ends at verified fresh OP menu with `natural_game_exit=false`.
+
 ## Guest DOS overlay-entry observation (v1440)
 
 The new optional `--process-events` observer uses the retained emulator binary
@@ -19,8 +81,8 @@ The original short boot/OP/one-update MAIN probe observes `AX=4B03` for
 relocation factor10FC. The copied runtime stub ends in a far jump. The observer
 checks the entire relocated MZ image before that host CPU_JMP and again after
 its return, when actual guest CS:IP is10FC:0000. The complete RAM digest also
-matches the existing MAIN L stream and pinned Japanese MAIN. This establishes
-one real MAIN entry; it does not establish Quit, MAINE or fresh OP.
+matches the existing MAIN L stream and pinned Japanese MAIN. This earlier probe establishes
+one real MAIN entry; the separately captured full bounded route is above.
 
 Replay namespace: `.analysis/reconstruction/probes/dos-process-route-v1440/`.
 The successful capture is `dos-process-route-v1440-owner-probe-v6`; its current
@@ -32,9 +94,9 @@ argument filters in callbacks or use native conditional stops outside Python.
 Do not misclassify that transport failure as a game/DOS IRQ fault.
 
 Nine public MCB/PSP/environment counterexamples pass. Complete source/bytes,
-frame, target provenance and timing requirements remain unchanged. Next record
-the real MAIN overlay handoff, retire its frame watch before memory reuse, and
-prove MAINE/fresh OP entries and resident ownership. A reused PSP or changed
+frame, target provenance and timing requirements remain unchanged. The later route above records
+the real MAIN handoff, retires its watch before memory reuse, and proves
+MAINE/fresh OP entries and resident pointer/content use. A reused PSP or changed
 environment filename alone cannot satisfy those boundaries.
 
 ## Natural Continue and score-counter ownership (v1439)

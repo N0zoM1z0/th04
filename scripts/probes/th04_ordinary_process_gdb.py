@@ -1,5 +1,6 @@
 """Read actual guest software INT 21h requests and subsequent process activity."""
 import hashlib
+import gzip
 import json
 from pathlib import Path
 
@@ -129,7 +130,10 @@ class ProcessRecorder(gdb.Breakpoint):
             return
         self.finished = True
         (self.output / 'process-events.json').write_text(json.dumps(dict(schema_version=1,
-            complete_capture=not self.error, complete_route=False, boundary=boundary,
+            complete_capture=not self.error,
+            complete_route=not self.error and boundary == 'fresh-op-menu' and
+                           [self.rows[i]['artifact'] for i in self.entry_records] ==
+                           ['th04-main', 'th04-maine', 'th04-op'], boundary=boundary,
             events=len(self.rows), pending=self.pending_exec, error=self.error,
             entries=self.entry_records,
             scope='Booted guest DOS, with internal DOS kernel disabled: actual software INT21 requests and subsequent MCB/PSP-owned activity; requests alone are not successful exec or natural exit'), indent=2) + '\n')
@@ -190,12 +194,18 @@ class EntryReturn(gdb.FinishBreakpoint):
             owner = process_owner(memory, cs, ip)
             if owner is None or owner['load_segment'] != expected['load_segment']:
                 raise ValueError('overlay entry MCB/PSP ownership')
+            name = 'process-entry-%04d.bin.gz' % len(r.rows)
+            with (r.output / name).open('xb') as stream:
+                stream.write(gzip.compress(observed, mtime=0))
             row = r.record('entry', context, artifact=expected['artifact'], owner=owner,
                            cs=cs, ip=ip, load_segment=expected['load_segment'],
                            relocation_factor=expected['relocation_factor'],
                            request_sequence=expected['request_sequence'],
                            file_sha256=hashlib.sha256(expected['image']).hexdigest(),
-                           relocated_sha256=hashlib.sha256(observed).hexdigest(), image_bytes=len(observed))
+                           relocated_sha256=hashlib.sha256(observed).hexdigest(), image_bytes=len(observed),
+                           ram_file=name, ram_file_sha256=hashlib.sha256((r.output / name).read_bytes()).hexdigest())
+            if context != r.context() or memory != r.ram.read_range(0, 655360)[0]:
+                raise ValueError('entry observation changed guest context/RAM/tick')
             r.bound_artifact = expected['artifact']
             r.entry_records.append(row['sequence'])
             r.last_entry = r.entry_requested = row

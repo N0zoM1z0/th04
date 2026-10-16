@@ -25,6 +25,9 @@ class Monitor:
         self.continue_frame = int(os.environ.get('TH04_ORDINARY_CONTINUE_FRAME', 0))
         self.continue_requested = False
         self.continue_observed = False
+        self.quit_frame = int(os.environ.get('TH04_ORDINARY_QUIT_FRAME', 0))
+        self.quit_requested = False
+        self.route_prefix_terminal = None
         self.process = self.address('th04_demo_observer::process')
         self.load = self.address('th04_demo_observer::load_segment')
         self.active = self.address('th04_demo_observer::active')
@@ -43,6 +46,26 @@ class Monitor:
 
     def address(self, name):
         return int(gdb.parse_and_eval("(void *)&'" + name + "'"))
+
+    def finish_handoff(self, event):
+        if (not self.quit_frame or self.current.sequence.frames != self.quit_frame or
+                self.route_prefix_terminal is None or event['ax'] != 0x4b03 or
+                event['caller_artifact'] != 'th04-main' or event['requested_artifact'] != 'th04-maine'):
+            raise ValueError('actual MAIN overlay handoff boundary')
+        self.current.enabled = False
+        self.loader.enabled = False
+        data = self.ram.read_range(self.current.linear, DGROUP_SIZE)[0]
+        (self.output / 'handoff-dgroup.bin').write_bytes(data)
+        record = dict(schema_version=1, boundary='actual MAIN INT21 AX4B03 request before guest DOS dispatch',
+                      requested_limit=self.end_after, completed_updates=self.current.sequence.frames,
+                      incomplete_update_frame=self.current.sequence.frames,
+                      request_sequence=event['sequence'], natural_game_exit=False,
+                      load_segment=self.current.load, dgroup_segment=self.current.dgroup,
+                      resident_hex=event['resident_hex'], cpu_regs=event['cpu_regs'], segments=event['segments'])
+        (self.output / 'main-handoff.json').write_text(json.dumps(record, indent=2) + '\n')
+        self.end_after = self.current.sequence.frames
+        self.terminal = self.route_prefix_terminal
+        self.finish()
 
     def finish(self):
         if self.current is None:
@@ -148,7 +171,7 @@ class Frame(gdb.Breakpoint):
                 if m.video is not None:
                     self.video_stream.flush()
                 gdb.write('TH04_ORDINARY_DGROUP %d\n' % frame)
-            if m.bounded and frame == m.end_after:
+            if (m.bounded and frame == m.end_after) or (m.quit_frame and frame == m.quit_frame):
                 values = {name: data[offset:offset + size].hex()
                           for name, offset, size in m.profile['fields']}
                 pointer = bytes.fromhex(values['resident_pointer'])
@@ -158,13 +181,18 @@ class Frame(gdb.Breakpoint):
                 cs = int.from_bytes(segments[8:16], 'little')
                 ip = int.from_bytes(registers[32:36], 'little') & 65535
                 opcode = m.ram.read_range(cs * 16 + ip, 16)[0]
-                m.terminal = dict(schema_version=1, boundary=BOUNDARY, complete_prefix=True,
+                snapshot = dict(schema_version=1, boundary=BOUNDARY, complete_prefix=True,
                     natural_game_exit=False, frame=frame, load_segment=self.load,
                     dgroup_segment=self.dgroup, cr0=cr0, cr4=cr4, cr3=cr3, values=values,
                     resident=m.ram.read_range(resident, 80)[0].hex(), cs=cs, ip=ip,
                     opcode=opcode.hex(), cpu_regs=registers.hex(), segments=segments.hex(),
                     lcg_calls=m.ram.integer(m.address('th04_demo_observer::lcg_count'), 8),
                     ring_calls=m.ram.integer(m.address('th04_demo_observer::ring_count'), 8))
+                if m.quit_frame and frame == m.quit_frame:
+                    m.route_prefix_terminal = snapshot
+                    m.quit_requested = True
+                else:
+                    m.terminal = snapshot
                 return True
             if m.dialog_frame and frame == m.dialog_frame and not m.dialog_observed:
                 m.dialog_requested = True

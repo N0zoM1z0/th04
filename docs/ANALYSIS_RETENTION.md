@@ -20,6 +20,30 @@ compilation's wrapper refusal and subsequent verified cache publication are
 retained separately. This does not restore the old working directories or the
 94 missing native protected files. See the v1438 focused differential note.
 
+## Actual DOS process-route retention (v1440)
+
+Under `.analysis/reconstruction/probes/dos-process-route-v1440/`, two independent
+journals retire only terminal owned captures:
+
+| Journal | Paths / blobs | Archive MiB | Net released MiB |
+| --- | ---: | ---: | ---: |
+| `probes-retention/retention.json` | 23 / 15 | 0.467 | 248.566 |
+| `route-retention/retention.json` | 8 / 21 | 1.044 | 96.895 |
+
+Total verified net release is 345.461 MiB from 31 image/font/raw aliases.
+Both journals bind the pinned base HDI, archive SHA/CRC, every reconstructed
+payload and temporary size/mode/nsmtime. Protected hashes pass before and after
+removal. `recover.py` in each directory verifies without expansion; add
+`--restore --prefix .analysis/runtime/candidates/dos-process-route-v1440-candidate/`
+for selected candidate aliases, or `--restore` for its whole journal.
+
+Complete 7,547-record DGROUP streams, three full entry dumps per route, process,
+clock/input, resident/menu/handoff evidence, source snapshots, 1,549-input source
+archive, MAIN/MAP, CI, physical-file comparisons and all failures remain live.
+The 24 actual counterexamples mutate temporary copies only. Producer receipts
+are unchanged; original supports remain original. Missing historical native
+worktrees and their 94 protected files are outside this cleanup.
+
 ## Natural Continue score-alias repair (v1439)
 
 `.analysis/reconstruction/probes/dos-gameover-continue-v1439/retention.json`

@@ -20,6 +20,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/compare_th04_demo_video.py](../probes/compare_th04_demo_video.py) | command | Compare complete raw video streams and programmed GDC state with ordinary trace controls. |
 | [probes/compare_th04_dos_demos.py](../probes/compare_th04_dos_demos.py) | command | Reject incomplete/reset-mismatched demo traces and report the first logical divergence. |
 | [probes/compare_th04_dos_ordinary_prefix.py](../probes/compare_th04_dos_ordinary_prefix.py) | command | Admit ordinary DOS prefixes by input and entry RNG before reporting state differences. |
+| [probes/compare_th04_dos_process_route.py](../probes/compare_th04_dos_process_route.py) | command | Compare MAIN Quit, original MAINE and fresh OP menu entries, prefix pools, resident bytes and physical saves. |
 | [probes/compare_th04_ordinary_pools.py](../probes/compare_th04_ordinary_pools.py) | command | Compare complete ordinary actor pools against pinned scalar controls and target/MAP owners. |
 | [probes/compare_th04_ordinary_video.py](../probes/compare_th04_ordinary_video.py) | command | Compare complete ordinary VRAM/palettes/display state with independent scalar controls. |
 | [probes/inspect_th04_cpu_fault_trace.py](../probes/inspect_th04_cpu_fault_trace.py) | command | Decode private MAIN exception frames without claiming normal gameplay. |
@@ -58,6 +59,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_demo_snapshot.gdb](../probes/th04_demo_snapshot.gdb) | fixture | Observe stage-frame writes in host RAM and take read-only DGROUP diagnostic snapshots. |
 | [probes/th04_demo_video.py](../probes/th04_demo_video.py) | support | Read/decode complete two-page PC-98 VRAM, palettes and GDC without guest memory accessors. |
 | [probes/th04_dos_process.py](../probes/th04_dos_process.py) | support | Resolve conventional DOS process ownership from complete MCB, PSP and environment evidence. |
+| [probes/th04_dos_route.py](../probes/th04_dos_route.py) | support | Validate actual overlay images/generations, real Quit keys, shared resident use and full score checksums. |
 | [probes/th04_ordinary_continue.py](../probes/th04_ordinary_continue.py) | support | Attest Continue counter ownership and verify release-first input, natural last-life restoration and resumed gameplay. |
 | [probes/th04_ordinary_dgroup.py](../probes/th04_ordinary_dgroup.py) | support | Decode every ordinary DGROUP record with strict framing, stage and gzip integrity. |
 | [probes/th04_ordinary_dgroup_gdb.py](../probes/th04_ordinary_dgroup_gdb.py) | support | Observe full ordinary DGROUP after actor updates through read-only mapped host RAM. |

@@ -525,6 +525,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/compare_th04_dos_process_route.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Compare MAIN Quit, original MAINE and fresh OP menu entries, prefix pools, resident bytes and physical saves.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/compare_th04_native_maine_link.py",
     "category": "matching",
     "role": "command",
@@ -3462,6 +3469,13 @@
     "category": "runtime",
     "role": "support",
     "purpose": "Resolve conventional DOS process ownership from complete MCB, PSP and environment evidence.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_dos_route.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Validate actual overlay images/generations, real Quit keys, shared resident use and full score checksums.",
     "purpose_source": "maintained-description"
   },
   {

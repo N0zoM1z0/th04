@@ -133,6 +133,7 @@ def load(directory: Path, original: bytes, source_snapshot: Path | None = None) 
     fields = expected['fields']
     names = [field[0] for field in fields]
     rows, resident_rows, events, pending = [], [], [], []
+    sample_counts = []
     counts = Counter()
     load_segment = None
     terminal = False
@@ -171,6 +172,7 @@ def load(directory: Path, original: bytes, source_snapshot: Path | None = None) 
             if kind == 'I':
                 require(frame == len(rows), 'noncontiguous ordinary prefix')
                 rows.append(values)
+                sample_counts.append(dict(counts))
                 resident_rows.append(resident.hex())
                 events.append(pending)
                 pending = []
@@ -182,8 +184,18 @@ def load(directory: Path, original: bytes, source_snapshot: Path | None = None) 
         else:
             raise ValueError('unknown trace event')
     bounded_terminal = None
+    route_terminal = None
     if bounded is None:
         require(terminal and len(rows) == 3997, 'missing terminal')
+    elif receipt.get('quit_at_frame') is not None:
+        count = receipt['main_frames']
+        require('ordinary-terminal.json' in receipt['files'] and not terminal and
+                type(count) is int and 0 < count == receipt['quit_at_frame'] < bounded and
+                len(rows) == count + 1 and receipt['termination'] == 'observed-fresh-op-menu' and
+                receipt['natural_game_exit'] is False, 'route completed prefix/partial sample extent')
+        route_terminal = json.loads((directory / 'ordinary-terminal.json').read_text())
+        validate_bounded_terminal(route_terminal, main, dict(expected, end_after=count), load_segment,
+                                  Counter(sample_counts[-1]))
     else:
         require('ordinary-terminal.json' in receipt['files'] and not terminal and
                 len(rows) == bounded, 'bounded sample/terminal extent')
@@ -194,8 +206,12 @@ def load(directory: Path, original: bytes, source_snapshot: Path | None = None) 
     if 'adapter_sha256' in receipt:
         require('clock-input.json' in receipt['files'], 'missing pinned keyboard record')
         clock = json.loads((directory / 'clock-input.json').read_text())
-        validate_keyboard_capture(clock, rows[0], resident_rows[0])
-        for path, digest in receipt['source_files'].items():
+        if receipt.get('quit_at_frame') is not None:
+            from th04_dos_route import validate_keyboard
+            validate_keyboard(clock, receipt, rows[0], resident_rows[0])
+        else:
+            validate_keyboard_capture(clock, rows[0], resident_rows[0])
+        for path, digest in (receipt['source_files'] | receipt.get('process_host_inputs', {})).items():
             live = Path(path)
             observed = sha(live.read_bytes()) if live.is_file() else None
             if observed != digest and source_snapshot is not None and live.is_relative_to(ROOT):
@@ -204,6 +220,14 @@ def load(directory: Path, original: bytes, source_snapshot: Path | None = None) 
             require(observed == digest, 'keyboard source identity drift: ' + path)
     result = dict(receipt=receipt, fields=names, rows=rows, resident=resident_rows, events=events,
                   starting_files=starting_files, bounded_terminal=bounded_terminal, terminal_events=pending)
+    if receipt.get('quit_at_frame') is not None:
+        from th04_dos_route import validate_route
+        required = {'process-events.json', 'process-events.jsonl', 'process-targets.json',
+                    'main-handoff.json', 'handoff-dgroup.bin', 'fresh-op-menu.json'}
+        require(required <= receipt['files'].keys(), 'route pinned process evidence extent')
+        result['original_product_hashes'] = {row['id']: row['sha256'] for row in targets}
+        result['route_prefix_terminal'] = route_terminal
+        result['route'] = validate_route(directory, receipt, result)
     if receipt.get('continue_at_frame') is not None:
         from th04_ordinary_continue import attest_continue, validate_wait_cues, validate_transition
         require(bounded is not None, 'Continue requires observed bounded terminal')

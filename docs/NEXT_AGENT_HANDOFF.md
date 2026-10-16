@@ -8,7 +8,7 @@ whole-game completion metrics. Keep all new code and documentation in English.
 
 | Purpose | Published baseline | Availability |
 | --- | --- | --- |
-| DOS reconstruction, comparison tools and ledgers | `main: 07f69d3d6c01c3319b9865357f4420120c2f4b85` | Current checkout; later evidence commits follow this baseline |
+| DOS reconstruction, comparison tools and ledgers | `main: a29ef83` | Current checkout; later evidence commits follow this baseline |
 | Native x64 source | `port/modern-64: c0a1060371c5f8ba758ca8b10f6cbc99063ba3d6` | Remote and local Git objects exist; old working directories are missing |
 
 The old `.analysis/worktrees/` directory was absent at the 2026-10-16 audit,
@@ -87,8 +87,28 @@ Over UI/wait frames are outside that boundary. All four Demo scalar/RNG
 regressions pass 15,984 updates/four terminals. New-producer full Demo pool/video
 acceptance remains pending; do not inherit older producer acceptance.
 Replay and frozen sources: `.analysis/reconstruction/probes/dos-gameover-continue-v1439/`.
-Root CI 506/private gates pass. Quit/MAINE/fresh OP, resident lifecycle, complete
-process routes and native/cross-emulator/Windows acceptance remain open.
+Root CI506/private gates passed for v1439. The later bounded Quit route is
+below; complete resident lifecycle, full reconstructed process routes and
+native/cross-emulator/Windows acceptance remain open.
+
+## Actual bounded DOS Quit route (v1440)
+
+Real original/candidate MAIN Quit -> original MAINE -> fresh original OP menu
+now has three full-image/actual-entry observations with retained PSP10EC.
+MAIN778641ab agrees on 7,547 completed updates, 7,548 pre-update samples,
+consumed input/scalar/RNG, nine pools and 22 state blocks. The unfinished final
+update is retained explicitly. The aggregate fails for 284 post-reset input
+samples. All 256 resident bytes agree at four handoff/entry/menu checkpoints;
+physical CFG and SCR agree, including all ten complete 16-bit checksums and
+only decoded score section1 changed. Fresh OP's counter64->65 proves real use.
+
+Replay and source archive: `.analysis/reconstruction/probes/dos-process-route-v1440/`.
+Use `compare_th04_dos_process_route.py`; restore selected route-retention images
+first. Root CI526 and 24 actual counterexamples pass. Supporting products remain
+original, `natural_game_exit=false`, and resident allocation-owner MCB is not
+sampled. Intermediate UI pictures, second MAIN and full reconstructed chain
+remain separate requirements. Probe/route retention verifies 31 aliases and
+releases 345.461 MiB net; missing old worktrees are untouched.
 
 ## Recorded results and open requirements
 
@@ -122,14 +142,12 @@ The two deferred carpet/checkerboard exact cases remain deferred.
 
 ## Next tasks
 
-1. Finish full Demo pool/video and intermediate Game Over UI checks, then drive
-   Quit/MAINE/fresh OP and resident process routes. Preserve the actual Continue repair
-   and its failed predecessor. The original naturally reaches
-   Game Over at frame 7,547. Release held Shot before operating its release-first
-   wait. Do not change lives/RNG/clock or diagnose an IRQ failure from a single
-   Count1=0 sample. Record Continue, Quit, MAINE, fresh OP/second MAIN and resident
-   lifetimes separately; the current single-MAIN observer does not imply
-   multi-process support.
+1. Finish new-producer full Demo pool/video and intermediate Game Over UI
+   checks. Extend the verified v1440 Quit/MAINE/fresh OP route with resident
+   allocation-owner MCB and second MAIN evidence, then the reconstructed
+   supporting products. Preserve the actual Continue repair and its failed
+   predecessor. Do not change lives/RNG/clock or mistake an overlay request,
+   reused PSP or environment name for actual executing-image identity.
 2. Recover native development and historical replay inputs. Search for the
    original missing storage; otherwise build published source under a new
    namespace and collect independent new evidence. The new root MAIN/MAP does

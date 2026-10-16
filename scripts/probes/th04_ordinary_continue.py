@@ -32,6 +32,26 @@ def attest_continue(main, original, map_path, profile):
                 counter_offset=score, counter_ip=instructions[counter], counter_opcode=counter.hex())
 
 
+def validate_release_resume(clock, wait, kind, frame, previous_end=0):
+    actions = clock['actions']
+    start, end = wait['action_start'], wait['action_end']
+    require(wait['kind'] == kind and wait['frame'] == frame and
+            wait['resumed_frame'] == frame + 1 and
+            previous_end <= start < end <= len(actions), 'Continue wait boundary/actions')
+    events = actions[start:end]
+    first, last = events[0], events[-1]
+    require(first['key'] == 'KBD_z' and first['pressed'] is False and
+            first['frame'] == frame and first['tick'] >= wait['tick'] + 100,
+            'Continue release-first keyboard event')
+    require(any(e['key'] == 'KBD_enter' and e['pressed'] is True and
+                e['frame'] == frame and e['tick'] >= first['tick'] + 500 for e in events),
+            'Continue ordinary confirmation event')
+    require(last['key'] == 'KBD_z' and last['pressed'] is True and
+            last['frame'] == frame + 1 and last['tick'] == wait['resumed_tick'] and
+            last['resident'] == wait['resident_after'], 'Continue resumed gameplay event')
+    return end
+
+
 def validate_wait_cues(clock, receipt):
     frames = [receipt['dialog_at_frame'], receipt['continue_at_frame']]
     require(0 < frames[0] < frames[1] < receipt['end_after'] - 1, 'Continue cue extent/order')
@@ -39,22 +59,7 @@ def validate_wait_cues(clock, receipt):
     require(len(waits) == 2, 'Continue wait count')
     previous_end = 0
     for kind, frame, wait in zip(('dialogue', 'continue'), frames, waits):
-        start, end = wait['action_start'], wait['action_end']
-        require(wait['kind'] == kind and wait['frame'] == frame and
-                wait['resumed_frame'] == frame + 1 and
-                previous_end <= start < end <= len(actions), 'Continue wait boundary/actions')
-        events = actions[start:end]
-        first, last = events[0], events[-1]
-        require(first['key'] == 'KBD_z' and first['pressed'] is False and
-                first['frame'] == frame and first['tick'] >= wait['tick'] + 100,
-                'Continue release-first keyboard event')
-        require(any(e['key'] == 'KBD_enter' and e['pressed'] is True and
-                    e['frame'] == frame and e['tick'] >= first['tick'] + 500 for e in events),
-                'Continue ordinary confirmation event')
-        require(last['key'] == 'KBD_z' and last['pressed'] is True and
-                last['frame'] == frame + 1 and last['tick'] == wait['resumed_tick'] and
-                last['resident'] == wait['resident_after'], 'Continue resumed gameplay event')
-        previous_end = end
+        previous_end = validate_release_resume(clock, wait, kind, frame, previous_end)
 
 
 def validate_transition(capture):

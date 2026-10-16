@@ -172,7 +172,10 @@ INT21 AX4B03 overlay loading with a retained PSP. The environment filename is
 updated before transfer. Model executable generations separately from PSP
 addresses and require actual entry/image evidence when identifying a new
 owner; a new filename or reused PSP is insufficient. Full process/resident
-lifecycle validation remains separate from the observed single MAIN entry.
+lifecycle validation remains separate. The later paired v1440 route proves
+MAIN Quit -> original MAINE -> fresh original OP using full entry images,
+retirement of old MAIN observers before reuse, and shared resident content/use.
+The resident allocation-owner MCB and second MAIN are not yet sampled.
 
 ## Private and generated state
 

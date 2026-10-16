@@ -50,6 +50,8 @@ OVERRIDES = {
     'th04_ordinary_continue.py': ('runtime', 'Attest Continue counter ownership and verify release-first input, natural last-life restoration and resumed gameplay.'),
     'th04_dos_process.py': ('runtime', 'Resolve conventional DOS process ownership from complete MCB, PSP and environment evidence.'),
     'th04_ordinary_process_gdb.py': ('runtime', 'Observe actual guest software INT21 requests and subsequent MCB/PSP-owned activity without guest service calls.'),
+    'th04_dos_route.py': ('runtime', 'Validate actual overlay images/generations, real Quit keys, shared resident use and full score checksums.'),
+    'compare_th04_dos_process_route.py': ('runtime', 'Compare MAIN Quit, original MAINE and fresh OP menu entries, prefix pools, resident bytes and physical saves.'),
     'capture_th04_dos_ordinary_prefix.py': ('runtime', 'Capture ordinary DOS through original OP using observed menu-count keyboard API input.'),
     'th04_ordinary_keyboard.gdb': ('runtime', 'Queue keyboard device events after observed original OP menu ticks with guest-state preservation checks.'),
     'compare_th04_dos_ordinary_prefix.py': ('runtime', 'Admit ordinary DOS prefixes by input and entry RNG before reporting state differences.'),

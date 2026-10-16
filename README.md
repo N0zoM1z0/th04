@@ -70,8 +70,12 @@ score/RNG, nine pools and 22 state blocks, including real Continue and resumed
 gameplay. Full video now also agrees at all 8,000 actor-update checkpoints on
 all 38 configured regions. Its video companion retains 281 post-reset input
 differences; separate controls retain 263. All four Demo scalar/RNG regressions
-pass. Intermediate Game Over UI, new-producer full Demo pool/picture replay,
-Quit/MAINE/fresh OP and complete routes remain separate requirements.
+pass. Intermediate Game Over UI, new-producer full Demo pool/picture replay
+and complete routes remain separate requirements. A new real Quit -> original
+MAINE -> fresh original OP route verifies all three full entry images and
+resident use. Its 7,547 complete MAIN updates, all pools/states and physical
+CFG/SCR agree; 284 post-reset input samples differ. The resident allocation-owner
+MCB, second MAIN and complete reconstructed-product chain remain open.
 
 Native x64 source lives on `port/modern-64`. Scoped Linux Reimu A runs cover
 Normal, Lunatic and Extra clears with registration, physical saves and fresh
