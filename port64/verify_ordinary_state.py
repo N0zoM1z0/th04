@@ -141,9 +141,12 @@ def main() -> int:
         parser.add_argument('--' + name, required=True, type=Path)
     parser.add_argument('--updates', type=int, default=UPDATES)
     parser.add_argument('--frontend', action='store_true')
+    parser.add_argument('--require-homing', action='store_true',
+                        help='Require the actual native homing trace and compare every original DGROUP record')
     parser.add_argument('--dialog-observer-profile', type=Path)
     args = parser.parse_args()
     require(0 < args.updates <= 65535, 'ordinary requested extent')
+    require(not args.require_homing or args.frontend, 'homing requires the actual FrontEnd')
     root = Path(__file__).resolve().parents[1]
     dos = args.dos_root.resolve()
     sys.path.insert(0, str(dos / 'scripts/probes'))
@@ -194,6 +197,17 @@ def main() -> int:
         require(sha(font.read_bytes()) == capture['receipt']['font_sha256'], 'ordinary font identity')
         (inputs/'save/MIKO.CFG').write_bytes((inputs/'MIKO.CFG').read_bytes())
         (inputs/'save/ordinary-inputs.txt').write_bytes((inputs/'inputs.txt').read_bytes())
+        picture_plans = [Path(name) for name in capture['receipt']['source_files']
+                         if Path(name).name == 'font-plan.json']
+        require(len(picture_plans) <= 1, 'ordinary unique original picture plan')
+        if picture_plans:
+            frames = json.loads(picture_plans[0].read_text())['frames']
+            require(all(type(frame) is int and 0 < frame <= 65535 for frame in frames) and
+                    frames == sorted(set(frames)), 'ordinary original picture plan order/extent')
+            selected = [frame for frame in frames if frame <= args.updates]
+            if selected:
+                (inputs/'save/ordinary-picture-frames.txt').write_text(
+                    ' '.join(map(str, selected)) + '\n')
         frontend = output/'frontend'
         raw_path = frontend/'pools.bin'
         command = [str(args.exe.resolve()), '--hdi', str(original/'prepared/diagnostic.hdi'),
@@ -221,6 +235,14 @@ def main() -> int:
             profile_path = args.dialog_observer_profile or original/'dialog-checkpoint-sources.json'
             require(profile_path.is_file(), 'blocking dialogue requires original player-entry evidence')
             witness = attest_capture(original, target, profile_path.resolve())
+            if capture['receipt'].get('post_boss_dialog_at_frame') is not None:
+                from attest_th04_postboss_checkpoints import attest_capture as attest_postboss
+                postboss = attest_postboss(original, target)
+                require(not set(witness['player_inputs']).intersection(postboss['player_inputs']),
+                        'ordinary distinct dialogue player prefixes')
+                witness['player_inputs'].update(postboss['player_inputs'])
+                witness['post_boss'] = postboss
+                witness['scope'] += ' ' + postboss['scope']
             require(blocked_frames == {int(k) for k in witness['player_inputs']},
                     'ordinary blocking/player-entry evidence coverage')
             (output/'player-input-witness.json').write_text(json.dumps(witness, indent=2)+'\n')
@@ -279,6 +301,32 @@ def main() -> int:
     iterator = records(original / 'ordinary-dgroup.bin.gz', terminal['load_segment'],
         terminal['dgroup_segment'], profile['fields'], terminal['cr0'], terminal['cr3'],
         terminal['frame'])
+    homing = dict(passed=True, configured=False, scope='Legacy producer: homing is not observed.')
+    homing_path = frontend/'homing.txt' if args.frontend else None
+    require(not args.require_homing or homing_path.is_file(), 'required native homing trace absent')
+    if homing_path is not None and homing_path.is_file():
+        homing_rows = [list(map(int, line.split())) for line in homing_path.read_text().splitlines()]
+        require(len(homing_rows) == args.updates + 1 and
+                all(len(row) == 3 and row[0] == frame and
+                    all(-32768 <= value <= 32767 for value in row[1:])
+                    for frame, row in enumerate(homing_rows)), 'ordinary homing wire order/extent')
+        homing = dict(passed=True, configured=True, updates=args.updates,
+                      differing_frames=0, differences=[],
+                      scope='Actual native global target versus original DGROUP4642/4644 after each update; initial0 is not in this stream.')
+        original_iterator = iterator
+        def checked_homing():
+            for frame, data in original_iterator:
+                if frame <= args.updates:
+                    expected = [int.from_bytes(data[at:at+2], 'little', signed=True)
+                                for at in (0x4642, 0x4644)]
+                    actual = homing_rows[frame][1:]
+                    if actual != expected:
+                        homing['passed'] = False
+                        homing['differing_frames'] += 1
+                        if len(homing['differences']) < 8:
+                            homing['differences'].append(dict(frame=frame, original=expected, native=actual))
+                yield frame, data
+        iterator = checked_homing()
     with raw_path.open('rb') as stream:
         require(stream.read(8) == b'TH04OP1\n', 'ordinary pool protocol')
         pools = compare_demo(islice(iterator, args.updates), stream, 0, args.updates)
@@ -299,11 +347,11 @@ def main() -> int:
     require(restored_hash.digest() == raw_hash.digest(), 'ordinary pool retention readback')
     raw_path.unlink()
     require(source_manifest(root)[0] == manifest, 'ordinary native source drift')
-    report = dict(passed=scalar['passed'] and pools['passed'] and consumed['passed'] and owners['passed'] and physical_files['passed'], accepts_exact=False,
+    report = dict(passed=scalar['passed'] and pools['passed'] and consumed['passed'] and owners['passed'] and physical_files['passed'] and homing['passed'], accepts_exact=False,
         natural_game_exit=False, updates=args.updates, scalar=scalar, actor_pools=pools,
         command=command, frontend=args.frontend, consumed_input=consumed,
         player_input_boundary=[w['scope'] for w in (witness, continue_witness) if w],
-        continue_blocks=continue_blocks, physical_files=physical_files, starting_inputs=starting_inputs, boss_owners=owners, source_manifest_sha256=manifest, source_files=sources,
+        continue_blocks=continue_blocks, physical_files=physical_files, starting_inputs=starting_inputs, boss_owners=owners, homing=homing, source_manifest_sha256=manifest, source_files=sources,
         executable_sha256=sha(args.exe.read_bytes()), original_receipt_sha256=sha((original/'receipt.json').read_bytes()),
         input_files={str(p.relative_to(inputs)):sha(p.read_bytes()) for p in inputs.rglob('*') if p.is_file()},
         pools_raw_sha256=raw_hash.hexdigest(), pools_gzip_sha256=sha(packed.read_bytes()),

@@ -10,9 +10,20 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
     unsigned seed,updates,character,shot_type;
     require_view(bool(plan>>seed>>updates>>character>>shot_type) && seed<600 && updates>0 && updates<=65535 && character<2 && shot_type<2,
                  "ordinary FrontEnd plan header");
+    std::vector<unsigned> picture_frames{74,90,98,99,100,105,106,107,110,192,265,266,270,280,290,296,297,298,299,6549,6573,6574,6581,6582,6583,6740,6741,6753,6765,6772,6773,6774,7639,7641,7648,7657,7705,7770};
+    std::ifstream picture_plan(fs::path(assets.save_directory)/"ordinary-picture-frames.txt");
+    if(picture_plan) {
+        picture_frames.clear();unsigned picture;
+        while(picture_plan>>picture) {
+            require_view(picture>0 && picture<=updates && (picture_frames.empty() || picture>picture_frames.back()),"ordinary picture frame order/extent");
+            picture_frames.push_back(picture);
+        }
+        require_view(picture_plan.eof() && !picture_frames.empty(),"ordinary picture plan syntax/extent");
+    }
     fs::create_directories(output);
     std::ofstream owners(output/"owners.txt"),go_blocks(output/"gameover-blocks.txt"),go_events(output/"gameover-events.txt");
     std::ofstream state(output/"state.txt"),consumed(output/"consumed.txt"),blocks(output/"blocks.txt"),pools(output/"pools.bin",std::ios::binary);
+    std::ofstream homing(output/"homing.txt");require_view(bool(homing),"ordinary homing output unavailable");
     require_view(bool(go_blocks) && bool(go_events) && bool(owners) && bool(state) && bool(consumed) && bool(blocks) && bool(pools),"ordinary FrontEnd output unavailable");
     pools.write("TH04OP1\n",8);
     std::ofstream popup_rows(output/"popup-rows.bin",std::ios::binary);
@@ -56,6 +67,8 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
         require_view(bool(plan>>number>>keys>>shift) && number==frame && keys<=65535 && !(keys&~0x303fu) && shift<=1,"ordinary FrontEnd input/order/width");
         auto& main=scene.main_state();require_view(main.frames()==frame,"ordinary FrontEnd missing update");
         const auto& life=main.life();const auto pos=main.player().position().current;
+        const auto target=main.homing_target().value_or(th04::portable::motion::Point{-15984,-15984});
+        homing<<frame<<' '<<target.x<<' '<<target.y<<'\n';
         const auto& scoreboard=main.scoreboard();const auto& resident=scene.resident();
         state<<frame<<' '<<(frame==updates ? 'P':'I')<<' '<<keys<<' '<<shift<<' '<<+resident.stage<<' ';hex(scoreboard.digits);
         state<<' '<<main.score().score_delta<<' '<<scoreboard.frame_delta<<' '<<scene.process_random_state()<<' ';hex(main.random_ring_bytes());
@@ -78,8 +91,7 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
         for(unsigned row:{2u,23u})for(unsigned bank:{0u,0x2000u})
             popup_rows.write(reinterpret_cast<const char*>(text.data()+bank+row*160u),160);
         {
-            constexpr unsigned title_frames[]{74,90,98,99,100,105,106,107,110,192,265,266,270,280,290,296,297,298,299,6549,6573,6574,6581,6582,6583,6740,6741,6753,6765,6772,6773,6774,7639,7641,7648,7657,7705,7770};
-            if(std::find(std::begin(title_frames),std::end(title_frames),frame)!=std::end(title_frames)) {
+            if(std::find(picture_frames.begin(),picture_frames.end(),frame)!=picture_frames.end()) {
                 const auto random=scene.process_random_state();const auto samples=main.random_samples();
                 const auto cursor=main.random_cursor();
                 std::ostringstream before;th04::portable::demo_wire::pools(before,0,main,program);
@@ -154,7 +166,8 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
             if(main.frames()!=frame)break;
             ++blocked_ticks;
         }
-        consumed<<frame<<' '<<suspended_player_sample.value_or(main.consumed_input())<<' '<<shift<<'\n';
+        if(suspended_player_sample)require_view(*suspended_player_sample==main.player_input(),"Game Over repeated or changed the player prefix");
+        consumed<<frame<<' '<<main.player_input()<<' '<<shift<<'\n';
         require_view(main.frames()==frame+1 && scene.resident().stage==0,"ordinary FrontEnd crossed stage extent");
     }
     plan>>std::ws;require_view(plan.peek()==std::char_traits<char>::eof(),"ordinary FrontEnd trailing input");

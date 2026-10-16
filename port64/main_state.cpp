@@ -315,6 +315,10 @@ void State::apply_clear_bonus(bool all_clear) {
     bonus_context_.point_items=score_.stage_point_items_collected;
     bonus_context_.remaining_lives=score_.remaining_lives;
     bonus_context_.defeated_in_time=boss_snapshot().patterns_or_bonus;
+    // Continue and later misses change these live totals after construction.
+    bonus_context_.continues=scoreboard_.digits[0];
+    bonus_context_.misses=application_->resident().miss_count;
+    bonus_context_.bombs_used=application_->resident().bombs_used;
     constexpr std::uint8_t minimum[]{4,11,20,22,16},maximum[]{16,24,32,34,20};
     bonus::State state;state.score_delta=score_.score_delta;state.bombs=score_.remaining_bombs;
     state.performance=performance_;state.minimum=minimum[rank_];state.maximum=maximum[rank_];
@@ -494,7 +498,10 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         if(marisa_active_)marisa_->set_player_hit(0);
         if(boss_active())life_.synchronize_graphics(boss_snapshot().palette_tone,boss_snapshot().circle_color);
         auto player_context=life_context();
-        life_.update(player::input_from_host_actions(held_input),shift,player_context);
+        // Record this executed player prefix. Blocking suffixes keep live UI
+        // input and skip this block rather than consuming the prefix again.
+        player_input_=player::input_from_host_actions(held_input);
+        life_.update(player_input_,shift,player_context);
         bullets_.set_clear_time(life_.state().clear_time);
         application_->publish_player_statistics(life_.state().misses,life_.state().bombs_used);
         application_->publish_main_resources(score_.remaining_lives,score_.remaining_bombs);
@@ -681,11 +688,14 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         boss_context.hit=[&](motion::Point center,motion::Point radius) { return shot_hit(center,radius,true); };
         boss_context.scythe_hit=[&](motion::Point center,motion::Point radius) { return shot_hit(center,radius,false); };
         const auto before=boss_snapshot().score_delta;
+        const bool publishes_homing=boss_snapshot().phase!=254;
         const auto sink=[&](const orange::Event& event) {
             orange_events_.push_back(event);
             if(event.type==orange::EventType::sound)sound_action(sound::ActionKind::play,std::uint16_t(event.value));
             if(event.type==orange::EventType::fade)sound_action(sound::ActionKind::command,std::uint16_t(0x200|event.value));
             if (event.type==orange::EventType::circle) circles_.add(event.position,event.count!=0);
+            if (event.type==orange::EventType::point)
+                point_numbers_.add(event.position,event.value,true,false);
             if (event.type==orange::EventType::item) items_.add(event.position,static_cast<item::Type>(event.value));
             if (event.type==orange::EventType::hp)
                 hud::apply(hud_text_,hud::hp_update(hud_hp_previous_,motion::wrap(event.value),motion::wrap(event.count)));
@@ -725,8 +735,13 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         life_.set_invincibility(boss_snapshot().invincibility);
         circles_.set_color(boss_snapshot().circle_color);
         score_.score_delta+=boss_snapshot().score_delta-before;
-        const auto target=boss_snapshot().homing;
-        if (target.x==-15984 && target.y==-15984) homing_target_.reset();else homing_target_=target;
+        // The phase254 default returns before the original homing writes.
+        // Preserve the enemy/midboss producer's value, including a live target.
+        // Test the entry phase: phase5->254 still executes the normal tail.
+        if(publishes_homing) {
+            const auto target=boss_snapshot().homing;
+            if (target.x==-15984 && target.y==-15984) homing_target_.reset();else homing_target_=target;
+        }
     }
     item_events_ = items_.update(score_, player_.position().current, pull_items, life_.state().miss_time,
         [this](const item::CollectionEffects& effects,const item::ScoreState& current) {

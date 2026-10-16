@@ -129,6 +129,9 @@ public:
     // periodic performance and score/extend processing.
     // The last update argument after host-key translation; this never polls.
     std::uint16_t consumed_input() const { return last_input_; }
+    // Literal executed player prefix, preserved while later UI polls run.
+    std::uint16_t player_input() const { return player_input_; }
+    std::optional<motion::Point> homing_target() const { return homing_target_; }
     void set_actor_observer(std::function<void(const State&)> observer) {actor_observer_=std::move(observer);}
     const bullet::System& bullets() const { return bullets_; }
     // Score/extend runs after foreground rendering. Its clear request belongs
@@ -325,6 +328,7 @@ private:
     demo::Sample demo_sample_{};
     bool demo_exit_requested_=false;
     std::uint16_t last_input_=0;
+    std::uint16_t player_input_=0;
     bool player_frame_suspended_=false,score_registration_requested_=false;
     std::vector<player::LifeEvent> life_events_;
     std::vector<gameover::Event> gameover_events_;
