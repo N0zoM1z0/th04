@@ -39,6 +39,8 @@ constructed-BB inference was disproved. Both cold GNU/UBSan programs match2665
 actual BB calls,8000 title/state checks and38 complete playfield pictures.
 Whole-picture acceptance still fails7 score-area samples. Original captures
 are DOSBox-X,not NP2. See the current handoff for the exact remaining points.
+Verified recoverable cleanup releases257.988MiB;actual failure/positive programs
+replay without changing the seven-picture aggregate failure.
 
 With local inputs and the toolchain installed:
 
