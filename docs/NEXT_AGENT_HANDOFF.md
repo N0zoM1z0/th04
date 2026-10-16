@@ -8,7 +8,7 @@ whole-game completion metrics. Keep all new code and documentation in English.
 
 | Purpose | Published baseline | Availability |
 | --- | --- | --- |
-| DOS reconstruction, comparison tools and ledgers | `main: a2bfd91` | Current checkout; later evidence commits follow this baseline |
+| DOS reconstruction, comparison tools and ledgers | `main: fba85a9` | Current checkout; later evidence commits follow this baseline |
 | Native x64 source | `port/modern-64: a8e0165` | Fresh writable `.analysis/native/port64-recovery-v1445/`; old frozen working directories remain missing |
 
 The old `.analysis/worktrees/` directory was absent at the 2026-10-16 audit,
@@ -94,6 +94,18 @@ pre-scroll title phase from `a8a67af` is retained. Old negative reports and
 retention journals remain unchanged. Restore the v1451 score capture's four
 archived aliases before strict original readers,and verify/retire them afterward
 without counting borrowed files as new cleanup.
+
+Verified retention archives 640 owned aliases/intermediates in 255 blobs,
+releasing 254.469 MiB after archive and new gzip recipes; all 13102 protected
+hashes remain equal. Current GNU87/cache, UBSan game/Orange/cold cores, all38
+GNU pictures, complete original compressed font/video/memory and the old failed
+producer remain recoverable or live. `recover.py` verifies SHA/mode/nsmtime.
+`replay_restored.py` restores one owned archived actual writer, borrows four
+v1451 original aliases and reruns it plus both repaired8000-update programs.
+Every selected state/entry/popup gate and all38 BMP identities reproduce;
+the old writer still fails1377 pixels and both current profiles pass. All five
+aliases verify and retire afterward. The four borrowed aliases receive no new
+cleanup credit; previous journals and failed attempts remain unchanged.
 
 Next extend the original/native comparison beyond 8000 toward Boss defeat and
 process/campaign completion. These 38 samples establish programmed-display
