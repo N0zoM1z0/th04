@@ -357,6 +357,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/attest_th04_dialog_pages.py",
+    "category": "setup",
+    "role": "command",
+    "purpose": "Attest the copied back page used by the original post-Boss dialogue suffix.",
+    "purpose_source": "source-docstring"
+  },
+  {
     "path": "scripts/probes/attest_th04_postboss_checkpoints.py",
     "category": "setup",
     "role": "command",
