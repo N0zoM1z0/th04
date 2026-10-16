@@ -1,5 +1,63 @@
 # TH04 native branch handoff
 
+## Ordinary native dialogue and Boss prefix (v1446)
+
+Source `13e6676` preserves Stage1's gameplay input across blocking dialogue
+refreshes. Target MAIN `0AAF:00F1` calls player_update at `0AAF:5FCF` before the
+Boss callback through `DGROUP 2134:432C` at `0AAF:0113`; load `10FC` is recorded.
+The executed predecessor consumed 0 at update 6548 instead of original `20h`.
+Its 21 selected fields and nine pools still matched: the held-shot interval
+made this input error invisible to that earlier comparison. The fixed real
+FrontEnd retains the selected gameplay key/Shift while dialogue owns its
+separate release/Enter samples. It does not edit game state or original captures.
+
+Fresh source closure of 557 files (d246f71f) builds 85 GNU programs, passes 82 CTests and
+also builds an optimized UBSan core/game. The ordinary Normal/ReimuA seed64/lives6/bombs0 comparison
+now covers 7,500 completed updates and 7,501 boundaries through real dialogue and
+Boss phases 0/1/2: actual gameplay inputs, 21 fields/full RNG state and counts,
+nine complete pools, and four complete Boss blocks (45 bytes, including spare
+state bytes) agree with original DOS. Dialogue has 803 frozen admissions and
+804 advances under declared component keys; these are not original timing.
+Five natural losses end with one life. Native initialization uses an explicit
+OP counter of 64 and menu API; natural startup/input delivery is not accepted.
+
+Public replay: native port64/verify_ordinary_state.py --frontend --updates 7500
+with --dos-root, --original, --exe and a fresh --output-dir. Canonical proof/source/recovery:
+`.analysis/reconstruction/probes/native-ordinary-front-v1446/`. The writable
+native tree remains `.analysis/native/port64-recovery-v1445/`.
+Intermediate dialogue/player-prefix pictures, remaining globals/Game Over/
+Continue, Boss defeat, whole routes, scanout/timing, Windows and historical
+exactness remain open. Next extend the actual FrontEnd through Game Over and
+Continue using original captured inputs and separate blocking-owner evidence.
+
+Eight actual reader controls pass, including independent sampled-input/Boss
+mutations and strict default/configured extents. Compiler dependencies cover 350
+actual own files; fresh GNU core and ymfm archives equal v1445 byte for byte.
+Verified archival retires 249 owned files in 244 blobs, releasing544.664 MiB net
+after a 9.607 MiB archive. SHA/CRC/mode/nsmtime and 2,296 protected hashes pass.
+Restored predecessor/fixed prototype and current GNU/UBSan FrontEnds reproduce
+the complete 7,500-update outputs; only the predecessor repeats its actual-input
+failure. Two restored executable aliases retire again; six borrowed original
+aliases return to their older archive state without counting as new cleanup.
+Current GNU cache/85 programs, selected UBSan game/libraries, all sources and
+complete original/current compressed captures remain. Use recover.py and
+replay_restored.py in this batch's namespace. The active retirement log is
+explicitly excluded until the final closure; no journal/log receipt is restamped.
+Missing old 94 files remain a separate historical gap.
+
+Cold C++ producer13e6676 remains557/d246f71f. Current Python consumer48db31c
+is557/7c4b8576: only verify_demo_pools.py restores the default Demo truncation
+diagnostic after the first native CI found its message regression. All350
+compiled own inputs and cold executables are unchanged. Fresh separate GNU/
+UBSan consumer replays and eight current-reader controls reproduce all admitted
+results. The first failed CI and every old producer/runtime receipt remain
+unchanged; current-consumer.json and consumer-replay.json bind both identities.
+
+Final gates pass: root CI573 with live MAIN database and Ghidra mutation
+checks, native CI354, and both tracking/diff checks. Native private Ghidra is
+skipped because this checkout has no project; the actual database replay is
+in the DOS root. Keep the initial native message-regression CI as a negative.
+
 ## Ordinary MAIN collision-latch publication (v1445)
 
 Source8a2092b fixes an observable shared-hit latch: collision owners previously
