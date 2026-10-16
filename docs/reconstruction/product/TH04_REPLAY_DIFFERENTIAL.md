@@ -5737,3 +5737,20 @@ final GNU/cache/UBSan cores and all compressed complete/incomplete evidence.
 The fixed cached reader has a real public-class GDB switch probe;the original
 per-checkpoint creation pattern remains a retained negative. Midboss defeat
 and new native pictures are open;do not reinterpret the3200 boundary as death.
+
+
+## Independent original Midboss termination (v1459)
+
+The completed original-only3500 Stage2 capture independently observes activation
+at2601, attack at2696, defeat at3349 (HP-4), phase3/HP0 at3413 and inactive reset
+at3414, with86 further completed updates. Complete raw DGROUP actors and each
+own relocated near/far null callback support these boundaries. Its10507 total
+checkpoints retain raw CPU/video/RNG and conventional-memory witnesses.
+Original-only attestation passes; source/native3500 comparisons are pending in
+this observation. The prior native4000 scout selected a budget and did not
+supply an expected state or substitute for target evidence.
+
+Replay: python3 .analysis/reconstruction/probes/dos-midboss-reset-v1459/observe_original.py.
+Receipt: original-lifecycle.json in that bundle. Original MAIN remains
+SHA077440a3, reset13A9:642C, DGROUP2134:53B4 andactive46B2, loaded at10FC.
+No native picture, physical timing, fullStage2/campaign or exactness claim.

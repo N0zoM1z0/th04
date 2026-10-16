@@ -7,6 +7,11 @@ Wine writer. No Windows GUI, focus changes or host-key injection.
 
 ## Current Midboss frontier (v1458)
 
+New original-only v1459 evidence observes actual defeat3349, phase3/HP0 at3413
+and reset3414, followed by86 updates. Its3500-update capture passes independent
+MZ/CPU/DGROUP/RNG/callback attestation. Source/native3500 comparisons are still
+pending; the completed paired/native frontier below remains3200.
+
 Original/reconstructed DOS complete3200 Stage2 updates, with Midboss activation
 at actor2601 and600 battle updates. The NPC remainsactive at3200 withHP100,
 phase1/frame39; defeat is not accepted. Comparable loop fields and7787 ordered
