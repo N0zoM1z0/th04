@@ -69,28 +69,31 @@ active and leave the two deferred MAIN exactness cases alone.
 
 ## Verified recovery
 
-Archive311 owned generated files into125 content blobs,
-releasing1288.430 MiB after archive, gzip and both journal files. All32386
-protected hashes verify, including28575 parent identities, all51 prior
-finish.late_protected entries and the old finish identity. Actual recovery
-restores17 owned aliases (12 complete-capture aliases,4 incomplete-capture
-aliases and the private executable), executes allthree pinned native programs
-from fresh input-only fixtures, and replays frozen DOS/native consumers.
-Both actual standalone GDB probes reproduce growth versus bounded caching;
-the controlled original still rejects. Every restored alias verifies SHA,
-size,mode and nsmtime before retirement. Earlier borrowed13 reader-control
-aliases and4 elapsed-fixture aliases receive no cleanup credit. Keep current
-final GNU/cache/UBSan cores and all compressed complete/incomplete evidence.
+Verified retention archives 52 owned generated files into 13 content blobs,
+releasing 1136.781 MiB after archive, gzip and both journal files. All 33549
+protected hashes verify, including all 32386 parent identities, all 44 prior
+finish.late_protected entries and that finish identity. Actual recovery restores
+12 owned capture aliases, executes both retained cold GNU/optimized UBSan
+programs with fresh original-input-only 3500 fixtures, and replays frozen
+DOS/native and callback/lifecycle consumers. Full state/pool vectors and the
+failed DOS key/raw-GDC aggregate reproduce. SHA, size, mode and nsmtime verify
+before every restored alias retires. The one earlier borrowed v1458 HDI was
+verified and retired separately, with no cleanup credit. Keep both current
+cold programs/cache and all complete compressed CPU/DGROUP/video/full-memory/
+raw/RNG evidence. New backing files are private immutable snapshots.
+Run comparison commands from the main checkout; the native checkout links
+this root-owned bundle for recovery.
 
 ```sh
-python3 .analysis/reconstruction/probes/dos-stage2-midboss-v1458/replay_restored.py \
-  --output-dir .analysis/reconstruction/probes/NEW-midboss-recovery
+python3 .analysis/reconstruction/probes/dos-midboss-reset-v1459/replay_restored.py \
+  --output-dir .analysis/reconstruction/probes/NEW-reset-recovery
 ```
 
-This re-executes actual native programs and replays captured DOS reducers;
-it is not a new emulator run. Use fresh output names. Manual recovery supports
-recover.py --restore --path EXACT. New backing paths are private immutable
-snapshots. Preserve finish.json late_protected too when chaining future journals.
+This executes native programs and replays recorded DOS consumers; it does not
+rerun the emulator. Use fresh outputs. Manual recovery supports recover.py
+--restore --path EXACT. Subsequent journals must merge all 33549 protected
+identities, every finish.json late_protected entry and that finish identity.
+Old journals and the incomplete v1458 reader observation remain unchanged.
 The two old public capture/keyboard files remain frozen backing inputs.
 
 Historical missing worktrees, native v1432's94 protected files and old v1437

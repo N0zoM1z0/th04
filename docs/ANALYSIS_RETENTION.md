@@ -1,5 +1,35 @@
 # Private build and analysis retention
 
+## Midboss defeat/reset recovery (v1459)
+
+Verified retention archives 52 owned generated files into 13 content blobs,
+releasing 1136.781 MiB after archive, gzip and both journal files. All 33549
+protected hashes verify, including all 32386 parent identities, all 44 prior
+finish.late_protected entries and that finish identity. Actual recovery restores
+12 owned capture aliases, executes both retained cold GNU/optimized UBSan
+programs with fresh original-input-only 3500 fixtures, and replays frozen
+DOS/native and callback/lifecycle consumers. Full state/pool vectors and the
+failed DOS key/raw-GDC aggregate reproduce. SHA, size, mode and nsmtime verify
+before every restored alias retires. The one earlier borrowed v1458 HDI was
+verified and retired separately, with no cleanup credit. Keep both current
+cold programs/cache and all complete compressed CPU/DGROUP/video/full-memory/
+raw/RNG evidence. New backing files are private immutable snapshots.
+Run comparison commands from the main checkout; the native checkout links
+this root-owned bundle for recovery.
+
+```sh
+python3 .analysis/reconstruction/probes/dos-midboss-reset-v1459/replay_restored.py \
+  --output-dir .analysis/reconstruction/probes/NEW-reset-recovery
+```
+
+This executes native programs and replays recorded DOS consumers; it does not
+rerun the emulator. Use fresh outputs. Manual recovery supports recover.py
+--restore --path EXACT. Subsequent journals must merge all 33549 protected
+identities, every finish.json late_protected entry and that finish identity.
+Old journals and the incomplete v1458 reader observation remain unchanged.
+The two old public capture/keyboard files remain frozen backing inputs.
+
+
 ## Midboss battle and bounded-reader retention (v1458)
 
 Archive311 owned generated files into125 content blobs,
