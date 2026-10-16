@@ -8,8 +8,8 @@ whole-game completion metrics. Keep all new code and documentation in English.
 
 | Purpose | Published baseline | Availability |
 | --- | --- | --- |
-| DOS reconstruction, comparison tools and ledgers | `main: a5a89a1` | Current checkout; later evidence commits follow this baseline |
-| Native x64 source | `port/modern-64: 1558b7d` | Fresh writable `.analysis/native/port64-recovery-v1445/`; old frozen working directories remain missing |
+| DOS reconstruction, comparison tools and ledgers | `main: 734bcab` | Current checkout; later evidence commits follow this baseline |
+| Native x64 source | `port/modern-64: 7bdcd60` | Fresh writable `.analysis/native/port64-recovery-v1445/`; old frozen working directories remain missing |
 
 The old `.analysis/worktrees/` directory was absent at the 2026-10-16 audit,
 although Git retains its registrations. This includes `native-natural-clear-v1432`,
@@ -58,6 +58,43 @@ git -C .analysis/native/port64-recovery-v1445 log -n 3 --oneline
 
 Avoid recreating a missing frozen directory. Main commits do not publish native changes;
 commit and push each branch separately and verify its remote head.
+
+## Native Continue and full-power pickup repaired (v1448)
+
+Native source `7bdcd60` now applies item collection's clear effect to the real
+bullet owner. An actual ordinary Game Over/Continue reaches a full-power pickup
+at update 7640. The old executable leaves bullets active; original MAIN instead
+sets DGROUP2134:BCBA to20, then19 next update. Its first visible state/pool
+failure is boundary 7642. The failed executable, source and reports remain.
+
+A fresh original 8001 capture and complete cold GNU/optimized UBSan builds pass
+8000 updates: 21 selected state/RNG fields, actual player input, nine complete
+pools, four Boss blocks and complete CFG/SCR bytes. GNU 85 programs / 82 CTests pass.
+Five original code-fetch/caller/memory checkpoints at frame7547 establish that
+player0AAF:5FCF consumes20h before Game Over0AAF:3A51; the later menu2000h resumes
+that same call through5FCA/00F4. Keep this distinct from STD dialogue before
+player_update. The real ranked Continue changes only decoded score section 1;
+all ten full 16-bit checksums and the complete encoded file agree.
+
+Producer 557/8284f2cd freezes every maintained source before both cold builds.
+Final consumer 557/3e985ee3 changes only the Python save-scope text/reporting;
+all compiled inputs are unchanged. Five real negative reader controls pass.
+Replay/source: `.analysis/reconstruction/probes/native-continue-v1448/`,
+`result.json`, `cold_build.py`, `finalize_consumer.py`, `continue-witness.json`.
+Public original reader: `scripts/probes/attest_th04_continue_checkpoints.py`.
+Native save/UI controls are component stimuli; blocking timing, complete
+pictures/TRAM/scanout, other globals, full process/campaign, Windows and exact
+promotion remain open. Continue these comparisons; both development goals stay active.
+
+Verified retention archives 243 owned aliases/intermediates into 243 content blobs:
+21.612 MiB archive,54.297 MiB net released,2338 protected hashes checked. Restore/
+CRC/SHA/mode/nsmtime checks pass. Restoring five original/prototype aliases and
+rerunning three real 8000-update programs reproduces the old 7642 failure and both
+current successes, including full selected output/save/GO traces. The five aliases
+are checked and retired again. Current GNU programs/cache,UBSan game,both new
+cold cores and complete compressed captures remain. Use recover.py to restore
+capture aliases, or replay_restored.py for restore/run/retirement. The old 94
+missing files are unrelated and no historical receipt is rebound.
 
 ## Original dialogue/player input boundary corrected (v1447)
 
@@ -332,13 +369,12 @@ The two deferred carpet/checkerboard exact cases remain deferred.
 
 ## Next tasks
 
-1. Extend the corrected original/native comparison through Game Over/Continue.
-   Keep loop, dialogue and actual player-entry input boundaries separate. V1447
-   proves the pre-Boss checkpoint and replaces v1446's incorrect latch; do not
-   infer a player's post-blocking keys from an earlier I-line. Restore/attest
-   original v1439 evidence or make a new capture before extending the7500-update
-   surface. Compare actual waits, resident/score publication, full pools/Boss
-   states and intermediate UI pictures. Full campaign/process remains open.
+1. Extend the v1448 original/native8000-update Continue comparison toward Boss
+   defeat and complete process routes. Keep loop,STD dialogue,player prefix and
+   resumed Game Over suffix input boundaries separate. V1448 covers real ranked
+   Continue score writes,selected state/RNG,nine full pools and four Boss blocks;
+   complete menu/pickup pictures,other globals and original wait timing remain
+   open. Use the new immutable producer/capture identities and recovery recipes.
 2. The v1443 four-source nine-entry/second-MAIN extension and fresh native
    recovery are completed bounded steps. Continue DOS OP renderer/readiness
    diagnosis or new-producer Demo pool/video checks; retain post-reset/raw-GDC

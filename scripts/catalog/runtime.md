@@ -8,6 +8,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | Path | Kind | Purpose |
 | --- | --- | --- |
 | [prepare_product_hdi.py](../prepare_product_hdi.py) | command | Prepare a disposable original-data image with verified source or original products. |
+| [probes/attest_th04_continue_checkpoints.py](../probes/attest_th04_continue_checkpoints.py) | command | Attest original player/Game Over/Continue code-fetch, caller and complete memory evidence at the consumed-input boundary. |
 | [probes/attest_th04_dialog_checkpoints.py](../probes/attest_th04_dialog_checkpoints.py) | command | Attest original STD/dialog/player code-fetch, caller and memory evidence without conflating input boundaries. |
 | [probes/build_th04_cpu_fault_emulator.py](../probes/build_th04_cpu_fault_emulator.py) | command | Build a private, pinned DOSBox-X observer without changing game bytes. |
 | [probes/build_th04_demo_emulator.py](../probes/build_th04_demo_emulator.py) | command | Build a resource-limited pinned read-only normal-core demo observer. |

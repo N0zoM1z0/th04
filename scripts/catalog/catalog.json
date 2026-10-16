@@ -343,6 +343,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/attest_th04_continue_checkpoints.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Attest original player/Game Over/Continue code-fetch, caller and complete memory evidence at the consumed-input boundary.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/attest_th04_dialog_checkpoints.py",
     "category": "runtime",
     "role": "command",

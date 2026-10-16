@@ -5,6 +5,106 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Native Continue and full-power pickup repaired (v1448)
+
+Native source `7bdcd60` now applies item collection's clear effect to the real
+bullet owner. An actual ordinary Game Over/Continue reaches a full-power pickup
+at update 7640. The old executable leaves bullets active; original MAIN instead
+sets DGROUP2134:BCBA to20, then19 next update. Its first visible state/pool
+failure is boundary 7642. The failed executable, source and reports remain.
+
+A fresh original 8001 capture and complete cold GNU/optimized UBSan builds pass
+8000 updates: 21 selected state/RNG fields, actual player input, nine complete
+pools, four Boss blocks and complete CFG/SCR bytes. GNU 85 programs / 82 CTests pass.
+Five original code-fetch/caller/memory checkpoints at frame7547 establish that
+player0AAF:5FCF consumes20h before Game Over0AAF:3A51; the later menu2000h resumes
+that same call through5FCA/00F4. Keep this distinct from STD dialogue before
+player_update. The real ranked Continue changes only decoded score section 1;
+all ten full 16-bit checksums and the complete encoded file agree.
+
+Producer 557/8284f2cd freezes every maintained source before both cold builds.
+Final consumer 557/3e985ee3 changes only the Python save-scope text/reporting;
+all compiled inputs are unchanged. Five real negative reader controls pass.
+Replay/source: `.analysis/reconstruction/probes/native-continue-v1448/`,
+`result.json`, `cold_build.py`, `finalize_consumer.py`, `continue-witness.json`.
+Public original reader: `scripts/probes/attest_th04_continue_checkpoints.py`.
+Native save/UI controls are component stimuli; blocking timing, complete
+pictures/TRAM/scanout, other globals, full process/campaign, Windows and exact
+promotion remain open. Continue these comparisons; both development goals stay active.
+
+The original run uses configured Normal/ReimuA, seed 64, lives 6, bombs 0, Turbo on;
+it injects keyboard release/Enter only at the declared blocking owners. It does
+not inject actor/life/score state. Original load10FC gives DGROUP3230. The five
+Continue checkpoints include complete 640KiB conventional memory, 64KiB DGROUP,
+raw video,CPU/segments and target opcodes. Credit-applied0AAF:3CDE follows the
+actual score[0] increment. The miss-helper return validates BP+2=610A;
+player-return00F4 validates the preceding direct call. Generic entry-stack
+validation would use the wrong stack surface at those interior returns.
+
+The full-power target branch is MAIN_035_TEXT13A9:A2DF..A2EB, target file
+1F56F..1F57A: compare clear_time with20 and write20 only when smaller. Runtime
+DGROUP after actors7640/7641/7642 shows power1/128/128 and clear0/20/19.
+The nine pools first diverge at7642 in bullet movement/positions/patterns; the
+score pending accumulator becomes7857 in original after those actors. Native
+item::collect already produced bullets_cleared, but State::update discarded it.
+The correction dispatches that existing effect at item collection, after
+bullets_update, and preserves the larger active clear timer. The live MAIN
+regression checks20 on collection and19 after exactly one following update.
+No target source, accepted Borland layout or historical byte state changes.
+
+The extended ordinary FrontEnd drives the real Game Over owner for 189 advances
+while the simulation remains at 7547, then completes 7548 once. It records the
+actual prefix argument before the block and retains that observation through
+UI polling. It does not override gameplay input or repeat the player prefix.
+Release/Enter polling remains an explicitly declared component policy;189 is
+not an original wait-duration claim. The public consumer requires witness
+coverage for every observed Game Over frame and checks actual frame freeze,
+entry/return,Continue digit,player sample and final physical files.
+
+Both final producers yield identical selected scalar/full-pool/Boss,input/UI
+trace,prefix and physical-file outputs. GENSOU.SCR changes identically in both
+executions: decoded section 1 inserts CONTINUE at zero-based place 2 using the
+pre-reset score. CFG remains unchanged. This observes the actual ranked Turbo
+save branch, not just restored life/Bomb counts. Encoded keys and all ten 192-byte
+decoded payloads agree, including full 16-bit checksums. Full pictures at the
+pickup/menu and scene timing still need separate comparison; the earlier single
+pre-script graphics sample does not cover them.
+
+The frozen cold-producer Python verifier had an incorrect unranked-scope
+sentence. The separately frozen final consumer corrects that sentence and
+reports changed decoded sections. The source diff is exactly that one Python
+file; no compiled source/header changed. The earlier diagnostic receipts remain
+unchanged, including their narrower/inaccurate scope text. The initial native
+failure is retained as a counterexample rather than converted into acceptance.
+
+Replay with restored capture aliases:
+
+```sh
+python3 scripts/probes/attest_th04_continue_checkpoints.py \
+  --capture .analysis/runtime/candidates/native-continue-v1448-original \
+  --main .analysis/targets/th04/main.exe --output NEW_WITNESS.json
+python3 .analysis/native/port64-recovery-v1445/port64/verify_ordinary_state.py \
+  --dos-root "$PWD" --frontend --updates 8000 \
+  --original .analysis/runtime/candidates/native-continue-v1448-original \
+  --exe .analysis/native/port64-recovery-v1445/.analysis/port64/continue-v1448/gnu/th04-port64 \
+  --output-dir NEW_OBSERVATION
+```
+
+The complete commands and selected executable hashes are frozen in final receipts.
+The private capture.py/keyboard/continue_watch.py closure is bound by its
+original receipt. Existing v1447 public capture helpers remain unchanged so
+that its protected original evidence can still replay.
+
+Verified retention archives 243 owned aliases/intermediates into 243 content blobs:
+21.612 MiB archive,54.297 MiB net released,2338 protected hashes checked. Restore/
+CRC/SHA/mode/nsmtime checks pass. Restoring five original/prototype aliases and
+rerunning three real 8000-update programs reproduces the old 7642 failure and both
+current successes, including full selected output/save/GO traces. The five aliases
+are checked and retired again. Current GNU programs/cache,UBSan game,both new
+cold cores and complete compressed captures remain. Use recover.py to restore
+capture aliases, or replay_restored.py for restore/run/retirement. The old 94
+missing files are unrelated and no historical receipt is rebound.
+
 ## Original dialogue/player input boundary corrected (v1447)
 
 The v1446 input interpretation and the `13e6676` latch are withdrawn. Actual
