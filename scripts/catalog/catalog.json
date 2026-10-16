@@ -553,6 +553,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/compare_th04_dos_titles.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Compare all ordinary title state, three complete text rows and original BB calls with strict stream boundaries.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/compare_th04_native_maine_link.py",
     "category": "matching",
     "role": "command",
@@ -3644,6 +3651,13 @@
     "category": "runtime",
     "role": "command",
     "purpose": "Execute original MAIN popup, CRT and text instructions at two load segments with complete TRAM and ABI observations.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/runtime/verify_dos_hud_titles.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Execute original title, CRT, text and BB instructions with guarded GRCG hardware and complete plane observations.",
     "purpose_source": "maintained-description"
   },
   {

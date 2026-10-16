@@ -58,6 +58,8 @@ OVERRIDES = {
     'compare_th04_dos_process_route.py': ('runtime', 'Compare MAIN Quit, original MAINE and fresh OP menu entries, prefix pools, resident bytes and physical saves.'),
     'attest_th04_dialog_checkpoints.py': ('runtime', 'Attest original STD/dialog/player code-fetch, caller and memory evidence without conflating input boundaries.'),
     'attest_th04_continue_checkpoints.py': ('runtime', 'Attest original player/Game Over/Continue code-fetch, caller and complete memory evidence at the consumed-input boundary.'),
+    'compare_th04_dos_titles.py': ('runtime', 'Compare all ordinary title state, three complete text rows and original BB calls with strict stream boundaries.'),
+    'verify_dos_hud_titles.py': ('runtime', 'Execute original title, CRT, text and BB instructions with guarded GRCG hardware and complete plane observations.'),
     'compare_th04_dos_popup.py': ('runtime', 'Compare complete popup and BGM text rows and popup state at ordinary boundaries with separate owner verdicts.'),
     'verify_dos_hud_popup.py': ('runtime', 'Execute original MAIN popup, CRT and text instructions at two load segments with complete TRAM and ABI observations.'),
     'verify_dos_popup_score.py': ('runtime', 'Execute original popup and following score drain to observe retained bonus ownership at the return boundary.'),

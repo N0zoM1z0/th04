@@ -24,6 +24,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/compare_th04_dos_ordinary_prefix.py](../probes/compare_th04_dos_ordinary_prefix.py) | command | Admit ordinary DOS prefixes by input and entry RNG before reporting state differences. |
 | [probes/compare_th04_dos_popup.py](../probes/compare_th04_dos_popup.py) | command | Compare complete popup and BGM text rows and popup state at ordinary boundaries with separate owner verdicts. |
 | [probes/compare_th04_dos_process_route.py](../probes/compare_th04_dos_process_route.py) | command | Compare MAIN Quit, original MAINE and fresh OP menu entries, prefix pools, resident bytes and physical saves. |
+| [probes/compare_th04_dos_titles.py](../probes/compare_th04_dos_titles.py) | command | Compare all ordinary title state, three complete text rows and original BB calls with strict stream boundaries. |
 | [probes/compare_th04_ordinary_pools.py](../probes/compare_th04_ordinary_pools.py) | command | Compare complete ordinary actor pools against pinned scalar controls and target/MAP owners. |
 | [probes/compare_th04_ordinary_video.py](../probes/compare_th04_ordinary_video.py) | command | Compare complete ordinary VRAM/palettes/display state with independent scalar controls. |
 | [probes/inspect_th04_cpu_fault_trace.py](../probes/inspect_th04_cpu_fault_trace.py) | command | Decode private MAIN exception frames without claiming normal gameplay. |
@@ -78,6 +79,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [runtime/fixtures/good_ending.asm](../runtime/fixtures/good_ending.asm) | fixture | Private resident seed for real MAINE Ending tests; bypasses OP/gameplay initialization. |
 | [runtime/verify_dos_gaiji.py](../runtime/verify_dos_gaiji.py) | command | Compare original and linked DOS Gaiji writes, port order and far-call return state across WORD address boundaries. |
 | [runtime/verify_dos_hud_popup.py](../runtime/verify_dos_hud_popup.py) | command | Execute original MAIN popup, CRT and text instructions at two load segments with complete TRAM and ABI observations. |
+| [runtime/verify_dos_hud_titles.py](../runtime/verify_dos_hud_titles.py) | support | Execute original title, CRT, text and BB instructions with guarded GRCG hardware and complete plane observations. |
 | [runtime/verify_dos_popup_score.py](../runtime/verify_dos_popup_score.py) | command | Execute original popup and following score drain to observe retained bonus ownership at the return boundary. |
 | [runtime/verify_dos_smem_page_copy.py](../runtime/verify_dos_smem_page_copy.py) | command | Compare original and linked DOS SMEM allocation, release, shared HMEM boundaries and complete page-copy memory with seeded DOS/I/O replies. |
 | [runtime/verify_dos_text_gaiji.py](../runtime/verify_dos_text_gaiji.py) | command | Compare original and linked DOS text Gaiji memory, store order, wrapped attribute counts and far-call return state. |
