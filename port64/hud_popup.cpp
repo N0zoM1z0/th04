@@ -21,9 +21,10 @@ void points(registration::TextPlane& text,std::uint32_t value) {
     digits+=char(std::uint8_t(0xa0u+value));digits+=char(0xa0);text.put_string(28,2,digits,0xe1);
 }
 }
+void request(Snapshot& s,Kind id) {s.requested=std::uint8_t(id);s.active=true;}
 void request(Snapshot& s,Kind id,std::uint32_t bonus) {
-    s.requested=std::uint8_t(id);s.active=true;
     if(id==Kind::bonus)s.bonus=bonus;
+    request(s,id);
 }
 void update(Snapshot& s,registration::TextPlane& text) {
     if(!s.active)return;

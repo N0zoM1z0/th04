@@ -14,6 +14,8 @@ struct Snapshot {
 };
 // Requests replace one pending ID. They do not reset an active popup's clock;
 // the callback admits a different ID only after its first 64 updates.
-void request(Snapshot&,Kind,std::uint32_t bonus=0);
+// Only an explicit bonus producer may change the shared amount.
+void request(Snapshot&,Kind);
+void request(Snapshot&,Kind,std::uint32_t bonus);
 void update(Snapshot&,registration::TextPlane&);
 } // namespace th04::portable::popup
