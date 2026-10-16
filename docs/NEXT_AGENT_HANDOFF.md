@@ -8,8 +8,8 @@ whole-game completion metrics. Keep all new code and documentation in English.
 
 | Purpose | Published baseline | Availability |
 | --- | --- | --- |
-| DOS reconstruction, comparison tools and ledgers | `main: b370639` | Current checkout; later evidence commits follow this baseline |
-| Native x64 source | `port/modern-64: 8a2092b` | Fresh writable `.analysis/native/port64-recovery-v1445/`; old frozen working directories remain missing |
+| DOS reconstruction, comparison tools and ledgers | `main: bb9ba26` | Current checkout; later evidence commits follow this baseline |
+| Native x64 source | `port/modern-64: 7fe667b` | Fresh writable `.analysis/native/port64-recovery-v1445/`; old frozen working directories remain missing |
 
 The old `.analysis/worktrees/` directory was absent at the 2026-10-16 audit,
 although Git retains its registrations. This includes `native-natural-clear-v1432`,
@@ -59,7 +59,65 @@ git -C .analysis/native/port64-recovery-v1445 log -n 3 --oneline
 Avoid recreating a missing frozen directory. Main commits do not publish native changes;
 commit and push each branch separately and verify its remote head.
 
-## Current native ordinary component and source repair (v1445)
+## Ordinary native dialogue and Boss prefix (v1446)
+
+Source `13e6676` preserves Stage1's gameplay input across blocking dialogue
+refreshes. Target MAIN `0AAF:00F1` calls player_update at `0AAF:5FCF` before the
+Boss callback through `DGROUP 2134:432C` at `0AAF:0113`; load `10FC` is recorded.
+The executed predecessor consumed 0 at update 6548 instead of original `20h`.
+Its 21 selected fields and nine pools still matched: the held-shot interval
+made this input error invisible to that earlier comparison. The fixed real
+FrontEnd retains the selected gameplay key/Shift while dialogue owns its
+separate release/Enter samples. It does not edit game state or original captures.
+
+Fresh source closure of 557 files (d246f71f) builds 85 GNU programs, passes 82 CTests and
+also builds an optimized UBSan core/game. The ordinary Normal/ReimuA seed64/lives6/bombs0 comparison
+now covers 7,500 completed updates and 7,501 boundaries through real dialogue and
+Boss phases 0/1/2: actual gameplay inputs, 21 fields/full RNG state and counts,
+nine complete pools, and four complete Boss blocks (45 bytes, including spare
+state bytes) agree with original DOS. Dialogue has 803 frozen admissions and
+804 advances under declared component keys; these are not original timing.
+Five natural losses end with one life. Native initialization uses an explicit
+OP counter of 64 and menu API; natural startup/input delivery is not accepted.
+
+Public replay: native port64/verify_ordinary_state.py --frontend --updates 7500
+with --dos-root, --original, --exe and a fresh --output-dir. Canonical proof/source/recovery:
+`.analysis/reconstruction/probes/native-ordinary-front-v1446/`. The writable
+native tree remains `.analysis/native/port64-recovery-v1445/`.
+Intermediate dialogue/player-prefix pictures, remaining globals/Game Over/
+Continue, Boss defeat, whole routes, scanout/timing, Windows and historical
+exactness remain open. Next extend the actual FrontEnd through Game Over and
+Continue using original captured inputs and separate blocking-owner evidence.
+
+Eight actual reader controls pass, including independent sampled-input/Boss
+mutations and strict default/configured extents. Compiler dependencies cover 350
+actual own files; fresh GNU core and ymfm archives equal v1445 byte for byte.
+Verified archival retires 249 owned files in 244 blobs, releasing544.664 MiB net
+after a 9.607 MiB archive. SHA/CRC/mode/nsmtime and 2,296 protected hashes pass.
+Restored predecessor/fixed prototype and current GNU/UBSan FrontEnds reproduce
+the complete 7,500-update outputs; only the predecessor repeats its actual-input
+failure. Two restored executable aliases retire again; six borrowed original
+aliases return to their older archive state without counting as new cleanup.
+Current GNU cache/85 programs, selected UBSan game/libraries, all sources and
+complete original/current compressed captures remain. Use recover.py and
+replay_restored.py in this batch's namespace. The active retirement log is
+explicitly excluded until the final closure; no journal/log receipt is restamped.
+Missing old 94 files remain a separate historical gap.
+
+Cold C++ producer13e6676 remains557/d246f71f. Current Python consumer48db31c
+is557/7c4b8576: only verify_demo_pools.py restores the default Demo truncation
+diagnostic after the first native CI found its message regression. All350
+compiled own inputs and cold executables are unchanged. Fresh separate GNU/
+UBSan consumer replays and eight current-reader controls reproduce all admitted
+results. The first failed CI and every old producer/runtime receipt remain
+unchanged; current-consumer.json and consumer-replay.json bind both identities.
+
+Final gates pass: root CI573 with live MAIN database and Ghidra mutation
+checks, native CI354, and both tracking/diff checks. Native private Ghidra is
+skipped because this checkout has no project; the actual database replay is
+in the DOS root. Keep the initial native message-regression CI as a negative.
+
+## Earlier native ordinary component and source repair (v1445)
 
 Fresh native GNU85 programs/82 CTests and optimized UBSan entire-core/tracer
 match original Normal/ReimuA seed64,6 lives/0 bombs at3997 boundaries/3996
@@ -275,18 +333,20 @@ The two deferred carpet/checkerboard exact cases remain deferred.
 
 ## Next tasks
 
-1. Extend the admitted second-MAIN scenario to a newly attested build of all
-   four reconstructed products. Derive candidate OP menu/entry hooks from its
-   own MAP and bytes; the current capture still preserves original supports.
-   Retain the first-MAIN unfinished sample, actual generation IDs and first-
-   actor input boundary. Keep the timed-input negative and all post-reset/raw-GDC
-   failures. Full new-producer Demo pool/video, intermediate UI and allocation
-   creation/release remain separate checks; a bounded600-update pass is not a
-   campaign or continuous-lifetime acceptance.
-2. Recover native development and historical replay inputs. Search for the
-   original missing storage; otherwise build published source under a new
-   namespace and collect independent new evidence. The new root MAIN/MAP does
-   not restore the native producer, old trees or a fresh four-product build.
+1. Capture the original inside the pre-Boss dialogue callback and compare
+   the intermediate player-prefix state/pictures; current acceptance samples
+   completed gameplay updates only. Then extend the original/native FrontEnd
+   beyond 7,500 updates into actual Game Over/Continue ownership. Restore and attest
+   the original v1439 8,000-update Continue surface before reuse. Keep gameplay
+   samples separate from blocking UI keys, and compare resident/score changes
+   as well as input/RNG/full pools/Boss state. Intermediate UI pictures, Boss
+   defeat and complete campaign/process routes remain separate requirements.
+2. The v1443 four-source nine-entry/second-MAIN extension and fresh native
+   recovery are completed bounded steps. Continue DOS OP renderer/readiness
+   diagnosis or new-producer Demo pool/video checks; retain post-reset/raw-GDC
+   failures and the unfinished first-MAIN sample. Missing old native94 files
+   and old candidate MAPs remain historical gaps. Use the new attested native
+   producer; never re-sign old receipts or recreate missing frozen directories.
 3. Extend past the paired 8,000-update Continue prefix toward Boss defeat and
    complete process routes with independent input/RNG/pool controls and video.
    v1439 passes all 38 video regions at 8,000 actor-update checkpoints. The
