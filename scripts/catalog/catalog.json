@@ -448,6 +448,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/capture_th04_dos_boss_suffix.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Capture the ordinary Boss suffix with explicit dialogue and Continue keyboard cues.",
+    "purpose_source": "source-docstring"
+  },
+  {
     "path": "scripts/probes/capture_th04_dos_demos.py",
     "category": "runtime",
     "role": "command",
@@ -3477,6 +3484,13 @@
     "role": "command",
     "purpose": "Run the disposable TH04-only packed ZUN candidate under PC-98 DOSBox-X.",
     "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/th04_boss_suffix_keyboard.gdb",
+    "category": "source-review",
+    "role": "fixture",
+    "purpose": "th04 boss suffix keyboard (filename-derived; inspect source before use).",
+    "purpose_source": "filename-routing"
   },
   {
     "path": "scripts/probes/th04_bullet_load_trace.py",

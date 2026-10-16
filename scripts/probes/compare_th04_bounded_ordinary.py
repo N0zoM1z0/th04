@@ -12,8 +12,8 @@ from th04_demo_globals import attest_fields
 from th04_ordinary_dgroup import records, BOUNDARY
 
 
-def read_side(directory, original):
-    capture = load(directory, original)
+def read_side(directory, original, source_snapshot=None):
+    capture = load(directory, original, source_snapshot)
     receipt = capture['receipt']
     count = receipt['end_after']
     require(capture['bounded_terminal'] and receipt['natural_game_exit'] is False,
@@ -55,16 +55,18 @@ def main():
     parser.add_argument('candidate', type=Path)
     parser.add_argument('--original-main', required=True, type=Path)
     parser.add_argument('--output', required=True, type=Path)
+    parser.add_argument('--source-snapshot', type=Path,
+                        help='Frozen source fallback for immutable older capture identities')
     args = parser.parse_args()
     original = args.original_main.read_bytes()
-    a, ap, ar = read_side(args.original, original)
-    b, bp, br = read_side(args.candidate, original)
+    a, ap, ar = read_side(args.original, original, args.source_snapshot)
+    b, bp, br = read_side(args.candidate, original, args.source_snapshot)
     require(a['receipt']['role'] == 'original' and b['receipt']['role'] == 'candidate', 'prefix roles')
     count = a['receipt']['end_after']
     require(count == b['receipt']['end_after'] and a['starting_files'] == b['starting_files'],
             'prefix reset/extent')
     for key in ('emulator_sha256', 'debugger_sha256', 'adapter_sha256', 'walker_sha256',
-                'font_sha256', 'dialog_at_frame', 'continue_at_frame'):
+                'font_sha256', 'dialog_at_frame', 'continue_at_frame', 'post_boss_dialog_at_frame'):
         require(a['receipt'].get(key) == b['receipt'].get(key), 'prefix producer: ' + key)
     require(a['receipt']['files']['dosbox-x.conf'] == b['receipt']['files']['dosbox-x.conf'],
             'prefix emulator config')

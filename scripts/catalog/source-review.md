@@ -210,6 +210,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/replay_th04_zun_version_grp.py](../probes/replay_th04_zun_version_grp.py) | command | Cold-replace ZUN's VERSION and GRP pure-data library members after local FONTOPEN support. |
 | [probes/replay_th04_zuninit_symbolic.py](../probes/replay_th04_zuninit_symbolic.py) | command | Cold-link the complete ZUNINIT COM component from maintained symbolic ASM. |
 | [probes/review_th04_enemy_es_preservation.py](../probes/review_th04_enemy_es_preservation.py) | command | Attest TH04 enemy ES-save sites and independent TH05 analogues. |
+| [probes/th04_boss_suffix_keyboard.gdb](../probes/th04_boss_suffix_keyboard.gdb) | fixture | th04 boss suffix keyboard (filename-derived; inspect source before use). |
 | [probes/th04_main_fault_trace.py](../probes/th04_main_fault_trace.py) | support | Private MAIN gameplay-call and decimal DIV checkpoints to Bochs port E9. |
 | [review_th04_main_functions.py](../review_th04_main_functions.py) | command | Conservatively review TH04 MAIN authored functions against exact byte owners. |
 | [survey_rec98_outputs.py](../survey_rec98_outputs.py) | command | Survey every locally built ReC98 PC-98 output under strict local policy. |
