@@ -323,6 +323,14 @@ void State::apply_clear_bonus(bool all_clear) {
     bonus::State state;state.score_delta=score_.score_delta;state.bombs=score_.remaining_bombs;
     state.performance=performance_;state.minimum=minimum[rank_];state.maximum=maximum[rank_];
     clear_bonus_=bonus::apply(bonus_context_,state,all_clear);
+    for(const auto& event:clear_bonus_->events) {
+        if(event.kind==bonus::Kind::text)
+            hud_text_.put_sjis(event.left,event.row,event.bytes,std::uint16_t(event.color));
+        else if(event.kind==bonus::Kind::gaiji)
+            hud_text_.put_string(event.left,event.row,event.bytes,std::uint16_t(event.color));
+        else if(event.kind==bonus::Kind::hud_bombs)
+            hud::apply(hud_text_,hud::bombs(state.bombs));
+    }
     if(all_clear) scoreboard_.extends=state.extends;
     score_.score_delta=state.score_delta;score_.remaining_bombs=state.bombs;performance_=state.performance;
     // Called at the original bonus position when the blocked frame resumes,

@@ -1186,36 +1186,6 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     return frame;
 }
 
-// TRAM stays bright over the dimmed graphics palette. Writes replace
-// entire character cells; blank gaiji also erase preceding text in that cell.
-void put_text_requests(Frame& frame,const MainSprites& sprites,const std::vector<th04::portable::bonus::Event>& events) {
-    namespace bonus=th04::portable::bonus;
-    std::vector<std::uint32_t> layer(640*400,0);
-    const auto gaiji_pixel=[&](unsigned glyph,unsigned x,unsigned y) {
-        const auto base=32u+unsigned(sprites.gaiji.at(28))+(unsigned(sprites.gaiji.at(29))<<8);
-        return (sprites.gaiji.at(base+glyph*32+y*2+x/8)&(0x80u>>(x&7)))!=0;
-    };
-    for(const auto& e:events) {
-        if(e.kind!=bonus::Kind::text && e.kind!=bonus::Kind::gaiji) continue;
-        const unsigned color=0xff000000u|((e.color&0x40) ? 0xff0000u : 0)|((e.color&0x80) ? 0xff00u : 0)|((e.color&0x20) ? 0xffu : 0);
-        int left=e.left*8;const int top=e.row*16;
-        for(unsigned at=0;at<e.bytes.size();) {
-            const auto first=static_cast<unsigned char>(e.bytes[at++]);unsigned glyph=first;
-            if(e.kind==bonus::Kind::text) {
-                require_view(sprites.font.present(),"Text requires the PC-98 font bitmap");
-                require_view(at<e.bytes.size(),"Truncated SJIS text");glyph=(glyph<<8)|static_cast<unsigned char>(e.bytes[at++]);
-            }
-            for(unsigned y=0;y<16;++y) for(unsigned x=0;x<16;++x) {
-                const bool set=e.kind==bonus::Kind::text ? sprites.font.pixel(static_cast<std::uint16_t>(glyph),x,y) : gaiji_pixel(glyph,x,y);
-                if(left+int(x)>=0 && left+int(x)<640 && top+int(y)>=0 && top+int(y)<400)
-                    layer[unsigned(top+int(y))*640+unsigned(left+int(x))]=set ? color : 0;
-            }
-            left+=16;
-        }
-    }
-    for(unsigned i=0;i<layer.size();++i) if(layer[i]) frame.pixels[i]=layer[i];
-}
-
 registration::TextPlane main_text_plane(const gameplay::State& state,unsigned demo_number=0) {
     auto text=state.hud_text_plane();
     if(demo_number && state.overlay().callback==th04::portable::transition::Callback::titles) {
@@ -2131,7 +2101,6 @@ private:
         if(!pause_requested_ && !(held&0x2000u))return;
         pause_requested_=false;
         pause_graphics_=render_main(*sprites_,*main_,application_.resident().playchar);
-        if(main_->clear_bonus() && main_->bonus_text_visible())put_text_requests(pause_graphics_,*sprites_,main_->clear_bonus()->events);
         pause_text_=main_text_plane(*main_,application_.resident().demo_number);
         pause_.emplace(startup_clock_,std::uint16_t(pause::input_from_host(held)|0x1000u),[this](const pause::Event& event) {
             main_->apply_pause_text(event);
@@ -2452,7 +2421,6 @@ private:
             if(extra_route_) {
                 if(extra_route_->phase()==maine::ExtraPhase::main_fade) {
                     auto frame=render_main(*sprites_,*main_,application_.resident().playchar,extra_route_->main_tone());
-                    if(main_->clear_bonus() && main_->bonus_text_visible())put_text_requests(frame,*sprites_,main_->clear_bonus()->events);
                     put_main_text(frame,*sprites_,*main_,application_.resident().demo_number,text_blink_visible());return frame;
                 }
                 Frame frame{640,400,std::vector<std::uint32_t>(640*400,0xff000000u)};
@@ -2498,7 +2466,6 @@ private:
             }
             if(ending_->phase()==maine::Phase::main_fade) {
                 auto frame=render_main(*sprites_,*main_,application_.resident().playchar,ending_->main_tone());
-                if(main_->clear_bonus() && main_->bonus_text_visible()) put_text_requests(frame,*sprites_,main_->clear_bonus()->events);
                 put_main_text(frame,*sprites_,*main_,application_.resident().demo_number,text_blink_visible());
                 return frame;
             } else {
@@ -2532,11 +2499,6 @@ private:
             if(dialog_scene_) { auto frame=dialog_scene_->render();put_main_text(frame,*sprites_,*main_,application_.resident().demo_number,text_blink_visible());return frame; }
             if(main_) {
                 auto frame=render_main(*sprites_,*main_,application_.resident().playchar);
-                if(main_->clear_bonus()) {
-                    // Departure already publishes graphics tone60 once; TRAM stays bright.
-                    if(main_->bonus_text_visible()) put_text_requests(frame,*sprites_,main_->clear_bonus()->events);
-                }
-
                 put_main_text(frame,*sprites_,*main_,application_.resident().demo_number,text_blink_visible());
                 return frame;
             }
