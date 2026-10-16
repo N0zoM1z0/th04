@@ -27,7 +27,7 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
     const auto base_draws=scene.process_random_draws(),base_samples=scene.main_state().random_samples();
     const auto hex=[&](const auto& bytes){constexpr char digits[]="0123456789abcdef";for(auto value:bytes)state<<digits[unsigned(value)>>4]<<digits[unsigned(value)&15];};
     state<<"TH04_ORDINARY_STATE 1 "<<updates<<'\n';
-    unsigned blocked_ticks=0,dialog_ticks=0;
+    unsigned blocked_ticks=0,dialog_ticks=0;bool prefix_saved=false;
     for(unsigned frame=0;frame<=updates;++frame) {
         unsigned number,keys,shift;
         require_view(bool(plan>>number>>keys>>shift) && number==frame && keys<=65535 && !(keys&~0x303fu) && shift<=1,"ordinary FrontEnd input/order/width");
@@ -56,9 +56,23 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
         for(unsigned attempt=0;;++attempt) {
             require_view(attempt<10000 && scene.live_main() && !main.game_over(),"unconfigured ordinary FrontEnd blocking owner");
             const bool dialog=scene.dialog_active();const auto status=scene.dialog_status();
-            const auto input=dialog ? std::uint16_t(status==th04::portable::dialog::Status::press ? 0x1000 : 0) : held;
+            const auto input=dialog ? std::uint16_t((status==th04::portable::dialog::Status::press || status==th04::portable::dialog::Status::running) ? 0x1000 : 0) : held;
             scene.advance(input,shift!=0,false);
             if(dialog || scene.dialog_active()) {blocks<<frame<<' '<<attempt<<' '<<unsigned(status)<<' '<<input<<' '<<main.frames()<<' '<<scene.dialog_offset()<<'\n';++dialog_ticks;}
+            if(!prefix_saved && scene.dialog_active() && scene.dialog_status()==th04::portable::dialog::Status::running && scene.dialog_offset()==0) {
+                const auto random=scene.process_random_state();const auto cursor=main.random_cursor();
+                const auto pos=main.player().position().current;
+                std::ofstream checkpoint(output/"dialog-prefix.txt");
+                checkpoint<<frame<<' '<<pos.x<<' '<<pos.y<<' '<<+main.shots().snapshot().time<<' '
+                    <<+main.life().invincibility<<' '<<+main.life().respawn_time<<' '<<+main.life().hit<<' '
+                    <<+main.life().miss_time<<' '<<random<<' '<<cursor<<'\n';
+                std::ofstream snapshot(output/"dialog-prefix-pools.bin",std::ios::binary);
+                snapshot.write("TH04OD1\n",8);th04::portable::demo_wire::pools(snapshot,0,main,program);
+                scene.repaint();write_bmp((output/"dialog-prefix.bmp").string(),scene.frame());
+                require_view(main.frames()==frame && scene.process_random_state()==random && main.random_cursor()==cursor,
+                             "dialogue prefix repaint advanced gameplay or RNG");
+                prefix_saved=true;
+            }
             if(main.frames()!=frame)break;
             ++blocked_ticks;
         }

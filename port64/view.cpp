@@ -1849,13 +1849,9 @@ public:
             if(loaded_stage_==3 && !dialog_scene_ && !fourth_pre_finished_ && main_->stage4_dialog_ready(sprites_->background)) begin_dialog(false);
             if(loaded_stage_==2 && !dialog_scene_ && !third_pre_finished_ && main_->stage3_dialog_ready(sprites_->background)) begin_dialog(false);
             if(loaded_stage_==1 && !dialog_scene_ && !second_pre_finished_ && main_->stage2_dialog_ready(sprites_->background)) begin_dialog(false);
-            if(!diagnostic_ && !dialog_scene_ && main_->stage1_dialog_ready(sprites_->background)) {
-                // Stage1 blocks inside boss_update after the player prefix.
-                // Dialogue refreshes own their keys, while this update keeps
-                // the gameplay sample selected before entering that callback.
-                stage1_dialog_input_=std::make_pair(held_input,shift);
-                begin_dialog(false);
-            }
+            // The original STD callback blocks before player_update. Its
+            // dialogue polls remain live input when that player prefix begins.
+            if(!diagnostic_ && !dialog_scene_ && main_->stage1_dialog_ready(sprites_->background)) begin_dialog(false);
             if(!diagnostic_ && !dialog_scene_ && !post_started_ && !main_->yuuka6_active() && !main_->mugetsu_active() && !main_->gengetsu_active() && main_->boss_active() && main_->boss_snapshot().phase==255 && main_->boss_snapshot().phase_frame==0) {
                 capture_gameover_graphics();
                 main_->update(held_input,shift,false,0,&sprites_->background);
@@ -1903,10 +1899,6 @@ public:
                     else if(loaded_stage_==1) { second_pre_finished_=true;if(continue_kurumi_) main_->start_kurumi_after_dialog({sprites_->palette.palette[0],sprites_->palette.palette[1],sprites_->palette.palette[2]}); }
                     else { require_view(sprites_->stage_end==140,"Stage 1 dialog did not install the twelve battle sprites");main_->start_orange_after_dialog(); }
                     dialog_scene_.reset();
-                    if(stage1_dialog_input_) {
-                        held_input=stage1_dialog_input_->first;shift=stage1_dialog_input_->second;
-                        stage1_dialog_input_.reset();
-                    }
                 } else { if(repaint) frame_=render();return; }
             }
             }
@@ -2213,7 +2205,6 @@ private:
     }
     void release_sound() {sound_timeline_->leave();sound_.reset();}
     void install_main_scene() {
-        stage1_dialog_input_.reset();
         pause_.reset();pause_requested_=pause_quit_pending_=false;pause_graphics_=Frame{};pause_text_=registration::TextPlane{};
         if(!sprites_ && assets_ && !assets_->reimu.empty())sprites_=std::make_unique<MainSprites>(*assets_);
         if(!sprites_)return;
@@ -2639,7 +2630,6 @@ private:
     bool pending_op_scores_=false;
     th04::portable::op_startup::Palette startup_initial_palette_{};
     th04::portable::op_setup::Sink setup_observer_;
-    std::optional<std::pair<std::uint16_t,bool>> stage1_dialog_input_;
     std::unique_ptr<dialog::Script> script_;
     std::unique_ptr<DialogScene> dialog_scene_;
     bool diagnostic_=false,post_started_=false,post_finished_=false;

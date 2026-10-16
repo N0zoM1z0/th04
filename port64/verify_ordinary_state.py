@@ -93,7 +93,7 @@ def compare_scalar(capture: dict, profile: dict, native: list[dict]) -> dict:
                 differing_boundaries=len(differences), differences=differences)
 
 
-def compare_consumed(capture: dict, raw: bytes, updates: int) -> dict:
+def compare_consumed(capture: dict, raw: bytes, updates: int, player_inputs: dict | None = None) -> dict:
     lines = raw.decode('ascii').splitlines()
     require(len(lines) == updates, 'ordinary consumed input extent')
     differences = []
@@ -104,6 +104,8 @@ def compare_consumed(capture: dict, raw: bytes, updates: int) -> dict:
         require(0 <= keys <= 65535 and shift in (0, 1), 'ordinary consumed input width')
         original = capture['rows'][frame]
         expected = (int.from_bytes(bytes.fromhex(original['input']), 'little'), int(original['shift_raw'], 16))
+        if player_inputs is not None and str(frame) in player_inputs:
+            expected = tuple(player_inputs[str(frame)])
         if (keys, shift) != expected:
             differences.append(dict(frame=frame, original=list(expected), native=[keys, shift]))
     return dict(passed=not differences, updates=updates, differences=differences)
@@ -139,6 +141,7 @@ def main() -> int:
         parser.add_argument('--' + name, required=True, type=Path)
     parser.add_argument('--updates', type=int, default=UPDATES)
     parser.add_argument('--frontend', action='store_true')
+    parser.add_argument('--dialog-observer-profile', type=Path)
     args = parser.parse_args()
     require(0 < args.updates <= 65535, 'ordinary requested extent')
     root = Path(__file__).resolve().parents[1]
@@ -203,14 +206,32 @@ def main() -> int:
     run.check_returncode()
     state_raw = (frontend/'state.txt').read_bytes() if args.frontend else run.stdout
     (output / 'state.txt').write_bytes(state_raw)
-    consumed = compare_consumed(capture, (frontend/'consumed.txt').read_bytes(), args.updates) if args.frontend else dict(passed=True, adapter='direct update arguments')
+    witness = None
+    if args.frontend:
+        blocked_frames = set()
+        for line in (frontend/'blocks.txt').read_text().splitlines():
+            columns = line.split()
+            require(len(columns) == 6, 'ordinary blocking input record width')
+            frame = int(columns[0])
+            require(0 <= frame < args.updates, 'ordinary blocking frame extent')
+            blocked_frames.add(frame)
+        if blocked_frames:
+            from attest_th04_dialog_checkpoints import attest_capture
+            profile_path = args.dialog_observer_profile or original/'dialog-checkpoint-sources.json'
+            require(profile_path.is_file(), 'blocking dialogue requires original player-entry evidence')
+            witness = attest_capture(original, target, profile_path.resolve())
+            require(blocked_frames == {int(k) for k in witness['player_inputs']},
+                    'ordinary blocking/player-entry evidence coverage')
+            (output/'player-input-witness.json').write_text(json.dumps(witness, indent=2)+'\n')
+    consumed = compare_consumed(capture, (frontend/'consumed.txt').read_bytes(), args.updates,
+        witness['player_inputs'] if witness else None) if args.frontend else dict(passed=True, adapter='direct update arguments')
     owners = compare_owners(capture, (frontend/'owners.txt').read_bytes(), args.updates) if args.frontend else dict(passed=True, scope='not configured')
     profile = json.loads((original / 'profile.json').read_text())
     scalar = compare_scalar(capture, profile, parse_native(state_raw, args.updates))
     terminal = json.loads((original / 'ordinary-terminal.json').read_text())
     iterator = records(original / 'ordinary-dgroup.bin.gz', terminal['load_segment'],
         terminal['dgroup_segment'], profile['fields'], terminal['cr0'], terminal['cr3'],
-        capture['receipt']['main_frames'])
+        terminal['frame'])
     with raw_path.open('rb') as stream:
         require(stream.read(8) == b'TH04OP1\n', 'ordinary pool protocol')
         pools = compare_demo(islice(iterator, args.updates), stream, 0, args.updates)
@@ -233,7 +254,7 @@ def main() -> int:
     require(source_manifest(root)[0] == manifest, 'ordinary native source drift')
     report = dict(passed=scalar['passed'] and pools['passed'] and consumed['passed'] and owners['passed'], accepts_exact=False,
         natural_game_exit=False, updates=args.updates, scalar=scalar, actor_pools=pools,
-        command=command, frontend=args.frontend, consumed_input=consumed, boss_owners=owners, source_manifest_sha256=manifest, source_files=sources,
+        command=command, frontend=args.frontend, consumed_input=consumed, player_input_boundary=witness['scope'] if witness else 'no interrupted prefix', boss_owners=owners, source_manifest_sha256=manifest, source_files=sources,
         executable_sha256=sha(args.exe.read_bytes()), original_receipt_sha256=sha((original/'receipt.json').read_bytes()),
         input_files={str(p.relative_to(inputs)):sha(p.read_bytes()) for p in inputs.rglob('*') if p.is_file()},
         pools_raw_sha256=raw_hash.hexdigest(), pools_gzip_sha256=sha(packed.read_bytes()),
