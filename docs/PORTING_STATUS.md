@@ -5,7 +5,7 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-Updated 2026-10-16. The full native goal remains active on `port/modern-64`.
+Updated 2026-10-17. The full native goal remains active on `port/modern-64`.
 The latest verified route snapshot was recorded under
 `.analysis/worktrees/native-natural-clear-v1432/`, but the 2026-10-16 audit
 found the entire old worktree directory absent. Root-level reports/archives and
@@ -33,6 +33,21 @@ Original naturally reaches Game Over at7547; held Shot waits for release in
 that UI, not a confirmed IRQ fault. Boss pictures/defeat and paired process
 routes remain open. Native full-picture acceptance remains separate;
 see [current handoff](RE_HANDOFF.md).
+
+## Boss defeat, post-Boss dialogue and bonus event integration (v1453)
+
+Native `791203f` extends the actual original/native comparison to **9835
+updates**, through Orange defeat, post-Boss dialogue, stage bonus and leave.
+Both cold GNU and optimized UBSan programs pass selected state/RNG/input,
+global homing, nine pools, four Boss blocks, Continue/save, popup/title rows
+and 2665 actual BB calls over 9834 intervals. Source565/3cf3900b.
+All59 active-TRAM samples pass; the complete-picture gate retains 4
+whole RGB failures at frames 9284, 9349, 9600, 9700. Keep these failures.
+Stage2 update9836, complete campaigns, raw graphics-plane identity, physical
+scanout, NP2, Windows and historical exactness remain open.
+
+See [the bounded evidence note](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md)
+for target addresses, falsified approaches, replay and remaining picture gates.
 
 ## Boss circle clipping and complete sampled pictures (v1452)
 

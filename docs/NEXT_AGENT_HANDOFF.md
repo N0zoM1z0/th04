@@ -1,6 +1,6 @@
 # TH04 reconstruction and port64 handoff
 
-Updated 2026-10-16. Both development goals remain active. Verify the current
+Updated 2026-10-17. Both development goals remain active. Verify the current
 machine and select one bounded task. Historical exact-function counts are not
 whole-game completion metrics. Keep all new code and documentation in English.
 
@@ -8,8 +8,8 @@ whole-game completion metrics. Keep all new code and documentation in English.
 
 | Purpose | Published baseline | Availability |
 | --- | --- | --- |
-| DOS reconstruction, comparison tools and ledgers | `main: fba85a9` | Current checkout; later evidence commits follow this baseline |
-| Native x64 source | `port/modern-64: a8e0165` | Fresh writable `.analysis/native/port64-recovery-v1445/`; old frozen working directories remain missing |
+| DOS reconstruction, comparison tools and ledgers | `main: 585392f` | Current checkout; later evidence commits follow this baseline |
+| Native x64 source | `port/modern-64: 791203f` | Fresh writable `.analysis/native/port64-recovery-v1445/`; old frozen working directories remain missing |
 
 The old `.analysis/worktrees/` directory was absent at the 2026-10-16 audit,
 although Git retains its registrations. This includes `native-natural-clear-v1432`,
@@ -58,6 +58,28 @@ git -C .analysis/native/port64-recovery-v1445 log -n 3 --oneline
 
 Avoid recreating a missing frozen directory. Main commits do not publish native changes;
 commit and push each branch separately and verify its remote head.
+
+## Boss defeat, post-Boss dialogue and bonus event integration (v1453)
+
+Native `791203f` extends the actual original/native comparison to **9835
+updates**, through Orange defeat, post-Boss dialogue, stage bonus and leave.
+Both cold GNU and optimized UBSan programs pass selected state/RNG/input,
+global homing, nine pools, four Boss blocks, Continue/save, popup/title rows
+and 2665 actual BB calls over 9834 intervals. Source565/3cf3900b.
+All59 active-TRAM samples pass; the complete-picture gate retains 4
+whole RGB failures at frames 9284, 9349, 9600, 9700. Keep these failures.
+Stage2 update9836, complete campaigns, raw graphics-plane identity, physical
+scanout, NP2, Windows and historical exactness remain open.
+
+See [the bounded evidence note](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md)
+for target addresses, falsified approaches, replay and remaining picture gates.
+
+v1453 recovery replays the archived missing-TRAM producer and both corrected
+9835-update programs, preserving all177 picture observations and the retained
+RGB failures. SHA/mode/nsmtime retirement totals 1481.680 MiB net over two disjoint
+journals;all16595 protected hashes remain equal. Five owned restored aliases
+and eight borrowed aliases verify and retire;borrowed bytes receive no new
+cleanup credit. See the focused note for exact recovery selection and failures.
 
 ## Boss circle clipping and complete sampled pictures (v1452)
 
@@ -438,27 +460,25 @@ The two deferred carpet/checkerboard exact cases remain deferred.
 
 ## Next tasks
 
-1. Trace the actual native graphics writer for seven after-score full-picture
-   failures at6740,6741,6753,6765,6772,6773,6774. Start with557,64 at6740:
-   original graphics index1,native9; complete visible TRAM is equal. Use
-   v1451/remaining-picture-gap.json,post-score snapshots and actual scene BMPs.
-   All38 complete playfields/title bands and2665 real BB calls pass after
-   restoring pre-scroll title arguments. The v1450 constructed BB Oracle and
-   pending-background preview are withdrawn. Do not mask/clip the HUD or infer
-   an actor owner without direct draw evidence. Original runtime is DOSBox-X;
-   NP2 cross-emulator/full campaign/Windows remain open.
+1. Resolve v1453 complete RGB failures at9284,9349,9600,9700. All59 active
+   TRAM samples and selected9835 ordinary updates pass. The first two failures
+   include substantial graphics differences;the last two differ407 pixels,
+   matching the independently measured blink footprint. Record the actual native
+   clock/writers and compare captured original GDC phase without fitting it.
+   The former seven v1451 failures are repaired in v1452;do not restart that
+   finished circle investigation or revive the refuted constructed BB Oracle.
 2. The v1443 four-source nine-entry/second-MAIN extension and fresh native
    recovery are completed bounded steps. Continue DOS OP renderer/readiness
    diagnosis or new-producer Demo pool/video checks; retain post-reset/raw-GDC
    failures and the unfinished first-MAIN sample. Missing old native94 files
    and old candidate MAPs remain historical gaps. Use the new attested native
    producer; never re-sign old receipts or recreate missing frozen directories.
-3. Extend past the paired 8,000-update Continue prefix toward Boss defeat and
-   complete process routes with independent input/RNG/pool controls and video.
-   v1439 passes all 38 video regions at 8,000 actor-update checkpoints. The
-   comparator retains v1438's actual-frame counterexamples; eleven new Continue
-   controls and the refused-producer negative apply to v1439. The 3,996 default remains strict.
-   Preserve all post-reset/raw-GDC failures when extending the acceptance extent.
+3. Extend the primary original/reconstructed DOS comparison beyond8000
+   updates and route native beyond the newly accepted9835 selected updates only
+   after addressing the retained pictures. Use each candidate's own MAP/CS/DS
+   and explicit STD/Continue/post-Boss waits. Native Stage2 update9836 is outside
+   the current comparison. Preserve raw-GDC/process failures and missing old
+   producer gaps;do not re-sign original addresses onto a reconstructed MZ.
 4. Align native state/effects using identical consumed inputs and explicit
    state boundaries: original DOS, reconstructed DOS, then native. Expand game
    area checks to HUD/page changes/text/palettes/full pictures. GNU/UBSan equality

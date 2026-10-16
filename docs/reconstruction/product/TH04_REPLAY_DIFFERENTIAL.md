@@ -1,9 +1,104 @@
 # Original DOS, reconstructed DOS and native fidelity
 
-Updated 2026-10-16. The user's primary requested comparison
+Updated 2026-10-17. The user's primary requested comparison
 is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
+
+## Boss defeat, post-Boss dialogue and bonus event integration (v1453)
+
+Native `791203f` extends the actual original/native comparison to **9835
+updates**, through Orange defeat, post-Boss dialogue, stage bonus and leave.
+Both cold GNU and optimized UBSan programs pass selected state/RNG/input,
+global homing, nine pools, four Boss blocks, Continue/save, popup/title rows
+and 2665 actual BB calls over 9834 intervals. Source565/3cf3900b.
+All59 active-TRAM samples pass; the complete-picture gate retains 4
+whole RGB failures at frames 9284, 9349, 9600, 9700. Keep these failures.
+Stage2 update9836, complete campaigns, raw graphics-plane identity, physical
+scanout, NP2, Windows and historical exactness remain open.
+
+The original is the pinned candidate-local-attested Japanese MAIN; no pristine
+provenance claim is added. Fresh preflight and segment-aware database checks
+pass. Capture uses pinned DOSBox-X ELF6e1a6e70, load10FC, DGROUP3230, with
+raw I0..9835 and three device-driven release/Enter waits. The first capture
+exhausts optional debugger watchpoints; the second times out in post-Boss
+text; the first post-Boss watcher follows a disproved player ordering. All
+failures and the complete fourth capture remain distinct immutable inputs.
+The successful capture ends before executing Stage2 update9836.
+
+Original observations and native integration repairs:
+
+- Phase254 leaves the global homing target written by enemies/midboss intact.
+  Original far13A9:6013 calls common13A9:ACB3 at63F8 and bypasses the normal
+  homing tail at63FD. Six isolated Unicorn2.1.4 executions retain both a real
+  incoming target and the none sentinel, including phase254->255. Native had
+  republished stale Boss snapshot homing; actual `shots_fire` then consumed
+  two extra random bytes at9288. Test the entry phase so5->254 still publishes
+  its normal tail once. The repaired global matches9835 original boundaries.
+- Original Boss bonus13A9:6548 calls yellow allocator13A9:0300. Six isolated
+  original executions check1/3/10 rewards and ring wrap. Native Orange already
+  emitted point events, but State ignored them; the first missing yellow
+  pool slots occurred after update8015. The existing point model now receives
+  these events. Do not confuse this Boss helper with the Midboss helper64DE.
+- Actual frame9348 executes player0AAF:5FCF before text animate0AAF:2BFB,
+  run0AAF:2A7C and return13A9:AE19. Raw CPU/conventional memory/DGROUP/code
+  and BP/near-far return chain prove main return0109 and player return00F4.
+  Player consumes Shot32, then UI returns Enter8192. Literal executed player
+  input is recorded once; resumed suffixes do not relatch it. STD dialogue6548
+  waits before player, while GameOver7547 and post-Boss9348 wait after it.
+  Twenty-two real-context negatives reject wrong ownership/order and cues.
+- Bonus context now reads live Continue/miss/Bomb totals. Actual Continue1,
+  credit6, power94, graze23 and18 points yield12330*3/10*8/10=2959,
+  followed by195 score drain to2764. Default Continue0 had awarded3699.
+  Existing arithmetic is retained. Persistent TRAM receives SJIS/gaiji events
+  once at bonus application and the Bomb HUD consumes its existing event.
+  The former direct RGB text layer is removed; leave replaces cells in order.
+  Intermediate actual replays separately retain the missing labels and the
+  remaining Bomb glyph defect. Complete performance-state coverage remains open.
+
+The prior38-frame reader remains unchanged. The new blink-aware reader checks
+all59 complete640x400 RGB images and all8000 active TRAM bytes per sample.
+A pinned-header ABI probe gives GDC size232 and blink/count/rate196/197/198;
+the pinned ELF text renderer independently reads pc98_gdc+0xc4. Projection
+uses the captured original phase, never feeds it to native and fits no offset.
+Actual9349 font/video controls change407 pixels at phase0;phases1/2/3 agree.
+Bad phase/count/rate, ABI, emulator and source identities fail. Hidden/raw
+index differences stay diagnostic and cannot establish graphics-plane identity.
+
+Replay index: `.analysis/reconstruction/probes/native-boss-extent-v1453/`.
+`hud-fixed/cold-source.json` pins the final565-file closure; final GNU87/83
+CTests and optimized UBSan game/Orange use fresh directories under native
+`.analysis/port64/boss-bonus-v1453-final/`. `validate_hud.py` records the full
+9835-update state/entry/popup gates; `compare_final_pictures.py` records the
+separate59-sample failures in `result.json`. The actual original capture is
+`.analysis/runtime/candidates/native-boss-extent-v1453-postboss-original-v2/`.
+Use the explicit third wait and actual `postboss-witness-final.json`.
+Earlier exploratory inputs and incomplete captures are not accepted replays.
+
+Verified retention preserves 16595 protected hashes. The final journal
+retires 4118 owned aliases/intermediates in 203 blobs, releasing
+1025.941 MiB after archive and new gzip recipes. The earlier
+two exploratory raw pool streams separately released 455.738 MiB;
+disjoint total 1481.680 MiB. Final GNU87/cache, UBSan game/Orange/cold cores,
+all59 GNU pictures, original compressed captures/live fonts and all source,
+negative and failed-attempt receipts remain live or losslessly recoverable.
+`recover.py` verifies SHA/mode/nsmtime; `replay_restored_exact.py` restores one
+actual archived missing-TRAM program plus four owned original aliases. Old,
+GNU and UBSan9835-update replays reproduce all177 BMP/index/TRAM observations
+and selected state gates;the old title failure and corrected title passes remain.
+All five owned aliases and eight borrowed prior aliases verify and retire;
+borrowed aliases receive no new cleanup credit. Use exact executable selection:
+the first recovery's prefix also restored86 contract programs;all extras were
+verified and retired before the corrected replay. Its failed source/log remain.
+The first picture aggregate also counted `title-rows.bin` as a picture;its
+failed count/log remain separate from the completed59-sample comparisons.
+Replay in a fresh output namespace;never overwrite sealed inputs or receipts.
+
+Next locate actual graphics/palette/text writers at the retained failing
+boundaries before accepting complete pictures or extending Stage2/process
+transitions. Also continue the primary original/reconstructed DOS comparison
+using its own MAP/segment identities; original0AAF code points must not be
+applied to the reconstructed MZ. No DOS unit or exact ledger is promoted.
 
 ## Boss circle clipping and complete sampled pictures (v1452)
 
