@@ -8,8 +8,8 @@ whole-game completion metrics. Keep all new code and documentation in English.
 
 | Purpose | Published baseline | Availability |
 | --- | --- | --- |
-| DOS reconstruction, comparison tools and ledgers | `main: fd34756` | Current checkout; later evidence commits follow this baseline |
-| Native x64 source | `port/modern-64: bf4ae8d` | Fresh writable `.analysis/native/port64-recovery-v1445/`; old frozen working directories remain missing |
+| DOS reconstruction, comparison tools and ledgers | `main: 82e8397` | Current checkout; later evidence commits follow this baseline |
+| Native x64 source | `port/modern-64: 9b3e67f` | Fresh writable `.analysis/native/port64-recovery-v1445/`; old frozen working directories remain missing |
 
 The old `.analysis/worktrees/` directory was absent at the 2026-10-16 audit,
 although Git retains its registrations. This includes `native-natural-clear-v1432`,
