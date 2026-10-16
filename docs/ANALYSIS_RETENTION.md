@@ -1,5 +1,21 @@
 # Native private-state retention
 
+## Recorded elapsed fixture retention (v1455)
+
+Verified recovery restores eight owned capture aliases and the actual compiled
+ignored-time counterexample, replays it and both cold 9835-update producers, then
+checks SHA/mode/nsmtime and retires all nine aliases. All 177 picture/index/TRAM
+identities reproduce per program; the counterexample still rejects all 9836
+clock boundaries while its selected gameplay gates pass. No borrowed files.
+
+The closed retention journal preserves all 18400 parent hashes and verifies
+21663 protected hashes. It retires 1214 owned files into 129 blobs:
+500.203 MiB after archive/gzip, or 482.402 MiB after the three journal files too.
+The initial journal mistakenly froze its still-open console log; preserve it and
+use `closed-retention.json` for the explicit one-log metadata correction and
+`recover_closed.py` / `replay_restored_v2.py` for recovery. No target, source,
+producer, capture, old failure or parent journal was rewritten.
+
 ## v1414 palette and wait/text join
 
 The isolated `native-palette-join-v1414` tree retains producer 530/4dc27bde,

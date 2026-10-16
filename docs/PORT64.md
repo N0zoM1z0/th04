@@ -5,11 +5,29 @@ The primary requested differential is original DOS versus reconstructed DOS;
 native x64 also needs state/effect parity. Successful native gameplay routes
 and native-host equality do not establish original complete-game parity.
 
+## Recorded elapsed display fixture (v1455)
+
+Native `d22e190` adds an optional recorded-time replay through the existing
+elapsed display interface. Both cold GNU and optimized UBSan programs match
+**all 59 complete 640x400 RGB pictures and all 59 active TRAM samples** at their
+recorded score-return times. All 9835 selected updates, nine pools, four Boss
+blocks, homing, consumed input, Continue/save, popup/title rows and 2665 actual
+BB calls still pass. Source closure: 565/533075c0; GNU 87 programs/83 CTests pass.
+
+The independent raw PIC clock predicts all 9896 original phase/count observations
+without fitting a phase. Only frame numbers and elapsed nanoseconds enter native.
+Default logical timing still fails three samples by 407 pixels each on this new
+capture; the old v1454 two-sample failure remains unchanged. This fixture accepts
+completed display boundaries, not natural OP/loader/UI-interior or CPU/I/O timing,
+every frame, physical scanout or campaigns. Primary original/reconstructed DOS
+beyond 8000, native Stage2 update 9836, NP2, Windows, pristine provenance and
+historical exactness remain open. Both full development goals remain active.
+
 All game launches remain muted. No Windows host GUI, focus activation or key
 injection while the user uses the computer; Linux display/input tests require
 private TCP-disabled Xvfb. Physical audio remains untested.
 
-Currentv1388 recovers the original common boot display-event clock. Actual GDC
+Historical v1388 recovers the original common boot display-event clock. Actual GDC
 constructors begin0/0/32 and display initialization immediately advances both
 counts to1. Blind eventcounts and unchanged archived counter body
 replay all15,988 original scalar phases without a fitted offset. Producerf2b03ebb
