@@ -364,6 +364,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/attest_th04_display_clock.py",
+    "category": "setup",
+    "role": "command",
+    "purpose": "Attest raw elapsed time and independently predict the captured GDC clock.",
+    "purpose_source": "source-docstring"
+  },
+  {
     "path": "scripts/probes/attest_th04_postboss_checkpoints.py",
     "category": "setup",
     "role": "command",
