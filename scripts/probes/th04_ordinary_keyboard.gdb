@@ -383,6 +383,10 @@ while gdb.selected_inferior().pid:
         gdb.execute('kill')
         break
     if monitor is not None and (monitor.dialog_requested or monitor.continue_requested or monitor.quit_requested):
+        if monitor.dialog_requested and os.environ.get('TH04_DIALOG_CHECKPOINTS') == '1':
+            from th04_dialog_checkpoints_gdb import Entry
+            monitor.loader.enabled = False
+            monitor.dialog_entry_watch = Entry(monitor)
         is_continue = monitor.continue_requested
         is_quit = monitor.quit_requested
         monitor.dialog_requested = False

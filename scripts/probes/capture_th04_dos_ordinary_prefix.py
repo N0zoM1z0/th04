@@ -43,6 +43,8 @@ def main() -> int:
                         help='Stop at an observed after-update frame; bounded prefix, not natural game exit')
     parser.add_argument('--dialog-at-frame', type=int,
                         help='After this observed frame stalls, release Shot and send ordinary Enter pulses')
+    parser.add_argument('--dialog-checkpoints', action='store_true',
+                        help='Read original STD/dialog/player instruction-fetch checkpoints; requires --video-layout')
     parser.add_argument('--continue-at-frame', type=int,
                         help='Release Shot and operate the real Continue wait after this later observed frame')
     parser.add_argument('--quit-at-frame', type=int,
@@ -63,6 +65,8 @@ def main() -> int:
                         help='Observe actual guest INT21 requests and MCB/PSP process activity')
     parser.add_argument('--emulator-archive', type=Path, default=PRIVATE / 'dosbox-x-199aa35f.tar.gz')
     args = parser.parse_args()
+    if args.dialog_checkpoints and (not args.original or args.dialog_at_frame is None or args.video_layout is None):
+        parser.error('dialogue checkpoints require original, dialogue cue and an attested video layout')
     if args.video_stream:
         if args.video_layout is None:
             parser.error('video stream requires an attested --video-layout')
@@ -243,6 +247,14 @@ def main() -> int:
         env['TH04_ORDINARY_DGROUP'] = '1'
         stream_sources = [adapter.with_name(name) for name in
                           ('th04_ordinary_dgroup.py', 'th04_ordinary_dgroup_gdb.py', 'th04_demo_dgroup.py')]
+    if args.dialog_checkpoints:
+        from th04_demo_video import LAYOUT
+        layout = json.loads(args.video_layout.read_text())
+        if not layout['passed'] or layout['layout'] != LAYOUT or layout['emulator_sha256'] != emulator['binary_sha256']:
+            raise ValueError('dialogue checkpoint video layout/emulator identity')
+        env['TH04_DIALOG_CHECKPOINTS'] = '1'
+        env['TH04_DIALOG_VIDEO_LAYOUT'] = str(args.video_layout.resolve())
+        stream_sources += [ROOT/'scripts/probes/th04_dialog_checkpoints_gdb.py', args.video_layout.resolve()]
     if args.video_stream:
         from th04_demo_video import LAYOUT, SYMBOL_SIZES
         layout = json.loads(args.video_layout.read_text())
@@ -311,6 +323,16 @@ def main() -> int:
         names += ['second-main/first-update.json']
     if args.all_products:
         names += ['product-surface.json','op-counter-profile.json','initial-op-menu.json']
+    if args.dialog_checkpoints:
+        checkpoint_names = [f'dialog-checkpoints/{label}{suffix}'
+            for label in ('std-transition','dialog-animate','dialog-run','player-update')
+            for suffix in ('.json','-dgroup.bin','-memory.bin.gz','-video.bin.gz')]
+        complete = complete and all((output/name).is_file() for name in checkpoint_names)
+        names += checkpoint_names
+        checkpoint_sources = {str(path.resolve()): sha(path.read_bytes()) for path in
+            (Path(__file__), adapter, ROOT/'scripts/probes/th04_dialog_checkpoints_gdb.py', args.video_layout.resolve())}
+        (output/'dialog-checkpoint-sources.json').write_text(json.dumps(checkpoint_sources,indent=2)+'\n')
+        names.append('dialog-checkpoint-sources.json')
     for name in ('route-diagnostic.json','route-diagnostic-memory.bin.gz'):
         if (output/name).exists():
             names.append(name)
