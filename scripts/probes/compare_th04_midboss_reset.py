@@ -179,6 +179,7 @@ def lifecycle(actors, complete_updates):
         and defeated["phase_frame"] == 0
         and exited["hp"] == reset["hp"] == 0
         and exited["phase_frame"] == reset["phase_frame"] == 64
+        and exited["frame"] - defeated["frame"] == 64
         and reset["frame"] == exited["frame"] + 1
         and complete_updates - reset["frame"] >= 64,
         "Midboss real damage, defeat duration and post-reset tail",
@@ -235,7 +236,9 @@ def compare(original, candidate, paired_path, native_frontend, native_receipt, u
     }
     require(len(native_by) == len(native), "Midboss unique native observations")
     target = Path(
-        json.loads((original / "profile.json").read_text())["main_path"]
+        json.loads((original / "stage-boundary-summary.json").read_text())["profile"][
+            "main_path"
+        ]
     ).read_bytes()
     results = {}
     all_actors = {}
@@ -247,7 +250,9 @@ def compare(original, candidate, paired_path, native_frontend, native_receipt, u
             proof == paired[role + "_attestation"],
             "Midboss independent complete attestation",
         )
-        profile = json.loads((capture / "profile.json").read_text())
+        profile = json.loads((capture / "stage-boundary-summary.json").read_text())[
+            "profile"
+        ]
         main = Path(profile["main_path"]).read_bytes()
         symbols = (
             map_symbols(Path(profile["map_path"])) if role == "candidate" else None

@@ -25,20 +25,18 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
-The primary original/reconstructed DOS comparison now covers3200 Stage2 updates,
-including Midboss activation at2601 and600 battle updates. Nine complete pools,
-22 states,7787 ordered RNG calls and38 configured video regions agree across
-9607 checkpoints. Aggregate retains248 post-reset input and9607 raw-GDC failures;
-older failure vectors remain independent. The NPC is stillactive at3200/HP100.
+The primary original/reconstructed DOS comparison covers 3500 Stage2 updates,
+including observed Midboss defeat at 3349 and callback reset at 3414, followed
+by 86 updates. Nine full pools, 22 states, 7861 ordered RNG calls and 38 video
+regions agree over 10507 snapshots. Aggregate retains 174 post-reset key and
+10507 raw-GDC differences; older failed vectors remain independent.
 
-Native8cd826e adds direct Midboss observation;no gameplay repair was needed.
-Complete566/3747e671 coldGNU87 programs/83CTests and optimizedUBSan2 match6403
-selected records,3201 full9-pool snapshots,input/homing/Boss/Midboss/RNG,plus
-the separate9835 selected-update/59 completeRGB-TRAM elapsed fixture. A bounded
-watchpoint cache fixes collector growth;actual original/source maxima stay10.
-Full Midboss defeat,Stage2native pictures,natural clocks,campaigns,NP2,Windows
-and pristine provenance remainopen. Both full goals remainactive;see the
-[current handoff](docs/RE_HANDOFF.md) for scope and verified recovery.
+Unchanged complete 566/3747e671 cold GNU and optimized UBSan programs match 7003
+selected records and 3501 full nine-pool snapshots, consumed input, homing and
+Boss/Midboss/RNG. Actual own-file near/far callbacks and adjacent full-memory
+witnesses verify DOS reset. No gameplay repair was needed. Native Stage2 pictures,
+natural clocks, campaigns, NP2, Windows and pristine provenance remain open.
+Both goals stay active; see the [current handoff](docs/RE_HANDOFF.md).
 
 
 Development is active. All four DOS products build from maintained local source.

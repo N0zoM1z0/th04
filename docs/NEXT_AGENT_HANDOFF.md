@@ -7,7 +7,7 @@ bounded claim, keep code/docs English and publish frequent gpt-6.1-sol: commits.
 
 | Purpose | Identity | Location |
 | --- | --- | --- |
-| DOS tools | main b7fe3d8 plus cached-reader/final evidence commits | This checkout |
+| DOS tools | main 4f75f49 plus verified lifecycle evidence commits | This checkout |
 | Native telemetry | port/modern-64 8cd826e plus final evidence commits | `.analysis/native/port64-recovery-v1445/` |
 | Normal DOS cohort | MAIN778641ab/MAP42d7d2c7 | `.analysis/build/dos-four-products-v1443/` |
 | Native cold GNU/cache/UBSan | 566/3747e671 | Native `.analysis/port64/stage2-midboss-v1458-final/{gnu,ubsan}` |
@@ -38,60 +38,60 @@ inside the private recorded emulator. Never inject expected state/RNG/phase.
 
 ## Verified frontier
 
-Original/reconstructed DOS complete3200 Stage2 updates, with Midboss activation
-at actor2601 and600 battle updates. The NPC remainsactive at3200 withHP100,
-phase1/frame39; defeat is not accepted. Comparable loop fields and7787 ordered
-RNG calls (707 LCG/7080 ring), nine full pools,22 states and38 configured video
-regions agree across9607 bridge/actor/score/loop snapshots. Own MZ/MAP/CPU/DS/
-opcode, full DGROUP/video/resident and conventional-memory witnesses bind each
-producer. Aggregate remainsfalse for248 post-reset input and9607 raw-GDC records.
-Older v1457 18/1807 and v1456 302/312/9836 vectors remain independent failures.
-These are MAIN-only replacements with original OP/MAINE/ZUN/assets.
+Original and reconstructed DOS now complete 3500 Stage2 updates in the same
+process. The observed Midboss activates at 2601, enters defeat at 3349,
+reaches phase3/HP0 at 3413 and resets at 3414; 86 further updates retain
+its inactive raw state. All comparable loop fields, 7861 ordered RNG calls
+(707 LCG/7154 ring), nine complete pools, 22 states and 38 configured video
+regions agree across 10507 bridge/actor/score/loop snapshots. Each side binds its
+own MZ/MAP/CS/DS, opcode, DGROUP, video and full conventional-memory witnesses.
+Aggregate remains false for 174 post-reset key and 10507 raw-GDC records.
+Older v1458 248/9607, v1457 18/1807 and v1456 302/312/9836 failures remain separate.
+These are MAIN replacements with original OP/MAINE/ZUN/assets.
 
-Native code8cd826e adds direct22-byte Midboss/active telemetry and a16-bit
-extent guard; no gameplay repair was needed in this span. Complete566-file
-3747e671 closure, coldGNU87 programs/83CTests and optimizedUBSan2 match6403
-selected bridge/init/actor-score records,3201 complete9-pool snapshots, consumed
-inputs, homing, Boss/Midboss and continuous RNG. Full state/pool wires agree
-across programs. Native116 volatile post-reset samples remain separately
-measured. Both programs also reproduce the distinct9835 selected-update,
-59 full640x400 RGB/TRAM elapsed pairs/177 observations, with real Continue,
-physical saves,title/popup and actor gates. Stage2 native pictures and natural
-OP/loader/UI/CPU clocks are not accepted by this component.
+Retained native 8cd826e telemetry and complete 566-file/3747e671 cold programs
+match 7003 selected records and 3501 full nine-pool snapshots in both GNU and
+optimized UBSan. Consumed inputs, homing, Boss/Midboss state and continuous RNG
+agree; 144 volatile post-reset key samples are measured separately. No gameplay
+repair was needed. Existing cold GNU 87 programs/83 CTests and UBSan2 remain the
+producers. The separate v1458 replay of 9835 selected updates and 59 full RGB/TRAM
+elapsed pairs remains valid for these unchanged programs. This new component
+accepts the observed Midboss lifecycle, not native Stage2 pictures or natural
+OP/loader/UI/CPU clocks.
 
-The initial reader created and disabled a new watchpoint per checkpoint;
-standalone GDB confirms disabled objects remain registered. Its controlled
-stop at1709 remainsincomplete. The replacement reuses seven own-file boundary
-watchpoints; actual original/source maxima are10 including3 baseline across
-all9607 snapshots. The public class survives3200 realGDB switches atseven
-cached points. Six resource-data mutations,ten new capture-data mutations and
-eight earlier extent/observation guards reject. Old600 semantic vectors remain
-identical. Complete physical CFG/SCR bytes match; allten16-bit score checksums
-validate and ranked Continue changes decoded section1.
+The lifecycle gate requires actual activation, attack, nonpositive HP, defeat,
+exit, reset and at least 64 post-reset updates. Original reset13A9:642C and
+source reset157C:661B each have independently decoded callback/active/HP stores
+and their own far relocation. Full-memory witnesses immediately around each
+transition verify the near invalidate/render and far update null callbacks;
+addresses are never normalized across executables. Thirteen lifecycle/MZ and
+ten actual original/source callback mutations reject. The bounded debugger
+still uses seven cached points, with ten total registered objects on each side.
+Complete initial/final CFG/SCR bytes match, all ten full 16-bit score checksums
+validate, and Continue changes decoded section1.
 
-Root-owned bundle: `.analysis/reconstruction/probes/dos-stage2-midboss-v1458/`,
-privately linked in native. Use paired-final-{gnu,ubsan},native-final-result,
-files,midboss-lifecycle,cached/captures and all actual negative/control receipts.
-The initial original capture is intentionally incomplete;never restamp it.
+Current root-owned bundle: `.analysis/reconstruction/probes/dos-midboss-reset-v1459/`.
+Use paired-{gnu,ubsan}, lifecycle-{gnu,ubsan}, result.json, files.json and
+reset-callback-controls.json. Programs stay in native
+`.analysis/port64/stage2-midboss-v1458-final/{gnu,ubsan}`.
 
 ## Next work
 
-Continue through actual Midboss reset/defeat from the verified3200 frontier;
-do not infer death from a fixed stop. Consider a recorded lifecycle stop with
-an independently checked bound, preserving continuous raw inputs/RNG and each
-own CS/DS/MAP. Add native Stage2 pictures only with actual original checkpoints
-and elapsed ownership. Resolve reset/IRQ/read timing behind248 and older key
-failures; equal consumed input does not waive GDC or physical timing.
-Full original/source/native campaigns, four-product routes, NP2, native Windows,
-every-frame/raw-plane rendering, audio/input clocks, pristine provenance and
-historical exactness remain open. Do not reopen the two deferred MAIN cases.
+Extend the verified 3500 frontier toward Stage2 Boss/clear, preserving actual
+inputs/RNG and each executable's own segment/layout ownership. Add native
+Stage2 pictures only with independent original elapsed checkpoints. Resolve
+the 174 post-reset key and raw-GDC failures; equal consumed inputs do not
+accept IRQ/CPU/display timing. Full original/source/native campaigns, four-product
+routes, NP2, native Windows, every-frame/raw-plane rendering, audio/input clocks,
+pristine provenance and historical exactness remain open. Keep both full goals
+active and leave the two deferred MAIN exactness cases alone.
 
-The native diagnostic accepts16-bit extents;3200 is the verified extent,not
-full-stage acceptance. Require both --require-midboss and
---require-bounded-watchpoints with --stage2-updates N for new paired claims.
-The public th04_stage_boundary_gdb.py maintains a fixed cache; future captures
-must freeze private copies before running. Preserve own-file address and
-raw-frame/RNG ordering when extending the lifecycle or adding UI waits.
+Require --stage2-updates N --require-midboss --require-bounded-watchpoints on
+compare_th04_stage_boundary.py. Then run compare_th04_midboss_reset.py with the
+same captures, paired native report, frontend and producer receipt. A fixed stop
+alone cannot accept defeat. Freeze private collector copies before each run.
+The new extra_memory_frames profile adds witnesses without removing baseline
+frames. Recovery uses private frozen readers; never mutate old backing paths.
 
 ## Replay and retention
 
