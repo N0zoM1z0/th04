@@ -42,6 +42,8 @@ def main() -> int:
                         help='Stop at an observed after-update frame; bounded prefix, not natural game exit')
     parser.add_argument('--dialog-at-frame', type=int,
                         help='After this observed frame stalls, release Shot and send ordinary Enter pulses')
+    parser.add_argument('--continue-at-frame', type=int,
+                        help='Release Shot and operate the real Continue wait after this later observed frame')
     parser.add_argument('--stall-diagnostic-ms', type=int,
                         help='Record actual guest PC/RAM after this much virtual no-frame progress')
     args = parser.parse_args()
@@ -56,6 +58,9 @@ def main() -> int:
     if args.dialog_at_frame is not None and (args.end_after is None or
             not 1 <= args.dialog_at_frame < args.end_after):
         parser.error('dialog cue requires 1 <= frame < --end-after')
+    if args.continue_at_frame is not None and (args.dialog_at_frame is None or
+            not args.dialog_at_frame < args.continue_at_frame < args.end_after):
+        parser.error('Continue cue requires dialog frame < Continue frame < --end-after')
     if args.stall_diagnostic_ms is not None and (args.end_after is None or args.stall_diagnostic_ms < 1000):
         parser.error('stall diagnostics require a bounded prefix and at least1000 virtual milliseconds')
     output = args.output_dir.resolve()
@@ -154,6 +159,8 @@ def main() -> int:
         env['TH04_ORDINARY_END_AFTER'] = str(args.end_after)
     if args.dialog_at_frame is not None:
         env['TH04_ORDINARY_DIALOG_FRAME'] = str(args.dialog_at_frame)
+    if args.continue_at_frame is not None:
+        env['TH04_ORDINARY_CONTINUE_FRAME'] = str(args.continue_at_frame)
     if args.stall_diagnostic_ms is not None:
         env['TH04_ORDINARY_STALL_MS'] = str(args.stall_diagnostic_ms)
     if args.dgroup_stream:
@@ -223,6 +230,8 @@ def main() -> int:
                        natural_game_exit=False)
     if args.dialog_at_frame is not None:
         receipt['dialog_at_frame'] = args.dialog_at_frame
+    if args.continue_at_frame is not None:
+        receipt['continue_at_frame'] = args.continue_at_frame
     if args.video_stream:
         receipt['video_layout'] = dict(path=str(args.video_layout.resolve()),
                                        sha256=sha(args.video_layout.read_bytes()))

@@ -87,7 +87,7 @@ def main():
     b, br, bt = video_side(args.candidate, args.candidate_baseline, original, args.baseline_sources)
     require(a['receipt']['role'] == 'original' and b['receipt']['role'] == 'candidate', 'video pair roles')
     require(compare(a, b)['passed'], 'video paired scalar/RNG control')
-    for key in ('end_after', 'dialog_at_frame', 'termination', 'natural_game_exit'):
+    for key in ('end_after', 'dialog_at_frame', 'continue_at_frame', 'termination', 'natural_game_exit'):
         require(a['receipt'].get(key) == b['receipt'].get(key), 'video paired contract: ' + key)
     for key in ('emulator_sha256', 'debugger_sha256', 'font_sha256', 'adapter_sha256', 'walker_sha256'):
         require(a['receipt'][key] == b['receipt'][key], 'video pair identity: ' + key)

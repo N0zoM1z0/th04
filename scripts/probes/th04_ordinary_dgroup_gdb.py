@@ -22,6 +22,9 @@ class Monitor:
         self.dialog_frame = int(os.environ.get('TH04_ORDINARY_DIALOG_FRAME', 0))
         self.dialog_requested = False
         self.dialog_observed = False
+        self.continue_frame = int(os.environ.get('TH04_ORDINARY_CONTINUE_FRAME', 0))
+        self.continue_requested = False
+        self.continue_observed = False
         self.process = self.address('th04_demo_observer::process')
         self.load = self.address('th04_demo_observer::load_segment')
         self.active = self.address('th04_demo_observer::active')
@@ -166,6 +169,10 @@ class Frame(gdb.Breakpoint):
             if m.dialog_frame and frame == m.dialog_frame and not m.dialog_observed:
                 m.dialog_requested = True
                 m.dialog_observed = True
+                return True
+            if m.continue_frame and frame == m.continue_frame and not m.continue_observed:
+                m.continue_requested = True
+                m.continue_observed = True
                 return True
             return False
         except Exception as error:

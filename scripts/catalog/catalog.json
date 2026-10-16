@@ -3465,6 +3465,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/th04_ordinary_continue.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Attest Continue counter ownership and verify release-first input, natural last-life restoration and resumed gameplay.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/th04_ordinary_dgroup.py",
     "category": "runtime",
     "role": "support",

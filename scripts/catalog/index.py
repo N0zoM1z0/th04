@@ -47,6 +47,7 @@ OVERRIDES = {
     'compare_th04_ordinary_pools.py': ('runtime', 'Compare complete ordinary actor pools against pinned scalar controls and target/MAP owners.'),
     'th04_ordinary_dgroup.py': ('runtime', 'Decode every ordinary DGROUP record with strict framing, stage and gzip integrity.'),
     'th04_ordinary_dgroup_gdb.py': ('runtime', 'Observe full ordinary DGROUP after actor updates through read-only mapped host RAM.'),
+    'th04_ordinary_continue.py': ('runtime', 'Attest Continue counter ownership and verify release-first input, natural last-life restoration and resumed gameplay.'),
     'capture_th04_dos_ordinary_prefix.py': ('runtime', 'Capture ordinary DOS through original OP using observed menu-count keyboard API input.'),
     'th04_ordinary_keyboard.gdb': ('runtime', 'Queue keyboard device events after observed original OP menu ticks with guest-state preservation checks.'),
     'compare_th04_dos_ordinary_prefix.py': ('runtime', 'Admit ordinary DOS prefixes by input and entry RNG before reporting state differences.'),

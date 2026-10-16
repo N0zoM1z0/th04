@@ -34,6 +34,9 @@ armed = False
 held = False
 found = None
 dialog_frame = int(os.environ.get('TH04_ORDINARY_DIALOG_FRAME', 0))
+continue_frame = int(os.environ.get('TH04_ORDINARY_CONTINUE_FRAME', 0))
+active_dialog_frame = dialog_frame
+waits = []
 dialog_active = False
 dialog_released = False
 dialog_done = False
@@ -56,7 +59,10 @@ def snapshot():
     return dict(conventional_sha256=hashlib.sha256(ram.read_range(0, 655360)[0]).hexdigest(), cpu_regs=read(regs, 48).hex(), segments=read(segments, 136).hex())
 
 def save():
-    (out / 'clock-input.json').write_text(json.dumps(dict(actions=actions, remaining=schedule, resident_linear=resident, found=found, requested_seed=64, pic_ticks_address=address, keyboard_function_address=function, keys=keys, scope='Original OP resident seed increment is observed, never written; keyboard API adapter only; no guest RAM/register/clock writes'), indent=2) + '\n')
+    record = dict(actions=actions, remaining=schedule, resident_linear=resident, found=found, requested_seed=64, pic_ticks_address=address, keyboard_function_address=function, keys=keys, scope='Original OP resident seed increment is observed, never written; keyboard API adapter only; no guest RAM/register/clock writes')
+    if continue_frame:
+        record['waits'] = waits
+    (out / 'clock-input.json').write_text(json.dumps(record, indent=2) + '\n')
 
 class Seed(gdb.Breakpoint):
 
@@ -90,7 +96,7 @@ class Clock(gdb.Breakpoint):
                 return True
         if dialog_active:
             current_frame = monitor.current.sequence.frames
-            if current_frame > dialog_frame:
+            if current_frame > active_dialog_frame:
                 if enter_down:
                     todo = ('key', now, 'KBD_enter', False)
                 else:
@@ -155,11 +161,20 @@ while gdb.selected_inferior().pid:
         monitor = None
         gdb.execute('kill')
         break
-    if monitor is not None and monitor.dialog_requested:
+    if monitor is not None and (monitor.dialog_requested or monitor.continue_requested):
+        is_continue = monitor.continue_requested
         monitor.dialog_requested = False
+        monitor.continue_requested = False
+        active_dialog_frame = continue_frame if is_continue else dialog_frame
         dialog_active = True
+        dialog_released = False
+        dialog_done = False
         dialog_tick = tick()
         schedule = []
+        if continue_frame:
+            waits.append(dict(kind='continue' if is_continue else 'dialogue', frame=active_dialog_frame,
+                              tick=dialog_tick, action_start=len(actions),
+                              resident=ram.read_range(resident,80)[0].hex()))
         clock.enabled = True
         continue
     if todo is not None and todo[0] == 'diagnostic':
@@ -192,7 +207,11 @@ while gdb.selected_inferior().pid:
             seed = int.from_bytes(read(base() + ram.physical(resident + 20), 4), 'little')
             gdb.execute('call ((void (*)(int, bool))0x%x)(%d, %s)' % (function, keys[name], 'true' if down else 'false'), to_string=True)
             assert before == tick() and guest == snapshot()
-            actions.append(dict(due=due, tick=before, key=name, pressed=down, resident_seed=seed, unchanged_guest=guest))
+            action = dict(due=due, tick=before, key=name, pressed=down, resident_seed=seed, unchanged_guest=guest)
+            if continue_frame:
+                action.update(frame=monitor.current.sequence.frames if monitor.current else None,
+                              resident=ram.read_range(resident,80)[0].hex())
+            actions.append(action)
             if name == 'KBD_enter':
                 enter_down = down
             if dialog_active and name == 'KBD_z' and not down:
@@ -201,6 +220,9 @@ while gdb.selected_inferior().pid:
                     schedule.extend([(before + delta, 'KBD_enter', True),
                                      (before + delta + 120, 'KBD_enter', False)])
             if dialog_active and dialog_done:
+                if continue_frame:
+                    waits[-1].update(resumed_frame=monitor.current.sequence.frames, resumed_tick=before,
+                                     action_end=len(actions), resident_after=action['resident'])
                 dialog_active = False
                 schedule = []
             save()

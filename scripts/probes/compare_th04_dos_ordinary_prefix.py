@@ -193,8 +193,8 @@ def load(directory: Path, original: bytes, source_snapshot: Path | None = None) 
         validate_bounded_terminal(bounded_terminal, main, expected, load_segment, counts)
     if 'adapter_sha256' in receipt:
         require('clock-input.json' in receipt['files'], 'missing pinned keyboard record')
-        validate_keyboard_capture(json.loads((directory / 'clock-input.json').read_text()),
-                                  rows[0], resident_rows[0])
+        clock = json.loads((directory / 'clock-input.json').read_text())
+        validate_keyboard_capture(clock, rows[0], resident_rows[0])
         for path, digest in receipt['source_files'].items():
             live = Path(path)
             observed = sha(live.read_bytes()) if live.is_file() else None
@@ -202,8 +202,15 @@ def load(directory: Path, original: bytes, source_snapshot: Path | None = None) 
                 frozen = source_snapshot / live.relative_to(ROOT)
                 observed = sha(frozen.read_bytes()) if frozen.is_file() else None
             require(observed == digest, 'keyboard source identity drift: ' + path)
-    return dict(receipt=receipt, fields=names, rows=rows, resident=resident_rows, events=events,
-                starting_files=starting_files, bounded_terminal=bounded_terminal, terminal_events=pending)
+    result = dict(receipt=receipt, fields=names, rows=rows, resident=resident_rows, events=events,
+                  starting_files=starting_files, bounded_terminal=bounded_terminal, terminal_events=pending)
+    if receipt.get('continue_at_frame') is not None:
+        from th04_ordinary_continue import attest_continue, validate_wait_cues, validate_transition
+        require(bounded is not None, 'Continue requires observed bounded terminal')
+        validate_wait_cues(clock, receipt)
+        result['continue_witness'] = attest_continue(main, original, map_path, expected)
+        result['continue_transition'] = validate_transition(result)
+    return result
 
 
 def validate_bounded_terminal(terminal, main, profile, load, counts):

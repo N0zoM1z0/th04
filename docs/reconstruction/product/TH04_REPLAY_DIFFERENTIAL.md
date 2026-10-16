@@ -5,6 +5,49 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Natural Continue and score-counter ownership (v1439)
+
+The new `--continue-at-frame 7547` cue follows the existing dialogue cue at
+6548. Each wait releases held Shot, sends ordinary Enter pulses and resumes
+Shot only after the actual frame counter advances. Every keyboard API call
+retains guest RAM/register/PIC preservation checks. No lives, RNG, gameplay
+counter or clock is assigned. New receipts pin the extra cue; readers require
+release/confirmation/resume ordering and actual resident/score transitions.
+The existing one-wait/default contracts remain separate.
+
+Original Japanese MAIN reaches natural Game Over, accepts Continue, and runs
+to 8,000 updates. Between pre-update samples 7547/7548, resident lives restore
+from 1 to the legal credit value 6, bombs remain 0, power becomes 1, and score
+changes from `0007040101060000` to `0100000000000000`. The first score byte is
+the Continue count. Target relative MAIN `0AAF:3CDA` is `FE 06 49 43`, incrementing
+DGROUP4349, the same byte as the score owner. The complete 356-byte menu body
+also witnesses power reset and resident credit-to-current copies.
+
+The old f21a5c7c product has a reproduced defect. MAP gives `_continues_used`
+at relative DGROUP242E:B17C but `_score` at242E:B17D. Its maintained BSS owner
+allocates a separate byte before the eight-byte score, contradicting the
+score union and original instruction. Both actual routes admit identical
+consumed input and initial RNG; the first scalar difference is frame7548,
+`score_digits`: original `0100000000000000`, candidate `0000000000000000`.
+Lives/power still restore. The wrong low score byte persists at7999. The new
+strict gate rejects candidate counter/score ownership before accepting it.
+The frozen earlier reader is used only to diagnose the refused producer's
+complete raw trace, not to waive that rejection.
+
+Replay: `.analysis/reconstruction/probes/dos-gameover-continue-v1439/`.
+Original capture is `dos-gameover-continue-v1439-original-first`; refused
+candidate is `dos-gameover-continue-v1439-candidate-before`. Both complete
+8,000-record DGROUP streams, frozen first consumer and old MAIN/MAP remain.
+`before-diagnostic.json` binds the actual negative and first divergence.
+Eleven new public Continue counter/reset/cue tests pass; full root CI506 and
+private gates pass. This establishes neither a successful reconstructed
+Continue nor MAINE/fresh OP/multiple-process/native/full-route acceptance.
+
+The proposed storage fix affects product MAIN layout. Exact replay's complete
+438-input MAIN closure excludes `src/main/score/state.asm`; historical exact
+TUs use their own scaffold state owners. Historical accepted input/layout is
+therefore unchanged, while affected product behavior must be rebuilt/replayed.
+
 ## Bounded ordinary video replay contract (v1438)
 
 `compare_th04_ordinary_video.py` now admits the observed after-update terminal

@@ -21,6 +21,26 @@ describe recorded historical evidence, not a fresh availability guarantee.
 Recover original frozen inputs or create a newly attested producer from Git;
 do not rewrite old receipts. Both development goals remain active.
 
+## Natural Continue exposes a product score alias defect (v1439)
+
+Original and old f21a5c7c product now run through natural Game Over/Continue to
+8,000 updates using actual release-first keyboard input, with no gameplay
+writes. Original frame7548 restores lives1->6, bombs0, power1 and increments
+the first score byte0->1. The admitted pair first differs at7548: original
+score0100000000000000, product0000000000000000. Lives/power restore on both.
+The product BSS allocates `_continues_used` separately before `_score`, while
+target MAIN0AAF:3CDA increments the score's first byte at DGROUP4349. New strict
+Continue ownership/reset/cue guards reject this old producer. Preserve the
+complete failure; do not accept Continue merely because gameplay resumes.
+
+Next fix product score storage aliasing, rebuild/replay affected product
+behavior, then advance Quit/MAINE/fresh OP/resident process routes. All438
+historical MAIN exact inputs exclude this product-only BSS owner; historical
+accepted inputs remain unchanged. Eleven new controls and root CI506/private
+gates pass. Evidence/source index:
+`.analysis/reconstruction/probes/dos-gameover-continue-v1439/` and the existing
+[differential note](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
+
 ## Fresh MAIN and complete bounded Boss video (v1438)
 
 Fresh original/candidate captures now agree over 7,500 updates on all 38

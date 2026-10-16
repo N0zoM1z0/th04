@@ -18,7 +18,7 @@ def scalar_control(capture, baseline, original, snapshot):
     for key in ('role', 'main_sha256', 'map_sha256', 'initial_hdi_sha256',
                 'emulator_sha256', 'debugger_sha256', 'font_sha256'):
         require(capture['receipt'][key] == control['receipt'][key], 'scalar baseline identity: ' + key)
-    for key in ('end_after', 'dialog_at_frame', 'termination', 'natural_game_exit'):
+    for key in ('end_after', 'dialog_at_frame', 'continue_at_frame', 'termination', 'natural_game_exit'):
         require(capture['receipt'].get(key) == control['receipt'].get(key),
                 'scalar baseline contract: ' + key)
     require(capture['receipt']['files']['dosbox-x.conf'] == control['receipt']['files']['dosbox-x.conf'],

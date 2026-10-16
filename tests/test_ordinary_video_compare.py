@@ -99,9 +99,9 @@ class IndependentControlTests(unittest.TestCase):
         self.assertTrue(self.check()['passed'])
 
     def test_different_extent_dialog_or_exit_class_rejects(self):
-        for key, value in (('end_after', 3996), ('dialog_at_frame', 6547),
+        for key, value in (('end_after', 3996), ('dialog_at_frame', 6547), ('continue_at_frame', 7547),
                            ('termination', 'natural-exit'), ('natural_game_exit', True)):
-            old = self.baseline['receipt'][key]
+            old = self.baseline['receipt'].get(key)
             self.baseline['receipt'][key] = value
             with self.subTest(key=key), self.assertRaisesRegex(ValueError, 'baseline contract'):
                 self.check()

@@ -64,7 +64,7 @@ def main():
     require(count == b['receipt']['end_after'] and a['starting_files'] == b['starting_files'],
             'prefix reset/extent')
     for key in ('emulator_sha256', 'debugger_sha256', 'adapter_sha256', 'walker_sha256',
-                'font_sha256', 'dialog_at_frame'):
+                'font_sha256', 'dialog_at_frame', 'continue_at_frame'):
         require(a['receipt'].get(key) == b['receipt'].get(key), 'prefix producer: ' + key)
     require(a['receipt']['files']['dosbox-x.conf'] == b['receipt']['files']['dosbox-x.conf'],
             'prefix emulator config')
@@ -88,6 +88,10 @@ def main():
                   receipts={str(path): sha((path / 'receipt.json').read_bytes())
                             for path in (args.original, args.candidate)})
     result['passed'] &= scalar['passed']
+    if a.get('continue_transition') or b.get('continue_transition'):
+        require(a.get('continue_transition') == b.get('continue_transition'), 'paired Continue transition')
+        result['continue_transition'] = a['continue_transition']
+        result['continue_witnesses'] = [a['continue_witness'], b['continue_witness']]
     args.output.write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps(dict(passed=result['passed'], scalar_passed=scalar['passed'],
                          actor_pools_passed=result['actor_pools_passed'],
