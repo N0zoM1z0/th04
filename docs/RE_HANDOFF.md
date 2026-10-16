@@ -1,106 +1,87 @@
 # TH04 native branch current handoff
 
-Updated 2026-10-17. Both reconstruction/native goals remain active. Use the DOS
-root `docs/NEXT_AGENT_HANDOFF.md` for both branches, current producers and commands.
-Keep all code/docs English, heavy work on one low-priority CPU, and launches
-muted/headless. No Windows GUI, focus changes or host-key injection.
+Updated2026-10-17. Both reconstruction/native goals remain active. Use the DOS
+root docs/NEXT_AGENT_HANDOFF.md for both branches and commands. Keep code/docs
+English, heavy jobs on one low-priority CPU and launches muted/headless.
+No Windows GUI, focus changes, host keys or concurrent Borland/Wine writers.
 
 ## Current Stage2 repair (v1457)
 
-Current source closure566/187b574f includes the optional epoch diagnostic.
-Fresh GNU87 programs/83CTests and optimized UBSan2 pass. Both actual programs
-complete Stage1 at9837 and match Stage2init+600updates:1203 selected bridge/
-actor-score records,9 complete pools, input/homing/Boss fields and continuous
-RNG. Repair the missing400-record point-number clear and query the prepared
-inactive Boss. The initial565-file build omitted the new source-list entry
-and is diagnostic only. Current GNU/cache/UBSan cores:
-`.analysis/port64/stage-epoch-v1457-final/{gnu,ubsan}`.
+Native code3340389 fixes the omitted400-record point-number clear and the
+query that returned old Orange before prepared Kurumi became active. It does
+not change a guessed frame boundary. Complete source closure566/187b574f,
+fresh GNU87 programs/83CTests and optimized UBSan2 pass. Both actual programs
+match1203 selected bridge/init/actor-score records and all nine complete pools
+at Stage2init+600updates, consumed inputs, homing, Boss fields and continuous
+RNG. Their Stage2 state/pool wires are identical. Sixteen volatile post-reset
+key snapshots remain separately measured against native consumed input.
 
-Both current programs also reproduce9835 selected updates and59 complete
-RGB/TRAM elapsed pairs. New Stage2 pictures/natural timing remain open. DOS
-Stage2 fails18 post-reset input and1807 raw-GDC snapshots despite equal9pools/
-22states/38configured video regions. Older302/312 vectors remain valid.
-Extend actual Stage2 from frame600 next; do not infer a one-frame gameplay
-bug from the old9836 stop. Recovery is being closed in the root v1457 bundle.
+Both current programs also reproduce the separate v1455 elapsed fixture:
+9835 selected updates,59 complete640x400 RGB/TRAM pairs and177 full native
+observations, with real input/homing/pools/Boss/Continue/save/title/popup gates.
+Historical default-logical failures and natural OP/loader/UI/CPU clocks remain
+unresolved. No Stage2 picture or autonomous timing acceptance follows.
+Initial565-file diagnostic build omitted the new include from PORT_FILES and
+is retained as diagnostic only; final builds use the complete566-file closure.
 
-## Original/reconstructed DOS Boss suffix (v1456)
+Current programs/cache: `.analysis/port64/stage-epoch-v1457-final/{gnu,ubsan}`
+inside this checkout. Native subject note: docs/port64/evidence/stage-lifecycle.md.
+Root-owned bundle, privately linked here:
+`.analysis/reconstruction/probes/dos-stage2-boundary-v1457/`.
 
-The primary DOS comparison now reaches **9836 after-actor checkpoints**, with
-loop samples I0..I9835 and 9835 complete update boundaries. Both independent
-no-video and video pairs agree on configured scalar fields, all 5052 ordered RNG
-calls (354 LCG/4698 ring), nine complete pools and 22 state blocks. The video
-pair agrees on all 38 configured regions across all 9836 checkpoints: both
-pages/all four graphics planes, full TRAM, palettes, modes and programmed GDC
-fields. Each side's complete pool/state digests match its no-video control.
+## Original/reconstructed DOS boundary
 
-**Aggregate acceptance remains false:** no-video retains 302 post-reset input
-differences, video retains 312, and complete raw GDC differs on all 9836 video
-checkpoints. Across all four captures, complete initial/final CFG/SCR bytes agree; all ten
-full 16-bit score checksums validate and real Continue changes decoded section 1.
-The original and candidate use their own files/MAP/CS/DS. This is MAIN-only
-replacement with original OP/MAINE/ZUN/assets, not a full four-product campaign.
-The v1456 fixture alone does not accept later Stage2, interior UI, physical timing, NP2,
-Windows, pristine provenance and historical exactness remain open.
+Original and reconstructed DOS actually return from Stage1 at9837, after
+the old actor9836 stop, then initialize Stage2 in the same process.600 complete
+Stage2 updates agree on comparable loop fields and5656 ordered RNG events,
+nine complete pools,22 state blocks and38 configured video regions across1807
+bridge/Stage2 records. Actual CPU/CS:IP/DS/opcode, full DGROUP/video/resident,
+28 full conventional-memory witnesses and601 Stage2 raw-loop contexts bind the
+observations to each artifact's own MZ/MAP. Absolute LCG calls rise354 to707
+in Stage2 initialization; its353 draws continue the existing process state.
 
-This DOS observation does not change native code or renew native acceptance.
-See [stage lifecycle evidence](port64/evidence/stage-lifecycle.md) and the DOS
-root `docs/reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md`.
+Aggregate DOS acceptance remains false:18 post-reset input and1807 full raw-GDC
+snapshots differ. The independent older v1456 control/video pairs retain302/312
+post-reset input differences and9836 raw-GDC differences, despite equal nine
+pools,22 states,38 configured regions and complete CFG/SCR bytes. These are
+MAIN-only replacements with original OP/MAINE/ZUN/assets, not full four-product
+campaign parity. Target provenance remains candidate-local-attested.
 
-## Native recorded elapsed display fixture (v1455)
+Primary capture remains DOSBox-X-specific. Full original/source/native
+campaigns, four-product routes, NP2, Windows, every-frame/physical rendering,
+raw native planes, audio/input clocks, pristine provenance and byte exactness
+remain open. Historical native four-route acceptance keeps its own producer
+and does not establish full original campaign parity.
 
-Historical v1455 source is `d22e190`, closure565/533075c0, in the fresh checkout
-`.analysis/native/port64-recovery-v1445/` relative to the DOS root. Frozen current
-programs/cache are native `.analysis/port64/clock-phase-v1455-final/{gnu,ubsan}`.
-GNU 87 programs/83 CTests and optimized UBSan 2 programs passed.
+## Next bounded work
 
-Both match 9835 selected ordinary updates, input/homing/nine pools/four Boss
-blocks, Continue/full CFG-SCR, title/popup/2665 BB calls and all 59 complete
-RGB/TRAM samples at recorded score-return times. Independent raw PIC time and
-first display initialization predict all 9896 original phase/count observations;
-only frame/ns enter native. An actual producer that ignores the elapsed calls
-is rejected even while selected gameplay gates pass.
-
-Default logical timing still fails 9349/9600/9700 by 407 pixels each on the v1455
-capture. The v1454 two-sample failure remains immutable. Natural OP/loader/UI
-interiors and CPU/I/O timing, every-frame rendering, physical scanout and full
-original/native campaigns remain open. Keep the earlier palette/back-page/circle
-repairs and their original writer/page/negative evidence.
-
-## Next bounded work and limits
-
-Measure the actual original/source MAIN suffix after actor 9836, stage/frame
-reset and STD rebind before extending native Stage2. Use each artifact's own
-MAP/CS/DS and actual player-prefix/STD/Continue/post-Boss ordering. Do not alter
-gameplay or observers to fit a guessed boundary. The primary DOS 302/312 input
-and raw-GDC failures remain separate unresolved requirements.
-
-Complete original/source/native campaigns, full four-product process routes,
-NP2, Windows, raw native plane identity, physical audio/input/rendering and
-pristine target provenance remain open. Historical exactness is a separate
-ledger; the two deferred MAIN cases stay deferred. Previous natural native
-four-route results retain their historical producers and are not original full
-campaign parity. Old v1432 has 94 missing protected files and older frozen
-worktree paths remain absent; never recreate or rebind them.
+Extend actual Stage2 frame600 toward Midboss, keeping own-file MAP/CS/DS,
+STD/input ordering and complete inactive-byte comparisons. Add pictures only
+with actual original checkpoints and elapsed ownership. Resolve reset/IRQ/read
+behavior behind the retained old302/312 and new18 post-reset differences;
+equal consumed input does not waive key/GDC or natural timing requirements.
+Preserve the earlier palette/page/circle repairs and original writer evidence.
 
 ## Recovery and checks
 
-Sixteen owned capture image/font/raw aliases are archived in six blobs. Net
-release is 157.621 MiB after archive, gzip and both journal files. The chain
-verifies 24890 distinct protected hashes, including all 21663 parent
-hashes and the two old public capture paths. New protected recipes use private
-immutable copies. Actual archive restoration and fresh-output reducer replays
-reproduce both failed state aggregates and the passing video regions before
-SHA/mode/nsmtime verification and retirement of all sixteen aliases. No borrowed
-files or duplicate cleanup credit. Use `replay_restored_v2.py --output-dir NEW`
-for repeatable recovery; initial receipts, snapshots and replay remain unchanged.
+Verified retention archives2732 owned generated files into1676 content blobs,
+releasing1385.176 MiB after archive, gzip and both journal files. All28575
+protected hashes verify, including all24890 parent identities. Actual recovery
+restores12 owned capture aliases and the pre-fix executable, executes it and
+both retained repaired GNU/UBSan programs from fresh input-only fixtures, then
+replays the frozen DOS/native consumers. The old native failure remains false;
+both repaired vectors remain true. All13 restored aliases verify SHA, size,
+mode and nsmtime before retirement. Four borrowed v1455 aliases were separately
+verified and retired without cleanup credit. Current final GNU/cache/UBSan
+cores and all complete compressed original evidence remain live. New backing
+paths are immutable private files; older journals and missing-file gaps remain.
 
-The new DOS evidence lives under the root-owned
-`.analysis/reconstruction/probes/dos-boss-extent-v1456/`; this checkout links it
-privately for ledger validation. Recovery is a captured-data reducer replay,
-not a fresh emulator execution. Native v1455 uses its distinct closed journal,
-`recover_closed.py` and `replay_restored_v2.py`; see its focused subject note.
-Preserve current GNU/cache, UBSan cores and complete compressed original evidence.
+From the DOS root, run v1457 replay_restored.py with --output-dir NEW for
+repeatable actual native execution plus captured DOS reducer recovery.
+Older v1455/v1456 journals stay unchanged. The old94 missing protected files
+and historical missing worktree/producer paths remain explicit gaps; do not
+recreate them, rebind receipts or count absence as cleanup.
 
-Finish relevant focused comparisons, `python3 scripts/ci.py` and `git diff --check`.
-Commit/push this branch with `git push origin HEAD:port/modern-64`, then verify
-its remote head and clean status. Root commits do not publish native changes.
+Finish focused comparisons, python3 scripts/ci.py and git diff --check.
+Commit/push this branch with git push origin HEAD:port/modern-64 and verify
+remote head and clean status. A root commit does not publish native changes.
