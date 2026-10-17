@@ -25,14 +25,17 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
-Active v1462 now has a complete original4000-update Stage3 capture after the
-real Stage1/Stage2 clears. Current566/1ad0ea4c GNU/UBSan match28793 selected
-scalar records,14396 nine-pool component snapshots,private3/inputs/RNG and
-9836 current Stage1 actor-pool snapshots. All8 wires and physical saves agree;
-510 volatile post-actor keys remain separate. The new reconstructed DOS pair
-is still capturing. The latest closed paired DOS extent follows below.
+Current v1462 completes actual original/source4000-update Stage3 routes after
+real Stage1/Stage2 clears. Across43193 boundaries, configured fields/RNG,
+nine pools,22 states,private3 and38 video regions agree. DOS aggregate remains
+false for682 post-reset keys/31563 raw-GDC records plus12 auxiliary GDC records.
+Current566/1ad0ea4c GNU/UBSan match28793 selected scalars/14396 nine-pool
+snapshots and9836 current Stage1 pool snapshots. All8 wires and physical saves
+agree;510 native volatile keys remain separate. Both roles68 full memories and
+43193 full resident256 windows pass;12 UI full windows were not captured.
+Frozen archive recovery remains pending. The prior closed extent follows below.
 
-The primary original/reconstructed DOS comparison completes 10394 Stage2
+The prior v1461 original/reconstructed DOS comparison completes 10394 Stage2
 updates, Kurumi defeat/clear, Stage3 initialization and its first update. Nine
 full pools, 22 states, 11636 ordered RNG calls and 38 configured video regions
 agree over 31196 boundaries. The DOS aggregate retains

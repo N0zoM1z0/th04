@@ -12,8 +12,12 @@ return and10394 Stage2 clear:43193 boundaries,24232 raw loops,1062 LCG/13410
 ring calls,704 full conventional-memory witnesses and57 actual keyboard edges.
 All4000 raw loop inputs agree with the declared normal Bomb/movement plan;
 API calls preserve CPU/context/tick/640KiB RAM, and one actual GameOver guard
-never fires. Source DOS is still capturing; the latest closed paired DOS extent
-remains v1461. See [current handoff](../../RE_HANDOFF.md) for live paths/caches.
+never fires. Source DOS also completes the same route. Both full paired readers
+pass configured scalar/RNG,9pools/22states/private3 and38 video regions. Their
+aggregate remains false for682 keys/31563 raw-GDC records plus12 UI GDC records.
+All43193 captured256-byte resident windows agree;12 UI full windows are absent.
+Both roles68 complete RAM witnesses and actual physical files pass. See
+[current handoff](../../RE_HANDOFF.md) for paths/caches.
 
 Both actual current566/1ad0ea4c GNU/UBSan programs match28793 selected scalars
 and14396 whole nine-pool component snapshots, Boss/Midboss/private3, homing,
@@ -59,8 +63,10 @@ clear wires and all177 display observations. Six malformed plans and four
 new private/input mutations reject. Default complete readers reproduce and
 all20232 closed original LCG transitions/three mutations pass. The early
 71-file scout journal chains43332 protected hashes; actual old-program complete
-and failed replays reproduce all outputs and metadata. New source-DOS paired
-state/pools/video, memories/files and final frozen retention remain pending.
+and failed replays reproduce all outputs and metadata. Intermediate884-file
+cleanup chains45796 protected hashes and releases4245.352MiB net; actual restored
+test/object/pool aliases verify and retire. Final frozen retention/recovery
+remains pending and must chain both early journals without recounting files.
 Native pictures, physical timing, campaigns and exactness are separate goals.
 
 ## Original/reconstructed DOS Boss suffix (v1456)

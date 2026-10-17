@@ -5,10 +5,12 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-Current v1461: actual original/source Stage2 clear at 10394 and Stage3 init/first
-update match configured vectors. Current 566/4c3c50cb cold GNU/UBSan match full
-state/pool/input checks. DOS key/raw-GDC, native Stage2 pictures, physical timing
-and full campaigns remain open. See [handoff](RE_HANDOFF.md).
+Current v1462: actual original/source Stage3 reaches4000 after10394 Stage2
+clear. Configured state/pools/private3/RNG/video pass43193 boundaries; both
+566/1ad0ea4c cold native programs pass28793 scalars/14396 nine-pool snapshots.
+DOS682 key/31563 raw-GDC plus12 UI GDC differences remain failed; frozen archive
+recovery, native pictures, physical timing and full campaigns remain open.
+See [handoff](RE_HANDOFF.md).
 
 Updated 2026-10-17. The full native goal remains active on `port/modern-64`.
 The historical v1432 route snapshot was recorded under
