@@ -25,11 +25,19 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
+The v1472 private native forecast reaches Elly defeat and natural Stage4
+initialization/first update while preserving the complete prior8000 wire prefix.
+The actual original experiment instead reaches GameOver8085 with every input
+matching its plan. First tracked native hit divergence8046 identifies an Elly
+collision bridge to validate; see the current handoff. This is not Stage4 DOS
+parity or full campaign acceptance.
+
 The v1470 original/source DOS vector reaches8000 Stage3 updates: all8001 nine-pool,
 22-state/private3 snapshots, actual inputs and nine configured video-region samples
 match. Literal post-dialogue player inputs agree. The strict aggregate retains49
 post-actor key/nine raw-GDC differences; source fonts/full RGB and campaigns remain
-open. No emulator job remains; see the current handoff and recovery instructions.
+open. That source8000 producer is terminal; the new original Elly/Stage4 probe
+is separate. See the current handoff and recovery instructions.
 
 Current v1467 records a complete original 8000-update Stage3 route. Native
 566/4787233c replays its literal inputs: both cold GNU/optimized UBSan programs
@@ -38,11 +46,11 @@ nine complete RGB/TRAM/DAC samples. Palette-bearing dialogue loads refresh the
 player palette; enemy opcode8F tile writes preserve background-prefix order.
 Fresh GNU 83 CTests and UBSan/session checks pass. One requested/readback input
 mismatch and 712 volatile post-actor keys remain separate. Original/source-DOS
-paired MAIN remains at completed Stage3 4000; continuous display, physical timing,
+selected source MAIN vector now reaches8000 as described above; continuous display, physical timing,
 full campaigns and artifact exactness remain open. Completed products retire
 after recovery checks; see the [current handoff](docs/RE_HANDOFF.md).
 
-Current v1462 completes actual original/source4000-update Stage3 routes after
+The earlier v1462 completes actual original/source4000-update Stage3 routes after
 real Stage1/Stage2 clears. Across43193 boundaries, configured fields/RNG,
 nine pools,22 states,private3 and38 video regions agree. DOS aggregate remains
 false for682 post-reset keys/31563 raw-GDC records plus12 auxiliary GDC records.
@@ -149,7 +157,7 @@ GNU lighting samples also agree. These game-area diagnostics do not establish
 complete-picture acceptance. Whole graphics/RGB, physical scanout, broader routes and Windows
 input/audio acceptance remain open; see the handoff for scoped evidence.
 
-Native development is active. Current frozen554/31e6b3d7 GNU and optimized
+Native development is active. Earlier frozen554/31e6b3d7 GNU and optimized
 UBSan now pass four strict natural headless routes: Easy ReimuA, Normal ReimuA,
 Normal MarisaA and Extra ReimuA earned by the same-run Normal save. All four
 complete captures/saves agree across compilers, with real clear mask1 and no

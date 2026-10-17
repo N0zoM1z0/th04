@@ -5,6 +5,92 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Actual original collision rejects the safe Elly forecast (v1472)
+
+The801.680s original extension is terminal/incomplete, not timed out, with exit1.
+Own stopped CPU/full640KiB RAM validates actual MAIN0AAF:3A51/GameOver at8085,
+load10FC/DS3230 and resident life byte1 atentry. No emulator remains. All8086
+actual inputs match expectations; only known7835 physical32/readback8192 differs.
+The complete previous29146871-byte raw prefix is exact, including ordered RNG;
+all8001 previous nine-pool/22-state/stable snapshots reproduce. The safe native
+forecast is therefore not established by requested-input delivery alone.
+
+First tracked native stable difference is hit at8046 (original1/native0), then
+shots/sparks at8047. Captured original scythe mode7/flag1/position2932,4621
+and player3312,4976 lie strictly inside the24-pixel collision box. An independent
+Oracle executes unmodified original MAIN13A9:8165..8199 on these post-update
+coordinates. The instruction at8195 writes global DGROUP4669=1. Six fixtures
+include four exact-boundary negatives; all pass. These are bounded synthetic
+unit fixtures based on actual state, not a second live runtime or whole-helper
+claim. Native Elly's component already sets its private player_hit flag, but the
+main composite hit/reset paths omit Elly. A future fix must replay the retained
+failed path and old8000 regression; do not alter target collision/invulnerability.
+
+The failed actor stream contains8081 complete records plus35710 bytes of the
+next record, without gzip footer. Metadata records8000 because that was its last
+flush. No8082..8085 actor snapshots are fabricated. All raw latches and the
+actual GameOver fullRAM witness remain available. Full Stage4 original/source
+acceptance remains open; the private native forecasts below remain source-bound
+observations of the defective bridge, not valid target routes.
+
+Six additional terminal original aliases retire after metadata-exact recovery.
+All five independent current Oracles reproduce with restored files and with all
+93 new aliases absent. Local releases134.80859375/60.25390625MiB total195.0625MiB;
+new whole-phase costs include every original witness and final reserve. Current
+recovery carries287 aliases. No prior cleanup orhypothetical raw-copy credit.
+The initial failed-original reader assumed zero lives atguardentry; actual
+resident byte1 is preserved and validated. Both reader versions remain.
+
+## Earlier Elly/Stage4 forecast and experiment preparation (v1472)
+
+A const-advice scout links only a private view observer against unchanged
+current566/4787233c core/main/audio/ymfm objects. It freezes the original-bound
+8000 inputs, then records ordinary nonfocused keys. All five complete prior
+raw-wire prefixes match stock GNU byte-for-byte. The actual scout reaches
+Elly phase4/HP-11 at12991, explosion254 at13023, phase255 at13087 and natural
+Stage3 departure13576. UI cues are7834/13087. A second private observer enables
+the existing Stage4 configuration and advances normally after departure;
+actual Stage4 init, actor1 and score1 append to otherwise identical complete
+Stage3 pools/scalars/inputs. Resource and resident indices are both zero-based3.
+The V1 reader incorrectly expected human stage number4 and remains preserved.
+This is native forecast evidence, not original/source acceptance or a campaign.
+
+Five large complete wires stream through fresh named pipes into deterministic
+gzip:862.447MiB raw becomes38.045MiB without raw intermediates. The first host
+attempt correctly failed the original fresh-directory guard before any update;
+its wires are empty. The private observer's V2 accepts only its five explicitly
+named fresh FIFOs. Product code and public fresh-output guards are unchanged.
+
+A real original Micro300 validates the new literal-player watch sharing:
+all611908 raw bytes,301 snapshots of nine complete pools/22 states/stable fields
+and six own full-font/RGB samples agree with the previous Micro. Original
+MAIN0AAF:5FCF/near return00F4 captures actual keys36/52 at frames64/96. CPU,
+own code, DS/SS, full640KiB RAM and independent raw input bind both entries;
+three rebased IP/input/guard mutations reject. Strict whole DGROUP remains
+false:39 offsets in the captured SS stack-address region and five post-actor
+input bytes differ. Seven init differences precede either tap; their cause is
+not proved. The failed whole-DGROUP reader and all raw bytes remain. The V1
+private Micro host driver omitted its own start/end source pin; its post-run
+identity is scoped accordingly, while executed workers/helper were frozen.
+The long V2 host driver explicitly includes its own identity in the pinned set.
+
+`dos-elly-v1472-original` now targets actual Elly defeat, post-Boss dialogue and
+Stage4 initialization/score1. It preserves strict original8000 expectations and
+records the new tail as actual observations; candidate-derived requested keys
+cannot establish actual latch equality. Twenty sparse full-font/video/RAM points,
+all13576 Stage3 DGROUP records, four literal player taps and one completed Stage4
+init/fullRAM witness are requested. Completion and new original/source/native
+comparisons remain pending. Keep this exact producer/capsule immutable and poll
+its owned PID/start/argv identity; do not restart for a slow observation.
+
+Eighty-seven closed aliases restore SHA/size/mode/nsmtime and three independent
+real-file/virtual reports reproduce. Current recovery carries281 aliases. Local
+cleanup134.809MiB is separate from new retained evidence and the evolving original
+capture. The V1 virtual reader's physical-only stat failure remains preserved;
+the corrected reader obtains the same logical size from exact bytes. No raw
+intermediate or prior cleanup is credited. Receipts/readers are under
+`elly-route-v1472`. No product source or accepted exact unit changes.
+
 ## Own-MAP sparse source observer and Micro (v1471)
 
 The public sparse collector accepts a normal maintained MAIN with its own

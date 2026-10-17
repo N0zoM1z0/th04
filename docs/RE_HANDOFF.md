@@ -1,12 +1,53 @@
 # TH04 current handoff
 
-Updated 2026-10-17. Complete maintained DOS four-product and faithful native x64
+Updated 2026-10-18. Complete maintained DOS four-product and faithful native x64
 goals remain active. Use one low-priority CPU (`taskset -c 1 nice -n 19`), mute
 SDL/headless runs and serialize Borland/Wine builds. Do not change host focus or
 inject host keys. Code, documentation and commit messages are English.
 
 Source8000 evidence baseline: main `f331680`; native handoff `064397d`.
 The source normal cohort and native566/4787233c programs are unchanged.
+
+## Actual Stage3 collision discrepancy (v1472)
+
+The new original capture `dos-elly-v1472-original` terminates at actual
+MAIN0AAF:3A51/GameOver8085 after801.680s. It is incomplete, not timed out, and
+exits1. No emulator remains. All8086 actual inputs match expectations; the only
+physical/readback difference remains known7835 Shot32/Enter8192. The complete
+old29146871-byte raw prefix and 8001 whole-pool/stable snapshots reproduce.
+
+First tracked native stable mismatch is hit at8046:original1/native0. Shots and
+sparks first differ at8047. Original scythe(2932,4621) overlaps player(3312,4976)
+inside its strict24-pixel box. Independent unmodified MAIN13A9:8165..8199
+execution confirms global DS4669=1 at8195; four exact boundaries reject among
+six fixtures. Native Elly already sets a private hit flag, but main_state.cpp's
+composite hit and clear paths omit Elly. Test this concrete bridge hypothesis
+against the retained failed route before forecasting another expensive original.
+Do not change target collision or invulnerability behavior to avoid the failure.
+
+The failed actor gzip yields8081 complete records plus35710 bytes of the next
+record, and has no footer. Its metadata last flushed8000 records; no missing
+records are invented. Keep raw inputs, partial actor data, full error RAM, literal
+player witnesses and nine actual full-font/video/RAM samples. Use
+`elly-route-v1472/frozen_reader.py --reader failed` and `--reader scythe`.
+
+Private native forecasts reached Elly defeat12991, dialogue13087, departure13576
+and Stage4 init/first update with unchanged566/4787233c game objects. They remain
+forecasts contradicted as safe routes by the actual original failure. Their
+full old8000 wire prefixes still match stock GNU byte-for-byte. No maintained
+native product or DOS source has changed. Stage4 original/source acceptance,
+source Stage3 full RGB, timing and campaigns remain open.
+
+The literal-tap Micro passes300 raw loops,301 nine-pool/22-state snapshots,
+two player/fullRAM witnesses, three rebased controls and six full-font/RGB samples.
+Strict whole DGROUP retains39 stack-address offsets/five post-actor bytes;
+seven initial differences precede either tap and their cause is unknown. V1 Micro
+host-driver identity is post-run only; the failed long V2 self-pins start/end.
+Ninety-three closed aliases restore exact metadata and five real/virtual Oracles
+reproduce, including the failed verdict. Local cleanup195.0625MiB has separate
+whole-phase retained costs; all original witness costs now belong in this journal.
+Current recovery carries287 aliases. Keep current products/link inputs and all
+providers; do not restart the failed producer or recredit earlier cleanup.
 
 ## Current sparse source observer (v1471)
 
@@ -104,8 +145,9 @@ identities and finish itself, and carry inherited alias providers.
 
 Preserve the passing8000 vector and failed aggregate. Reuse these artifacts for
 regressions; the completed producer need not run again. The cheap own-MAP sparse
-source/font Micro is now validated. Before another long source extension, select
-its required font/UI/player checkpoints explicitly. The dense legacy run retained794 RAM
+source/font Micro is validated. Fix andindependently replay the native Elly hit
+bridge against actual failed inputs/pools before forecasting another route.
+The dense legacy run retained794 RAM
 snapshots and every boundary video; choose the next scenario's required surfaces
 explicitly to reduce storage and CPU costs. Then pursue actual Elly defeat and
 Stage4 initialization, with original/source and native comparisons. A future

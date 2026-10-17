@@ -1,5 +1,33 @@
 # Private build and analysis retention
 
+## Elly forecast and actual failed original recovery (v1472)
+
+Ninety-three owned aliases retire after exact SHA/size/mode/nsmtime recovery:
+87 closed Micro/forecast/compiler files and six terminal original duplicates.
+Five independent real-file and virtual readers reproduce, including original
+GameOver8085 and the partial8081/no-footer actor extent. Current recovery carries
+287 aliases. Keep all compressed actor/font/video/error/player RAM evidence,
+private sources, current product programs/link inputs and parent providers.
+
+```sh
+python3 .analysis/reconstruction/probes/elly-route-v1472/recover.py
+python3 .analysis/reconstruction/probes/elly-route-v1472/frozen_reader.py
+```
+
+Local cleanup totals195.0625MiB:134.80859375MiB for the first87 files and
+60.25390625MiB for the six terminal original files, each after its archive/replay
+costs and 1MiB reserve. These two releases are counted once. Five forecast wires
+stream862.447MiB directly into38.045MiB gzip; raw intermediates never existed
+and are not release credit. The complete phase now charges all original witness
+costs, new sources/readers/replays and 32MiB final reserve. The interim exclusion
+while the original was live is closed; no emulator remains. No v1471 orolder
+cleanup is credited again. Future builds/captures use fresh output paths.
+
+The V1 virtual reader failed on physical-only Path.stat; its source/log remain.
+The corrected reader gets identical logical compressed size from exact bytes.
+Restore only an explicitly needed alias with --restore --path EXACT, and retire
+it after its consumer. Preserve every parent/late/finish identity and provider.
+
 ## Current sparse source capture recovery (v1471)
 
 Nineteen redundant closed image/font/raw/log aliases, including the temporary
