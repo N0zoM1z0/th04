@@ -1,5 +1,26 @@
 # Private build and analysis retention
 
+## Read-only dialogue clock probe recovery (v1476)
+
+Current DOS-root text-blink-v1476/recover.py carries 1662 direct exact aliases:
+1520 inherited plus 142 newly closed probe outputs,inputs,compressed streams,
+clock account and one unused private link object. All 142 restore SHA,size,mode,
+nsmtime. Two real-restored/archive readers reproduce all 130 full stock output
+hashes and the clock budgets/negative control; the 407-pixel display failure remains.
+
+Keep 70224 parent identities,every current/late/finish identity andphysical
+provider. Current game builds/cold link inputs and private observer executable
+stay physical. No game source or cold game build changes in this batch. Do not
+restart either completed DOS capture. The actual source Elly/Stage4 vector remains.
+
+Actual new closed-file release is 92.1015625MiB; new archives cost 0.59765625MiB.
+All cleanup artifacts cost 0.7421875MiB; after 2MiB metadata reserve, local net
+release is 89.359375MiB. The 857.2264728546143MiB raw FIFO streams never existed as
+regular files and earn zero cleanup credit. Do not recredit older cleanup or
+claim system-wide free space. Whole-phase retained costs and 32MiB reserve are
+accounted separately. Run analyze.py,verify_outputs.py andexport_windows.py;
+restore only explicit alias paths,verify,then retire. Use fresh producer paths.
+
 ## Terminal source Elly/Stage4 recovery (v1475)
 
 Current DOS-root `source-elly-v1475/recover.py` carries1520 exact aliases:

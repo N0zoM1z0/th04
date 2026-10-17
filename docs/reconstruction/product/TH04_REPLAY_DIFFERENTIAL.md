@@ -5,6 +5,65 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Measured native dialogue clock budgets (v1476)
+
+A private read-only FrontEnd observer, linked to the unchanged current cold game
+objects, completes all 13377 Stage3 updates and reproduces all 130 stock outputs.
+Its 13960 normal advance calls account for 14513 refreshes;22 independent picture
+counters agree. A consistently rebased +1 counter tail is rejected by those
+independent picture observations. The existing departure-guard exit1 stays explicit.
+
+At loop 7834, native automatic confirmation takes 464 calls/464 refreshes versus
+original/source loop-to-loop PIC intervals of 20633 integer ms. At loop 12888 it
+takes 121 calls/122 refreshes versus 2624 ms. The wait detector spans20635/2626 ms,
+so its seam remains distinct. Native uses status-driven rapid confirmation;
+original/source use21/3 complete Enter pulses. All 52 physical edges have identical
+relative millisecond timings on both DOS captures. Their absolute loop ticks
+differ by 513/514/515 ms (97/13103/177 rows). No original/source capture was rerun.
+
+The phase0-hidden/other-phases-visible rule remains consistent with the independent
+prior emitter and current observations. At 12889, native refresh36616 modulo 128=8
+is hidden; original phase2/count4 is visible. The actual407 pixels and native 1805
+volatile keys remain, as do source 19 keys/23 raw GDC failures. The schedules are
+not elapsed-time equivalent. This does not prove that UI timing alone causes or
+fixes the final phase: initial epoch, other work, natural IRQ/UI timing and
+continuous display remain open. No phase fitting, compensation or game-code edit.
+
+Next replay recorded device edges through one input owner during UI and retain
+queued tail release/Shot restoration across UI exit. Keep normal time admission,
+report sampling quantization and compare state/literal players/RGB independently.
+Do not drop pending edges, substitute expected latches or set a clock/visibility
+to its expected result. The exported physical-dialogue-windows.json is an input
+fixture, not an executed timed native replay or physical-fidelity acceptance.
+
+The sensor only reads existing text_refreshes/frame/dialog status around normal
+scene.advance. Main/core/audio/ymfm link inputs and 566/a7606e66 game source remain
+identical; this is a private observer build, not a fresh cold game build. Actual
+execution takes 23.291s, headless/muted on one low-priority CPU. All 130 complete
+output hashes match current stock GNU, whose output vector already matches
+UBSan. Thus prior source/native state and failed RGB observations remain bounded
+by their original identities; this probe does not broaden them into a campaign.
+
+The counter-tail control rebases the local account hash, shifts every subsequent
+counter coherently and still fails the independent real picture counters. Native
+pre-dialogue held samples are424 zero/1 Shot/39 Enter; post-dialogue has 115 zero/
+1 Shot/5 Enter. These are held-call counts, not physical pulse counts. Original
+and source each have44/8 real keyboard edges:21/3 complete Enter pulses plus Shot
+release/restoration. Preserve that distinction and pending tail releases.
+
+The two PIC intervals are measured at actual input-loop seams; native refresh
+budgets span completed-score seams. Quantization and small seam skew remain
+explicit. Neither a matched logical frame nor selected state agreement proves
+a shared elapsed schedule. No pixel-derived phase choice or native clock repair
+is justified. The unchanged407-pixel failure is reproduced, not counterfactually
+greened. Full natural-time, physical-input, continuous-scanout, cross-emulator,
+four-source/native campaigns and executable exactness remain open.
+
+Recovery retires142 actual new regular/compressed aliases, preserving exact
+metadata and both full-wire/accounting real/archive readers. Local net cleanup
+89.359375MiB is separate from all retained phase costs; no prior or hypothetical
+raw FIFO credit. Keep all 1662 aliases/providers and 70224 inherited identities.
+
 ## Actual source MAIN Elly defeat, full RGB and Stage4 (v1475)
 
 The maintained normal source MAIN completes the actual Elly route and reaches
