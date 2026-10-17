@@ -5,6 +5,84 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Sampled PC-98 input reaches MAIN/player (v1479)
+
+MAIN now consumes pc98_input::Snapshot directly. Latch::snapshot() captures the
+complete action word and Shift by value; the real player lifecycle receives
+that value. Keypad diagonals retain their high bits. The existing integer/Shift
+entry remains the host-key adapter and delegates to the same MAIN body.
+
+An independent Oracle executes unchanged original input reset/sense/joystick
+and movement instructions, then compares 15209 fresh MAIN/player updates:
+12288 controlled sample calls and 2921 actual original BIOS samples. GNU and
+optimized UBSan agree. Repeating host translation at this boundary fails 11073
+cases. Keypad movement, sampled Bomb, Shift, Enter persistence and demo Q exit
+also pass direct contracts. Each movement comparison starts a fresh game;
+prior conflicting chords, clamps and full-route timing are outside that Oracle.
+
+Fresh GNU 89 programs/85 CTests and four selected UBSan programs pass. Both
+unmodified new game programs replay all 13377 actual loop words with every one
+of the prior 130 complete output hashes unchanged. This preserves the stock
+scenario's 407 blinking-text pixels and 1805 volatile keys; it does not repair
+physical input delivery. The v1477 device scenario still has two failed literal
+player inputs and 1803 keys. Keep these scenarios separate.
+
+The existing original poll evidence shows Enter present at the head sample,
+then BIOS Enter clear with key_det8192 at players7835/12889, 1.544944/1.594111ms
+after sampler return. Frontend MAIN/UI polling and physical-device/BIOS IRQ
+admission remain to be integrated. No fitted hold, expected-latch/clock/phase
+assignment, new Stage4 observation or full-campaign acceptance is introduced.
+
+The source boundary is gameplay::State::update(pc98_input::Snapshot, ...).
+The former host path translates frontend bits once, then enters this common
+body;consumed_input/player_input record the original action domain. A sampled
+keypad down-right bit0800 therefore remains a diagonal instead of being decoded
+as host Bomb. Snapshot holds a value even if the caller resets the sampler or
+BIOS input changes before MAIN consumes it. Demo Q exits before player update.
+
+The independent composition executes MAIN130E:06BC/06C4/07C4 and the separate
+original movement primitive MAIN0AAF:5DA8, size131. Scratch BIOS INT18 and ready
+OPNA transactions are declared controls. Fresh positions/zero prior movement
+avoid unsupported history/clamp claims;Shift halves even primitive velocities
+mathematically. Actual samples use recorded BIOS andmasked joystick wrapper
+returns. Expected key_det is compared after maintained sampler/MAIN execution,
+never assigned to the game. The compiled negative repeats host translation at
+that exact consumer boundary and must mismatch actions/movement. Its first
+compile helper missed the product root include/GAME flag;failed logs remain.
+
+The first stock regression harness precreated FIFOs and correctly failed the
+fresh-output-directory guard before updates. It is a transport failure, not a
+game regression. Corrected runs use absent output directories andcompress each
+of five real regular wires immediately after closure with full decoded-hash
+verification. Preserve the rejection andmixed file/gzip inherited-provider
+correction. All successful source/receipts andfailed attempts remain distinct.
+
+Current source 569/32693566 has GNU 89/85 andUBSan4 cold validation. Both complete
+host-adapter output maps equal the old scenario;this preserves its407 blink
+pixels/1805 volatile keys. Typed fresh-game composition remains separate from
+the v1477 physical-device scenario's two wrong player words/1803 keys. Source-DOS
+19 keys/23 GDC remain separate too. No timing, visibility or full-campaign promotion.
+
+Current recovery carries 4513 aliases, including2688 newaliases. Old83-contract
+andtwo exact-relink readers work with restored original paths andarchive
+materializations. Newcurrent programs/link inputs and every inherited provider
+stayphysical;use a fresh build directory after retiring the oldcache. All ten
+regular raw trace files did exist andrestore exact metadata;they are not the
+rejected FIFO paths. Whole retained build/evidence costs plus 32MiB reserve are
+separate from 1964.046875MiB local cleanup afternew archive/reader costs and2MiB
+reserve. Do not credit older cleanup or transient restoration writes. Replay
+verify_consumer.py, verify_host.py, check_old_build.py and verify_retired.py in
+main-input-owner-v1479. Next implement frontend sampling/IRQ admission ownership
+using the existing head/player timestamps andpending physical edge tails.
+
+CTest inspection also writes LastTest.log: this phase's --show-only query
+replaced the old protected log. The final chain rejected it. All 73472 original
+bytes were recovered using retained same-run stdout and CTest format; the full
+SHA remained exactly the immutable original value. This is historical log byte
+recovery, not a fresh execution or original-nsmtime claim. Keep the failed-chain
+record, damaged bytes and recovery provenance. Use saved old-ctest.json or a
+copied build for future queries; do not invoke CTest in protected build trees.
+
 ## Actual input polls and maintained sampler (v1478)
 
 A fresh bounded original run completes Stage3 score 12891 in 802.802s, exit0,
