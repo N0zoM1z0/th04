@@ -34,12 +34,12 @@ complete pictures, physical timing and Windows remain open; see the
 
 ## Build and run
 
-Active v1462 Stage3 work has verified300 real DOS Bomb/movement inputs and
-all300 native scalar/input/nine-pool snapshots. The new4000 Stage3 original/source
-capture and extended native parity are pending. Current566/1ad0ea4c cold GNU
-87-build/83CTest and optimized UBSan2 pass; both reproduce all seven old clear
-wires. A native-only4000 forecast selects Midboss3 checkpoints without assigning
-target state. See the current handoff for the active capture and protected caches.
+Active v1462 now has a complete original4000-update Stage3 capture after the
+real Stage1/Stage2 clears. Current566/1ad0ea4c GNU/UBSan match28793 selected
+scalar records,14396 nine-pool component snapshots,private3/inputs/RNG and
+9836 current Stage1 actor-pool snapshots. All8 wires and physical saves agree;
+510 volatile post-actor keys remain separate. The new reconstructed DOS pair
+is still capturing. The latest closed paired DOS extent follows below.
 
 The primary original/reconstructed DOS comparison completes 10394 Stage2
 updates, Kurumi defeat/clear, Stage3 initialization and its first update. Nine
