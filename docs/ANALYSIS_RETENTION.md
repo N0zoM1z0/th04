@@ -21,6 +21,15 @@ taskset -c 1 nice -n 19 python3 \
   .analysis/reconstruction/probes/pause-latch-v1468/recover.py
 ```
 
+From the DOS root, use the v1468 `frozen_reader_virtual.py` with
+`attest_controls.py --output .analysis/reconstruction/probes/NEW-latch-replay.json`
+for recorded-evidence replay without disk expansion.
+The backend verifies exact providers and exposes logical exists/read together;
+real restored files take priority. Both control and prepared8000 reports
+reproduce byte-identically with all25 aliases physically absent. The earlier
+exists-guard failure and its wrapper/log stay retained. This backend applies
+only to archived readers, never a new producer or current-state acceptance.
+
 Use `--restore --path EXACT` for one journal-relative alias, then verify and
 retire it. Avoid bulk expansion. The next journal must merge retention,
 every finish.late_protected identity and finish itself. V2 has positive/negative

@@ -68,6 +68,10 @@ All25 closed capture aliases restore SHA/size/mode/nsmtime and the independent
 five-capture reader reproduces before retirement. Keep compressed witnesses,
 source versions, the original8000 golden and all61959 parent identities.
 Recovery and combined net accounting are below `pause-latch-v1468/retention`.
+For direct archived replay use `frozen_reader_virtual.py`: its logical exists/read
+view fixes the earlier wrapper's exists-guard failure while retaining actual-file
+priority. Both reports reproduce identically without expanding any25 aliases.
+The failed wrapper/log and every original report remain frozen.
 
 ## Complete original8000 and native palette/tile repair (v1467)
 
