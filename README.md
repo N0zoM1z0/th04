@@ -28,6 +28,12 @@ RGB/TRAM/palette samples pass. Source strict aggregate retains 19 postactor keys
 and 23 raw GDC differences. Native 12889 still differs by 407 blinking pixels;
 1805 native keys remain separate. No emulator is live. See the current handoff.
 
+The v1476 read-only native observer preserves all 130 stock outputs and measures
+automatic dialogue confirmation at 464/122 refreshes versus DOS loop intervals
+of 20633/2624 ms. All 52 original/source device edges share relative timing. The
+407-pixel native failure remains;next replay those edges continuously across UI
+exit,with explicit clock/input scope and no fitted phase. No game-code changes.
+
 The prior v1473 repair propagates and consumes Elly's scythe hit through MAIN's player
 latch. Cold GNU/UBSan reproduce original hit8046 and GameOver8085 with8082 complete
 nine-pool/state snapshots and8086 raw score/state/resident/RNG-count rows. All79
