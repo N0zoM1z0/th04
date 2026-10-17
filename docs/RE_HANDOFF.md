@@ -5,7 +5,30 @@ Code/docs stay English. Use one low-priority CPU, serialize Borland/Wine builds,
 launch muted/headless, and clean unused products after each bounded batch.
 The user uses Windows: no GUI, focus changes or host-key injection.
 
-## Stage3 wait investigation (v1467)
+## Observed Stage3 dialogue wait (v1467)
+
+The real original deadline capture resolves the earlier wait hypothesis:
+Stage3 frame7834 has scroll0/backpage1, active STD13A9:4341 and pending
+wave7900/count2. Its unchangedCPU/full640KiB RAM stops at MAIN130E:00E3.
+Six own-MZ callsites and the mixed near/far stack bind frame_delay(1) inside
+input_wait_for_change(0)'s release loop, called through dialogue to
+MAIN0AAF:2454. key_det32 is held Shot; the input plan wrongly declares9202.
+This is an observed dialogue wait, not evidence of a dead timer. The run stays
+incomplete after809.886s/idle120 and proves no post-dialogue Boss parity.
+
+Independent original Elly13A9:8855 phase0 execution retains the STD VM; the
+raw main loop always invokes it at0AAF:00D3. The native regression rejects
+its old extra EOF predicate. Stage3 readiness/handoff and pending-wave dispatch
+are being repaired with fresh GNU/UBSan cold builds. Reforecast the ordinary
+route with dialogue7834 before another original capture; keep other stage
+callback ownership separate. Receipts: `stage3-wait-v1467` below `.analysis/reconstruction/probes/`.
+
+Mid-batch cleanup restores15closed capture aliases with SHA/size/mode/nsmtime,
+reruns all3 independent readers identically, then retires them. Net127.570MiB
+includes retention costs and1MiBreserve. Preserve allcompressed witnesses,
+capsules andexact providers. No earlier cleanup credit is counted again.
+
+## Earlier Stage3 wait checkpoint (v1467)
 
 Six complete original score-return snapshots at Stage3
 1/4000/4011/4357/4448/6000 now match every640x400 RGB pixel,8000 active TRAM
@@ -25,10 +48,9 @@ not a game hang. The default idle deadline stays disabled.
 Target MAIN0AAF:2454..24CD checks only scroll speed0 and back page1 before
 dialogue. Independent execution of its unmodified bytes reaches the dialogue
 call with either active or no-op STD VM. Native currently also waits for STD
-exhaustion. Actor7832 plus earlier complete STD RAM predicts scroll stop7834
-with a pending wave7900;this is an inferred explanation,not yet the observed
-wait cause. A fresh original run uses idle120/total1800 and includes new full
-RAM/font/video points7834/7835. Do not change its frozen inputs while live.
+exhaustion. The earlier actor7832/STD inference is now confirmed by the actual
+7834 score-return and deadline witnesses above. The diagnostic run has ended;
+its complete inputs and incomplete result remain frozen.
 Receipts: `.analysis/reconstruction/probes/stage3-wait-v1467`.
 
 ## Current Stage3 frontier and blocker (v1466)
