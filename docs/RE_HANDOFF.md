@@ -42,9 +42,23 @@ release batch passes400. Public sparse V2 separates physical requests from
 strictly asserted latch words; a wrong expectation still rejects. This changes
 no native game source or accepted fidelity frontier.
 
-Next extend the legacy paired source-DOS transport/reader to V2, validate a
-cheap original/source Micro, then run source-DOS8000 against the existing
-original8000 golden. Do not repeat the long original capture. Continuous effects, full campaigns, NP2/Windows
+Main-checkout v1469 now extends the paired transport/reader to V2. Actual
+original/source300 probes pass every raw latch,eight device edges and full
+CPU/tick/RAM guards;four rebased controls reject and root582-test CI passes.
+Source-only8000 is running from `source-latch-v1469/route-command.json`,reusing
+the original golden. Keep paired source-DOS coverage at4000 until its enclosing
+capture and independent checks finish; do not restart the live prefix.
+
+Ten closed Micro aliases,92 superseded native link inputs and64 old native
+main/session programs retire after exact SHA/size/mode/nsmtime restoration.
+Latest `stage3-tiles-v1467-final` GNU/UBSan programs and inputs stay physical.
+The current DOS-root `source-latch-v1469/recover.py` verifies the inherited
+identity chain through exact compressed providers. Restore explicit historical
+aliases before their old linker/program consumers; routine chain verification
+uses this current reader. Keep every provider and the original8000 golden.
+
+Finish source-DOS8000 against the existing original8000 golden. Do not repeat
+the long original capture. Continuous effects, full campaigns, NP2/Windows
 and artifact exactness remain open. Push using `HEAD:port/modern-64`.
 See the [main comparison note](https://github.com/N0zoM1z0/th04/blob/main/docs/reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md)
 and [main handoff](https://github.com/N0zoM1z0/th04/blob/main/docs/RE_HANDOFF.md).
