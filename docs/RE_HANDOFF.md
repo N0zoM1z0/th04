@@ -5,6 +5,20 @@ Use [the actionable handoff](NEXT_AGENT_HANDOFF.md). Keep code/docs English,
 heavy jobs on one low-priority CPU and one Borland/Wine writer. All launches
 muted/headless;no Windows GUI, focus changes or host-key injection.
 
+## Active clear observation (v1461)
+
+The v1461 batch follows Stage2 defeat/clear. Fresh target/source own-MZ CFG
+proves nonzero quit returns after score, without a following Stage2 loop
+(original0AAF:0207, source0708:07BD). The first new loop-exit collector was
+controlled-stopped during its unfinished Stage1 prefix and remains failed.
+A distinct score-exit capsule now observes actual quit2/return/free/Stage3 init
+and one full update under a11000 budget. Twelve host-only dispatch mutations
+reject; actual original/source clear acceptance is pending. Native-only scouts
+forecast Continue8132, defeat9809, postdialog9905 and departure10394; these do
+not widen the accepted8000 frontier. Current bundle:
+`.analysis/reconstruction/probes/dos-kurumi-clear-v1461/`, score-captures.log and
+capture-score/. Keep the stopped capsule/data and all parent38121+22 late hashes.
+
 ## Current Stage2 Boss frontier (v1460)
 
 Original and reconstructed DOS complete 8000 Stage2 updates after the same

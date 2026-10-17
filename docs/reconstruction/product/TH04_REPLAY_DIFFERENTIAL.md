@@ -5990,3 +5990,23 @@ attested original DOS8000 files exactly, including the second Continue update.
 The separate native-physical-files-attested.json binds both producer receipts.
 Both full goals stay active; Stage2 Boss defeat/clear, native pictures, timing,
 campaigns, NP2, Windows, pristine provenance and historical exactness remain open.
+
+## Post-score Stage2 exit ownership (v1461)
+
+The v1461 batch follows Stage2 defeat/clear. Fresh target/source own-MZ CFG
+proves nonzero quit returns after score, without a following Stage2 loop
+(original0AAF:0207, source0708:07BD). The first new loop-exit collector was
+controlled-stopped during its unfinished Stage1 prefix and remains failed.
+A distinct score-exit capsule now observes actual quit2/return/free/Stage3 init
+and one full update under a11000 budget. Twelve host-only dispatch mutations
+reject; actual original/source clear acceptance is pending. Native-only scouts
+forecast Continue8132, defeat9809, postdialog9905 and departure10394; these do
+not widen the accepted8000 frontier. Current bundle:
+`.analysis/reconstruction/probes/dos-kurumi-clear-v1461/`, score-captures.log and
+capture-score/. Keep the stopped capsule/data and all parent38121+22 late hashes.
+
+The initial host-only dispatch test passed its own incorrect loop-exit model.
+Pinned target cmp/JE/RET instructions falsified that model before completion.
+Retain the failed experiment;do not manufacture a missing loop sample or
+rewrite its source/receipt. The score-exit stream will contain finalactor/scoreN,
+raw Stage2loops0..N-1 and returnN, then the actual Stage3 init/update.
