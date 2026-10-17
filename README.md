@@ -34,6 +34,13 @@ complete pictures, physical timing and Windows remain open; see the
 
 ## Build and run
 
+Current v1463 repairs a carried clear-bonus palette tone at stage-session
+completion. Both cold programs match 14 complete original WORD/DAC samples;
+all eight state wires, legacy routes and 177 prior display observations remain
+unchanged. Full current fonts/RGB and raw graphics-index differences remain
+open. See [current handoff](docs/RE_HANDOFF.md) for evidence and recovery.
+
+
 Current v1462 completes actual original/source4000-update Stage3 routes after
 real Stage1/Stage2 clears. Across43193 boundaries, configured fields/RNG,
 nine pools,22 states,private3 and38 video regions agree. DOS aggregate remains

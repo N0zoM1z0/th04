@@ -1,5 +1,40 @@
 # Native private-state retention
 
+## Stage-session palette repair recovery (v1463)
+
+Final retirement removes 878 owned completed outputs and unused current
+objects/tests, chaining the earlier 14-file scout journal and all previous
+parent/late/finish identities. Net release is 4415.926 MiB
+(4.312 GiB) after new compressed backing, journals, full immutable
+566-file native source/root-reader snapshots and successful/failed recovery
+metadata. Parent v1462 releases and temporary/borrowed outputs are excluded.
+All 52473 protected hashes verify.
+
+Actual final recovery restores three owned BMP/state/pool aliases, executes both
+retained current cold programs and reproduces all eight state wires,58 picture/
+index/text/palette outputs,initial inputs and physical saves. Both full14x48DAC/
+WORD consumers reproduce; only truthful fresh producer receipt identity differs.
+SHA,size,mode and nanosecond mtime verify before all three aliases retire.
+Earlier recovery restores two streams and reruns the actual pre-repair program,
+reproducing all58 picture outputs and seven bad palette samples. Keep failed
+initial recovery-count and fixture-path consumers as failed observations.
+
+Run from the root DOS checkout,with fresh outputs:
+
+```sh
+python3 .analysis/reconstruction/probes/native-stage2-pictures-v1463/replay_final.py \
+  --output-dir .analysis/reconstruction/probes/NEW-stage-picture-recovery
+```
+
+This reexecutes actual native programs and recorded consumers,not the emulator.
+Full graphics-index failures remain measured; full live fonts/RGB/scanout and
+campaigns remain unaccepted. Keep current88575 main/session/link inputs,all
+parent backings and the immutable source snapshots. Build in a fresh directory;
+unused objects/tests require explicit archive recovery. The next journal must
+merge every final protected identity,every finish.late_protected entry and
+finish itself. Never recreate or credit missing historical files.
+
+
 ## Complete Stage3 route frozen recovery (v1462)
 
 Final retention retires56 additional owned files into8 content blobs,

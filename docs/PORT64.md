@@ -5,6 +5,15 @@ The primary requested differential is original DOS versus reconstructed DOS;
 native x64 also needs state/effect parity. Successful native gameplay routes
 and native-host equality do not establish original complete-game parity.
 
+## Stage-session palette reset (v1463)
+
+Native 566/88575 restores the original stage-session completion's tone100 reset
+instead of carrying the preceding bonus's60 into Stage2/3. Both fresh cold
+programs match all 14 original raw WORD/DAC samples and preserve the eight
+state wires, legacy routes and 177 old display observations. Current full raw
+indices still differ and live-font/RGB coverage remains open. See
+[handoff](RE_HANDOFF.md) and [lifecycle evidence](port64/evidence/stage-lifecycle.md).
+
 ## Continuous Stage3 comparison (v1462)
 
 Current v1462 completes actual original/source4000-update Stage3 routes after
