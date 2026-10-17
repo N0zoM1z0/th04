@@ -2641,3 +2641,46 @@ replayed by attest_original_defeat_partial.py. The failed capture is not
 promoted or rewritten. Initial speculation about a different dialog return or
 a one-frame gameplay error is disproved by the eleven saved actual records;
 the collector ordering is the diagnosed failure.
+
+### Original/native clear and the actual custom reset interval
+
+Original MAIN now completes 10394 Stage2 updates, returns after the final score
+with quit=2, initializes Stage3 and completes its first update. Independent
+readback validates 31196 CPU/DGROUP/video boundaries, full memories, own MZ/CFG
+and continuous raw RNG (1062 LCG and 10574 ring calls). There is no terminal
+Stage2 loop after the score requests departure. Current cold GNU matches
+20795 selected scalar records and 10397 complete nine-pool snapshots, actual
+player inputs, Boss/Midboss, homing and RNG. Its 356 volatile post-reset key
+samples remain separately measured. Optimized UBSan completes the same route;
+all seven output wires are directly verified identical to GNU. Full paired
+DOS reductions remain pending the currently running reconstructed DOS capture.
+The accepted original/reconstructed DOS frontier remains 8000 until that closes.
+
+All four waits use real FrontEnd input: Continue 5363/8132, pre-dialogue 6982
+and post-dialogue 9905, with 189/400/189/76 polls. The post-dialogue observer
+now records player -> run -> return at 9905. Both earlier failed capsules and
+their partial evidence remain unchanged. Three actual-output mutations reject
+a bad unused-input count, a Stage3 LCG bit and an inactive custom-pool tail byte.
+
+Original full memory retains 52 nonzero custom bytes at Stage2 return/free and
+Stage3 init entry, then all 832 bytes are zero at init completion and the first
+actor. The native full-pool comparison agrees; no exporter/gameplay correction
+is needed. Own MZ 0AAF:7456 calls 0AAF:185E for B204/208 dwords. The helper
+clears AX and executes REP STOSD; do not infer a general upper-EAX guarantee.
+Use the actual full-memory reset observation for this scenario.
+
+Current 566/4c3c50cb cold GNU 87/83 CTests and optimized UBSan 2 retain legacy
+3500/8000 wires and 59 RGB/TRAM pairs with 177 observations. Thirteen malformed
+clear plans reject. Root-owned `.analysis/reconstruction/probes/dos-kurumi-clear-v1461/`
+contains the live post capture, producers, independent reductions and memory
+proofs. Next: finish both complete DOS/native reducers and physical-file/lifecycle
+checks, run verified final retention/recovery, then both CIs and diff checks.
+Do not restart a live capture on timeout or modify a completed capsule.
+
+Early scout retention/recovery passes: 54 owned files, 17 recipes, 1908.8125 MiB
+released and 38326 protected hashes. Twelve replay wires reproduce and three
+owned aliases verify SHA/size/mode/nsmtime before retirement. The final journal
+must chain `scout-retention/retention.json` and count its retired files once.
+Preserve both failed capsules, all parent late identities and old/current caches.
+Both full goals remain active; native Stage2 pictures, timing, campaigns, NP2,
+Windows, pristine provenance and historical exactness remain open.
