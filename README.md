@@ -21,6 +21,14 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
+Current 566/88575 has 14 sampled complete Stage2/3 RGB/TRAM matches using new
+original font/video/RAM captures. Every 640x400 RGB pixel and all 8000 active TRAM
+bytes equal authenticated GNU outputs; prior actual UBSan file hashes agree.
+The new Stage3 route also reproduces 24231 raw loops, 14472 ordered RNG records
+and 4000 physical input samples/57 edges. Native programs did not execute again.
+Raw index/GDC failures, later stages, every-frame display, natural timing and
+original full-campaign parity remain open; see the current handoff.
+
 Native development is active. Historical frozen554/31e6b3d7 GNU and optimized
 UBSan passed four strict natural headless routes: Easy ReimuA, Normal ReimuA,
 Normal MarisaA and Extra ReimuA earned by the same-run Normal save. All four

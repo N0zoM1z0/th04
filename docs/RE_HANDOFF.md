@@ -5,6 +5,41 @@ Code/docs stay English. Use one low-priority CPU, serialize Borland/Wine builds,
 launch muted/headless, and clean unused products after each bounded batch.
 The user uses Windows: no GUI, focus changes or host-key injection.
 
+## Verified Stage3 RGB samples (v1465)
+
+Original MAIN 0AAF:0207 has six complete font/video/DGROUP/640 KiB RAM/CPU
+witnesses at Stage3 frames 1/400/1601/2228/2357/4000. Each complete 640x400 RGB
+picture and all 8000 active TRAM bytes equal authenticated current 566/88575 GNU
+outputs; prior actual UBSan file hashes agree. All six full fonts share SHA-256 prefix `46198044`.
+The nine whole pools, three private Midboss fields, configured fields and RNG
+counters match old original RAM at every sample. All 38 programmed video regions
+reproduce; raw indices/GDC clocks remain unequal. Together with the separate
+eight Stage2 samples below, 14 sampled complete RGB/TRAM comparisons pass.
+
+The 489.65s original run completes 9837/10394/4000 Stage1/2/3 loops. All 24231
+raw loop records and 14472 ordered RNG PC/SS/SP/stack-word records match the retained
+original. Only observer hook indices translate. The old extra Stage3 loop4000
+stays unpaired because this capture ends at its completed score. All 4000 planned
+inputs and 57 actual API edges validate; the GameOver guard never fires. Actual
+completed initialization at MAIN 0AAF:007E activates the input watches.
+Native programs did not execute again. V1/V2 reader bytes remain preserved;
+V3 requires complete loop extents and physical plans, then compares the raw route.
+
+The 450-loop/10-edge direction/Bomb probe and default 400-loop regression pass.
+Four input controls, four complete-route controls and one decoded-pixel control
+reject, including raw mutations that preserve all six selected pool/state checks.
+Receipts: `.analysis/reconstruction/probes/dos-stage3-font-v1465`.
+Recovery restores 15 owned aliases and reruns three original readers plus full
+RGB with identical outputs. All 52896 protected hashes verify. Retiring 39 owned
+files releases at least 119.59 MiB after all retained phase evidence/recovery
+costs and a 1 MiB final-metadata reserve. Run `replay_restored.py --output-dir NEW`
+from the DOS root; keep the full compressed witnesses and every parent backing.
+Next forecast a guarded Stage3 Boss/later-stage input extension with the retained
+native program before another long original prefix. Full campaigns, every-frame
+display, natural UI/IRQ/scanout timing, NP2/Windows, pristine provenance and
+artifact exactness remain open. Keep all prior raw input/GDC/graphics-index
+failures; sampled RGB does not waive them.
+
 ## Verified sparse Stage2 full RGB (v1464)
 
 Original MAIN0AAF:0207 now has complete same-context live font/video/DGROUP/
@@ -27,9 +62,8 @@ identities verify. Retiring41 owned generated aliases releases at least120.086
 MiB after all retained phase evidence/recovery costs and1MiB final-metadata
 reserve. Keep the compressed font/video/RAM witnesses and every parent backing;
 use `replay_restored.py --output-dir NEW` from the DOS root for recovery.
-Stage3 full fonts/RGB remain missing. Extend the sparse monitor with the retained
-actual Bomb/movement keyboard transport and GameOver guard,then collect its6
-declared score points. Do not substitute a Stage1/demo font for current Stage3.
+The6 Stage3 points above now have their own current fonts/RGB. Do not substitute
+old Stage1/demo fonts when extending current later-stage observations.
 Every-frame RGB,natural UI/IRQ/scanout timing,later stages and campaigns remain
 open. The earlier palette repair and complete state/pool limitations still apply.
 
@@ -47,7 +81,8 @@ input wires remain identical; all 58 current picture/index/text/palette outputs
 agree across configurations. Both legacy 3500/8000 routes and 177 old display
 observations (59 RGB/TRAM pairs) reproduce. Four actual malformed picture plans
 and 2 semantic output mutations reject. Current full active TRAM passes 14;
-raw full graphics indices fail 14 and full live fonts/RGB remain unproved.
+raw full graphics indices fail14. The later sparse captures now supply live
+fonts and passing RGB for14 selected scores;continuous display remains unproved.
 Preserve the failed recovery-count and legacy-path consumers; fixed V2 readers
 retain the same inputs and program identities. No DOS source or exact state changes.
 
@@ -61,9 +96,8 @@ Keep native `.analysis/port64/stage-pictures-v1463-final` main/session/link inpu
 and all prior backing dependencies. Use fresh build/output directories.
 Receipts: `.analysis/reconstruction/probes/native-stage2-pictures-v1463`.
 
-Next obtain current full live-font evidence for the sampled Stage2/3 boundaries
-and compare complete composited RGB. Reuse current captures and minimize
-observer stops before another long prefix. Raw indices include duplicate colors
+Extend the verified sparse route above before another long prefix. Reuse current
+captures and minimize observer stops. Raw indices include duplicate colors
 and hidden cache bytes; their failure is not interchangeable with RGB failure.
 Natural UI/IRQ/init-interior/scanout timing, Stage3 Boss/later stages/campaigns,
 NP2, Windows, pristine provenance and full-artifact exactness remain open.
@@ -140,9 +174,9 @@ source MAIN cohort remains 200279 bytes / 1183 relocations/SHA
 Fresh preflights and full MAIN database attestation pass. Canonicality remains
 candidate-local-attested, not proof of a pristine official dump.
 
-Next use retained Stage2/Stage3 observations to expose native picture/effect
-mismatches before another long DOS prefix. Then extend Stage3 Boss/later-stage
-parity with a bounded, own-file CPU/input/RNG/pool Oracle. Complete natural
+Next extend Stage3 Boss/later-stage parity with a bounded own-file CPU/input/
+RNG/pool Oracle, after forecasting the input extension in native. Preserve the
+14 sampled full RGB/TRAM passes above. Complete natural
 UI/IRQ/GDC timing, campaigns, NP2, Windows, pristine provenance and full-artifact
 exactness remain open. Read docs/skills and current ledgers, run preflight and
 attest the active database before target work. Never restart a live capture
