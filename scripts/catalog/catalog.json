@@ -490,6 +490,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/capture_th04_dos_sparse_fonts.py",
+    "category": "formats",
+    "role": "command",
+    "purpose": "Capture sparse original MAIN live-font/video witnesses with ordinary keys.",
+    "purpose_source": "source-docstring"
+  },
+  {
     "path": "scripts/probes/check_th04_bullet_default_objects.py",
     "category": "source-review",
     "role": "command",
@@ -3715,6 +3722,13 @@
     "role": "support",
     "purpose": "Observe original complete video, font and DGROUP at the actual score-return instruction boundary.",
     "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_sparse_font_gdb.py",
+    "category": "formats",
+    "role": "support",
+    "purpose": "Read sparse full fonts/video/RAM at original MAIN score-return boundaries.",
+    "purpose_source": "source-docstring"
   },
   {
     "path": "scripts/probes/th04_stage_boundary_gdb.py",

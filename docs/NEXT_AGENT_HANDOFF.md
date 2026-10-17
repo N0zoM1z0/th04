@@ -5,6 +5,22 @@ Code/docs stay English. Use one low-priority CPU, serialize Borland/Wine builds,
 launch muted/headless, and clean unused products after each bounded batch.
 The user uses Windows: no GUI, focus changes or host-key injection.
 
+## Sparse live-font observation (v1464, in progress)
+
+The new `capture_th04_dos_sparse_fonts.py` keeps ordinary OP seed64 and real
+keyboard input, reads only small frame/stage counters between selected scores,
+and captures full live font/video/DGROUP/640 KiB RAM at original MAIN
+0AAF:0207. The Stage1 micro completes frames1/74/100/400 in25.1s; its full
+1136-relocation load image, actual CPU/RAM and first400 loop fields/RNG pass.
+All4 fonts reproduce `46198044`. Keep the failed first collector: already-zero
+RAM never triggered the zero-value write watch; readiness now reads initial RAM.
+
+Receipts: `.analysis/reconstruction/probes/dos-stage-font-v1464`.
+The Stage2 eight-point run is active; inspect its actual process/receipt under
+`.analysis/runtime/candidates/dos-stage-font-v1464-stage2` before continuing.
+Do not restart a live capture on polling timeout. Full Stage2/3 fonts/RGB remain
+pending; the complete objective and prior palette/state limitations stay open.
+
 ## Verified stage-session palette repair (v1463)
 
 Native 566/88575 restores the original completed-stage PaletteTone reset:
