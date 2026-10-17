@@ -25,23 +25,19 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
-The primary original/reconstructed DOS comparison covers 3500 Stage2 updates,
-including observed Midboss defeat at 3349 and callback reset at 3414, followed
-by 86 updates. Nine full pools, 22 states, 7861 ordered RNG calls and 38 video
-regions agree over 10507 snapshots. Aggregate retains 174 post-reset key and
-10507 raw-GDC differences; older failed vectors remain independent.
+The primary original/reconstructed DOS comparison covers 8000 Stage2 updates,
+including Continue 5363, dialogue 6982 and 1018 Kurumi battle updates. Nine full
+pools, 22 states, 10161 ordered RNG calls and 38 configured video regions agree over
+24007 snapshots. Aggregate retains 422 post-reset key/24007 raw-GDC differences;
+six additional UI records retain 6 raw-GDC differences. Older vectors stay separate.
 
-Unchanged complete 566/3747e671 cold GNU and optimized UBSan programs match 7003
-selected records and 3501 full nine-pool snapshots, consumed input, homing and
-Boss/Midboss/RNG. Actual own-file near/far callbacks and adjacent full-memory
-witnesses verify DOS reset. No gameplay repair was needed. Native Stage2 pictures,
-natural clocks, campaigns, NP2, Windows and pristine provenance remain open.
-Both goals stay active; see the [current handoff](docs/RE_HANDOFF.md).
-
-The new opt-in wait adapter is cold-built as566/6a2664d6 and preserves the
-3500/59-picture legacy fixtures in GNU and UBSan. Original/source8000
-verification is running; native-only forecasts do not extend acceptance.
-
+Current 566/bcd114bb cold GNU and optimized UBSan match 16003 selected records and 8001
+full nine-pool snapshots, actual consumed inputs, homing and Boss/Midboss/RNG.
+The custom-pool observer now exports six real Kurumi rays, including inactive
+bytes; the old 602-record failure remains retained. Gameplay logic was unchanged.
+Legacy 3500 and 59 RGB/TRAM elapsed fixtures pass. Boss is still phase 2/3811 HP at 8000;
+defeat/clear, native Stage2 pictures, natural clocks, campaigns, NP2, Windows and pristine
+provenance remain open. Both goals stay active; see the [current handoff](docs/RE_HANDOFF.md).
 
 Development is active. All four DOS products build from maintained local source.
 Retained original/reconstructed DOS comparisons agree across all four bundled

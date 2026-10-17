@@ -5,8 +5,12 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
+Current v1460: 8000 Stage2 updates and 1018 Kurumi battle updates are compared;
+current 566/bcd114bb cold GNU/UBSan state/full-pool/input checks pass. DOS key/rawGDC,
+Boss defeat/clear andnativeStage2 pictures/timing remain open. See [handoff](RE_HANDOFF.md).
+
 Updated 2026-10-17. The full native goal remains active on `port/modern-64`.
-The latest verified route snapshot was recorded under
+The historical v1432 route snapshot was recorded under
 `.analysis/worktrees/native-natural-clear-v1432/`, but the 2026-10-16 audit
 found the entire old worktree directory absent. Root-level reports/archives and
 published source remain; frozen programs and 94 protected route files need
@@ -26,7 +30,7 @@ state blocks, with three pools empty. Aggregate acceptance stays rejected for156
 post-reset input differences despite equal consumed inputs and scalar controls.
 Current v1436 additionally passes all configured full VRAM/text/palette/display
 regions for the ordinary fragment including deaths/respawns. Raw GDC timing
-still differs every frame; companion post-reset input differs at155samples.
+still differs every frame; companion post-reset input differs at 155samples.
 Boss/full lifecycle/physical/Windows stay open. A v1437 bounded7,500-update pair now covers actual Boss phases0/1/2 with
 matching input/RNG/pools/states and258 retained post-reset input differences.
 Original naturally reaches Game Over at7547; held Shot waits for release in
@@ -112,12 +116,12 @@ without counting borrowed files as new cleanup.
 
 Verified retention archives 640 owned aliases/intermediates in 255 blobs,
 releasing 254.469 MiB after archive and new gzip recipes; all 13102 protected
-hashes remain equal. Current GNU87/cache, UBSan game/Orange/cold cores, all38
+hashes remain equal. Current GNU87/cache, UBSan game/Orange/cold cores, all 38
 GNU pictures, complete original compressed font/video/memory and the old failed
 producer remain recoverable or live. `recover.py` verifies SHA/mode/nsmtime.
 `replay_restored.py` restores one owned archived actual writer, borrows four
 v1451 original aliases and reruns it plus both repaired8000-update programs.
-Every selected state/entry/popup gate and all38 BMP identities reproduce;
+Every selected state/entry/popup gate and all 38 BMP identities reproduce;
 the old writer still fails1377 pixels and both current profiles pass. All five
 aliases verify and retire afterward. The four borrowed aliases receive no new
 cleanup credit; previous journals and failed attempts remain unchanged.
@@ -196,7 +200,7 @@ by that menu and is not requeued as a new pause after Resume.
 
 Original MAIN DEMO_TEXT0AAF:07DF..08FD (load0B2CF..0B3ED,287 bytes), full
 input_wait130E:0133..0186, frame_delay130E:00D7..00EB and VSYNC_WAIT0000:2462..
-2487 execute with legal MZ relocations/DGROUP2134 at loads1000/3333.
+2487 execute with legal MZ relocations/DGROUP 2134 at loads1000/3333.
 Initial/final busy reset-sense loops sample immediately then at explicitly
 chosen counted-edge observation points, without clearing Count1. Those points
 are keyboard/CPU cadence adapters, not measured polling costs. Menu waits
@@ -408,7 +412,7 @@ MAIN now initializes its own counter BSS while retaining raster phase.
 
 Original MAIN0AAF:3971..3CEE (load-module E461..E7DD,893 bytes), frame_delay
 130E:00D7..00EB, input_wait130E:0133..0186 and black fades0000:0622..06A3
-execute unchanged at loads1000/3333. Full legal MZ relocation/DGROUP2134 and
+execute unchanged at loads1000/3333. Full legal MZ relocation/DGROUP 2134 and
 seeded live2AB2/2AB4/2ABA counters are retained. Resident scratch9000:0000
 lies outside both load modules, DGROUP and stack. Graphics, keyboard, ranking,
 HUD, sound and final dispatch have guarded ABI adapters. Stage5 Bad Ending
@@ -467,7 +471,7 @@ number273. The legacy no-clock helper remains a separate logical model.
 
 Observed MAIN relative CS:IP0000:B7B9/B7E4/B80F complete three exits (124 bytes),
 0000:0622..06A3 black fades and0000:2462..2487 IRQ-owned wait execute unchanged
-at loads1000/3333. DGROUP2134 counters2AB2/2AB4/2ABA, increment0772 and active
+at loads1000/3333. DGROUP 2134 counters2AB2/2AB4/2ABA, increment0772 and active
 owner0774 are explicit. Sound0204 and nonreturning execl are guarded seams;
 ideal IRQ stimuli do not measure CPU/I/O, sound or DOS-loader latency.
 The targets remain candidate-local-attested; historical exact stays661/663.
@@ -1135,7 +1139,7 @@ This accepts the bounded corpus and explicit native fault surface; it is not
 an exhaustive four-coordinate Cartesian product or historical byte exactness.
 
 Eight fresh current startup/fourDemo/freshOP profiles each match original
-selected state at15988 boundaries and every129 frozen v1401 output hashes.
+selected state at 15988 boundaries and every129 frozen v1401 output hashes.
 Startup/IRQ code itself is unchanged. Physical timing, default resource/CPU
 costs, full pictures and broader Boss/death/process remain open. Continue
 bounded source recovery before long game campaigns. Windows GUI/focus/host
@@ -1169,7 +1173,7 @@ independent unsigned IRQ owner and services PMD at timer deadlines within an
 elapsed admission. It preserves inherited Logo counts and clears inactive zero
 fallbacks. Cold70GNU/6UBSan contracts, three compiled negative controls,
 132 frontend configuration/restart cases and eight full four-Demo routes pass.
-Each route matches original selected state at15988 boundaries. Only startup
+Each route matches original selected state at 15988 boundaries. Only startup
 and text-clock traces change for PMD profiles; other127 outputs remain equal to
 frozen v1399. No-driver retains all129. Current GNU/UBSan outputs match completely.
 Default loading/graphics/CPU costs, physical timing and other scene adapters
@@ -1453,7 +1457,7 @@ handoff for replay recipes and evidence scopes.
 
 All 15,984 original GDC/time records reproduce the archived timing model;
 native now uses the nearest period, 17,723,227 ns. Fresh GNU69 CTests,
-optimized UBSan3 targets and127 identical ordinary Demo files pass. Independent
+optimized UBSan3 targets and 127 identical ordinary Demo files pass. Independent
 20,000 scheduling and1,000,000 frontend-refresh controls reject the old cadence;
 an actual private Linux window/input route also passes. Producer03351541 has
 two changed inputs. Full-font/register references and original selected-state
@@ -1474,7 +1478,7 @@ A separate actual FrontEnd recorded-event-clock experiment reproduces all
 index differences remain; explicitDAC
 RGBdiagnostics match 40/40, raw RGB 12/40. Oldzero negativecontrol rejects.
 Defaultboot/loading/process CPU-I/Oelapsed owners,rawpalette/RGB,physicalscanout,
-broaderpairedBoss/death/process andWindows remainopen. The full goal staysactive.
+broaderpairedBoss/death/process andWindows remain open. The full goal staysactive.
 
 ## Native raw RGB palette owner (v1389)
 

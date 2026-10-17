@@ -5871,28 +5871,56 @@ Old journals and the incomplete v1458 reader observation remain unchanged.
 The two old public capture/keyboard files remain frozen backing inputs.
 
 
-## Stage2 wait-owner preparation (v1460)
+## Stage2 waits and actual Kurumi pool ownership (v1460)
 
-The v1460 opt-in wait adapter has complete 566-file/6a2664d6 cold GNU87/83CTests
-and optimized UBSan2 builds. Both actual programs reproduce the prior3500
-state/pool wires and the separate9835/59RGB-TRAM elapsed fixture. Eleven actual
-CLI plan mutations reject; the streaming reader reproduces all21014 original/
-source3500 metadata/DGROUP/video records byte for byte. Native-only forecasts
-identify Continue5363 and pre-Boss dialogue6982 and drive8000 planned updates.
-Original/reconstructed8000 captures are in progress; those forecasts and the
-new auxiliary input protocol do not widen the accepted target frontier yet.
-Use `.analysis/reconstruction/probes/dos-stage2-boss-v1460/` and the new native
-`.analysis/port64/stage2-boss-v1460-final/{gnu,ubsan}` programs. The prior3747
-programs/cache and all frozen historical readers remain preserved.
+Original and reconstructed DOS complete 8000 Stage2 updates after the same
+Stage1 return at 9837. Comparable fields, 10161 ordered RNG calls (708 LCG/9453 ring),
+nine full pools, 22 states and 38 configured video regions agree across 24007
+bridge/actor/score/loop snapshots; 17838 independent raw loops bind the route.
+The aggregate remains false: 422 post-reset key and 24007 raw-GDC records differ.
+Six additional own-file blocking CPU/stack/full-memory observations have equal
+fields, full pools/states and configured video, with six raw-GDC differences.
+These are MAIN replacements with original OP/MAINE/ZUN/assets; older failed
+vectors remain independent.
 
-The old generic diagnostic guard stopped at5363 and did not identify its owner.
-An initial dialogue-only prototype produced no dialogue records and rejected a
-non-dialogue stall. Explicit typed Game Over observations then demonstrate the
-native Continue5363 path, followed by dialogue6982. These failed scouts and
-all private compiler/source capsules remain separate. They are budget and
-control-plane observations, not evidence that the original uses those boundaries.
+Continue at 5363 and pre-Boss dialogue at 6982 are independently observed on both
+DOS files. Own player entries establish 5364 input 32 and 6983 input 8192, although
+the preceding 6982 loop input is 32. The native adapter uses real FrontEnd keys;
+189 Continue and 400 dialogue polls suspend gameplay and resume one update each.
+All other loop-to-player input checks stay strict. Five fixed auxiliary watches
+plus seven cached boundary points keep each debugger at 15 registered objects.
+Fourteen target-record and 12 native-record mutations reject; 11 earlier actual
+CLI plan negatives and 21014 old/new reader records remain valid.
 
-The explicit `stage-epoch-waits.txt` stimulus grammar is:
+Current complete 566/bcd114bb cold GNU 87 programs/83 CTests and optimized UBSan 2
+match 16003 selected scalar records and 8001 complete nine-pool snapshots, actual
+consumed input, homing, Boss/Midboss and continuous RNG. 278 volatile native
+post-reset key samples remain separately measured. Both actual programs also
+reproduce the legacy 3500 wires and the separate 9835 selected updates/59 full
+RGB-TRAM pairs/177 observations with recorded elapsed inputs.
+
+The superseded 6a cold program failed 602 custom-pool records at 7399..8000. Its
+exporter always used the Yuuka6 view and omitted six existing Kurumi rays.
+Pinned original MAIN 13A9:4F84 independently observes a byte flag, word members,
+26-byte stride and six entries at DGROUP 2134:B204; source own MAP locates the
+allocator 157C:335C and pool 242E:4544. The corrected exporter writes all six
+actual records into the first 156/832 bytes and preserves the full tail and
+inactive coordinates. All other exported bytes stay identical. Gameplay logic
+was unchanged; keep the failed program/report as a counterexample.
+
+Boss initialization is observed at 6983 with 4800 HP; phase 1 starts at 7303 and phase 2
+starts at 7334. All 1018 battle actor updates through 8000 match; the final Boss is
+phase 2/3811 HP. Defeat and clear remain open. The prior Midboss defeat at 3349 and
+reset at 3414 remain accepted under their separate callback/lifecycle gate. Complete
+initial/final physical CFG/SCR files agree and all ten 16-bit score checksums pass.
+
+Evidence bundle: `.analysis/reconstruction/probes/dos-stage2-boss-v1460/`. Current cold producer closure is 566/bcd114bb;
+see result.json,paired-final-{gnu,ubsan},boss-lifecycle.json,custom-wire-fix.json,
+kurumi-layout-disassembly.json and both wait-control reports. The private first
+wire correction and the maintained complete cold rebuild are separate proofs.
+The initial native-only scouts selected a budget;the later independent original
+and source captures supply the actual accepted boundaries. The failed dialogue-
+only scout and the superseded 6a 602-record failure remain retained.
 
 ```text
 TH04_STAGE_WAITS 1 2
@@ -5900,17 +5928,27 @@ TH04_STAGE_WAITS 1 2
 6982 dialogue
 ```
 
-Frames/kinds are declared inputs. The driver rejects invalid headers, duplicate/
-out-of-range cues, unknown kinds, trailing data, missing actual waits and waits
-that were declared but never observed. It uses normal FrontEnd key inputs and
-the existing Kurumi owner, without assigning gameplay/RNG/phase. Legacy mode
-has no wait file and retains its prior byte-identical observation wires.
+This file declares input cues, not expected state. The actual normal FrontEnd
+handles Continue/dialogue;stage2-consumed.txt observes State::player_input and
+stage2-blocks.txt binds the real wait sequence. Required own-MZ player-entry
+observations independently establish input ownership. Counterfactual loop-only
+input at 6983 rejects;no other frame receives an override. The main rawtrace and
+all 35 comparable fields remain strict. The six auxiliary raw CPU/DGROUP/video/
+conventional-memory rows and their separate raw-GDC failure remain preserved.
 
-Stage2-consumed.txt records State::player_input once per actual actor boundary.
-UI polls can change State::last_input: the private native Continue resumes with
-player32/last0, while the later dialogue finishes with8192. This reuses the
-v1448 player-prefix versus STD ordering discovery. Target comparisons require
-own-file player-entry CPU/full-memory evidence, rather than assuming the loop
-sample owns every post-dialogue player prefix. Ordinary loop checks remain
-strict elsewhere. New auxiliary video and key/GDC differences will be reported
-separately; no native Stage2 picture or natural UI timing claim follows.
+Focused comparison:
+
+```sh
+python3 scripts/probes/compare_th04_stage_boundary.py \
+  --stage2-updates 8000 --require-midboss --require-bounded-watchpoints \
+  --require-stage2-waits \
+  --original .analysis/runtime/candidates/dos-stage2-boss-v1460-original \
+  --candidate .analysis/runtime/candidates/dos-stage2-boss-v1460-candidate \
+  --native-root .analysis/native/port64-recovery-v1445 \
+  --native-frontend .analysis/reconstruction/probes/dos-stage2-boss-v1460/native-final-gnu/frontend \
+  --native-receipt .analysis/reconstruction/probes/dos-stage2-boss-v1460/native-final-gnu/receipt.json \
+  --output-dir .analysis/reconstruction/probes/NEW-stage2-boss-comparison
+```
+
+After retention,use the frozen recovery wrapper to restore required aliases
+before this reduction; never overwrite the closed outputs.
