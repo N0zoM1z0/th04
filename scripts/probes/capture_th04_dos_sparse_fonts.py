@@ -4,6 +4,8 @@
 Use a fresh output below .analysis/runtime/candidates. The plan names an
 attested initial HDI, boundary profile, font/video ABI receipts, selected
 score-return points, and actual observed dialogue/Continue frame cues.
+A deadline interrupts the debugger for a read-only CPU/RAM witness before
+termination; an interrupted capture always remains incomplete.
 """
 from __future__ import annotations
 
@@ -116,6 +118,9 @@ def main():
         shutil.copy2(ROOT/'scripts/probes/th04_sparse_actor_gdb.py',capsule/'th04_sparse_actor_gdb.py')
     keyboard=ROOT/'scripts/probes/th04_ordinary_keyboard.gdb';inputs[str(keyboard)]=sha(keyboard)
     text=keyboard.read_text()
+    anchor='    monitor = Monitor(out, ram)'
+    assert text.count(anchor)==1
+    text=text.replace(anchor,anchor+"\n    from th04_sparse_interrupt_gdb import install\n    install(monitor)")
     text=text.replace("sys.path.insert(0, os.environ['TH04_CLOCK_SOURCE_DIR'])", "sys.path.insert(0, "+repr(str(ROOT/'scripts'))+")\nsys.path.insert(0, "+repr(str(ROOT/'scripts/probes'))+")\nsys.path.insert(0, os.environ['TH04_CLOCK_SOURCE_DIR'])")
     # The historical adapter's regex is overescaped. Correct only this copy.
     text=text.replace("'\\\\bKBD_[A-Za-z0-9_]+\\\\b'", r"r'\bKBD_[A-Za-z0-9_]+\b'")
@@ -133,6 +138,7 @@ def main():
         assert text.count(anchor)==1
         text=text.replace(anchor,"    if monitor is not None and monitor.input_plan is not None and monitor.input_plan.pending:\n        monitor.input_plan.flush()\n        continue\n"+anchor)
     adapter=capsule/'keyboard.gdb';adapter.write_text(text)
+    shutil.copy2(ROOT/'scripts/probes/th04_sparse_interrupt_gdb.py',capsule/'th04_sparse_interrupt_gdb.py')
     initial=out/'initial.hdi';shutil.copy2(image_source,initial)
     image=out/'execution.hdi';shutil.copy2(initial,image)
     shutil.copy2(font_source,out/'FREECG98.BMP')
@@ -163,13 +169,18 @@ def main():
         (out/'process.json').write_text(json.dumps(dict(pid=child.pid,started_ns=time.time_ns()))+'\n')
         try:code=child.wait(timeout=args.timeout)
         except subprocess.TimeoutExpired:
-            timeout=True;os.killpg(child.pid,signal.SIGTERM)
+            # Let the debugger save a stopped guest CPU/RAM witness first.
+            timeout=True;os.kill(child.pid,signal.SIGINT)
             try:code=child.wait(timeout=10)
-            except subprocess.TimeoutExpired:os.killpg(child.pid,signal.SIGKILL);code=child.wait()
+            except subprocess.TimeoutExpired:
+                os.killpg(child.pid,signal.SIGTERM)
+                try:code=child.wait(timeout=10)
+                except subprocess.TimeoutExpired:os.killpg(child.pid,signal.SIGKILL);code=child.wait()
     for name,digest in {**inputs,**frozen}.items():assert sha(Path(name))==digest,(name,'capture input changed')
     complete=not timeout and code==0 and b'TH04_SPARSE_FONTS_COMPLETE\n' in (out/'boot.log').read_bytes()
     files={str(p.relative_to(out)):sha(p) for p in out.rglob('*') if p.is_file() and p.suffix!='.pyc'}
     receipt=dict(complete=complete,timeout=timeout,exit=code,elapsed=time.monotonic()-start,
+        deadline_diagnostic_present=(out/'interrupt-diagnostic.json').is_file(),
         command=command,source_files=inputs,capsule=frozen,files=files,
         initial_hdi_sha256=sha(initial),final_hdi_sha256=sha(image),
         emulator_sha256=sha(binary),main_sha256=sha(main_path),points=points,

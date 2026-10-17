@@ -25,6 +25,12 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
+Current v1466 retains a failed original Stage3 capture at loop7834. Its complete
+7832-frame actor prefix matches nine whole native pools and 21 stable fields;
+Boss parity remains open. The collector now saves stopped CPU/RAM on a deadline,
+validated by an actual controlled Micro and independent mutation checks.
+See the current handoff before another long original/source run.
+
 The v1464/v1465 captures validate 14 sampled complete RGB/TRAM pairs across
 Stage2/3, using each original score boundary's full live font/video/RAM.
 Authenticated 566/88575 GNU pictures match every 640x400 RGB pixel and all 8000

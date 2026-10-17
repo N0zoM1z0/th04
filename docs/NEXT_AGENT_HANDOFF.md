@@ -5,26 +5,38 @@ Code/docs stay English. Use one low-priority CPU, serialize Borland/Wine builds,
 launch muted/headless, and clean unused products after each bounded batch.
 The user uses Windows: no GUI, focus changes or host-key injection.
 
-## Validated native Stage3 Boss forecast (v1466)
+## Current Stage3 frontier and blocker (v1466)
 
-Unmodified current cold GNU and optimized UBSan consume the same recorded normal
-input plan through 12000 Stage3 updates; all 41 outputs agree byte-for-byte with
-the private const adviser. The accepted first 4000 inputs remain unchanged.
-A declared dialogue at 9202 precedes Boss phases 1/2/3 at 9203/9241/9273.
-Original and reconstructed DOS Boss parity are still pending. Static sweep,
-diamond and upper continuations fail in native at 4448/4357/4242; preserve these
-failed forecasts and the rejected undeclared-dialogue run.
+The original collector stops producing loops at Stage3 7834 and reaches its
+1800.85-second deadline. Exit 0 does not make it complete: timeout is true and
+the completion marker is absent. Its own stopped CPU was not captured, so the
+waiting instruction and cause remain unknown. Full Boss/source-DOS parity is
+still unproved. Do not restart another long prefix without deadline diagnostics.
 
-The first private include overlay compiled but did not execute its adviser.
-V3 preserves both nested include owners and requires actual compiler dependency
-paths plus a mandatory runtime advice sidecar. Compilation alone is insufficient.
-Receipts and the normal-input plan are under
-`.analysis/reconstruction/probes/stage3-boss-v1466`. Next capture original
-Stage3 after-actor DGROUP continuously plus sparse own-font/video/RAM at Boss
-checkpoints, then compare complete pools/state/RNG with the stock programs.
-Early cleanup retires 44 completed payloads with verified recovery, conservatively
-releasing 1628.43 MiB; all 52921 parent identities and current source verify.
-Keep current programs, link inputs, recorded advice and every compressed backing.
+An immutable partial stream yields 7832 complete after-actor records. All nine
+whole pools and 21 stable native fields, including private3/homing/RNG state,
+agree with current GNU; 685 volatile post-actor keys remain separate. Independent whole
+1136-relocation MZ, 28066 raw loops and 7835 actual Stage3 inputs validate.
+The old first 24231 loops and all 14472 ordered RNG stack-word records reproduce.
+The old extra loop4000 differs in one input: its old held40 versus the continued
+plan's normal Bomb pulse56. That raw aggregate stays false. The first 4000
+consumed inputs remain unchanged. Partial gzip/footer and later coverage stay
+explicitly missing; prepared 12000-frame/Boss/RGB reducers do not imply a pass.
+
+Both unmodified current GNU/optimized UBSan consume the frozen normal-input
+plan through 12000 with all 99 outputs identical, including 14 picture sets.
+This remains a native forecast: no new original Boss/RGB acceptance follows.
+The previous 14 sampled Stage2/3 RGB/TRAM matches below remain unchanged.
+
+The collector now saves a read-only CPU/full640KiB RAM witness on its deadline
+SIGINT before TERM/KILL fallback. A real 25-second controlled Micro validates
+original 0AAF:00B7/frame55, own MZ/registers/opcode/RAM and unchanged CPU; two
+rebased mutations reject. That controlled capture remains incomplete. Next use
+this hook to locate the Stage3 wait, then resume original/source/native parity.
+Run collectors from the DOS main checkout. Engine source stays 566/88575.
+Receipts: `.analysis/reconstruction/probes/stage3-boss-v1466`. Fifteen capture
+aliases restore with exact metadata and independent readers reproduce before
+retirement. Keep all compressed witnesses, source capsules and current programs.
 
 ## Verified Stage3 RGB samples (v1465)
 

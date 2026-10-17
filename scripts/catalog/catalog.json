@@ -3745,6 +3745,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/th04_sparse_interrupt_gdb.py",
+    "category": "source-review",
+    "role": "support",
+    "purpose": "Read a stopped emulator's guest CPU/RAM on the collector deadline interrupt.",
+    "purpose_source": "source-docstring"
+  },
+  {
     "path": "scripts/probes/th04_stage_boundary_gdb.py",
     "category": "boundaries",
     "role": "support",

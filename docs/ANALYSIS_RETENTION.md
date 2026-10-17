@@ -1,5 +1,45 @@
 # Private build and analysis retention
 
+## Incomplete Stage3 extension and deadline diagnostics (v1466)
+
+The original 12000-update proposal times out after 1800.85 seconds at raw loop
+7834. It remains incomplete despite GDB exit0. Its immutable partial stream
+yields 7832 complete nine-pool/stable-state records matching native GNU; no
+original Boss/full-RGB/source acceptance follows. Keep all missing-tail, raw-key
+and prior GDC/index failures. The new deadline reader is independently validated
+by an actual controlled25-second CPU/RAM witness and two rebased mutations.
+
+All313 owned native forecast/stock/picture and capture aliases retire once.
+The combined conservative release is8134.367 MiB (7.94 GiB), including every
+earlier v1466 cleanup. Charge all retained phase/capture logical paths, including
+shared compressed files, listed public files and1MiB final metadata. Do not add
+earlier44-file/forecast/deduplication or15-alias recovery credit again. All53938
+protected identities verify, including52921 parent/late/finish identities.
+Current566/88575 programs/link inputs, immutable source/capsules, incomplete actor
+stream bytes, fullfont/video/RAM witnesses and every parent provider stay live.
+
+Actual recovery restores15 aliases with SHA,size,mode and nanosecond mtime.
+The normalMicro, controlledinterrupt and failedoriginal own-MZ/input/CPU/RAM
+readers reproduce; the full7832 nine-pool comparison reruns with identical
+outputs. Restored aliases retire. Failed/partial results remain failed/partial.
+This reruns recorded-data consumers, not the emulator. Both stock native
+programs separately regenerated all41 state outputs after their first archive,
+then produced99 identical outputs including14 picture sets. Original Boss
+pictures remain unobserved.
+
+From the DOS root, verify the recipe-only journal (no tar member dependency):
+
+```sh
+taskset -c 1 nice -n 19 python3 \
+  .analysis/reconstruction/probes/stage3-boss-v1466/recover.py
+```
+
+Use `--restore --path EXACT` for one journal-relative owned alias, verify its
+metadata and remove it after use. Do not bulk-expand completed outputs. The
+next journal must merge every protected identity, every finish.late_protected
+entry and finish itself. The global goal stays active. Diagnose the original
+wait using the new stopped-CPU deadline witness before another long prefix.
+
 ## Sparse Stage3 live-font/RGB recovery (v1465)
 
 Thirty-nine owned aliases retire: three completed captures' initial/execution
