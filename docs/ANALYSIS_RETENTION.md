@@ -1,5 +1,30 @@
 # Native private-state retention
 
+## Actual input-poll capture recovery (v1478)
+
+DOS-root main-input-polls-v1478/recover.py carries 1825 aliases:1804 inherited
+and 21 new terminal Micro/original files. All 21 restore exact SHA, size, mode,
+nsmtime. Eight real/archive consumers preserve full capture identities, poll/
+player attestations, ordered raw prefix and maintained C++ sample replay.
+Historical Micro recipe versions resolve by exact SHA and immutable capsules.
+Keep 70685 parent identities, every current/late/finish identity and all providers.
+
+Three Micro and one original execution HDIs use exact XOR gzip archives against
+the pinned starting image. Five corrupt-hash/extent controls reject. The new raw
+stream is an exact bounded prefix of the old original gzip. Preserve sparse RAM,
+font/video, capsules, current game/component programs and cold links physically.
+Old complete game products retain 566/a7606e66;the new 568/1972cd96 source has only
+component validation. No emulator remains;do not restart completed captures.
+
+Actual newly retired files release207.10546875MiB. New archives cost0.94921875MiB;
+all cleanup artifacts cost1.1484375MiB. After 2MiB metadata reserve, local net is
+203.95703125MiB. Replacing this phase's full-image archive providers lowers
+current archive costs;do not credit that deletion again as raw release. Charge
+whole-phase retained evidence plus 32MiB reserve separately. No prior or
+never-created file credit. Restore only named paths, verify, then retire them.
+Use frozen_reader.py --reader identity|polls|prefix|component with the capture,
+output and, for component, the attestation path. Keep all inherited readers.
+
 ## Continuous UI-edge experiment recovery (v1477)
 
 Current DOS-root ui-edge-replay-v1477/recover.py carries 1804 exact aliases:
