@@ -5,6 +5,31 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Paired DOS V2 transport (v1469)
+
+`th04_stage_inputs_gdb.py` and `attest_th04_stage3_route.py` now share the V2
+parser. Actual original/source300 runs pass every raw latch,declared physical
+word,eight ordered real device edges and CPU/tick/full640KiB RAM guards. Four
+rebased controls reject. Nine focused tests retain independent raw-latch,
+physical-sidecar,Escape-edge,RAM-guard and strict V1 rejection coverage; root
+582-test CI passes. Every producer capsule must freeze and receipt the parser
+beside its worker. Expected words never generate physical key events or guest
+assignments. Input failure diagnostics retain own load segment,CPU and RAM.
+
+The source-only8000 capture is running from `source-latch-v1469/capture-route`.
+It reuses the retained original golden and derives source player MAIN0708:7463
+and unique gameplay return06AA from its own MZ/MAP. Stage3 dialogue7834 reuses
+the existing five gated wait points. Its eventual literal player witness and
+all actual raw inputs require independent checking; no pending run advances
+the4000 paired frontier. The executable cohort and native566/4787233c are unchanged.
+
+Ten closed micro aliases restore exactly and the independent reader reproduces
+before retirement. Ninety-two superseded native link inputs also restore
+SHA/size/mode/nsmtime before the unchanged parent reader checks all63324 hashes.
+Current v1469 recovery preserves those inherited identities through exact
+providers. Restore explicit historical link aliases before their consumers;
+keep current GNU/UBSan stage3-tiles inputs and all providers.
+
 ## Pause delivery and declared latch expectations (v1468)
 
 The public sparse format supports two independent planes:
@@ -59,8 +84,8 @@ handling are distinct. No capture was restarted because of that reader error.
 `pause-latch-v1468/stage3-v2-inputs.txt` derives all8000 expected words from the
 retained complete original rawI stream and preserves every physical request.
 Only7835 differs:32/8192. This binds a prepared fixture, not a new producer run.
-Legacy `th04_stage_inputs_gdb.py` and `attest_th04_stage3_route.py` still need V2
-support and a bounded original/source regression before source-DOS8000 executes.
+Legacy transport and route-reader V2 support now pass the bounded regression
+above; the separate source-only8000 run is pending independent validation.
 Native source remains566/4787233c; original/source-DOS paired coverage remains4000.
 Both complete product goals stay active.
 

@@ -1,5 +1,29 @@
 # Private build and analysis retention
 
+## Current source-latch recovery (v1469)
+
+Ten closed Micro aliases and92 superseded native `.a`/`.o` inputs retire after
+exact SHA/size/mode/nanosecond-mtime restoration. Actual restored Micro files
+reproduce the independent original/source300 reader; the unchanged parent
+reader verifies all63324 inherited hashes after link-input restoration. Current
+recovery checks protected retired paths through exact file/gzip recipes.
+Latest `stage3-tiles-v1467-final` GNU/UBSan programs and inputs remain physical.
+The source8000 capture is live; do not delete or restart it.
+
+```sh
+taskset -c 1 nice -n 19 python3 \
+  .analysis/reconstruction/probes/source-latch-v1469/recover.py
+python3 .analysis/reconstruction/probes/source-latch-v1469/frozen_reader.py attest_micro.py
+```
+
+Use `--restore --path EXACT` for one explicit root-relative historical alias
+before running an older physical-only recovery reader or linker; retire it after
+the consumer. Keep every provider and journal. Local cleanup nets59.664MiB for
+Micro aliases and253.578MiB for old link inputs after their own costs/reserves.
+These are intermediate local sums,not final phase accounting; charge the active
+capture,new snapshots,journal and final reserve before publishing a phase net.
+Earlier phase releases are not credited again.
+
 ## Pause intent/latch capture recovery (v1468)
 
 Twenty-five owned aliases from five closed real emulator captures retire after
@@ -33,8 +57,8 @@ only to archived readers, never a new producer or current-state acceptance.
 Use `--restore --path EXACT` for one journal-relative alias, then verify and
 retire it. Avoid bulk expansion. The next journal must merge retention,
 every finish.late_protected identity and finish itself. V2 has positive/negative
-original sparse controls; the legacy paired source-DOS collector still needs
-V2 support and a cheap original/source regression before source-DOS8000.
+original sparse controls; the legacy paired collector now passes the separate
+v1469 V2 original/source regression before its pending source-DOS8000 run.
 Both complete goals stay active.
 
 ## Complete Stage3 dialogue/tile batch recovery (v1467)

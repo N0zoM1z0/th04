@@ -6,6 +6,8 @@ import os
 from pathlib import Path
 import gdb
 
+from th04_stage_input_plan import parse_stage_input
+
 sha = lambda value: hashlib.sha256(value).hexdigest()
 KEYS = [(1, 'KBD_up'), (2, 'KBD_down'), (4, 'KBD_left'),
         (8, 'KBD_right'), (16, 'KBD_x'), (32, 'KBD_z')]
@@ -76,16 +78,9 @@ class InputPlan:
         self.path = Path(os.environ['TH04_STAGE_INPUT_PLAN'])
         raw = self.path.read_bytes()
         self.digest = sha(raw)
-        rows = raw.decode('ascii').splitlines()
-        header = rows[0].split()
-        assert len(header) == 4 and header[:2] == ['TH04_STAGE_INPUT', '1']
-        self.stage, self.extent = map(int, header[2:])
-        assert self.stage in [0, 2] and 0 < self.extent <= 65535 and len(rows) == self.extent + 1
-        self.inputs = []
-        for frame, line in enumerate(rows[1:]):
-            cells = list(map(int, line.split()))
-            assert len(cells) == 3 and cells[0] == frame and 0 <= cells[1] <= 63 and cells[2] == 0
-            self.inputs.append(cells[1])
+        self.version, self.stage, self.extent, self.inputs, self.expected = parse_stage_input(raw)
+        self.keys = KEYS + ([(4096, 'KBD_esc')] if self.version == 2 else [])
+        self.physical_readback_differences = []
         self.point = None
         self.guard = None
         self.guard_fired = False
@@ -117,22 +112,24 @@ class InputPlan:
             return False
         if self.guard is not None:self.guard.enabled=True
         assert frame == self.observed and frame < self.extent, 'input schedule observed stage/frame order'
-        assert actual == self.inputs[frame], 'input schedule actual loop sample differs at %d: %d != %d' % (frame, actual, self.inputs[frame])
+        assert actual == self.expected[frame], 'input schedule actual loop sample differs at %d: %d != %d' % (frame, actual, self.expected[frame])
+        if actual != self.inputs[frame]:
+            self.physical_readback_differences.append(dict(frame=frame, physical=self.inputs[frame], actual=actual))
         self.stream.write(json.dumps(dict(stage=stage, frame=frame, actual=actual,
-            expected=self.inputs[frame], tick=self.scope['tick']())) + '\n')
+            expected=self.expected[frame], physical=self.inputs[frame], tick=self.scope['tick']())) + '\n')
         self.stream.flush()
         self.observed += 1
         if self.held is None:
-            self.held = {name: False for _, name in KEYS}
+            self.held = {name: False for _, name in self.keys}
             for action in self.scope['actions']:
                 if action['key'] in self.held:
                     self.held[action['key']] = action['pressed']
-            assert sum(bit for bit, name in KEYS if self.held[name]) == self.inputs[0], 'input schedule initial physical key ownership'
+            assert sum(bit for bit, name in self.keys if self.held[name]) == self.inputs[0], 'input schedule initial physical key ownership'
         if frame + 1 < self.extent:
             wanted = self.inputs[frame + 1]
             # Release old directions before pressing their replacements.
-            self.pending = [(name, False, frame + 1) for bit, name in KEYS if self.held[name] and not wanted & bit]
-            self.pending += [(name, True, frame + 1) for bit, name in KEYS if not self.held[name] and wanted & bit]
+            self.pending = [(name, False, frame + 1) for bit, name in self.keys if self.held[name] and not wanted & bit]
+            self.pending += [(name, True, frame + 1) for bit, name in self.keys if not self.held[name] and wanted & bit]
         return bool(self.pending)
 
     def flush(self):
@@ -162,16 +159,21 @@ class InputPlan:
         m = self.monitor
         memory = m.ram.read_range(0, 655360)[0]
         (m.output / 'stage-input-error-memory.bin.gz').write_bytes(gzip.compress(memory, mtime=0, compresslevel=1))
+        registers = bytes(gdb.selected_inferior().read_memory(m.address('cpu_regs'), 48))
+        segments = bytes(gdb.selected_inferior().read_memory(m.address('Segs'), 136))
         (m.output / 'stage-input-error.json').write_text(json.dumps(dict(error=repr(error), stage=self.stage,
-            next_expected_frame=self.observed, memory_sha256=sha(memory)), indent=2) + '\n')
+            next_expected_frame=self.observed, memory_sha256=sha(memory),
+            load_segment=m.current.load, cpu_regs=registers.hex(), segments=segments.hex(),
+            cs=int.from_bytes(segments[8:16], 'little'), ip=int.from_bytes(registers[32:36], 'little') & 65535), indent=2) + '\n')
         m.error = 'stage input transport: ' + repr(error)
         return True
 
     def save(self, complete):
         (self.monitor.output / 'stage-input.json').write_text(json.dumps(dict(complete=complete,
             stage=self.stage, extent=self.extent, observed_loops=self.observed, plan_path=str(self.path),
+            plan_version=self.version, physical_readback_differences=self.physical_readback_differences,
             plan_sha256=self.digest, actions=self.actions, external_loop_owner=self.external, gameover_guard_registered=int(self.guard is not None), gameover_guard_fired=self.guard_fired,
-            scope='Actual ordinary KEYBOARD_AddKey device edges queued one observed loop ahead. Each consumed loop sample is checked against the declared input. Calls preserve CPU/context, tick and all 640 KiB conventional RAM; no gameplay/RNG/clock/key_det assignment.'), indent=2) + '\n')
+            scope='Actual ordinary KEYBOARD_AddKey device edges queued one observed loop ahead. Each actual latch strictly matches the frozen expected word. V2 keeps physical intent/readback differences explicit. Calls preserve CPU/context, tick and all 640 KiB conventional RAM; no gameplay/RNG/clock/key_det assignment.'), indent=2) + '\n')
 
     def checked_loop(self):
         try:return self.after_loop()

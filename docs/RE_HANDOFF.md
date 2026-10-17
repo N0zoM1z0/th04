@@ -6,6 +6,32 @@ fidelity goals remain active. Code/docs are English. Use one low-priority CPU
 The user uses Windows; do not open GUI windows, change focus or inject host keys.
 Clean unused intermediates during each batch and after consumers finish.
 
+## Paired V2 transport and current run (v1469)
+
+Legacy paired InputPlan and the independent route reader now use the shared
+V1/V2 parser. V1 keeps physical/latch identity; V2 checks every actual raw latch
+against the frozen expectation and derives keyboard edges only from physical
+intent. Freeze the parser beside the worker and include it in source receipts.
+Actual original/source300 probes pass all raw inputs,eight device edges and
+CPU/tick/full640KiB RAM guards. Four rebased controls reject; nine focused tests
+and root582-test CI pass. This is bounded transport, not new Stage3 acceptance.
+
+Source-only8000 is running under
+`.analysis/reconstruction/probes/source-latch-v1469/route-command.json` with a
+fresh `dos-source-latch-v1469-stage3` capture. Reuse the original8000 golden.
+Its private source profile reuses the five existing wait slots for Stage3
+dialogue7834 and a literal player-entry witness bound to own MAP/MZ; source
+player entry is MAIN0708:7463 with unique gameplay return06AA. Do not restart
+the live prefix. Keep the paired accepted frontier at4000 until the enclosing
+capture and independent comparison finish. No product source changed.
+
+Ten closed Micro aliases and92 superseded native link inputs retire after
+exact SHA/size/mode/nsmtime restoration and reader checks. All63324 inherited
+identities remain readable through current exact recipes. Use v1469 recover.py
+before deep historical replay; restore only explicit needed aliases. Latest
+stage3-tiles GNU/UBSan programs and inputs remain physical. Final phase storage
+accounting follows the live capture; do not recredit previous phases.
+
 ## Input intent and latch contract (v1468)
 
 The original Pause control now explains the rejected frame-return scheduler:
@@ -33,8 +59,8 @@ physical API guards validate. Five parser tests also pass.
 Receipts: `.analysis/reconstruction/probes/pause-latch-v1468`.
 `stage3-v2-inputs.txt` preserves all8000 physical requests and binds expected
 latches to the existing original8000 golden;7835 is explicitly32/8192.
-This fixture is prepared, not a new source-DOS run. The legacy paired source-DOS
-transport/reader still accepts V1 only. Do not feed V2 to it yet. Keep the
+This fixture was prepared separately from source-DOS execution. The paired
+transport now passes the bounded V2 regression above. Keep the
 original8000 golden and native566/4787233c programs; no producer rebuild is needed.
 
 ## Verified frontier
@@ -116,9 +142,8 @@ journal must merge retention,all finish.late_protected identities and finish.
 ## Next work and limits
 
 Keep the recorded original8000 golden; do not restart its long prefix.
-Extend the legacy paired source-DOS transport and independent route reader to
-V2 without weakening V1. Validate a cheap original/source Micro, then run only
-the reconstructed-DOS8000 extension against the frozen original golden and
+The V2 transport and cheap original/source Micro pass. Finish the current
+reconstructed-DOS8000 extension against the frozen original golden and
 independently verify actual consumed inputs. Include a literal post-dialogue
 source player-entry CPU/RAM witness bound to its own MAP/MZ and the retained
 original player witness; the earlier loop latch is a different observation. Reuse the source/layout/native pointers in the

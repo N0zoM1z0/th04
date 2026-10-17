@@ -7,6 +7,7 @@ from pathlib import Path
 from attest_th04_stage_boundary import capture_source, require, sha
 from attest_th04_stage_clear import attest_clear
 from capture_th04_dos_demos import map_symbols
+from th04_stage_input_plan import parse_stage_input
 
 KEYS = [(1, "KBD_up"), (2, "KBD_down"), (4, "KBD_left"),
         (8, "KBD_right"), (16, "KBD_x"), (32, "KBD_z")]
@@ -16,19 +17,30 @@ PRIVATE = [("pattern", 0x53, 1, "a20000"),
 root = Path(__file__).resolve().parents[2]
 
 
-def attest_input_rows(inputs, rows, raw, actions):
+def attest_input_rows(inputs, rows, raw, actions, *, expected_inputs=None, version=1):
+    inputs = list(inputs)
+    expected_inputs = list(inputs if expected_inputs is None else expected_inputs)
+    keys = KEYS + ([(4096, "KBD_esc")] if version == 2 else [])
+    allowed = sum(bit for bit, _ in keys)
+    require(version in (1, 2) and all(v >= 0 and not v & ~allowed for v in inputs),
+            "route physical key domain")
+    require(len(expected_inputs) == len(inputs) and all(0 <= v <= 65535 for v in expected_inputs),
+            "route expected latch extent/width")
+    require(version == 2 or expected_inputs == inputs, "route V1 physical/latch identity")
+    if version == 2:
+        require([row.get("physical") for row in rows] == inputs, "route declared physical sidecar inputs")
     require(len(rows) == len(inputs), "route complete input sidecar extent")
     require([(v["stage"], v["frame"], v["actual"], v["expected"]) for v in rows]
-            == [(2, i, value, value) for i, value in enumerate(inputs)], "route actual sidecar inputs")
+            == [(2, i, value, value) for i, value in enumerate(expected_inputs)], "route actual sidecar inputs")
     require([int.from_bytes(bytes.fromhex(raw[(2, i)]["fields"]["input"]), "little")
-             for i in range(len(inputs))] == inputs, "route independent raw inputs")
+             for i in range(len(inputs))] == expected_inputs, "route independent raw inputs")
     require(all(raw[(2, i)]["fields"]["shift_raw"] == "00" for i in range(len(inputs))),
             "route unshifted actual inputs")
     expected = []
     for frame in range(1, len(inputs)):
         old, new = inputs[frame - 1:frame + 1]
-        expected += [(2, frame, name, False) for bit, name in KEYS if old & bit and not new & bit]
-        expected += [(2, frame, name, True) for bit, name in KEYS if not old & bit and new & bit]
+        expected += [(2, frame, name, False) for bit, name in keys if old & bit and not new & bit]
+        expected += [(2, frame, name, True) for bit, name in keys if not old & bit and new & bit]
     require([(v["stage"], v["next_loop_frame"], v["key"], v["pressed"]) for v in actions]
             == expected, "route ordered real keyboard edges")
     require(all(v["unchanged_guest"] is True and len(v["conventional_memory_sha256"]) == 64
@@ -94,15 +106,8 @@ def attest_route(capture, target, stage3_updates=4000, stage2_budget=11000):
     plan = capture_source(receipt, "stage-inputs.txt")
     require(str(plan) == profile["stage3_input_path"] and sha(plan.read_bytes()) == profile["stage3_input_sha256"],
             "route actual input plan binding")
-    lines = plan.read_text().splitlines()
-    require(lines[0] == f"TH04_STAGE_INPUT 1 2 {stage3_updates}" and len(lines) == stage3_updates + 1,
-            "route complete declared input plan")
-    inputs = []
-    for frame, line in enumerate(lines[1:]):
-        row = list(map(int, line.split()))
-        require(len(row) == 3 and row[0] == frame and 0 <= row[1] <= 63 and row[2] == 0,
-                "route explicit input plan row")
-        inputs.append(row[1])
+    version, stage, extent, inputs, expected_inputs = parse_stage_input(plan.read_bytes())
+    require(stage == 2 and extent == stage3_updates, "route complete declared input plan")
     doc = json.loads((capture / "stage-input.json").read_text())
     require(doc["complete"] is True and doc["stage"] == 2
             and doc["extent"] == doc["observed_loops"] == stage3_updates
@@ -110,7 +115,15 @@ def attest_route(capture, target, stage3_updates=4000, stage2_budget=11000):
             and doc["external_loop_owner"] is True and doc["gameover_guard_registered"] == 1
             and doc["gameover_guard_fired"] is False, "route complete input/guard registry")
     rows = [json.loads(line) for line in (capture / "stage-input-loops.jsonl").open()]
-    edges = attest_input_rows(inputs, rows, raw, doc["actions"])
+    require(doc.get("plan_version", 1) == version, "route input format binding")
+    differences = [dict(frame=i, physical=physical, actual=latch)
+                   for i, (physical, latch) in enumerate(zip(inputs, expected_inputs, strict=True))
+                   if physical != latch]
+    if version == 2:
+        require(doc.get("physical_readback_differences") == differences,
+                "route explicit physical/readback differences")
+    edges = attest_input_rows(inputs, rows, raw, doc["actions"],
+                              expected_inputs=expected_inputs, version=version)
     require(all(m["baseline_registered_breakpoints"] == 9 and m["registered_breakpoints"] == 9 + m["watchpoint_cache_slots"]
                 and 0 <= m["watchpoint_cache_slots"] <= 7 for m in metadata), "route bounded nine-plus-seven observer registry")
     require(max(m["watchpoint_cache_slots"] for m in metadata) == 7, "route complete bounded observer cache")
@@ -118,12 +131,13 @@ def attest_route(capture, target, stage3_updates=4000, stage2_budget=11000):
             "route no hidden input or GameOver failure")
     offsets = attest_private(Path(profile["main_path"]).read_bytes(), profile, receipt["role"])
     report.update(route_reader_sha256=sha(Path(__file__).read_bytes()), stage3_input=dict(passed=True, loops=len(rows), physical_edges=edges,
+        plan_version=version, physical_readback_differences=differences,
         helper_sha256=sha(helper.read_bytes()), plan_sha256=sha(plan.read_bytes()),
         report_sha256=sha((capture / "stage-input.json").read_bytes()),
         loops_sha256=sha((capture / "stage-input-loops.jsonl").read_bytes()),
         gameover_guard_registered=1, gameover_guard_fired=False),
         stage3_private_offsets=offsets, process_lcg=attest_lcg(raw),
-        scope="Actual complete two-stage prefix and bounded Stage3 route, with every loop's declared ordinary hardware input, real keyboard edges and all conventional RAM/CPU/tick guards. Private Midboss3 bytes and the GameOver watch bind to own MZ/MAP. This is an observation attestation; paired state, native pictures, timing, campaign and exactness are separate claims.")
+        scope="Actual complete two-stage prefix and bounded Stage3 route, with every actual latch matched to its frozen expectation, physical intent/readback differences retained, real keyboard edges and all conventional RAM/CPU/tick guards. Private Midboss3 bytes and the GameOver watch bind to own MZ/MAP. This is an observation attestation; paired state, native pictures, timing, campaign and exactness are separate claims.")
     return report, metadata, raw, events
 
 
