@@ -36,7 +36,7 @@ class Fetch(gdb.Breakpoint):
             if (cs,ip)!=(m.current.load+self.point['segment'],self.point['offset']):return False
             assert int.from_bytes(segs[24:32],'little')==m.current.dgroup, 'input observer DGROUP'
             if self.kind=='init':
-                stage=m.number(0x5394,1);frame=m.number(0x538a,2)
+                stage=m.field('stage');frame=m.field('frame')
                 d.initializations.append(dict(stage=stage,frame=frame,cs=cs,ip=ip,
                     registers=regs.hex(),segments=segs.hex(),opcode=m.ram.read_range(self.linear,16)[0].hex()))
                 if stage==d.stage:
@@ -47,7 +47,7 @@ class Fetch(gdb.Breakpoint):
                 return False
             if self.kind=='guard':
                 self.enabled=False;d.guard_fired=True
-                raise ValueError('actual unexpected GameOver entry at frame '+str(m.number(0x538a,2)))
+                raise ValueError('actual unexpected GameOver entry at frame '+str(m.field('frame')))
             return d.after_loop()
         except Exception as error:
             return d.fail(error)

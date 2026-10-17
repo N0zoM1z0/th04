@@ -491,10 +491,10 @@
   },
   {
     "path": "scripts/probes/capture_th04_dos_sparse_fonts.py",
-    "category": "formats",
+    "category": "runtime",
     "role": "command",
-    "purpose": "Capture sparse original MAIN live-font/video witnesses with ordinary keys.",
-    "purpose_source": "source-docstring"
+    "purpose": "Capture sparse original or own-MZ/MAP source MAIN font/video/RAM samples and optional declared-stage actor streams.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/probes/check_th04_bullet_default_objects.py",
@@ -3750,6 +3750,13 @@
     "role": "support",
     "purpose": "Read a stopped emulator's guest CPU/RAM on the collector deadline interrupt.",
     "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/th04_sparse_profile.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Validate sparse observer fields, frame store, score return, initialization and GameOver seams against the executing MAIN and its own MAP.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/probes/th04_stage_boundary_gdb.py",

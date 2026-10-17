@@ -8,7 +8,6 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | Path | Kind | Purpose |
 | --- | --- | --- |
 | [probes/capture_th04_dos_boss_suffix.py](../probes/capture_th04_dos_boss_suffix.py) | command | Capture the ordinary Boss suffix with explicit dialogue and Continue keyboard cues. |
-| [probes/capture_th04_dos_sparse_fonts.py](../probes/capture_th04_dos_sparse_fonts.py) | command | Capture sparse original MAIN live-font/video witnesses with ordinary keys. |
 | [probes/maine_score_function_harness.py](../probes/maine_score_function_harness.py) | support | Shared cold source/OMF/link gate for one MAINE SCORE_TEXT function. |
 | [probes/op_score_function_harness.py](../probes/op_score_function_harness.py) | support | Cold source/OMF/link gate for one OP SCORE_TEXT decoded function. |
 | [probes/probe_th04_bgimage_copy_intrinsic.py](../probes/probe_th04_bgimage_copy_intrinsic.py) | command | Test whether TC4J's __memcpy__ emits the target BGIMAGE REP MOVSD loops. |

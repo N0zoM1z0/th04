@@ -1,5 +1,27 @@
 # Private build and analysis retention
 
+## Current sparse source capture recovery (v1471)
+
+Nineteen redundant closed image/font/raw/log aliases, including the temporary
+source initial image, retire after exact SHA/size/mode/nsmtime restoration.
+Both independent original/source Micro and old-dense-source readers reproduce
+with actual restored files, then with every new alias absent. Retained inputs
+include the live full-font/video/RAM samples, actor streams, immutable observer
+sources and all parent providers. No emulator job or new product build remains.
+
+```sh
+python3 .analysis/reconstruction/probes/source-sparse-v1471/recover.py
+python3 .analysis/reconstruction/probes/source-sparse-v1471/frozen_reader.py
+```
+
+Use `--restore --path EXACT` only for a needed historical alias, then verify and
+retire it after its consumer. Local cleanup releases122.082MiB after its new
+archive/replay costs and1MiB reserve. This excludes the new witnesses/source
+snapshots and is not a whole-phase or system-wide release. Earlier phase
+releases are not credited again. Current GNU/UBSan programs/link inputs remain
+physical; future builds use fresh outputs. Continue cleanup after each bounded
+batch and at intermediate checkpoints in long sessions.
+
 ## Current source8000 recovery (v1470)
 
 Nine closed source capture aliases retire after exact SHA/size/mode/nsmtime

@@ -5,9 +5,30 @@ goals remain active. Use one low-priority CPU (`taskset -c 1 nice -n 19`), mute
 SDL/headless runs and serialize Borland/Wine builds. Do not change host focus or
 inject host keys. Code, documentation and commit messages are English.
 
-Published source8000 evidence baseline: main `37e0e47`; native handoff `064397d`.
-The source normal cohort and native566/4787233c programs are unchanged by these
-documentation commits. Current recovery binds64529 identities and175 aliases.
+Source8000 evidence baseline: main `f331680`; native handoff `064397d`.
+The source normal cohort and native566/4787233c programs are unchanged.
+
+## Current sparse source observer (v1471)
+
+The public sparse collector now accepts a normal source MAIN with its own
+MZ/MAP/build receipt. Source frame CB44, stage B196, score MAIN0708:07BD,
+init-return0634 and actor-store0769 are independently bound; original offsets
+remain original-only. Five code-valid wrong-field/seam profiles reject.
+
+Actual original/source Micro300 passes all300 loop/input/RNG observations,
+301 snapshots of nine complete pools/22 states and six complete live fonts
+and640x400 RGB samples at1/64/96/128/160/300. Four post-actor key differences
+remain separate. The old dense source300 agrees on all300 pool/stable snapshots,
+with six separate post-actor keys. Original default400 reproduces all711787
+old raw bytes. These short samples do not close source Stage3 fonts/full RGB.
+
+All three captures completed in about94 seconds total. Nineteen redundant
+image/font/raw/log aliases restore exact SHA/size/mode/nsmtime; both independent
+readers reproduce with restored files and with aliases absent. Local cleanup
+releases122.082MiB after archive/replay costs and1MiB reserve. New witnesses and
+source snapshots have separate costs; no prior cleanup is credited again.
+Use `source-sparse-v1471/recover.py` and its `frozen_reader.py`; keep all inherited
+providers and current binaries/link inputs. No emulator job remains.
 
 ## Current original/source DOS frontier
 
@@ -63,7 +84,7 @@ Keep712 native volatile post-actor inputs separate. There is no new native build
 Current programs and link inputs remain under
 `.analysis/native/port64-recovery-v1445/.analysis/port64/stage3-tiles-v1467-final`.
 
-Source evidence/readers are under `.analysis/reconstruction/probes/source8000-v1470`;
+Source8000 evidence/readers are under `.analysis/reconstruction/probes/source8000-v1470`;
 its producer capsule and terminal receipts are under `source-latch-v1469`.
 The terminal capture is `dos-source-latch-v1469-stage3`; no emulator job remains.
 Keep the original `dos-stage3-wait-v1467-observed-inputs` golden.
@@ -82,9 +103,9 @@ identities and finish itself, and carry inherited alias providers.
 ## Next work
 
 Preserve the passing8000 vector and failed aggregate. Reuse these artifacts for
-regressions; the completed producer need not run again. Before another long
-source extension, add an own-MAP sparse source/font observer and validate a cheap
-source Micro against the retained probes. The dense legacy run retained794 RAM
+regressions; the completed producer need not run again. The cheap own-MAP sparse
+source/font Micro is now validated. Before another long source extension, select
+its required font/UI/player checkpoints explicitly. The dense legacy run retained794 RAM
 snapshots and every boundary video; choose the next scenario's required surfaces
 explicitly to reduce storage and CPU costs. Then pursue actual Elly defeat and
 Stage4 initialization, with original/source and native comparisons. A future

@@ -24,6 +24,7 @@ class Monitor:
     def __init__(self, output, ram):
         self.output, self.ram = Path(output), ram
         self.profile = json.loads((self.output/'profile.json').read_text())
+        self.fields = {name:(offset,size) for name,offset,size in self.profile['fields']}
         self.plan = json.loads((self.output/'font-plan.json').read_text())
         self.wanted = {tuple(point) for point in self.plan['points']}
         self.observed = []
@@ -46,6 +47,9 @@ class Monitor:
 
     def number(self, offset, size):
         return int.from_bytes(self.ram.read_range(self.current.linear+offset,size)[0], 'little')
+
+    def field(self, name):
+        return self.number(*self.fields[name])
 
     def context(self):
         inferior = gdb.selected_inferior()
@@ -89,8 +93,8 @@ class Load(gdb.Breakpoint):
 class Frame(gdb.Breakpoint):
     def __init__(self, monitor):
         self.monitor=monitor;self.previous=0
-        self.stage=monitor.number(0x5394,1) if monitor.number(0x538a,2)==0 else None
-        linear=monitor.current.linear+0x538a
+        self.stage=monitor.field('stage') if monitor.field('frame')==0 else None
+        linear=monitor.current.linear+monitor.fields['frame'][0]
         host=monitor.ram.state()[0]+monitor.ram.physical(linear)
         super().__init__('*(unsigned short *)%d'%host,
                          type=gdb.BP_WATCHPOINT,internal=True)
@@ -98,7 +102,7 @@ class Frame(gdb.Breakpoint):
     def stop(self):
         m=self.monitor
         try:
-            frame=m.number(0x538a,2);stage=m.number(0x5394,1)
+            frame=m.field('frame');stage=m.field('stage')
             # Loader/BSS writes precede the first real frame increment.
             if frame==0:
                 self.previous=0;self.stage=stage;m.current.sequence.frames=0
@@ -125,7 +129,8 @@ class Frame(gdb.Breakpoint):
 class Score(gdb.Breakpoint):
     def __init__(self, monitor):
         self.monitor=monitor
-        self.linear=(monitor.current.load+0xaaf)*16+0x207
+        self.point=monitor.profile['entries']['score']
+        self.linear=(monitor.current.load+self.point['segment'])*16+self.point['offset']
         host=monitor.ram.state()[0]+monitor.ram.physical(self.linear)
         super().__init__('*(unsigned char *)%d'%host,type=gdb.BP_WATCHPOINT,
                          wp_class=gdb.WP_READ,internal=True)
@@ -137,10 +142,11 @@ class Score(gdb.Breakpoint):
             before=m.context();state,regs,segs=before
             cs=int.from_bytes(segs[8:16],'little');ds=int.from_bytes(segs[24:32],'little')
             ip=int.from_bytes(regs[32:36],'little')&65535
-            if (cs,ip)!=(m.current.load+0xaaf,0x207):return False
+            if (cs,ip)!=(m.current.load+self.point['segment'],self.point['offset']):return False
             assert ds==m.current.dgroup, 'score DGROUP'
+            assert m.ram.read_range(self.linear,16)[0].hex()==self.point['opcode'], 'own score opcode'
             group,pages,_=m.ram.read_range(m.current.linear,65536)
-            stage=group[0x5394];frame=int.from_bytes(group[0x538a:0x538c],'little');point=(stage,frame)
+            stage=m.field('stage');frame=m.field('frame');point=(stage,frame)
             assert point in m.wanted, 'undeclared score capture'
             video,mapping=m.video.capture(stage)
             font=m.video.read(m.video.symbols['vga']+312,528384)

@@ -23,6 +23,8 @@ CATEGORIES = {
 }
 EXTENSIONS = {'.py', '.sh', '.ps1', '.cmd', '.bat', '.java', '.asm', '.gdb'}
 OVERRIDES = {
+    'capture_th04_dos_sparse_fonts.py': ('runtime', 'Capture sparse original or own-MZ/MAP source MAIN font/video/RAM samples and optional declared-stage actor streams.'),
+    'th04_sparse_profile.py': ('runtime', 'Validate sparse observer fields, frame store, score return, initialization and GameOver seams against the executing MAIN and its own MAP.'),
     'attest_th04_stage_clear.py': ('runtime', 'Attest actual post-score Stage2 exit, own-MZ cleanup/init and the first complete Stage3 update.'),
     'compare_th04_stage_clear.py': ('runtime', 'Compare complete DOS/native Stage2 clear and Stage3 entry pools/state/input/RNG while retaining key/GDC failures.'),
     'th04_stage_waits.py': ('runtime', 'Attest own-file Stage2 Continue/dialogue calls, CPU/full-memory and actual player-input ownership.'),

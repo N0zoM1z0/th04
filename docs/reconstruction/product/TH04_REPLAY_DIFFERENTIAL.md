@@ -5,6 +5,43 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Own-MAP sparse source observer and Micro (v1471)
+
+The public sparse collector accepts a normal maintained MAIN with its own
+MZ/MAP/build receipt. Field/hook declarations must match independent ordinary
+profile derivation. Own near calls bind the score return and initialization
+seam; the frame-store opcode uses the own MAP frame word. Source MAIN0708 uses
+score07BD, init-return0634 and actor-store0769, with DGROUP242E/frameCB44/stageB196.
+Original MAIN0AAF retains score0207/init007E/store01B3 and DGROUP2134/frame538A.
+Five mutated source profiles recompute actual source opcodes but still reject
+original fields/seams or misplaced source instructions through MAP ownership.
+
+Actual original400 remains byte-identical to the old711787-byte raw trace.
+Actual paired Micro300 verifies all300 input/field/resident80/ordered RNG
+observations and eight guarded physical device edges per side. All301 initial
+and actor snapshots match nine complete pools/22 states and stable configured
+fields. Six score-return samples at1/64/96/128/160/300 match complete528384-byte
+live fonts and all640x400 RGB pixels, using each side's own video/font evidence.
+Four post-actor key differences remain separate; they are not normalized.
+The earlier dense source300 at24000 cycles and new sparse source300 at36000
+cycles agree on all300 nine-pool/22-state/stable snapshots, with six separate
+post-actor keys. This comparison does not imply equivalent timing or full DGROUP.
+
+The private V1 reader used the wrong API guard hash key; V2 omitted the native
+projection import path. Both failed reader versions remain available. Corrected
+readers validate actual CPU, own code, full640KiB samples and typed API guards;
+no producer rerun or target change was needed. All three captures complete in
+about94 seconds total. Nineteen redundant image/font/raw/log aliases retire
+after metadata-exact recovery and identical real-file/virtual-reader reports.
+Local cleanup releases122.082MiB after its archive/replay costs and1MiB reserve;
+new whole-phase witness/source costs are separate, and no previous release is
+counted again. Receipts/readers are under `source-sparse-v1471`.
+
+This validates the cheaper source observer for a short Micro only. Source
+Stage3 full fonts/RGB, literal UI/player checkpoints in this sparse collector,
+Elly defeat/Stage4, continuous display, natural timing, NP2/Windows and complete
+campaigns remain open. Source/native game closure is unchanged; no unit is exact.
+
 ## Actual source8000 vector and literal UI player (v1470)
 
 The existing source producer completes in2939.763s; no prefix is restarted.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Capture sparse original MAIN live-font/video witnesses with ordinary keys.
+"""Capture sparse own-MZ MAIN live-font/video witnesses with ordinary keys.
 
 Use a fresh output below .analysis/runtime/candidates. The plan names an
 attested initial HDI, boundary profile, font/video ABI receipts, selected
@@ -27,6 +27,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path[:0]=[str(ROOT/'scripts'),str(ROOT/'scripts/probes')]
 from lib.pc98 import parse_mz
 from th04_demo_video import LAYOUT
+from th04_sparse_profile import bind_sparse_profile
 
 
 def sha(path):
@@ -91,11 +92,9 @@ def main():
     assert sha(observer)==emulator['observer_source_sha256']
     for name,key in [('src/cpu/core_normal.cpp','core_after_sha256'),('config.h','config_header_sha256')]:
         assert sha(source/name)==emulator[key];inputs[str(source/name)]=emulator[key]
-    profile_path=pin('boundary_profile');profile=json.loads(profile_path.read_text())['original']
-    # Kind2 terminates demo observers at frame3996. This ordinary capture
-    # terminates only after the declared actual score-return checkpoints.
-    profile['hooks']=[hook for hook in profile['hooks'] if hook[0]!=2]
-    assert profile['dgroup']==0x2134 and profile['fields'][0]==['frame',0x538a,2]
+    role=plan.get('role','original')
+    assert role in ('original','candidate'), 'declared sparse artifact role'
+    profile_path=pin('boundary_profile');profile=json.loads(profile_path.read_text())[role]
     layout_path=pin('font_layout');layout=json.loads(layout_path.read_text())
     assert layout['passed'] and layout['emulator_sha256']==sha(binary)
     assert layout['layout']==dict(font_offset=312,font_bytes=528384,vga_size=535896)
@@ -111,9 +110,22 @@ def main():
         path=ROOT/target['private_path'];data=path.read_bytes()
         assert len(data)==target['size'] and sha(path)==target['sha256'] and parse_mz(data).valid
         inputs[str(path)]=sha(path)
-    main_path=ROOT/'.analysis/targets/th04/main.exe';mz=parse_mz(main_path.read_bytes())
-    assert profile['module_size']==len(main_path.read_bytes())-6144
-    assert profile['signature']==main_path.read_bytes()[6144:6176].hex()
+    original_path=ROOT/'.analysis/targets/th04/main.exe'
+    main_path=original_path;map_path=None
+    if role=='candidate':
+        main_path=pin('main_artifact');map_path=pin('map')
+        manifest_path=pin('build_manifest');manifest=json.loads(manifest_path.read_text())
+        product=manifest['products']['main'];producer_path=Path(product['build_receipt'])
+        producer=json.loads(producer_path.read_text());inputs[str(producer_path)]=sha(producer_path)
+        assert manifest['variant']=='normal' and main_path==(manifest_path.parent/product['file']).resolve()
+        assert len(main_path.read_bytes())==product['size'] and sha(main_path)==product['sha256']
+        assert sha(map_path)==producer['link']['map_sha256'], 'source producer MAP identity'
+        assert Path(profile['main_path']).resolve()==main_path and profile['main_sha256']==sha(main_path)
+        assert Path(profile['map_path']).resolve()==map_path and profile['map_sha256']==sha(map_path)
+    main_bytes=main_path.read_bytes();mz=parse_mz(main_bytes);assert mz.valid
+    header=int.from_bytes(main_bytes[8:10],'little')*16
+    profile=bind_sparse_profile(main_bytes,original_path.read_bytes(),profile,map_path)
+    actor_boundary=profile.pop('sparse_actor_boundary')
     points=plan['points'];assert points and points==sorted(points) and len({tuple(p) for p in points})==len(points)
     assert all(type(s) is int and s in (0,1,2) and type(f) is int and 1<=f<=65535 for s,f in points)
     input_source=pin('stage_input') if 'stage_input' in plan else None
@@ -124,15 +136,13 @@ def main():
         _,input_stage,input_extent,_,_=parse_stage_input(input_source.read_bytes())
         assert points[-1]==[input_stage,input_extent], 'input extent must end at the final score sample'
         for name in ['init_return']:
-            point=profile['entries'][name];at=6144+point['segment']*16+point['offset'];assert main_path.read_bytes()[at:at+16].hex()==point['opcode']
-        point=profile['stage3_gameover_guard'];at=6144+point['segment']*16+point['offset'];assert main_path.read_bytes()[at:at+16].hex()==point['opcode']
+            point=profile['entries'][name];at=header+point['segment']*16+point['offset'];assert main_bytes[at:at+16].hex()==point['opcode']
+        point=profile['stage3_gameover_guard'];at=header+point['segment']*16+point['offset'];assert main_bytes[at:at+16].hex()==point['opcode']
     cues=plan['ui_cues'];assert all(c['kind'] in ('dialogue','continue') for c in cues)
     if 'actor_dgroup' in plan:
         actor=plan['actor_dgroup']
         assert input_source is not None and actor==dict(stage=input_stage,extent=input_extent), 'actor stream must cover the declared input stage/extent'
-        at=6144+0xaaf*16+0x1b3;opcode=main_path.read_bytes()[at:at+16].hex()
-        assert opcode.startswith('a38a53'), 'original frame-store owner'
-        profile['actor_boundary']=dict(segment=0xaaf,offset=0x1b3,opcode=opcode)
+        profile['actor_boundary']=actor_boundary
     out.mkdir(parents=True);capsule=out/'source';capsule.mkdir()
     # Freeze the imported observer closure, without mutating historical inputs.
     for directory in [ROOT/'scripts/probes',ROOT/'scripts/lib']:
@@ -219,6 +229,10 @@ def main():
         emulator_sha256=sha(binary),main_sha256=sha(main_path),points=points,
         resource_budget='One low-priority CPU,1536MiB address-space bound,headless/muted',
         scope='Original candidate-local-attested DOSBox-X sparse live font/video/RAM evidence;optional declared-stage full DGROUP stream. No per-frame video/full conventional memory,guest assignments,native equivalence or exact promotion.')
+    if role=='candidate':
+        receipt.update(role=role,main_path=str(main_path),map_path=str(map_path),map_sha256=sha(map_path),
+            build_manifest_sha256=sha(manifest_path),
+            scope='Maintained normal source MAIN-only DOSBox-X sparse live font/video/RAM evidence,with own MZ/MAP fields and code seams;optional full declared-stage DGROUP stream. Original other products/assets remain installed. No per-frame video/full conventional memory,guest assignment,whole-campaign or exactness claim.')
     (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
     print('SPARSE FONTS',complete,'elapsed',receipt['elapsed'],flush=True)
     return 0 if complete else 1

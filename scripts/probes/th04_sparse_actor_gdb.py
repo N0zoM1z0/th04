@@ -31,9 +31,10 @@ class ActorStream:
         assert (int.from_bytes(segs[8:16], 'little'),
                 int.from_bytes(regs[32:36], 'little') & 65535,
                 int.from_bytes(segs[24:32], 'little')) == (
-                    m.current.load + 0xaaf, 0x7e, m.current.dgroup)
+                    m.current.load + m.profile['entries']['init_return']['segment'],
+                    m.profile['entries']['init_return']['offset'], m.current.dgroup)
         group = m.ram.read_range(m.current.linear, 65536)[0]
-        assert group[0x5394] == self.stage and group[0x538a:0x538c] == b'\0\0'
+        assert m.field('stage') == self.stage and m.field('frame') == 0
         assert before == m.context(), 'initial actor observation changed CPU'
         path = m.output / 'actor-init-dgroup.bin.gz'
         path.write_bytes(gzip.compress(group, compresslevel=1, mtime=0))
@@ -64,7 +65,7 @@ class ActorStream:
         opcode = m.ram.read_range(cs * 16 + ip, 16)[0]
         assert opcode.hex() == boundary['opcode'], 'actor frame-store opcode'
         group = m.ram.read_range(m.current.linear, 65536)[0]
-        assert group[0x5394] == stage and int.from_bytes(group[0x538a:0x538c], 'little') == frame
+        assert m.field('stage') == stage and m.field('frame') == frame
         assert before == m.context(), 'actor observation changed CPU'
         # HostRam.state: memory base, CR0, CR4, CR3. No host pointer enters wire.
         context = (m.current.load, ds, *state[1:])

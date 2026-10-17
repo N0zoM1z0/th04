@@ -17,6 +17,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/calibrate_th04_cpu_fault_emulator.py](../probes/calibrate_th04_cpu_fault_emulator.py) | command | Falsify a private emulator observer using an independent DIV-zero COM. |
 | [probes/capture_th04_dos_demos.py](../probes/capture_th04_dos_demos.py) | command | Capture ordinary bundled DOS demos after replay input and at the terminal decision. |
 | [probes/capture_th04_dos_ordinary_prefix.py](../probes/capture_th04_dos_ordinary_prefix.py) | command | Capture ordinary DOS through original OP using observed menu-count keyboard API input. |
+| [probes/capture_th04_dos_sparse_fonts.py](../probes/capture_th04_dos_sparse_fonts.py) | command | Capture sparse original or own-MZ/MAP source MAIN font/video/RAM samples and optional declared-stage actor streams. |
 | [probes/check_th04_carpet_image_table.py](../probes/check_th04_carpet_image_table.py) | command | Check the complete initialized Stage4 carpet table against pinned MAIN instructions and data. |
 | [probes/check_th04_midboss4_initial_state.py](../probes/check_th04_midboss4_initial_state.py) | command | Check the Stage4 midboss toggle initializer and DATA ownership against pinned MAIN. |
 | [probes/compare_th04_bounded_ordinary.py](../probes/compare_th04_bounded_ordinary.py) | command | Compare actual after-update ordinary prefixes with complete actor/RNG/terminal identity gates. |
@@ -84,6 +85,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_primary_cpu_fault.gdb](../probes/th04_primary_cpu_fault.gdb) | fixture | Run the primary-emulator fault observer with configured symbols/event inputs. |
 | [probes/th04_product_surface.py](../probes/th04_product_surface.py) | support | Attest a same-run four-product source cohort and derive OP counter hooks from its own MAP and bytes. |
 | [probes/th04_score_video_checkpoints_gdb.py](../probes/th04_score_video_checkpoints_gdb.py) | support | Observe original complete video, font and DGROUP at the actual score-return instruction boundary. |
+| [probes/th04_sparse_profile.py](../probes/th04_sparse_profile.py) | support | Validate sparse observer fields, frame store, score return, initialization and GameOver seams against the executing MAIN and its own MAP. |
 | [probes/th04_stage_inputs_gdb.py](../probes/th04_stage_inputs_gdb.py) | support | Queue real keyboard edges one loop ahead, verify actual input samples and preserve an unexpected Game Over witness. |
 | [probes/th04_stage_waits.py](../probes/th04_stage_waits.py) | support | Attest own-file Stage2 Continue/dialogue calls, CPU/full-memory and actual player-input ownership. |
 | [probes/th04_stage_waits_gdb.py](../probes/th04_stage_waits_gdb.py) | support | Capture Stage2 blocking call/return/player checkpoints with five persistent read-only watchpoints. |
