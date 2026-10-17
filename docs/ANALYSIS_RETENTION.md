@@ -22,6 +22,14 @@ its providers/replays and1MiB reserve; it is not whole-phase or system free-spac
 accounting. New retained evidence costs are recorded separately. The preceding
 472.793MiB closed-checkpoint release is not credited again. No emulator job remains.
 
+The final source batch binds64529 identities,including63600 inherited hashes,
+and175 exact aliases. Whole-batch accounting charges525.508MiB of new required
+logical evidence and32MiB final reserve against283.703MiB of retired aliases:
+273.805MiB of required net growth. This explicitly records the cost of retaining
+new source evidence instead of calling the local cleanup a whole-phase release.
+No earlier cleanup is credited again. The next journal must merge retention,
+finish late identities and finish itself,and carry all alias manifests/providers.
+
 ## Current source-latch recovery (v1469)
 
 Ten closed Micro aliases,92 superseded native `.a`/`.o` inputs and64 historical

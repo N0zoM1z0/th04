@@ -5,6 +5,10 @@ goals remain active. Use one low-priority CPU (`taskset -c 1 nice -n 19`), mute
 SDL/headless runs and serialize Borland/Wine builds. Do not change host focus or
 inject host keys. Code, documentation and commit messages are English.
 
+Published source8000 evidence baseline: main `37e0e47`; native handoff `064397d`.
+The source normal cohort and native566/4787233c programs are unchanged by these
+documentation commits. Current recovery binds64529 identities and175 aliases.
+
 ## Current original/source DOS frontier
 
 Actual MAIN-only source replay completes Stage1/Stage2 at9837/10394 and8000
@@ -22,6 +26,9 @@ raw-loop field/resident80/RNG observations match. Nine configured raw-video
 region samples match. Source has an explicit extra terminal loop8000; the
 original stops at score8000. Both final full-RAM witnesses bind LCG1062/ring16467
 and the empty final RNG event tail. No original terminal loop is fabricated.
+
+The 8000 words are actual loop latches. Only the critical UI player entry is
+captured literally here; this is not an every-player-call trace.
 
 Strict aggregate remains false:49 post-actor input differences and nine raw GDC
 samples differ. These are retained, not normalized. Source live fonts/full RGB,

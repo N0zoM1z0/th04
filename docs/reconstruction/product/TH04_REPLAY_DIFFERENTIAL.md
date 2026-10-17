@@ -21,6 +21,10 @@ configured video-region samples match. These are raw regions, not source full
 RGB: source live font banks were not captured. The aggregate remains false for
 49 post-actor keys and nine raw GDC samples; retain both fields independently.
 
+The 8000 input words are actual loop latches. Only the critical post-dialogue
+player call is captured literally; a complete per-player-call trace is not
+claimed.
+
 Original stops at score8000; source additionally records loop8000. A separate
 Oracle compares the original pending RNG tail with that extra source sample,
 checks LCG1062/ring16467 and both own-MZ score8000 full-RAM/RNG witnesses. The
