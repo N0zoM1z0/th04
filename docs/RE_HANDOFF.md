@@ -84,11 +84,38 @@ captures; never modify closed capsules or their live backing inputs.
 
 ## Verified recovery
 
-The v1460 verified-retention and reexecution closure is being prepared. Until its
-own journal and recovery receipt pass, retain all owned capture aliases and both
-current cold caches. Parent recovery is v1459:33549 protected identities, all 38
-finish.late_protected entries and that finish identity must join this journal.
-Borrowed one HDI plus four legacy aliases have verified retirement and no new
-cleanup credit. The two old public capture/keyboard files remain frozen.
+Verified retention archives 3095 owned generated files into 1678 content blobs,
+releasing 5238.078 MiB after archive, gzip, both journal files and new frozen replay snapshots. All 38121
+protected identities verify, including 33549 parents, all 38 previous late
+identities and that finish identity. Current 566/bcd114bb GNU 87/cache/UBSan 2 and
+prior 3747 programs/cache stay live. Complete compressed original/source CPU,
+DGROUP, video, conventional memory, raw/RNG/keyboard/UI data remain preserved.
+The superseded 6a 602-record failure and its exact program are recoverable.
+
+Actual recovery restores 12 owned capture aliases and the exact old 6a GNU program.
+It executes that program and both current cold GNU/optimized UBSan programs with
+fresh original-input-only 8000 fixtures. All four output wires reproduce: old 602
+custom failures and current zero differences. Frozen paired DOS/native/UI
+reducers execute for before and current GNU; UBSan's four wires equal GNU and its
+original full paired report. No second restored UBSan reducer is claimed. Both
+actual reductions retain 422 key/24007 main-GDC/6 auxiliary-GDC failures. All 13 aliases
+verify SHA, size, mode and nsmtime before retirement. The earlier borrowed one HDI
+plus four legacy aliases retire separately with no new cleanup credit.
+
+```sh
+python3 .analysis/reconstruction/probes/dos-stage2-boss-v1460/replay_restored.py \
+  --output-dir .analysis/reconstruction/probes/NEW-stage2-boss-recovery
+```
+
+Run from the main checkout. This reexecutes native programs and recorded DOS
+consumers, not the emulator. Use fresh outputs; recover.py --restore --path EXACT
+supports manual recovery. Subsequent journals must merge all 38121 protected
+identities, every finish.json late_protected entry and that finish identity.
+The two old public capture/keyboard files remain frozen live backing inputs.
 Historical missing worktrees, native v1432's 94 files and v1437 MAIN/MAP remain explicit
 gaps; never recreate frozen paths, rebind receipts or count missing files as cleanup.
+Actual current GNU/UBSan final MIKO.CFG and GENSOU.SCR bytes also match the
+attested original DOS8000 files exactly, including the second Continue update.
+The separate native-physical-files-attested.json binds both producer receipts.
+Both full goals stay active; Stage2 Boss defeat/clear, native pictures, timing,
+campaigns, NP2, Windows, pristine provenance and historical exactness remain open.
