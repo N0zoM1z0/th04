@@ -1,5 +1,30 @@
 # Private build and analysis retention
 
+
+## Terminal scout recovery during clear capture (v1461)
+
+Four completed native-only scouts and their private observer ELF/object are
+archived: 54 owned files, 17 gzip recipes, 1908.8125 MiB released after archive
+and both journals. All 38326 protected hashes verify, including all 38121
+parents, all 22 late files and the parent finish receipt. Current cold caches
+and the running DOS capture remain live.
+
+Actual recovery restores the exact private ELF and two owned pool aliases,
+executes the program through 10394 Stage2 updates and the first Stage3 update,
+and reproduces all 12 state/pool/input/UI/prefix wires. SHA, size, mode and
+nanosecond mtime verify before the three aliases retire. Failed scouts retain
+their failed verdicts. This is recovery evidence for a native-only scout;
+complete original/source/native clear fidelity remains pending.
+
+```sh
+python3 .analysis/reconstruction/probes/dos-kurumi-clear-v1461/replay_scout_archive.py \
+  --output-dir .analysis/reconstruction/probes/NEW-scout-recovery
+```
+
+The final batch journal must chain `scout-retention/retention.json`, preserve
+its live backing inputs, and count its 54 archived files only once. No borrowed
+alias or temporary replay output is counted as new cleanup.
+
 ## Stage2 Boss observer and before/after recovery (v1460)
 
 Verified retention archives 3095 owned generated files into 1678 content blobs,

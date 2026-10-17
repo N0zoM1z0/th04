@@ -66,6 +66,12 @@ invalid CLI plans reject. The root-owned probe directory
 parent's 38121 protected hashes, all 22 late files and finish receipt, and the
 old bcd/3747 caches. Both full goals remain active.
 
+Early scout retention and actual restored-program replay pass: 54 owned files,
+17 recipes, 1908.8125 MiB released and 38326 protected hashes. All 12 replay
+wires reproduce; three owned aliases verify metadata and retire. The final
+journal must chain `scout-retention/retention.json`; do not count those files
+again. See [retention](ANALYSIS_RETENTION.md).
+
 ## Verified frontier
 
 Original and reconstructed DOS complete 8000 Stage2 updates after the same
