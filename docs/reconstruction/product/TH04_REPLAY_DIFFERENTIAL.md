@@ -19,7 +19,9 @@ incomplete after809.886s/idle120 and proves no post-dialogue Boss parity.
 Independent original Elly13A9:8855 phase0 execution retains the STD VM; the
 raw main loop always invokes it at0AAF:00D3. The native regression rejects
 its old extra EOF predicate. Stage3 readiness/handoff and pending-wave dispatch
-are being repaired with fresh GNU/UBSan cold builds. Reforecast the ordinary
+now pass fresh GNU87 programs/83CTest and optimized UBSan2/session builds.
+Current native closure is566/e1233854;the new regression rejects the old gate.
+Reforecast the ordinary
 route with dialogue7834 before another original capture; keep other stage
 callback ownership separate. Receipts: `stage3-wait-v1467` below `.analysis/reconstruction/probes/`.
 
