@@ -6,62 +6,67 @@ launch muted/headless. The user uses Windows: no GUI, focus changes or host keys
 
 ## Active Stage3 work (v1462)
 
-The latest closed differential extent remains v1461 below. The new continuous
-original/source capture targets 4000 Stage3 actor/score updates after the actual
-Stage1 and Stage2 departures. Neither new complete DOS capture nor extended
-native parity has been accepted yet. Never restart a live capture solely because
-an observation poll expires; inspect its real process and receipt first.
+The original completes 4000 Stage3 actor/score updates after the real Stage1
+return and 10394-update Stage2 clear. Its 43193 boundaries, 24232 raw loops,
+14472 ordered RNG calls (1062 LCG/13410 ring), 704 complete memory witnesses,
+4000 declared loop inputs and 57 physical keyboard edges attest. All device
+calls preserve CPU/context, tick and 640 KiB RAM. One GameOver guard registers
+and never fires; nine baseline objects/seven cached points bound the registry
+at sixteen. The reconstructed DOS capture is still running. Never restart it
+solely because an observation poll expires; inspect its real process/receipt.
 
-The actual original/source 300-update keyboard Micro Oracle passes all loop
-inputs and eight physical device edges, including two one-frame Bomb pulses and
-left/right changes. Device calls preserve CPU/context, tick and all 640 KiB RAM.
-Four altered host observations reject. The retained 4c cold GNU producer matches
-300 selected scalar records, all 300 literal inputs and 300 complete nine-pool
-post-actor snapshots. Two failed collectors and two failed native consumers
-remain failed and retained; their corrections affect observation only.
+Both current 566/1ad0ea4c cold GNU and optimized UBSan independently match
+28793 selected scalar records and 14396 complete nine-pool Stage2/Stage3
+snapshots, homing/Boss/Midboss/private3, original loop inputs plus the specific
+Stage2 UI player-entry inputs, and continuous RNG. All eight wires agree.
+Their 510 volatile post-actor keys stay separate. Both also match all nine
+pools at 9836 current original Stage1 after-actor checkpoints; native actor9837
+is checked only for wire framing/EOF, without a target actor-pool comparison.
+Actual final native CFG/SCR bytes equal the new original HDI files; all ten
+full 16-bit score checksums validate. The full source-DOS pair remains pending.
 
-Own MZ stores bind Midboss3 pattern/mirror/patterns_done to original
-MAIN DGROUP2134:4258/4259/425A and source DGROUP242E:8CE8/8CE7/48F3.
-Existing complete Stage3 entry memories show all three zero. Original
-MAIN0AAF:3B8A subtracts continues_used at DGROUP4349 from3; actual Stage3 entry
-has3 credits used. An empty credit gate explains the native-only forecast
-failure at933; it is not an observed original GameOver at933.
+Independent 34 complete original memories bind CPU, own MZ code, DGROUP,
+private3, resident and stack: Midboss3 activation1601, phase1at1620,
+defeat254/HP-6at2228, collected1UP2255, phase255at2356 and reset2357.
+Original private stores own DGROUP2134:4258/4259/425A; source MAP owns
+DGROUP242E:8CE8/8CE7/48F3. Stage3 entry has000000 and3 Continue credits used;
+original0AAF:3B8A computes3-used and returns1 via3CE8 when empty. The older
+native-only no-credit933 failure stays distinct from the actual new capture.
 
-Native-only normal inputs, with Bomb pulses from400 and horizontal movement
-from2400, complete4000 updates. Forecast Midboss3 activation1601,
-phase1at1620, defeat254/HP-6at2228, collected1UP2255 and reset2357 select
-independent DOS checkpoints; none is an assigned target state or new DOS claim.
-The generic scout receipt's heldShot32 prose is inaccurate for movement/Bomb
-cases; native-forecast-summary.json binds the actual plan and consumed inputs
-without rewriting that receipt.
+The 300-update real keyboard Micro Oracle passes both roles' raw inputs and
+8 physical Bomb/movement edges. Direct original/source fields/RNG, nine full
+pools and22 states agree; its aggregate stays false for4 post-actor keys.
+Retained4c native matches300 selected scalars/inputs/nine-pool snapshots.
+P300 is parsed syntax only; ordinary pool records start1. Keep both failed
+GDB capsules and failed native consumers. Bind via Load.stop; test
+clock.is_valid before toggling a possibly deleted clock object.
 
-Current native source closure566/1ad0ea4c has a version2 input-only Stage3
-observer and a read-only private-state getter. Fresh GNU builds87/83 CTests;
-optimized UBSan builds/checks2 programs. Both reproduce all seven legacy v1461
-wires unchanged. Both current version2 programs also reproduce the native-only
-4000 forecast, including8001 private3 records and all eight identical wires.
-Six malformed version2 plans reject. Current/frozen default clear attestors produce identical full
-31196-row reports for both DOS roles, apart from the truthful reader hash.
-The actual changed default native consumer reproduces its full20795-scalar/
-10397-pool report. All20232 original closed raw-loop LCG transitions pass;
-three late-value/count/init semantic controls reject. Both current programs
-also preserve3500/8000 and all177 legacy display observations (59 RGB/TRAM pairs).
-Keep .analysis/port64/stage3-route-v1462-final and all previous4c/bcd/3747
-accepted cold caches live. Extended route consumers are source-present and
-await actual complete inputs and semantic controls.
+Post-actor key_det and the previous-input field are not full input latches.
+Four original full memories show actor400 key48 withBombs1/used0, then
+update401 consumes the Bomb and reads32. The previous field stays0. Use the
+actual loop stream, specific UI entry taps and full state/pool comparisons;
+no literal per-player-entry claim for every Stage3 update follows.
 
-The closed scout journal retires71 owned files, with5 new payload recipes,
-43332 protected identities and2719.180 MiB net allocated-byte release before
-its fresh recovery cost. It chains all43077 parent hashes, every24 late parent
-identity and the parent finish receipt. Never count these files again. Its
-owned scout-inputs image remains live. Actual old-program complete4000 and failed933 replays reproduce every saved
-wire, event and failure diagnostic after restoring3 owned aliases. All3 verify
-SHA/size/mode/nsmtime before retirement. The final batch journal remains open.
+Current GNU87/83 CTests and optimized UBSan2 pass. Both preserve all seven old
+clear wires,3500/8000 routes and177 legacy display observations (59 RGB/TRAM
+pairs). Six malformed version2 plans and four new private/input mutations
+reject. Default full old/new reader reports reproduce; all20232 original
+closed LCG transitions and three mutations pass. Keep current
+.analysis/port64/stage3-route-v1462-final and every prior4c/bcd/3747 cold cache.
+The old scout heldShot32 prose is corrected by native-forecast-summary.json;
+that forecast receipt stays immutable and is not relabeled target evidence.
 
-Replay/input/false-case receipts live below
-.analysis/reconstruction/probes/dos-stage3-route-v1462. Current continuous
-capture directories are dos-stage3-route-v1462-original and -candidate under
-.analysis/runtime/candidates. Read their receipts rather than assuming success.
+The early scout journal retires71 owned files, chains43332 protected hashes
+including every43077 parent/all24 late identities/finish, and releases
+2719.180 MiB before fresh recovery costs. Actual old-program complete4000 and
+failed933 runs reproduce all outputs/events/diagnostics after restoring3 owned
+aliases and verifying SHA/size/mode/nsmtime before retirement. Do not recount
+those files. Its owned scout-inputs image stays live; final retention is open.
+
+Receipts are below .analysis/reconstruction/probes/dos-stage3-route-v1462.
+Live capture names are dos-stage3-route-v1462-original and -candidate under
+.analysis/runtime/candidates. Full paired DOS/video, source memory/save gates,
+frozen recovery, native pictures/timing/campaign and exactness remain open.
 
 ## Latest closed bounded frontier (v1461)
 

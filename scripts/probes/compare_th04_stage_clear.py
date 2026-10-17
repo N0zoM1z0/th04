@@ -107,6 +107,8 @@ def compare_dos(a, b, ar, br, am, bm, raw, braw, events, bevents, target, output
                   post_reset_input_differences=len(input_changes), post_reset_input_first_differences=input_changes[:12],
                   video_regions_passed=video["passed"], raw_gdc_differing_records=video["raw_gdc_differing_frames"],
                   stage2_waits=waits, scope=__doc__ + " Complete actual route; post-reset keys and raw GDC remain failed aggregate fields.")
+    if stage3_extents:
+        report["scope"] = ("Complete actual Stage2 clear and bounded Stage3 route; three own-MZ Midboss3 private bytes join configured pools and states. Every input and raw-GDC discrepancy contributes to the aggregate verdict.")
     for name, data in [("dos-comparison.json", report), ("dos-video.json", video), ("dos-waits.json", waits)]:
         (output / name).write_text(json.dumps(data, indent=2) + "\n")
     return states

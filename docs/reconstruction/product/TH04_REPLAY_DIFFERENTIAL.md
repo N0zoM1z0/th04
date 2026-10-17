@@ -5,48 +5,56 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
-## Active Stage3 transport and owner observations (v1462)
+## Active continuous Stage3 comparison (v1462)
 
-The latest closed two-stage/Stage3-entry vector is v1461 below. The new4000
-Stage3 continuous captures and extended native vector remain pending. Current
-source adds only an input observer/read-only Midboss3 getter; gameplay is not
-changed. See [current handoff](../../RE_HANDOFF.md) for live paths and caches.
+The original now completes4000 Stage3 actor/score updates after actual Stage1
+return and10394 Stage2 clear:43193 boundaries,24232 raw loops,1062 LCG/13410
+ring calls,704 full conventional-memory witnesses and57 actual keyboard edges.
+All4000 raw loop inputs agree with the declared normal Bomb/movement plan;
+API calls preserve CPU/context/tick/640KiB RAM, and one actual GameOver guard
+never fires. Source DOS is still capturing; the latest closed paired DOS extent
+remains v1461. See [current handoff](../../RE_HANDOFF.md) for live paths/caches.
 
-Both actual DOS roles pass300 ordinary loop inputs and8 physical keyboard
-edges: held Shot, left64..127/right128..191 and one-frame Bomb96/224. Every
-KEYBOARD_AddKey call preserves the complete640KiB RAM, CPU/context and tick.
-Four host mutations reject. The retained4c native normal FrontEnd matches all
-300 selected scalars, literal consumed inputs and complete nine-pool actor
-snapshots. The required P300 input row is parsed syntax only; it is not an
-observed target loop or advanced native update. Native pool records begin at1.
-Two failed GDB capsules (unbound helper, then deleted clock) and two failed
-native consumers (missing syntax row, then false frame0 assumption) remain
-failed. The fix binds via Load.stop and tests clock.is_valid before toggling.
+Both actual current566/1ad0ea4c GNU/UBSan programs match28793 selected scalars
+and14396 whole nine-pool component snapshots, Boss/Midboss/private3, homing,
+inputs and RNG. All eight complete output wires agree;510 volatile post-actor
+keys remain separate. Both also independently match9836 Stage1 after-actor
+pool snapshots from this current capture. Actor9837 has only wire/EOF checks,
+with no same-boundary target actor-pool comparison. Actual native final CFG/SCR
+bytes equal original physical files; all ten full16-bit score checksums pass.
 
-Original Midboss3 stores13A9:0A4E/0A56/0A59 own DS4258/4259/425A;
-source157C:25A6/25AE/25B1 stores its own MAP8CE8/8CE7/48F3.
-Their complete Stage3 init/first-actor memories independently show000000.
-Original0AAF:3B8A subtracts DGROUP4349 continues_used from3 and returns1 via
-0AAF:3CE8 when empty. Entry has3 credits used. This supports the native forecast
-failure933 but does not observe an original Stage3 GameOver there.
+Thirty-four independent full original RAM readbacks verify actual Midboss3
+activation1601/phase1at1620/defeat254 HP-6at2228/collected1UP2255/255at2356/
+reset2357, plus Stage2 defeat/clear and Stage3 entry/final4000. CPU, own MZ code,
+DGROUP, private3, resident and stack verify. Original stores13A9:0A4E/0A56/0A59
+own DS4258/4259/425A; source157C:25A6/25AE/25B1 owns MAP8CE8/8CE7/48F3.
+Original0AAF:3B8A computes3-continues_used at4349 and returns1 via3CE8 when
+empty; actual Stage3 entry has3 credits used. The older failed native-only933
+forecast remains separate. Its generic heldShot32 prose is corrected by the
+actual-input composite without changing or relabeling the old receipt.
 
-The actual native-only4000 input forecast defeats Midboss3 at2228 and resets
-it at2357 using ordinary Bomb/movement inputs. Those are checkpoint proposals,
-not assigned states. native-forecast-summary.json corrects the generic scout
-receipt's inaccurate heldShot32 prose by checking every saved/consumed input;
-the old receipt stays immutable. The long DOS producer adds one bounded
-GameOver guard and uses the same verified one-loop-ahead transport. Its helper
-is frozen privately; changing public support must never change the live capsule.
+Both actual300-loop Micro probes validate two one-frame Bomb pulses and
+left/right transitions. Raw fields/RNG, nine full pools and22 states agree
+between DOS roles, with4 post-reset keys retaining a false aggregate. Retained
+4c native matches300 selected pre-update scalars, literal consumed inputs and
+nine-pool actor snapshots. P300 is syntax only; ordinary pools start1. Keep
+the failed unbound/deleted-clock collectors and missing-row/frame0 consumers.
+Bind via Load.stop and test clock.is_valid before touching the clock object.
 
-Current566/1ad0ea4c cold GNU87/83 tests and optimized UBSan2 pass; both old
-seven-wire clear vectors are byte-identical. Default old/new full clear reader
-reports agree for both DOS roles, apart from reader hash. New extended consumers
-remain source-present, pending complete route and mutation checks. The early
-scout archive chains43332 protected hashes and retires71 owned aliases; its
-current net2719.180MiB is before fresh recovery costs. Actual old-program
-complete4000 and failed933 runs reproduce all wires/events/diagnostics after
-restoring3 owned aliases; metadata verifies before retirement. Keep final verdicts and
-all old failed observations separate from the active extension.
+A post-actor key_det is not a player-input latch: original actor400 already
+reads48 but still hasBombs1/used0; update401 consumes the Bomb and reads32.
+Four full RAM witnesses prove this counterexample and previous-input field0.
+Use actual loops, specific UI player-entry taps and full state/pool checks;
+this does not observe literal player entry for all4000 Stage3 updates.
+
+Current cold87/83 tests and UBSan2 pass; both preserve legacy3500/8000/seven
+clear wires and all177 display observations. Six malformed plans and four
+new private/input mutations reject. Default complete readers reproduce and
+all20232 closed original LCG transitions/three mutations pass. The early
+71-file scout journal chains43332 protected hashes; actual old-program complete
+and failed replays reproduce all outputs and metadata. New source-DOS paired
+state/pools/video, memories/files and final frozen retention remain pending.
+Native pictures, physical timing, campaigns and exactness are separate goals.
 
 ## Original/reconstructed DOS Boss suffix (v1456)
 

@@ -117,7 +117,7 @@ def attest_route(capture, target, stage3_updates=4000, stage2_budget=11000):
     require(not (capture / "stage-input-gameover.json").exists() and not (capture / "stage-input-error.json").exists(),
             "route no hidden input or GameOver failure")
     offsets = attest_private(Path(profile["main_path"]).read_bytes(), profile, receipt["role"])
-    report.update(stage3_input=dict(passed=True, loops=len(rows), physical_edges=edges,
+    report.update(route_reader_sha256=sha(Path(__file__).read_bytes()), stage3_input=dict(passed=True, loops=len(rows), physical_edges=edges,
         helper_sha256=sha(helper.read_bytes()), plan_sha256=sha(plan.read_bytes()),
         report_sha256=sha((capture / "stage-input.json").read_bytes()),
         loops_sha256=sha((capture / "stage-input-loops.jsonl").read_bytes()),
@@ -129,12 +129,13 @@ def attest_route(capture, target, stage3_updates=4000, stage2_budget=11000):
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument("--dos-root", type=Path, default=root)
     p.add_argument("--capture", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--stage3-updates", type=int, default=4000)
     p.add_argument("--stage2-budget", type=int, default=11000)
     args = p.parse_args()
-    report, *_ = attest_route(args.capture.resolve(), (root / ".analysis/targets/th04/main.exe").read_bytes(),
+    report, *_ = attest_route(args.capture.resolve(), (args.dos_root.resolve() / ".analysis/targets/th04/main.exe").read_bytes(),
                              args.stage3_updates, args.stage2_budget)
     with args.output.open("x") as stream:
         json.dump(report, stream, indent=2)
