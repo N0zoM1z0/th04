@@ -29,6 +29,7 @@ class Monitor:
         self.current = self.terminal = self.error = None
         self.dialog_requested = self.continue_requested = self.quit_requested = False
         self.ui_point = None
+        self.input_plan = None
         self.process = self.address('th04_demo_observer::process')
         self.load = self.address('th04_demo_observer::load_segment')
         self.video = VideoRam(gdb.selected_inferior().read_memory,
@@ -49,6 +50,7 @@ class Monitor:
 
     def finish(self):
         assert not self.error and not self.wanted and self.terminal is not None
+        if self.input_plan is not None:self.input_plan.finish()
         row = dict(complete=True, observations=self.observed,
                    terminal=self.terminal, natural_game_exit=False,
                    scope='Read-only completed score-return font/video/RAM samples. Ordinary keyboard input; no guest state assignments. Instantaneous display projection, not physical scanout or campaign equivalence.')
@@ -72,6 +74,7 @@ class Load(gdb.Breakpoint):
             self.enabled=False
             m.score=Score(m)
             m.frame=Frame(m)
+            if m.input_plan is not None:m.input_plan.bind()
             return False
         except Exception as error:
             m.error=repr(error);return True
@@ -95,7 +98,7 @@ class Frame(gdb.Breakpoint):
                 self.previous=0;self.stage=stage;m.current.sequence.frames=0
                 return False
             if self.stage is None:return False
-            assert stage in (0,1) and frame==self.previous+1, (stage,frame,self.stage,self.previous)
+            assert stage in (0,1,2) and frame==self.previous+1, (stage,frame,self.stage,self.previous)
             self.stage=stage;self.previous=frame;m.current.sequence.frames=frame
             m.score.enabled=(stage,frame) in m.wanted
             if frame%1000==0:gdb.write('SPARSE_FRAME %d %d\n'%(stage,frame))

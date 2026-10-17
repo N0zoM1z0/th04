@@ -3731,6 +3731,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/th04_sparse_input_gdb.py",
+    "category": "source-review",
+    "role": "support",
+    "purpose": "Replay declared ordinary device edges one observed loop ahead.",
+    "purpose_source": "source-docstring"
+  },
+  {
     "path": "scripts/probes/th04_stage_boundary_gdb.py",
     "category": "boundaries",
     "role": "support",

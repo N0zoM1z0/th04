@@ -5,6 +5,23 @@ Code/docs stay English. Use one low-priority CPU, serialize Borland/Wine builds,
 launch muted/headless, and clean unused products after each bounded batch.
 The user uses Windows: no GUI, focus changes or host-key injection.
 
+## Sparse Stage3 input extension (v1465, in progress)
+
+`th04_sparse_input_gdb.py` observes actual completed init MAIN0AAF:007E before
+activating loop/GameOver watches. A450-loop Stage1 Micro validates10 real
+direction/Bomb API edges and every consumed rawI sample;each API call preserves
+CPU,tick and complete640KiB RAM. Its9 full font/video/RAM score samples validate.
+The default no-plan400-loop/four-point path still matches old original fields/
+RNG. Four rebased input/edge/guard/init-register mutations reject. PreserveV1
+reader bytes;V2 adds init-register and complete final raw-RNG extent checks.
+
+The actual Stage3 six-point capture is running below
+`.analysis/runtime/candidates/dos-stage3-font-v1465-original`;inspect its current
+process/receipt before continuing and never restart a live run on poll timeout.
+Receipts/readers: `.analysis/reconstruction/probes/dos-stage3-font-v1465`.
+Stage3 complete fonts/RGB remain pending. Keep the full objective active and all
+prior sampled RGB/raw-index/clock/timing/campaign limits below.
+
 ## Verified sparse Stage2 full RGB (v1464)
 
 Original MAIN0AAF:0207 now has complete same-context live font/video/DGROUP/

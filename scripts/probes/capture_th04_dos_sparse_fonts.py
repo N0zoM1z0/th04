@@ -81,7 +81,19 @@ def main():
     assert profile['module_size']==len(main_path.read_bytes())-6144
     assert profile['signature']==main_path.read_bytes()[6144:6176].hex()
     points=plan['points'];assert points and points==sorted(points) and len({tuple(p) for p in points})==len(points)
-    assert all(type(s) is int and s in (0,1) and type(f) is int and 1<=f<=65535 for s,f in points)
+    assert all(type(s) is int and s in (0,1,2) and type(f) is int and 1<=f<=65535 for s,f in points)
+    input_source=pin('stage_input') if 'stage_input' in plan else None
+    if any(s==2 for s,_ in points):assert input_source is not None, 'Stage3 requires an actual physical input plan'
+    if input_source is not None:
+        lines=input_source.read_text(encoding='ascii').splitlines();header=lines[0].split()
+        assert len(header)==4 and header[:2]==['TH04_STAGE_INPUT','1']
+        input_stage,input_extent=map(int,header[2:]);assert input_stage in (0,2) and 0<input_extent<=65535
+        assert len(lines)==input_extent+1 and points[-1]==[input_stage,input_extent], 'input extent must end at the final score sample'
+        for frame,line in enumerate(lines[1:]):
+            cells=list(map(int,line.split()));assert len(cells)==3 and cells[0]==frame and 0<=cells[1]<=63 and cells[2]==0
+        for name in ['init_return']:
+            point=profile['entries'][name];at=6144+point['segment']*16+point['offset'];assert main_path.read_bytes()[at:at+16].hex()==point['opcode']
+        point=profile['stage3_gameover_guard'];at=6144+point['segment']*16+point['offset'];assert main_path.read_bytes()[at:at+16].hex()==point['opcode']
     cues=plan['ui_cues'];assert all(c['kind'] in ('dialogue','continue') for c in cues)
     out.mkdir(parents=True);capsule=out/'source';capsule.mkdir()
     # Freeze the imported observer closure, without mutating historical inputs.
@@ -91,6 +103,9 @@ def main():
     for name in ['th04_demo_host_ram.py','th04_demo_video.py','th04_demo_dgroup.py','compare_th04_dos_demos.py']:
         shutil.copy2(ROOT/'scripts/probes'/name,capsule/name)
     shutil.copy2(ROOT/'scripts/probes/th04_sparse_font_gdb.py',capsule/'th04_ordinary_dgroup_gdb.py')
+    if input_source is not None:
+        shutil.copy2(ROOT/'scripts/probes/th04_sparse_input_gdb.py',capsule/'th04_sparse_input_gdb.py')
+        shutil.copy2(input_source,capsule/'stage-inputs.txt')
     keyboard=ROOT/'scripts/probes/th04_ordinary_keyboard.gdb';inputs[str(keyboard)]=sha(keyboard)
     text=keyboard.read_text()
     text=text.replace("sys.path.insert(0, os.environ['TH04_CLOCK_SOURCE_DIR'])", "sys.path.insert(0, "+repr(str(ROOT/'scripts'))+")\nsys.path.insert(0, "+repr(str(ROOT/'scripts/probes'))+")\nsys.path.insert(0, os.environ['TH04_CLOCK_SOURCE_DIR'])")
@@ -102,6 +117,13 @@ def main():
     text=text.replace(old,"active_dialog_frame = monitor.ui_point['frame']")
     # Keep a disabled clock watchpoint for later real UI waits.
     text=text.replace('clock.delete()','clock.enabled = False')
+    if input_source is not None:
+        anchor='    monitor = Monitor(out, ram)'
+        assert text.count(anchor)==1
+        text=text.replace(anchor,anchor+"\n    from th04_sparse_input_gdb import SparseInput\n    monitor.input_plan = SparseInput(monitor, globals())")
+        anchor='    if process_recorder is not None and process_recorder.error:'
+        assert text.count(anchor)==1
+        text=text.replace(anchor,"    if monitor is not None and monitor.input_plan is not None and monitor.input_plan.pending:\n        monitor.input_plan.flush()\n        continue\n"+anchor)
     adapter=capsule/'keyboard.gdb';adapter.write_text(text)
     initial=out/'initial.hdi';shutil.copy2(image_source,initial)
     image=out/'execution.hdi';shutil.copy2(initial,image)
@@ -123,6 +145,7 @@ def main():
         TH04_CLOCK_SOURCE_DIR=str(capsule),TH04_ORDINARY_DGROUP='1',
         TH04_ORDINARY_DIALOG_FRAME='1',TH04_ORDINARY_CONTINUE_FRAME='1',
         XDG_CACHE_HOME=str(out/'cache'),XDG_CONFIG_HOME=str(out/'config'),XDG_DATA_HOME=str(out/'data'))
+    if input_source is not None:env['TH04_SPARSE_STAGE_INPUT']=str(capsule/'stage-inputs.txt')
     command=[str(debugger),'-nx','-batch','-x',str(adapter),'--args',str(binary),'-defaultconf','-defaultmapper','-conf',str(out/'dosbox-x.conf'),'-fastlaunch','-nogui','-nomenu','-exit','-c',f'imgmount 2 "{image}" -t hdd -fs none','-c','boot -l c']
     frozen={str(p):sha(p) for p in capsule.rglob('*') if p.is_file()}
     (out/'launch.json').write_text(json.dumps(dict(command=command,inputs=inputs,capsule=frozen,plan=plan),indent=2)+'\n')
