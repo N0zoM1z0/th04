@@ -5,36 +5,34 @@ goals remain active. Use `taskset -c 1 nice -n 19`, muted headless runs,
 serialized Borland/Wine and no host keys/focus. Keep English code/docs and
 `gpt-6.1-sol: ...` commits; push native `HEAD:port/modern-64` and the DOS main branch.
 
-## Measured native dialogue clock budgets (v1476)
+## Continuous device edges and MAIN latch mismatch (v1477)
 
-A private read-only FrontEnd observer, linked to the unchanged current cold game
-objects, completes all 13377 Stage3 updates and reproduces all 130 stock outputs.
-Its 13960 normal advance calls account for 14513 refreshes;22 independent picture
-counters agree. A consistently rebased +1 counter tail is rejected by those
-independent picture observations. The existing departure-guard exit1 stays explicit.
+A fresh private GNU observer replays the physical Stage3 baseline and all 52
+recorded keyboard edges through one persistent held-device owner. Four final
+release/Shot-restoration edges execute after UI exit; unchanged baseline keys
+never overwrite pending releases. An independent event-prefix reader checks every
+caller sample. Compiled controls retain tails at two clock origins and reject a
+consumer that stops at UI exit. No expected latch,clock,phase or state is assigned.
 
-At loop 7834, native automatic confirmation takes 464 calls/464 refreshes versus
-original/source loop-to-loop PIC intervals of 20633 integer ms. At loop 12888 it
-takes 121 calls/122 refreshes versus 2624 ms. The wait detector spans 20635/2626 ms,
-so its seam remains distinct. Native uses status-driven rapid confirmation;
-original/source use 21/3 complete Enter pulses. All 52 physical edges have identical
-relative millisecond timings on both DOS captures. Their absolute loop ticks
-differ by 513/514/515 ms (97/13103/177 rows). No original/source capture was rerun.
+All 13377 updates complete. All 13378 complete nine-pool/21-stable snapshots and
+13377 raw-score/resident/RNG-count rows agree with the original. All 22 Stage3
+full640x400 RGB/TRAM/DAC/raw-tone samples now pass, including 12889. This is a
+changed physical-input experiment, not a repair of the stock 407-pixel scenario.
+125 of 130 stock output hashes stay equal. Native Stage4 is not observed here.
 
-The phase0-hidden/other-phases-visible rule remains consistent with the independent
-prior emitter and current observations. At 12889, native refresh 36616 modulo 128=8
-is hidden; original phase2/count4 is visible. The actual 407 pixels and native 1805
-volatile keys remain, as do source 19 keys/23 raw GDC failures. The schedules are
-not elapsed-time equivalent. This does not prove that UI timing alone causes or
-fixes the final phase: initial epoch, other work, natural IRQ/UI timing and
-continuous display remain open. No phase fitting, compensation or game-code edit.
+The overall verdict remains false: literal players 7835/12889 read native 32 versus
+original 8192 (two of four pairs fail);1803 postactor keys remain separate. Both
+actual DOS artifacts independently show BIOS Enter clear/fresh keyboard 0 but
+key_det 8192 at those same literal entries. Own-MZ reset/head/tail instructions
+and the OR-accumulating sampler preserve old bits; ordinary callbacks are RET.
+Joystick is enabled but its wrapper masks returns to 63, excluding Enter, and
+observed joystick state is 0. Physical device state,BIOS state and key_det are
+separate surfaces. Do not substitute direct held actions for the game latch.
 
-Next replay recorded device edges through one input owner during UI and retain
-queued tail release/Shot restoration across UI exit. Keep normal time admission,
-report sampling quantization and compare state/literal players/RGB independently.
-Do not drop pending edges, substitute expected latches or set a clock/visibility
-to its expected result. The exported physical-dialogue-windows.json is an input
-fixture, not an executed timed native replay or physical-fidelity acceptance.
+Actual dialogue budgets are 1165/149 refreshes (1165/148 calls);12889 reports 37344.
+The pre-execution 1164/148 prediction is rejected and retained. No origins or
+sampling rules were fitted to pixels. Source 19 keys/23 GDC differences and the
+prior stock 407 pixels/1805 keys remain under their original scenario identities.
 
 ## Actual original/source Elly defeat and Stage4 (v1475)
 
@@ -58,7 +56,7 @@ points, nine pools, 22 states, configured stable fields and resident80 agree.
 Midboss3 private-byte ownership is claimed only for Stage3. This directly
 observed departure does not rely on a native forecast or the planned budget.
 
-All 23 full640x400 RGB, complete528384-byte live-font, active8000-byte TRAM,
+All 23 full640x400 RGB, complete 528384-byte live-font, active8000-byte TRAM,
 48-channel DAC, text-palette and own-MAP raw-tone samples agree, including
 post-dialogue12889 and Stage4 score1. Each side supplies its own fonts and raw
 GDC; no phase fitting, glyph masks or expected-state writes. All 23 raw GDC
@@ -100,18 +98,26 @@ identity/state/RGB/transition readers. Its Micro300 inactive-byte and full-route
 RNG-return controls remain preserved. Use the latest recovery below for all
 inherited aliases; do not rerun completed DOS captures or treat RAM as a resume.
 
-## Current clock-probe recovery and next work (v1476)
+## Current recovery and next work
 
-Next implement the bounded recorded-device input experiment described above.
-Current game closure and products remain unchanged. Read actual Git heads and
-latest finish receipt; this batch starts at main 8d06452/native 4050bf6. Replay
-text-blink-v1476/analyze.py,verify_outputs.py and export_windows.py in the DOS root.
-Current recovery is text-blink-v1476/recover.py:1662 exact aliases (1520 inherited
-plus 142 new), carrying 70224 parent identities and every current/late/finish/provider.
-Keep current game builds and the private observer executable physical. All 142 new
-aliases restore exact metadata; two real/archive consumers preserve 130 complete
-stock outputs and the false display verdict. Local net cleanup is 89.359375MiB
-including recovery artifacts and 2MiB reserve; whole-phase retained costs plus
-32MiB reserve are separate. Do not recredit prior cleanup or raw FIFO streams.
-Finish focused comparisons,tracking,both CIs and git diff --check. Both complete
-goals remain active;NP2/Windows and full four-source/native campaigns stay open.
+Phase entry heads are main 57b532b/native 8364e67; read actual heads and finish
+publication. Current game source stays 566/a7606e66 and current cold products/link
+inputs remain physical. No maintained game source or cold game build changes.
+Current ui-edge-replay-v1477 recovery carries 1804 aliases:1662 inherited plus 142
+new. Keep 70434 parent identities,every current/late/finish identity and provider.
+All 142 aliases restore exact metadata;five real/archive readers preserve 133 full
+outputs,the edge-intent pass,22 RGB pass and false literal-player/overall verdict.
+Private game/device-check executables stay physical;the unused view object is
+archived. Local cleanup net 87.79296875MiB includes recovery artifacts and 2MiB
+reserve; whole-phase retained costs plus 32MiB reserve are separate. No old or
+never-created raw FIFO credit. Replay analyze_device.py,attest_input_latch.py,
+verify_outputs.py and frozen_reader.py --reader native|rgb in the DOS batch.
+
+Next recover the reset-before-wait/head-OR sampling order as a native input
+owner,including BIOS/IRQ delivery timing where necessary. Use the eight actual
+RAM witnesses and own-code bindings before designing a fresh bounded poll-time
+capture. Do not force 8192,hold Enter one extra frame,blindly OR a previous host
+word or fit a clock phase. Keep the successful physical request queue separate
+from the missing game-latch model. Continue the existing differential note.
+Finish focused comparisons,tracking,both CIs and git diff --check. Complete DOS/
+native goals stay active;timing,continuous display,NP2/Windows and campaigns remain.
