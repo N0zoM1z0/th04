@@ -6,6 +6,36 @@ headless runs and serialized Borland/Wine builds. No host focus or key injection
 Code, documentation and `gpt-6.1-sol: ...` commits are English. Push both main
 and native `HEAD:port/modern-64`; read actual Git heads and current finish receipts.
 
+## Active legal Elly/Stage4 experiment (v1474)
+
+Entry heads are main `f2ff777` and native `95cc935`; game closure566/a7606e66
+and current cold products are unchanged. A private const scythe-aware advisor
+selects ordinary keys after the exact old8000 prefix. Both unmodified cold stock
+GNU/UBSan execute all13377 recorded rows, matching complete Stage3 pools/state
+wires and22 picture outputs. They exit1 at the existing diagnostic guard on
+natural departure after the final complete score; this is not a successful stock
+fixture. Private normal advance reaches Stage4 init/actor1/score1. Native defeat
+is12792, post-dialogue12888 and departure13377, retaining one life and no new hit
+flags after8000. This forecast is not original/source acceptance.
+
+`dos-elly-legal-v1474-original` is now live. Poll
+`elly-legal-route-v1474/poll_original.py` before acting. Pinned GDB/emulator IDs
+are4057685/4057718 with start ticks12127943/12127967, one low-priority CPU and
+headless/muted operation. Keep driver/helper/plan/capsule/images immutable.
+Do not restart because a tool observation expires. There is no emulator resume
+from stored RAM. Reduce actual terminal evidence before claiming defeat/Stage4
+or preparing the corresponding source capture. The older failed v1472 producer
+remains terminal and must not be restarted.
+
+Current recovery is `elly-legal-route-v1474/recover.py` and `frozen_reader.py`.
+It carries1146 aliases:683 inherited plus463 newly closed native files. All new
+aliases restore exact metadata; independent real/archive readers reproduce.
+Extra duplicate deallocation is180.046875MiB before metadata/replay costs and
+1MiB reserve. Separately,1805.1875MiB of actual regular stock outputs were
+compressed after closure. Scout FIFO raw streams never existed as regular files.
+Keep current builds and inherited providers physical. The live original's
+changing costs must enter the final journal after closure; no prior credit.
+
 ## Current native collision repair (v1473)
 
 The batch starts from main `67076b1` and native `4b082b8`. Native source closure
@@ -34,7 +64,7 @@ and `verify_replays.py`; their data are under `.analysis/reconstruction/probes/`
 ## Actual original endpoint and evidence limits
 
 `dos-elly-v1472-original` is terminal/incomplete, not timed out: exit1 after
-801.680s at MAIN0AAF:3A51/GameOver8085, load10FC/DS3230. No emulator remains.
+801.680s at MAIN0AAF:3A51/GameOver8085, load10FC/DS3230. The older failed producer is terminal.
 All8086 loop inputs matched plan. The sole physical/readback difference is known
 7835 Shot32/Enter8192. Its complete29146871-byte old8000 raw prefix and8001
 pool/state snapshots reproduce. Actual scythe(2932,4621) overlaps player(3312,4976)
@@ -75,9 +105,9 @@ full live-font/RGB samples. Original literal-tap Micro retains39 stack-address
 and five post-actor bytes in its strict whole-DGROUP failure; seven init offsets
 precede taps and their cause is unknown. See the focused differential note.
 
-## Recovery and next work
+## Preceding repair recovery and next work
 
-Use current `elly-hit-bridge-v1473/recover.py` and `verify_restoration.py`.
+The preceding checkpoint uses `elly-hit-bridge-v1473/recover.py` and `verify_restoration.py`.
 It carries287 inherited plus396 new exact aliases. All new aliases restore SHA,
 size,mode,nsmtime; four restored frontend output maps and both real/archive
 paired readers reproduce. Current builds and inherited providers stay physical;
@@ -92,9 +122,9 @@ build cleanup and whole-phase new retained costs separately. No earlier cleanup
 is credited again. Continue intermediate cleanup during long work and after each
 batch; keep required compressed RAM/pool/font/video evidence.
 
-Preserve the passing8000 vector and failed aggregates. Next forecast a legal
-input route using the fixed collision bridge, then obtain fresh actual original
-and source observations of Elly defeat and Stage4 initialization. Do not weaken
+Preserve the passing8000 vector and failed aggregates. Finish the active legal
+original capture above, independently validate its terminal observations, then
+obtain corresponding source observations of Elly defeat and Stage4 initialization. Do not weaken
 collision or invulnerability. Do not rerun the old unsafe plan or completed
 8000 producer. Stored RAM is not an emulator save-state resume.
 

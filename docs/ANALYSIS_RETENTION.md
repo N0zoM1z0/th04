@@ -1,5 +1,23 @@
 # Private build and analysis retention
 
+## Closed legal-route native recovery during original capture (v1474)
+
+Current `elly-legal-route-v1474/recover.py` carries1146 direct exact aliases:
+683 inherited and463 new closed native files. Exact SHA,size,mode,nsmtime restores
+and independent real/archive whole legal-route reader replay pass. Extra duplicate
+deallocation is180.046875MiB; deduct new recovery/replay metadata and1MiB reserve
+for the local net. Separately,1805.1875MiB of actual regular stock outputs were
+compressed after producer closure. Scout FIFO raw streams never existed as regular
+files, so they earn no raw cleanup credit. No prior cleanup is credited again.
+
+Keep current game programs/link inputs and inherited providers physical. The
+independent `dos-elly-legal-v1474-original` capture is live: do not prune its
+images, capsule or changing outputs. This is an interim closed-native cleanup,
+not a final whole-phase free-space claim; charge all original costs after it
+terminates. Carry68705 inherited identities plus every late/finish identity and
+all providers. Use `frozen_reader.py` for archived legal-route replay; restore
+only explicit historical paths with `--restore --path EXACT`, then retire them.
+
 ## Current native Elly repair recovery (v1473)
 
 Current `elly-hit-bridge-v1473/recover.py` carries683 exact aliases:287 inherited

@@ -34,13 +34,19 @@ complete init/actor nine-pool/21-stable-field snapshots and8086 available raw
 score/state/resident/RNG-count rows agree;716 postactor inputs remain separate.
 All79 old8000 output hashes remain unchanged;78 extended hashes agree across roles.
 The actual original actor stream still ends8081 plus35710 bytes, no footer.
-Its GameOver run is incomplete, not a Stage4 acceptance. No emulator is live.
+Its GameOver run is incomplete, not a Stage4 acceptance. The older failed producer is terminal.
 
-Next forecast a legal route using the corrected collision behavior, then capture
-fresh original/source Elly defeat and Stage4. Do not weaken collision or
-invulnerability or reuse the earlier defective-bridge safe-clear forecast.
-Current recovery carries683 aliases (287 inherited plus396 new); real-file and
-archive readers reproduce. Keep current builds and all inherited providers.
+The legal native forecast now reaches defeat12792/departure13377 and private
+Stage4 init/first update. Stock GNU/UBSan match every recorded Stage3 input and
+complete wire, with explicit exit1 at the existing final-departure diagnostic
+guard. Twenty-two native Stage3 picture pairs agree. It is not target acceptance.
+
+The new original capture `dos-elly-legal-v1474-original` is live. Use
+`elly-legal-route-v1474/poll_original.py` and the current handoff's PID/start
+identities before acting; do not restart it on a tool timeout. Keep all live
+inputs/images/capsule immutable. Reduce its actual terminal evidence, then
+prepare a source comparison only if supported. No actual Stage4 claim yet.
+Current recovery carries1146 aliases and real/archive readers reproduce.
 
 ## Resume instructions
 
@@ -48,16 +54,15 @@ archive readers reproduce. Keep current builds and all inherited providers.
 Continue the complete TH04 DOS/native goals. Read AGENTS.md, docs/RE_HANDOFF.md,
 docs/ARCHITECTURE.md, docs/RE_WORKFLOW.md and applicable local skills. Inspect
 Git status and verify current target/database identities. Preserve the passing
-captured-route Elly hit/reset regression. Forecast legal
-inputs on the fixed native product, then capture actual original/source defeat
-and Stage4. Keep the original driver/helper/plan/capsule immutable. Use one CPU
+captured-route Elly hit/reset regression. Poll the existing legal original
+producer, validate its terminal evidence, then prepare a source comparison. Keep the original driver/helper/plan/capsule immutable. Use one CPU
 with taskset -c 1
 nice -n 19, headless/muted runs, no host keys and serialized Borland/Wine builds.
 Validate terminal observations independently before extending parity claims.
 Keep failed aggregates, provenance gaps and unknown timing/campaign surfaces
 explicit. Clean completed outputs after each bounded batch and during long
 work; verify recovery before retiring required evidence. Use current recover.py
-and verify_restoration.py, carry every parent/late/finish identity and provider, and
+and frozen_reader.py, carry every parent/late/finish identity and provider, and
 charge evolving live-capture costs when it closes. Never recredit old cleanup.
 Run focused comparisons, python3 scripts/ci.py and git diff --check. Keep code,
 docs and commits English; commit with gpt-6.1-sol: and push main plus native

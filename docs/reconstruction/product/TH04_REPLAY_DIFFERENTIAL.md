@@ -5,6 +5,36 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Legal native route and active original experiment (v1474)
+
+Entry heads are main `f2ff777` and native `95cc935`; game closure566/a7606e66
+and current cold products are unchanged. A private const scythe-aware advisor
+selects ordinary keys after the exact old8000 prefix. Both unmodified cold stock
+GNU/UBSan execute all13377 recorded rows, matching complete Stage3 pools/state
+wires and22 picture outputs. They exit1 at the existing diagnostic guard on
+natural departure after the final complete score; this is not a successful stock
+fixture. Private normal advance reaches Stage4 init/actor1/score1. Native defeat
+is12792, post-dialogue12888 and departure13377, retaining one life and no new hit
+flags after8000. This forecast is not original/source acceptance.
+
+`dos-elly-legal-v1474-original` is now live. Poll
+`elly-legal-route-v1474/poll_original.py` before acting. Pinned GDB/emulator IDs
+are4057685/4057718 with start ticks12127943/12127967, one low-priority CPU and
+headless/muted operation. Keep driver/helper/plan/capsule/images immutable.
+Do not restart because a tool observation expires. There is no emulator resume
+from stored RAM. Reduce actual terminal evidence before claiming defeat/Stage4
+or preparing the corresponding source capture. The older failed v1472 producer
+remains terminal and must not be restarted.
+
+Current recovery is `elly-legal-route-v1474/recover.py` and `frozen_reader.py`.
+It carries1146 aliases:683 inherited plus463 newly closed native files. All new
+aliases restore exact metadata; independent real/archive readers reproduce.
+Extra duplicate deallocation is180.046875MiB before metadata/replay costs and
+1MiB reserve. Separately,1805.1875MiB of actual regular stock outputs were
+compressed after closure. Scout FIFO raw streams never existed as regular files.
+Keep current builds and inherited providers physical. The live original's
+changing costs must enter the final journal after closure; no prior credit.
+
 ## Native Elly hit propagation and consumption (v1473)
 
 Elly's existing component flag now participates in main_state.cpp's composite

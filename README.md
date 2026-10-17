@@ -25,6 +25,12 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
+The v1474 const scythe-aware native forecast reaches Elly defeat12792 and natural
+departure13377 with one life. Stock GNU/UBSan match all complete Stage3 wires and
+22 native picture pairs, with explicit exit1 at the existing departure diagnostic
+guard. The new original capture is live and still unaccepted; poll the current
+handoff before acting. Game source and current cold products are unchanged.
+
 The v1473 native repair propagates and consumes Elly's scythe hit flag. Both
 fresh cold GNU/UBSan frontends reproduce actual original hit8046/GameOver8085:
 8082 complete nine-pool/21-stable-field snapshots and8086 raw score/state/resident/
