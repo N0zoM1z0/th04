@@ -5,6 +5,70 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Pause delivery and declared latch expectations (v1468)
+
+The public sparse format supports two independent planes:
+
+```text
+TH04_STAGE_INPUT 2 0 2
+0 32 32
+1 32 32
+```
+
+For example, original Stage3 row7835 is `7835 32 8192`: request physicalShot32
+while asserting the independently observed UI Enter latch8192. This is fixture
+input/expectation data, not a guest assignment or candidate-derived correction.
+V1 remains `frame physical reserved_zero` and strictly requires actual==physical.
+V2 physical keys are six ordinary buttons plus Escape; the expected word is
+unsigned16-bit. Both versions validate order, extent and all real API guards.
+The sampler records actual, expected and physical separately, retains all
+physical/readback differences, and rejects a wrong expected word. Default V1
+never gains a mismatch waiver. Paired comparisons must still compare raw actual
+inputs and state directly; a declared expectation alone proves no fidelity.
+
+The pinned DOSBox-X Pause control records lateShot at MAIN0AAF:01B3 and a new
+input latch at0AAF:00B7 only0.009889ms later. UART queue entry0x29 arrives after
+0.572917ms; BIOS0000:052F's Shot bit remains clear at the latch and at UART return,
+then becomes set before the next frame. Native-host code/queue offsets bind to
+the own pinned ELF; all guest contexts are read-only. The original main loop
+branches from0AAF:0207 directly to00AE, providing no fresh frame_delay there.
+Do not interpret the delay using an assumed new wait between these two seams.
+The raw derived PIC FullIndex is nonmonotonic at three PIC_Ticks transition
+pairs; retain those values without fitting. The critical CPU-seam interval is
+outside those transitions. These observations do not generalize to NP2 or real
+keyboard hardware.
+
+Batching Shot with the actual Enter-release API edge passes all400 requested
+Pause-loop words. These earlier controls use a frozen private Escape extension;
+public V1 remains limited to its original six buttons. Its literal player80 still sees0 even after BIOSShot becomes
+pressed, demonstrating the distinct sampling seam. The early controller remains
+an experiment. The old frame-return scheduler stays rejected and unchanged in
+its retained capsule; shared `th04_ordinary_keyboard.gdb` is not modified.
+
+Five original short runs validate target identity, all1136 relocated words,
+CPU/full640KiB RAM, complete font/video snapshots and every physical API guard.
+Current public V1 matches all711787 retained normalMicro raw bytes. The complete
+observed latePause matches all436 records of the old rejected prefix. Explicit
+V2 physicalShot32/expected0 at81 completes400 and reproduces all764 observed raw
+records. Changing only the expected word to32 rejects actual0 at81. Its complete
+three score snapshots remain usable, while the enclosing run and missing tail
+remain failed/incomplete. The first reader incorrectly required a final sparse
+summary on that failure; its preserved V1 source and corrected partial-checkpoint
+handling are distinct. No capture was restarted because of that reader error.
+
+`pause-latch-v1468/stage3-v2-inputs.txt` derives all8000 expected words from the
+retained complete original rawI stream and preserves every physical request.
+Only7835 differs:32/8192. This binds a prepared fixture, not a new producer run.
+Legacy `th04_stage_inputs_gdb.py` and `attest_th04_stage3_route.py` still need V2
+support and a bounded original/source regression before source-DOS8000 executes.
+Native source remains566/4787233c; original/source-DOS paired coverage remains4000.
+Both complete product goals stay active.
+
+All25 closed capture aliases restore SHA/size/mode/nsmtime and the independent
+five-capture reader reproduces before retirement. Keep compressed witnesses,
+source versions, the original8000 golden and all61959 parent identities.
+Recovery and combined net accounting are below `pause-latch-v1468/retention`.
+
 ## Complete original8000 and native palette/tile repair (v1467)
 
 The [current handoff](../../RE_HANDOFF.md) is the active queue. Receipts and

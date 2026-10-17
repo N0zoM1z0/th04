@@ -25,6 +25,10 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
+The v1468 capture work separates physical input requests from strict expected
+latches, with measured Pause/UART timing and positive/negative controls. The
+paired source-DOS V2 transport remains the next task; see the current handoff.
+
 Current v1467 records a complete original 8000-update Stage3 route. Native
 566/4787233c replays its literal inputs: both cold GNU/optimized UBSan programs
 agree on all 79 files, 8001 nine-pool snapshots, 8010 stable-state records and

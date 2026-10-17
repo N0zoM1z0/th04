@@ -1,5 +1,33 @@
 # Private build and analysis retention
 
+## Pause intent/latch capture recovery (v1468)
+
+Twenty-five owned aliases from five closed real emulator captures retire after
+SHA/size/mode/nanosecond-mtime restoration. The independent five-capture reader
+consumes actual restored files and reproduces identical JSON, including the
+wrong-expectation rejection. Keep all compressed CPU/RAM/font/video/actor/UART
+witnesses, immutable source versions and parent providers. The original8000
+golden and current native566/4787233c programs remain available.
+
+The conservative v1468 net release is **103.164 MiB**. Charge all new
+retained logical paths (including hardlinks), public source snapshots and live
+changes, source/readers/witnesses, CI/recovery files, the journal itself and
+32 MiB final metadata reserve. Count this phase once; exclude earlier v1467
+credit, temporary/hypothetical copies and Python caches. All63272 protected
+identities verify, including61959 parent/late/finish identities.
+
+```sh
+taskset -c 1 nice -n 19 python3 \
+  .analysis/reconstruction/probes/pause-latch-v1468/recover.py
+```
+
+Use `--restore --path EXACT` for one journal-relative alias, then verify and
+retire it. Avoid bulk expansion. The next journal must merge retention,
+every finish.late_protected identity and finish itself. V2 has positive/negative
+original sparse controls; the legacy paired source-DOS collector still needs
+V2 support and a cheap original/source regression before source-DOS8000.
+Both complete goals stay active.
+
 ## Complete Stage3 dialogue/tile batch recovery (v1467)
 
 Retire 397 owned archival aliases: 55 closed capture files and 342 large

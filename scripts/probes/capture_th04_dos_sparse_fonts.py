@@ -61,6 +61,9 @@ def wait_capture(child, progress, timeout, idle_timeout):
                 raise subprocess.TimeoutExpired(child.args, timeout)
 
 
+from th04_stage_input_plan import parse_stage_input
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--plan',type=Path,required=True)
@@ -118,12 +121,8 @@ def main():
         parser.error('idle-timeout requires a physical stage input plan')
     if any(s==2 for s,_ in points):assert input_source is not None, 'Stage3 requires an actual physical input plan'
     if input_source is not None:
-        lines=input_source.read_text(encoding='ascii').splitlines();header=lines[0].split()
-        assert len(header)==4 and header[:2]==['TH04_STAGE_INPUT','1']
-        input_stage,input_extent=map(int,header[2:]);assert input_stage in (0,2) and 0<input_extent<=65535
-        assert len(lines)==input_extent+1 and points[-1]==[input_stage,input_extent], 'input extent must end at the final score sample'
-        for frame,line in enumerate(lines[1:]):
-            cells=list(map(int,line.split()));assert len(cells)==3 and cells[0]==frame and 0<=cells[1]<=63 and cells[2]==0
+        _,input_stage,input_extent,_,_=parse_stage_input(input_source.read_bytes())
+        assert points[-1]==[input_stage,input_extent], 'input extent must end at the final score sample'
         for name in ['init_return']:
             point=profile['entries'][name];at=6144+point['segment']*16+point['offset'];assert main_path.read_bytes()[at:at+16].hex()==point['opcode']
         point=profile['stage3_gameover_guard'];at=6144+point['segment']*16+point['offset'];assert main_path.read_bytes()[at:at+16].hex()==point['opcode']
@@ -145,6 +144,7 @@ def main():
     if input_source is not None:
         shutil.copy2(ROOT/'scripts/probes/th04_sparse_input_gdb.py',capsule/'th04_sparse_input_gdb.py')
         shutil.copy2(input_source,capsule/'stage-inputs.txt')
+        shutil.copy2(ROOT/'scripts/probes/th04_stage_input_plan.py',capsule/'th04_stage_input_plan.py')
     if 'actor_dgroup' in plan:
         shutil.copy2(ROOT/'scripts/probes/th04_sparse_actor_gdb.py',capsule/'th04_sparse_actor_gdb.py')
     keyboard=ROOT/'scripts/probes/th04_ordinary_keyboard.gdb';inputs[str(keyboard)]=sha(keyboard)

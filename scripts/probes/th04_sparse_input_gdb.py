@@ -12,6 +12,8 @@ from pathlib import Path
 
 import gdb
 
+from th04_stage_input_plan import parse_stage_input
+
 KEYS=[(1,'KBD_up'),(2,'KBD_down'),(4,'KBD_left'),(8,'KBD_right'),
       (16,'KBD_x'),(32,'KBD_z')]
 
@@ -56,14 +58,9 @@ class SparseInput:
         self.monitor,self.scope=monitor,scope
         self.path=Path(os.environ['TH04_SPARSE_STAGE_INPUT'])
         raw=self.path.read_bytes();self.digest=hashlib.sha256(raw).hexdigest()
-        lines=raw.decode('ascii').splitlines();header=lines[0].split()
-        assert len(header)==4 and header[:2]==['TH04_STAGE_INPUT','1']
-        self.stage,self.extent=map(int,header[2:]);assert self.stage in (0,2) and 0<self.extent<=65535
-        assert len(lines)==self.extent+1
-        self.inputs=[]
-        for frame,line in enumerate(lines[1:]):
-            cells=list(map(int,line.split()));assert len(cells)==3 and cells[0]==frame and 0<=cells[1]<=63 and cells[2]==0
-            self.inputs.append(cells[1])
+        self.version,self.stage,self.extent,self.inputs,self.expected=parse_stage_input(raw)
+        self.keys=KEYS+([(4096,'KBD_esc')] if self.version==2 else [])
+        self.physical_readback_differences=[]
         self.pending=[];self.actions=[];self.initializations=[]
         self.observed=0;self.active=False;self.bound=False;self.guard_fired=False;self.held=None
 
@@ -84,19 +81,21 @@ class SparseInput:
             off,size=self.offsets[name];return m.number(off,size)
         stage,frame,actual=number('stage'),number('frame'),number('input')
         assert self.active and stage==self.stage and frame==self.observed and frame<self.extent, 'input stage/frame order'
-        assert actual==self.inputs[frame], ('actual input differs',frame,actual,self.inputs[frame])
+        assert actual==self.expected[frame], ('actual input differs',frame,actual,self.expected[frame])
+        if actual!=self.inputs[frame]:
+            self.physical_readback_differences.append(dict(frame=frame,physical=self.inputs[frame],actual=actual))
         self.stream.write(json.dumps(dict(stage=stage,frame=frame,actual=actual,
-            expected=self.inputs[frame],tick=self.scope['tick']()))+'\n');self.stream.flush()
+            expected=self.expected[frame],physical=self.inputs[frame],tick=self.scope['tick']()))+'\n');self.stream.flush()
         self.observed+=1
         if self.held is None:
-            self.held={name:False for _,name in KEYS}
+            self.held={name:False for _,name in self.keys}
             for action in self.scope['actions']:
                 if action['key'] in self.held:self.held[action['key']]=action['pressed']
-            assert sum(bit for bit,name in KEYS if self.held[name])==self.inputs[0], 'initial physical keys'
+            assert sum(bit for bit,name in self.keys if self.held[name])==self.inputs[0], 'initial physical keys'
         if frame+1<self.extent:
             wanted=self.inputs[frame+1]
-            self.pending=[(name,False,frame+1) for bit,name in KEYS if self.held[name] and not wanted&bit]
-            self.pending += [(name,True,frame+1) for bit,name in KEYS if not self.held[name] and wanted&bit]
+            self.pending=[(name,False,frame+1) for bit,name in self.keys if self.held[name] and not wanted&bit]
+            self.pending += [(name,True,frame+1) for bit,name in self.keys if not self.held[name] and wanted&bit]
         return bool(self.pending)
 
     def flush(self):
@@ -126,9 +125,10 @@ class SparseInput:
 
     def save(self, complete):
         row=dict(complete=complete,stage=self.stage,extent=self.extent,observed_loops=self.observed,
+            plan_version=self.version,physical_readback_differences=self.physical_readback_differences,
             plan_sha256=self.digest,actions=self.actions,initializations=self.initializations,
             gameover_guard_registered=int(self.bound),gameover_guard_fired=self.guard_fired,
-            scope='Actual keyboard API edges queued one observed loop ahead;each consumed sample validates. Every call preserves CPU,tick and complete640KiB RAM. Own completed stage initialization activates loop/guard watches;no gameplay,RNG,clock or key_det assignment.')
+            scope='Actual keyboard API edges queued one observed loop ahead;each actual latch strictly matches its declared expectation. V2 keeps physical intent/readback differences explicit. Every call preserves CPU,tick and complete640KiB RAM. Own completed stage initialization activates loop/guard watches;no gameplay,RNG,clock or key_det assignment.')
         (self.monitor.output/'stage-input.json').write_text(json.dumps(row,indent=2)+'\n')
 
     def finish(self):

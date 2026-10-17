@@ -215,5 +215,6 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_sparse_actor_gdb.py](../probes/th04_sparse_actor_gdb.py) | support | Optional complete DGROUP stream at the original ordinary frame-write seam. |
 | [probes/th04_sparse_input_gdb.py](../probes/th04_sparse_input_gdb.py) | support | Replay declared ordinary device edges one observed loop ahead. |
 | [probes/th04_sparse_interrupt_gdb.py](../probes/th04_sparse_interrupt_gdb.py) | support | Read a stopped emulator's guest CPU/RAM on the collector deadline interrupt. |
+| [probes/th04_stage_input_plan.py](../probes/th04_stage_input_plan.py) | support | Parse physical device intent separately from the expected DOS input latch. |
 | [review_th04_main_functions.py](../review_th04_main_functions.py) | command | Conservatively review TH04 MAIN authored functions against exact byte owners. |
 | [survey_rec98_outputs.py](../survey_rec98_outputs.py) | command | Survey every locally built ReC98 PC-98 output under strict local policy. |

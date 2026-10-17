@@ -3759,6 +3759,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/th04_stage_input_plan.py",
+    "category": "source-review",
+    "role": "support",
+    "purpose": "Parse physical device intent separately from the expected DOS input latch.",
+    "purpose_source": "source-docstring"
+  },
+  {
     "path": "scripts/probes/th04_stage_inputs_gdb.py",
     "category": "runtime",
     "role": "support",

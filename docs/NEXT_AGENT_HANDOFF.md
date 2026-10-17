@@ -6,6 +6,37 @@ fidelity goals remain active. Code/docs are English. Use one low-priority CPU
 The user uses Windows; do not open GUI windows, change focus or inject host keys.
 Clean unused intermediates during each batch and after consumers finish.
 
+## Input intent and latch contract (v1468)
+
+The original Pause control now explains the rejected frame-return scheduler:
+Shot is queued at a completed-frame seam, but the next latch occurs0.009889ms
+later, before DOSBox-X's0.572917ms UART delivery. BIOSbitmap remains clear at
+that latch and becomes pressed before the following frame. These are pinned
+emulator observations, not a PC-98 hardware timing claim. Derived PIC FullIndex
+can move backward at its millisecond write-watch transition; preserve those rows.
+Batching Shot with the real confirmation-release edge passes all400 requested
+loop words. This remains a private bounded control, not a promoted UI scheduler.
+
+Public sparse input now supports V2: each row declares `frame physical expected`.
+V1 keeps its reserved-zero third column and requires latch==physical. V2 keeps
+physical keys separate from an explicit expected unsigned latch; every actual
+read still must match. V2 permits the six ordinary buttons plus physical Escape.
+It never writes expected words into the guest. Record every physical/readback
+difference. Freeze expectations from an original golden before a candidate run.
+
+Five actual short captures validate the contract. Current V1 reproduces all
+711787 parent raw bytes. Declared V2 Pause400 has physicalShot32/expected0 at81
+and reproduces all764 observed raw records. Changing only expected0 to32 rejects
+actual0 at81. The failed run stays incomplete; ownMZ/CPU/RAM/font/video and
+physical API guards validate. Five parser tests also pass.
+
+Receipts: `.analysis/reconstruction/probes/pause-latch-v1468`.
+`stage3-v2-inputs.txt` preserves all8000 physical requests and binds expected
+latches to the existing original8000 golden;7835 is explicitly32/8192.
+This fixture is prepared, not a new source-DOS run. The legacy paired source-DOS
+transport/reader still accepts V1 only. Do not feed V2 to it yet. Keep the
+original8000 golden and native566/4787233c programs; no producer rebuild is needed.
+
 ## Verified frontier
 
 Original/source-DOS paired MAIN remains at Stage3 completed4000 (v1462).
@@ -85,9 +116,12 @@ journal must merge retention,all finish.late_protected identities and finish.
 ## Next work and limits
 
 Keep the recorded original8000 golden; do not restart its long prefix.
-Resolve keyboard API-to-latch timing with a cheap real Pause/Resume control,
-then extend reconstructed-DOS comparison beyond4000 with independently verified
-actual inputs. Reuse the source/layout/native pointers in the
+Extend the legacy paired source-DOS transport and independent route reader to
+V2 without weakening V1. Validate a cheap original/source Micro, then run only
+the reconstructed-DOS8000 extension against the frozen original golden and
+independently verify actual consumed inputs. Include a literal post-dialogue
+source player-entry CPU/RAM witness bound to its own MAP/MZ and the retained
+original player witness; the earlier loop latch is a different observation. Reuse the source/layout/native pointers in the
 [focused differential note](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
 Raw post-actor keys,raw graphics indices/GDC clocks,natural IRQ/scanout timing,
 NP2/Windows and complete campaigns remain open. No artifact or unit becomes exact.
