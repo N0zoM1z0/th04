@@ -499,3 +499,7 @@ add_test(NAME startup-contracts COMMAND th04-port64-startup-contracts)
 
 add_executable(th04-port64-vsync-contracts pc98_vsync_checks.cpp)
 add_test(NAME vsync-contracts COMMAND th04-port64-vsync-contracts)
+
+add_executable(th04-port64-input-contracts pc98_input_checks.cpp)
+target_compile_features(th04-port64-input-contracts PRIVATE cxx_std_17)
+add_test(NAME input-sampler-contracts COMMAND th04-port64-input-contracts)

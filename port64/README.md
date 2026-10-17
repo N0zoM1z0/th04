@@ -1,5 +1,20 @@
 # TH04 native 64-bit bring-up
 
+## PC-98 input sampler component
+
+`pc98_input.hpp` separates BIOS keyboard samples and active-low joystick pins
+from the accumulated game input latch. Reset clears actions before sampling;
+ordinary sense ORs actions and replaces Shift. Keypad diagonals retain their
+original high-byte actions. The caller owns sampling and device delivery times.
+
+The standalone GNU and optimized UBSan CMake/CTest target
+`th04-port64-input-contracts` passes. An independent private Unicorn16 Oracle
+executes unchanged original MAIN reset/sense/joystick instructions for 6,144
+controlled cases (12,288 calls); both compiled implementations agree. This
+covers the component's reset/OR, keyboard, Shift and joystick semantics. Native
+MAIN/UI integration and actual keyboard delivery timing remain open; prior full
+game builds and gameplay verdicts retain their original source identities.
+
 ## Explosion palette and dialogue back-page repairs (v1454)
 
 Native `4b3bf1d` fixes the measured full-picture failures at 9284 and 9349.
