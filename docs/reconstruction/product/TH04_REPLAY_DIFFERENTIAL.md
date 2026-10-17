@@ -5,6 +5,32 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Stage3 wait investigation (v1467)
+
+Six complete original score-return snapshots at Stage3
+1/4000/4011/4357/4448/6000 now match every640x400 RGB pixel,8000 active TRAM
+bytes and48 DAC channels/raw tone. Four points are new:18 unique sampled
+Stage2/3 full RGB/TRAM comparisons now pass. The enclosing original run remains
+failed/incomplete and raw graphics-index differences remain. Its final receipt
+and all files verify through53946 parent/late/finish identities or exact recipes.
+Two fully rebased pixel/DAC-only controls reject independently.
+
+The optional `--idle-timeout` watches appended actual input-loop samples using
+monotonic time after the first sample. A normal400-frame Micro with idle2
+completes despite its stale last-edge JSON. An observer-only write suppression
+after55 samples triggers idle2 and saves actual frame125 CPU/full640KiB RAM;
+independent own-MZ/register/opcode checks pass. This is a recorder-fault control,
+not a game hang. The default idle deadline stays disabled.
+
+Target MAIN0AAF:2454..24CD checks only scroll speed0 and back page1 before
+dialogue. Independent execution of its unmodified bytes reaches the dialogue
+call with either active or no-op STD VM. Native currently also waits for STD
+exhaustion. Actor7832 plus earlier complete STD RAM predicts scroll stop7834
+with a pending wave7900;this is an inferred explanation,not yet the observed
+wait cause. A fresh original run uses idle120/total1800 and includes new full
+RAM/font/video points7834/7835. Do not change its frozen inputs while live.
+Receipts: `.analysis/reconstruction/probes/stage3-wait-v1467`.
+
 ## Optional bounded after-actor DGROUP stream
 
 `capture_th04_dos_sparse_fonts.py` accepts an optional plan member

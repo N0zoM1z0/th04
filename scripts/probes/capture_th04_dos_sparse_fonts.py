@@ -36,12 +36,41 @@ def sha(path):
     return h.hexdigest()
 
 
+class CaptureProgressTimeout(Exception):
+    """The armed input recorder has stopped appending samples."""
+
+
+def wait_capture(child, progress, timeout, idle_timeout):
+    if not idle_timeout:
+        return child.wait(timeout=timeout)
+    deadline = time.monotonic() + timeout
+    previous_size = 0
+    last_progress = None
+    while True:
+        remaining = max(0, deadline - time.monotonic())
+        try:
+            return child.wait(timeout=min(1, remaining))
+        except subprocess.TimeoutExpired:
+            now = time.monotonic()
+            size = progress.stat().st_size if progress.exists() else 0
+            if size and size != previous_size:
+                previous_size, last_progress = size, now
+            elif last_progress is not None and now - last_progress >= idle_timeout:
+                raise CaptureProgressTimeout('stage-input-idle')
+            if now >= deadline:
+                raise subprocess.TimeoutExpired(child.args, timeout)
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--plan',type=Path,required=True)
     parser.add_argument('--output-dir',type=Path,required=True)
     parser.add_argument('--timeout',type=int,default=1800)
+    parser.add_argument('--idle-timeout',type=int,default=0,
+        help='Seconds without an appended input-loop sample after the first sample;0 disables')
     args=parser.parse_args();out=args.output_dir.resolve()
+    if args.idle_timeout < 0 or args.timeout <= 0:
+        parser.error('timeout must be positive and idle-timeout nonnegative')
     if out.exists() or not out.is_relative_to(ROOT/'.analysis/runtime/candidates'):
         parser.error('use a fresh private capture directory')
     resource.setrlimit(resource.RLIMIT_AS,(1536*1024*1024,1536*1024*1024))
@@ -85,6 +114,8 @@ def main():
     points=plan['points'];assert points and points==sorted(points) and len({tuple(p) for p in points})==len(points)
     assert all(type(s) is int and s in (0,1,2) and type(f) is int and 1<=f<=65535 for s,f in points)
     input_source=pin('stage_input') if 'stage_input' in plan else None
+    if args.idle_timeout and input_source is None:
+        parser.error('idle-timeout requires a physical stage input plan')
     if any(s==2 for s,_ in points):assert input_source is not None, 'Stage3 requires an actual physical input plan'
     if input_source is not None:
         lines=input_source.read_text(encoding='ascii').splitlines();header=lines[0].split()
@@ -163,13 +194,14 @@ def main():
     command=[str(debugger),'-nx','-batch','-x',str(adapter),'--args',str(binary),'-defaultconf','-defaultmapper','-conf',str(out/'dosbox-x.conf'),'-fastlaunch','-nogui','-nomenu','-exit','-c',f'imgmount 2 "{image}" -t hdd -fs none','-c','boot -l c']
     frozen={str(p):sha(p) for p in capsule.rglob('*') if p.is_file()}
     (out/'launch.json').write_text(json.dumps(dict(command=command,inputs=inputs,capsule=frozen,plan=plan),indent=2)+'\n')
-    start=time.monotonic();timeout=False
+    start=time.monotonic();timeout=False;deadline_reason=None
     with (out/'boot.log').open('wb') as log:
         child=subprocess.Popen(command,cwd=out,env=env,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
         (out/'process.json').write_text(json.dumps(dict(pid=child.pid,started_ns=time.time_ns()))+'\n')
-        try:code=child.wait(timeout=args.timeout)
-        except subprocess.TimeoutExpired:
+        try:code=wait_capture(child,out/'stage-input-loops.jsonl',args.timeout,args.idle_timeout)
+        except (subprocess.TimeoutExpired,CaptureProgressTimeout) as error:
             # Let the debugger save a stopped guest CPU/RAM witness first.
+            deadline_reason='stage-input-idle' if isinstance(error,CaptureProgressTimeout) else 'total'
             timeout=True;os.kill(child.pid,signal.SIGINT)
             try:code=child.wait(timeout=10)
             except subprocess.TimeoutExpired:
@@ -180,6 +212,7 @@ def main():
     complete=not timeout and code==0 and b'TH04_SPARSE_FONTS_COMPLETE\n' in (out/'boot.log').read_bytes()
     files={str(p.relative_to(out)):sha(p) for p in out.rglob('*') if p.is_file() and p.suffix!='.pyc'}
     receipt=dict(complete=complete,timeout=timeout,exit=code,elapsed=time.monotonic()-start,
+        deadline_reason=deadline_reason,idle_timeout_seconds=args.idle_timeout,
         deadline_diagnostic_present=(out/'interrupt-diagnostic.json').is_file(),
         command=command,source_files=inputs,capsule=frozen,files=files,
         initial_hdi_sha256=sha(initial),final_hdi_sha256=sha(image),
