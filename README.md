@@ -21,14 +21,14 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-The actual v1474 original defeats Elly at 12792, departs Stage3 at 13377 and
-captures Stage4 init/score1. Both current cold stock native roles replay actual
-loop words with 130 identical outputs;all 13378 pool/state snapshots and four
-literal players match. Full RGB passes22/23 samples;407 blinking-text pixels
-at 12889 and 1805 postactor keys remain separate. No emulator is live. The next
-step is the corresponding maintained-source capture;see the current handoff.
+The v1475 actual source MAIN defeats Elly at 12792 and reaches Stage4 init/score1
+with original OP/MAINE/ZUN/assets. All 13378 pool/state snapshots,13377 actual
+words and 33609 raw/resident/RNG rows match the original. All 23 full live-font
+RGB/TRAM/palette samples pass. Source strict aggregate retains 19 postactor keys
+and 23 raw GDC differences. Native 12889 still differs by 407 blinking pixels;
+1805 native keys remain separate. No emulator is live. See the current handoff.
 
-Current v1473 propagates and consumes Elly's scythe hit through MAIN's player
+The prior v1473 repair propagates and consumes Elly's scythe hit through MAIN's player
 latch. Cold GNU/UBSan reproduce original hit8046 and GameOver8085 with8082 complete
 nine-pool/state snapshots and8086 raw score/state/resident/RNG-count rows. All79
 old8000 outputs remain unchanged. Stage4 and campaigns stay open; see the
@@ -41,7 +41,7 @@ nine complete RGB/TRAM/DAC samples. Palette-bearing dialogue loads refresh the
 player palette; enemy opcode8F tile writes preserve background-prefix order.
 Fresh GNU 83 CTests and UBSan/session checks pass. One requested/readback input
 mismatch and 712 volatile post-actor keys remain separate. Original/source-DOS
-paired MAIN was then at completed Stage3 4000; current source8000 is documented
+paired MAIN was then at completed Stage3 4000; current source 13377/Stage4 is documented
 in the handoff. Continuous display, physical timing,
 full campaigns and artifact exactness remain open. Completed products retire
 after recovery checks; see the [current handoff](docs/RE_HANDOFF.md).

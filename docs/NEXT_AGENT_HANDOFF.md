@@ -1,34 +1,43 @@
 # Resume native TH04
 
-Read [current native state](RE_HANDOFF.md),the [main handoff](https://github.com/N0zoM1z0/th04/blob/main/docs/RE_HANDOFF.md)
-and [main resume instructions](https://github.com/N0zoM1z0/th04/blob/main/docs/NEXT_AGENT_HANDOFF.md).
-Both complete maintained DOS and faithful native x64 goals remain active.
+Updated 2026-10-18. Read [current state](RE_HANDOFF.md), [the main differential
+note](https://github.com/N0zoM1z0/th04/blob/main/docs/reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md) and [recovery](ANALYSIS_RETENTION.md).
+Complete maintained DOS four-product and faithful native x64 goals remain active.
 
-Actual original Elly defeat12792/Stage3 departure13377 andStage4 init/score1 are
-captured. Current566/a7606e66 cold stock GNU/UBSan replay actual words with 130
-identical files,13378 whole-pool/state snapshots,13377 raw-score/state/resident/
-RNG-count rows and four literal players matching. Stock exit1 remains its final
-natural-departure diagnostic guard. Stage4 native uses a separate GNU observer.
+Actual original/source MAIN now defeat Elly at 12792, request quit2 at 13377 and
+reach actual Stage4 init/score1. The new source run completes in 929.884s and
+matches all 13378 nine-pool/22-state/private3 snapshots,13377 actual words and
+33609 common raw/resident80/ordered-RNG rows. All 23 full live-font RGB/TRAM/DAC/
+raw-tone samples pass. Original OP/MAINE/ZUN/assets remain; no four-source claim.
+Source strict aggregate retains 19 postactor keys and 23 raw GDC differences.
 
-The strict aggregate stays false for 1805 postactor keys and 407 blink-attribute
-text pixels at 12889. All23 TRAM/DAC/raw tones and 22 full RGB samples pass. Actual
-original blink phase2 is visible,native reports hidden;the cause is unproved. Do not
-fit phase,mask text orassign visibility. Physical32/readback8192 at 7835/12889
-must remain distinct from theactual-word native replay. No emulator remains.
+Native566/a7606e66 stays unchanged: current cold GNU/UBSan actual-word outputs
+agree on 130 files and state/player gates pass. Native 12889 still has407 blinking
+text pixels and1805 volatile keys. Stock exit1 is the departure guard; Stage4
+uses a separate GNU observer. Source RGB at12889 now independently passes.
 
-Next capture the maintained normal source MAIN on the current actual original
-physical plan,with own MZ/MAP/receipt and source0708:7463/return06AA. Its paired
-frontier remains 8000 with 49 keys/nine GDC differences;source full Stage3 fonts,
-Elly defeat andStage4 remain open. Reuse DOS-root source-stage3-inputs.txt and
-validated sparse observer;fresh paths andimmutable capsule,not an old producer
-restart orRAM resume. Current programs/link inputs stay at
-`.analysis/port64/stage3-hit-bridge-v1473-final`;game source is unchanged.
+Phase entry heads are main ec3f7c6/native a75d43e. Read actual heads and latest
+finish receipt. Current products/link inputs remain in native
+`.analysis/port64/stage3-hit-bridge-v1473-final`; normal source MAIN remains
+200279/1183relocs/778641ab. No new game code or cold game build in this batch.
+Current source-elly-v1475 recovery carries 1520 aliases and69967 parent identities,
+plus current/late/finish identities; seven new aliases restore exact metadata.
+Four actual restored/archive readers preserve all selected passes and failures.
 
-Current DOS-root recovery carries1513 exact aliases and all 830 new aliases
-restore metadata. Real/archive consumers retain selected passes and the false
-RGB/aggregate. Carry68705 parentidentities,every late/finish andprovider. Keep
-current builds physical,clean closed outputs regularly andcharge all final costs
-without prior cleanup credit. Use one low-priority CPU,headless/muted runs,no host
-keys and serialized Borland/Wine. Finish focused comparisons,tracking,both CIs
-and git diff --check. Use English docs/code andgpt-6.1-sol: commits;push
-HEAD:port/modern-64. Complete campaigns,timing,NP2/Windows andexactness stay open.
+```text
+Continue both complete TH04 goals. Read AGENTS.md,current handoff,ARCHITECTURE,
+RE_WORKFLOW and applicable skills. Inspect Git status; attest targets/database
+and the full inherited recovery chain. Do not rerun completed original/source
+Elly captures. Next design a bounded independent Oracle for native12889 text
+blink/clock divergence; compare actual raw GDC,source RGB andnative visibility
+without phase fitting,masks or expected-state assignments. Preserve19 source
+and1805 native postactor keys,23 source raw-GDC failures and407 native pixels.
+State/input/display/clock/campaign/exactness are separate claims. Use one
+low-priority CPU,muted/headless runs,no host keys and serialized Borland/Wine.
+Regularly delete unused products; verify exact recovery before retiring evidence.
+Carry all 1520 aliases,69967 inherited identities,everylate/finish/provider and
+charge all final costs without recrediting prior cleanup. Keep current game
+builds physical. Finish focused comparisons,tracking,both CIs andgit diff --check.
+Use English code/docs andgpt-6.1-sol: commits;push main andHEAD:port/modern-64.
+Both full goals stay active;timing,NP2/Windows andcomplete campaigns remain open.
+```
