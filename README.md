@@ -25,9 +25,11 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
-The v1469 paired source-DOS V2 transport passes actual original/source300
-regressions and keeps physical requests separate from strict expected latches.
-The source-only8000 extension is in progress; see the current handoff.
+The v1470 original/source DOS vector reaches8000 Stage3 updates: all8001 nine-pool,
+22-state/private3 snapshots, actual inputs and nine configured video-region samples
+match. Literal post-dialogue player inputs agree. The strict aggregate retains49
+post-actor key/nine raw-GDC differences; source fonts/full RGB and campaigns remain
+open. No emulator job remains; see the current handoff and recovery instructions.
 
 Current v1467 records a complete original 8000-update Stage3 route. Native
 566/4787233c replays its literal inputs: both cold GNU/optimized UBSan programs

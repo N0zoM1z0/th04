@@ -1,5 +1,27 @@
 # Private build and analysis retention
 
+## Current source8000 recovery (v1470)
+
+Nine closed source capture aliases retire after exact SHA/size/mode/nsmtime
+restoration and four actual-file Oracle replays. Full route55193 contexts,
+literal player,paired8001 states/pools and the final RNG tail reproduce
+byte-identically. Four virtual replays also pass with all nine aliases absent.
+Full raw,prefix and suffix use one gzip provider with exact slices. Current
+`source8000-v1470/recover.py` carries166 inherited aliases plus these nine.
+
+```sh
+python3 .analysis/reconstruction/probes/source8000-v1470/recover.py
+python3 .analysis/reconstruction/probes/source8000-v1470/frozen_source_reader.py replay_full_route.py --output NEW.json
+```
+
+Use `--restore --path EXACT` for one root-relative owned alias; verify and retire
+it after its consumer. Keep the full compressed source wire,794 RAM snapshots,
+UI witnesses,current GNU/UBSan programs and every parent/provider. About498.7MiB
+of source capture witnesses remain physical. Local alias cleanup262.938MiB charges
+its providers/replays and1MiB reserve; it is not whole-phase or system free-space
+accounting. New retained evidence costs are recorded separately. The preceding
+472.793MiB closed-checkpoint release is not credited again. No emulator job remains.
+
 ## Current source-latch recovery (v1469)
 
 Ten closed Micro aliases,92 superseded native `.a`/`.o` inputs and64 historical

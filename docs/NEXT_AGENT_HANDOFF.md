@@ -1,160 +1,90 @@
 # TH04 current handoff
 
-Updated 2026-10-17. The complete maintained DOS four-product and native x64
-fidelity goals remain active. Code/docs are English. Use one low-priority CPU
-(`taskset -c 1 nice -n 19`), serialize Borland/Wine builds and launch muted/headless.
-The user uses Windows; do not open GUI windows, change focus or inject host keys.
-Clean unused intermediates during each batch and after consumers finish.
+Updated 2026-10-17. Complete maintained DOS four-product and faithful native x64
+goals remain active. Use one low-priority CPU (`taskset -c 1 nice -n 19`), mute
+SDL/headless runs and serialize Borland/Wine builds. Do not change host focus or
+inject host keys. Code, documentation and commit messages are English.
 
-## Paired V2 transport and current run (v1469)
+## Current original/source DOS frontier
 
-Legacy paired InputPlan and the independent route reader now use the shared
-V1/V2 parser. V1 keeps physical/latch identity; V2 checks every actual raw latch
-against the frozen expectation and derives keyboard edges only from physical
-intent. Freeze the parser beside the worker and include it in source receipts.
-Actual original/source300 probes pass all raw inputs,eight device edges and
-CPU/tick/full640KiB RAM guards. Four rebased controls reject; nine focused tests
-and root582-test CI pass. This is bounded transport, not new Stage3 acceptance.
+Actual MAIN-only source replay completes Stage1/Stage2 at9837/10394 and8000
+Stage3 updates in2939.763s. Original OP/MAINE/ZUN/assets remain installed; this
+is not a complete four-source campaign. The original8000 golden is reused.
+Source MAIN is200279 bytes/1183 relocations, SHA256
+`778641ab845bcd67c6888bacc049e2cfa20fddda844681d3d2fd164f8386abc9`.
+Original MAIN remains156258 bytes/1136 relocations,
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
+Target provenance is still `candidate-local-attested`, not an official-dump claim.
 
-Source-only8000 is running under
-`.analysis/reconstruction/probes/source-latch-v1469/route-command.json` with a
-fresh `dos-source-latch-v1469-stage3` capture. Reuse the original8000 golden.
-Its private source profile reuses the five existing wait slots for Stage3
-dialogue7834 and a literal player-entry witness bound to own MAP/MZ; source
-player entry is MAIN0708:7463 with unique gameplay return06AA. Do not restart
-the live prefix. Keep the paired accepted frontier at4000 until the enclosing
-capture and independent comparison finish. No product source changed.
+The selected vector passes all8001 snapshots of nine complete pools,22 states
+and three private Midboss3 bytes. All8000 actual Stage3 inputs and28231 common
+raw-loop field/resident80/RNG observations match. Nine configured raw-video
+region samples match. Source has an explicit extra terminal loop8000; the
+original stops at score8000. Both final full-RAM witnesses bind LCG1062/ring16467
+and the empty final RNG event tail. No original terminal loop is fabricated.
 
-Ten closed Micro aliases,92 superseded native link inputs and64 historical
-native main/session programs retire after
-exact SHA/size/mode/nsmtime restoration and reader checks. All63324 inherited
-identities remain readable through current exact recipes. Use v1469 recover.py
-before deep historical replay; restore only explicit needed aliases. Latest
-stage3-tiles GNU/UBSan programs and inputs remain physical. The completed
-transport/cleanup checkpoint conservatively frees472.793MiB after all new
-immutable materials and32MiB final reserve. It explicitly excludes the separate
-live source capture and is not final whole-phase accounting. Current recovery
-verifies63578 identities and166 aliases; do not recredit previous phases.
-Prepared private route/player/paired-state readers have compiled but have not
-validated the unfinished capture. Preserve runtime helper versions while it runs.
+Strict aggregate remains false:49 post-actor input differences and nine raw GDC
+samples differ. These are retained, not normalized. Source live fonts/full RGB,
+continuous display, natural IRQ/UI timing, NP2/Windows and full campaigns remain
+open. No product source changed and no artifact/unit becomes exact.
 
-## Input intent and latch contract (v1468)
+## Literal input and observer ownership
 
-The original Pause control now explains the rejected frame-return scheduler:
-Shot is queued at a completed-frame seam, but the next latch occurs0.009889ms
-later, before DOSBox-X's0.572917ms UART delivery. BIOSbitmap remains clear at
-that latch and becomes pressed before the following frame. These are pinned
-emulator observations, not a PC-98 hardware timing claim. Derived PIC FullIndex
-can move backward at its millisecond write-watch transition; preserve those rows.
-Batching Shot with the real confirmation-release edge passes all400 requested
-loop words. This remains a private bounded control, not a promoted UI scheduler.
+V1 input retains physical/latch identity. V2 separates physical keys from frozen
+expected unsigned latch words and checks every actual sample. The original-bound
+plan has only7835 physicalShot32/expectedEnter8192; every source latch matches.
+There are1119 guarded plan edges and44 guarded UI events, with no guest/RNG/key
+assignment. The source GameOver guard never fires.
 
-Public sparse input now supports V2: each row declares `frame physical expected`.
-V1 keeps its reserved-zero third column and requires latch==physical. V2 keeps
-physical keys separate from an explicit expected unsigned latch; every actual
-read still must match. V2 permits the six ordinary buttons plus physical Escape.
-It never writes expected words into the guest. Record every physical/readback
-difference. Freeze expectations from an original golden before a candidate run.
+At dialogue7834, both actual player entries read8192, distinct from the earlier
+loop's32. Original MAIN0AAF:5FCF returns to00F4; source MAIN0708:7463 returns to06AA.
+Both load at10FC. Own MZ/MAP, stack, CPU and full640KiB RAM validate. Four rebased
+snapshot/input/IP mutations reject. Full route validation covers55193 contexts
+and794 complete RAM snapshots. The V1 supplemental reader wrongly treated old
+UI snapshot dictionaries as booleans; V1/V2 failures are preserved. V3 decodes
+CPU48/segments136/full-memory hashes and reuses the passed route only after
+rechecking its input identities. It does not rerun or alter the producer.
 
-Five actual short captures validate the contract. Current V1 reproduces all
-711787 parent raw bytes. Declared V2 Pause400 has physicalShot32/expected0 at81
-and reproduces all764 observed raw records. Changing only expected0 to32 rejects
-actual0 at81. The failed run stays incomplete; ownMZ/CPU/RAM/font/video and
-physical API guards validate. Five parser tests also pass.
+## Native baseline and retained evidence
 
-Receipts: `.analysis/reconstruction/probes/pause-latch-v1468`.
-`stage3-v2-inputs.txt` preserves all8000 physical requests and binds expected
-latches to the existing original8000 golden;7835 is explicitly32/8192.
-This fixture was prepared separately from source-DOS execution. The paired
-transport now passes the bounded V2 regression above. Keep the
-original8000 golden and native566/4787233c programs; no producer rebuild is needed.
-
-## Verified frontier
-
-Original/source-DOS paired MAIN remains at Stage3 completed4000 (v1462).
-Original/native now has a complete 8000-update Stage3 observation in
-`.analysis/runtime/candidates/dos-stage3-wait-v1467-observed-inputs`.
-The enclosing original run completes in 770.517s with 9837/10394/8000 stage loops;
-its own1136-relocated MAIN,CPU/RAM,physical edges and frozen sources validate.
-Target provenance remains `candidate-local-attested`.
-
-This diagnostic records actual input words separately from requested keys.
-Exactly one loop differs:7835 reads Enter8192 while Shot32 was requested.
-The literal post-dialogue player entry at MAIN0AAF:5FCF, own near caller00F1
-and return00F4 independently bind actor7835's8192. Native consumes those
-literal original words plus the declared dialogue7834 cue. This does not prove
-requested-key delivery or natural UI/IRQ timing. The default public sampler
-still rejects a requested/readback mismatch.
-
-Current native source closure: 566 files,
+Native game closure remains566 files,
 `4787233c1074df806c6dfdef6697030b8c2885ecf2911bfaf2fb7df11c33ba7e`.
-Fresh GNU 87 programs/83 CTests and optimized UBSan 2 programs/session pass.
-Both real frontends agree on all 79 outputs. All8001 nine-pool snapshots,
-8010 stable-state records and consumed inputs match. Keep 712 volatile
-post-actor input differences separate. Nine whole 640x400 RGB pictures,
-8000 active TRAM bytes and48 DAC channels/raw tone match at Stage3
-1/4000/6000/7834/7835/7873/7900/7901/8000. Earlier sampled results are
-historical observations; continuous display and full campaigns are unproved.
-
-## Repaired owners and rejected approaches
-
-Original7834 has scroll speed0/back page1 with active STD13A9:4341 and pending wave7900.
-A stopped CPU at130E:00E3 and typed mixed stack prove a held-Shot release wait
-inside dialogue. Native Stage3 now omits the extra STD-EOF predicate and keeps
-pending waves during Elly. Other stage guards retain separate ownership.
-
-A palette-bearing dialogue BFNT load updates the player's live palette14.
-The former cache incorrectly keptAA instead of the observed post-dialogue80;
-three DAC channels failed despite matching sampled RGB/TRAM. The callback now
-uses the decoded asset palette, with no target-color assignment.
-
-The old frame8000 picture failed by 105 pixels. Read-only drawing logs and
-original ring snapshots localize two cells at DS4D40 to a missing enemy tile
-write. Original MAIN13A9:2042..2054 calls0AAF:0B92 with a raw VRAM offset;
-independent unmodified-unit execution distinguishes72/image0 from74/image25.
-Native handles opcode8F's event and retains background-prefix ring inputs
-before actor writes, including the later scroll-tail copies. The old failure
-and all earlier raw graphics-index/GDC differences remain recorded.
-
-Only the proven Frame/Score watch reuse is promoted publicly. A400-frame
-original pressure control keeps four host watches and reproduces all711787
-raw bytes. Proposed UI frame-return API scheduling failed both real Pause
-controls at81 (actual0/requested32) and was reverted. V2/V3 controlled stops,
-V4's requested-input rejection and the original wait capture remain incomplete.
-Pixel-only, DAC-only and consumed-input-only rebased controls reject independently.
-
-## Replay and storage
-
-Receipts/readers/source snapshots: `.analysis/reconstruction/probes/stage3-wait-v1467`.
-Current cold programs/link inputs:
+Current GNU87 programs/83 CTests and UBSan2/session checks are the retained v1467
+results; both frontends agree on79 files. Original/native8001 nine-pool snapshots,
+8010 stable-state rows, consumed inputs and nine full RGB/TRAM/DAC samples pass.
+Keep712 native volatile post-actor inputs separate. There is no new native build.
+Current programs and link inputs remain under
 `.analysis/native/port64-recovery-v1445/.analysis/port64/stage3-tiles-v1467-final`.
-Retain main/session executables,main/audio/core/ymfm inputs,compressed witnesses,
-source capsules and every parent backing. Disposable build objects/tests have
-been removed after checks. Completed native payloads are compressed and
-deduplicated;55 closed capture aliases restore exact SHA/size/mode/nsmtime and
-independent readers reproduce before retirement. Use fresh build directories.
 
-```sh
-taskset -c 1 nice -n 19 python3 .analysis/reconstruction/probes/stage3-wait-v1467/recover.py
-python3 scripts/preflight.py
-python3 scripts/ci.py
-git diff --check
-```
+Source evidence/readers are under `.analysis/reconstruction/probes/source8000-v1470`;
+its producer capsule and terminal receipts are under `source-latch-v1469`.
+The terminal capture is `dos-source-latch-v1469-stage3`; no emulator job remains.
+Keep the original `dos-stage3-wait-v1467-observed-inputs` golden.
 
-`recover.py --restore --path EXACT` restores one explicit journal-relative
-owned alias. Verify and retire it after use; avoid bulk expansion. The next
-journal must merge retention,all finish.late_protected identities and finish.
+Nine closed source aliases restore exact SHA/size/mode/nsmtime. Four independent
+readers reproduce with actual restored files and with all nine aliases absent.
+Full raw/prefix/suffix share one exact gzip/slice provider. Local cleanup frees
+262.938MiB after its own costs; this is separate from new retained witness costs.
+Keep the compressed full wire, RAM/UI witnesses, source capsules and every parent
+provider. The previous472.793MiB closed-checkpoint release is not credited again.
+Use current `recover.py --restore --path EXACT` only for explicitly needed aliases;
+use `frozen_source_reader.py` for archived replay. Avoid bulk expansion and use
+fresh build directories. The next journal must merge retention, finish late
+identities and finish itself, and carry inherited alias providers.
 
-## Next work and limits
+## Next work
 
-Keep the recorded original8000 golden; do not restart its long prefix.
-The V2 transport and cheap original/source Micro pass. Finish the current
-reconstructed-DOS8000 extension against the frozen original golden and
-independently verify actual consumed inputs. Include a literal post-dialogue
-source player-entry CPU/RAM witness bound to its own MAP/MZ and the retained
-original player witness; the earlier loop latch is a different observation. Reuse the source/layout/native pointers in the
-[focused differential note](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
-Raw post-actor keys,raw graphics indices/GDC clocks,natural IRQ/scanout timing,
-NP2/Windows and complete campaigns remain open. No artifact or unit becomes exact.
-Commit English messages with `gpt-6.1-sol: ...`;push main and native
-`HEAD:port/modern-64`. Both global goals stay active.
+Preserve the passing8000 vector and failed aggregate. Reuse these artifacts for
+regressions; the completed producer need not run again. Before another long
+source extension, add an own-MAP sparse source/font observer and validate a cheap
+source Micro against the retained probes. The dense legacy run retained794 RAM
+snapshots and every boundary video; choose the next scenario's required surfaces
+explicitly to reduce storage and CPU costs. Then pursue actual Elly defeat and
+Stage4 initialization, with original/source and native comparisons. A future
+extension past8000 needs its own original observation; there is no attested full
+emulator save-state resume here. Do not mistake stored DOS RAM for such a state.
+
+Continue the existing [differential note](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
+Run focused comparisons, `python3 scripts/ci.py` and `git diff --check` before
+closing a batch. Commit with `gpt-6.1-sol: ...`; push main and native
+`HEAD:port/modern-64`. Both complete goals stay active.

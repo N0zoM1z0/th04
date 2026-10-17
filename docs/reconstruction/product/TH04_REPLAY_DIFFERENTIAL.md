@@ -5,6 +5,51 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Actual source8000 vector and literal UI player (v1470)
+
+The existing source producer completes in2939.763s; no prefix is restarted.
+Its normal MAIN200279/1183-relocation artifact and own MAP validate all55193
+contexts,794 complete RAM snapshots,1119 plan edges and8000 V2 actual latches.
+Actual Stage1/2 completion remains9837/10394. Original OP/MAINE/ZUN/assets are
+still installed; this does not establish a full four-source campaign.
+
+All8001 original/source actor snapshots match nine whole pools,22 states and
+three own-MZ private bytes. There are no stable-field or common raw-loop errors
+across28231 loops, including resident80 and ordered RNG observations. All8000
+Stage3 actual inputs match the previously frozen original expectation. Nine
+configured video-region samples match. These are raw regions, not source full
+RGB: source live font banks were not captured. The aggregate remains false for
+49 post-actor keys and nine raw GDC samples; retain both fields independently.
+
+Original stops at score8000; source additionally records loop8000. A separate
+Oracle compares the original pending RNG tail with that extra source sample,
+checks LCG1062/ring16467 and both own-MZ score8000 full-RAM/RNG witnesses. The
+final event tail is empty. Extra-event and changed-count controls reject. Do not
+fabricate an original terminal loop or omit its final update from RNG coverage.
+
+Both literal player entries after dialogue7834 read Enter8192, while the earlier
+loop7834 reads Shot32. Original MAIN0AAF:5FCF/return00F4 and source
+MAIN0708:7463/return06AA use load10FC and independently validate CPU, stack, own
+code and full640KiB RAM. Source44 UI events preserve their full snapshot guards.
+The old supplementary V1 reader incorrectly required a boolean where legacy UI
+records store conventional_sha256,48 register bytes and136 segment bytes. Its
+source/log and the V2 preparation failure remain preserved. V3 validates that
+actual typed representation and four rebased negative controls. The already
+passed full-route report is reused only after its input hashes are checked.
+No expected word, player state, clock or target/native byte is assigned.
+
+Receipts and immutable consumers live under `source8000-v1470`; the producer
+capsule stays under `source-latch-v1469`. Nine closed aliases restore exact
+SHA/size/mode/nsmtime, then four independent route/player/pool/tail readers
+reproduce byte-identically before retirement. The same four readers pass with
+all aliases absent through the exact gzip/slice backend. Keep compressed full
+wire/RAM/UI data and all parent providers. Local cleanup262.938MiB is separate
+from the whole phase's retained witness costs; do not recredit v1469's release.
+Native566/4787233c and its original8000 comparisons are unchanged. Natural timing,
+continuous effects, full campaigns, NP2/Windows and historical exactness remain
+open. Next reduce source observer cost with own-MAP sparse/font checkpoints and
+a cheap source Micro, then pursue Elly defeat/Stage4 with actual target evidence.
+
 ## Paired DOS V2 transport (v1469)
 
 `th04_stage_inputs_gdb.py` and `attest_th04_stage3_route.py` now share the V2
