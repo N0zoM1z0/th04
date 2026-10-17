@@ -1,45 +1,57 @@
 # TH04 native 64-bit bring-up
 
-## Shared frontend MAIN/UI input sampling (v1480)
+## Recorded sampler and original request ownership (v1481)
 
-Both native windows now sample fresh Win32/SDL keyboard state at actual MAIN
-and blocking-UI poll sites through one pc98_input::Latch. Initial reset, loop
-head sense, dialogue token/wait polls, pause/Game Over waits and loop-tail reset
-share that owner. Typed Snapshot reaches the real player; the tail runs before
-the frame counter advances. Genuine DEMO callback writes update the same latch.
-Keypad diagonals, Space, Shift and loss of focus have explicit BIOS adapters.
+The maintained Win32/SDL bridges now emit input.tsv alongside the unchanged
+window.tsv format. Each poll records the raw ten-byte BIOS sample, Shift,
+joystick pins, reset/sense operation, actual latch before/after values, host
+interval, focus and process/stage/frame identity. Observation is optional and
+does not supply input. Fresh GNU/UBSan frontend controls retain identical nine
+pools and recorded frame/input/RNG fields with observation disabled/enabled.
+Both sets of 31 witnessed polls match unchanged original sampler instructions.
+Windows is compile-only; this is not new live-window or hardware timing proof.
 
-The maintained dialogue parser reproduces all 2907 observed original reset/
-sense operations, complete action words and Shift values across both Stage3
-scenes. No expected key_det or clock is supplied. A compiled discard-on-sense
-negative completes both scenes but returns 21 wrong action words, so exit0 is
-insufficient; the comparator rejects it. A separate prewait-Enter/postwait-
-release control also rejects it. GNU and optimized UBSan agree. The real
-frontend independently checks reset/head/tail order, keypad/Shift player
-movement, actual tail retention and sampled pause/freeze/resume. Dialogue box
-intro keeps the existing three twelve-refresh waits; script-only tick counts
-do not establish original wall-clock or display timing.
+The original controller queues next-loop physical changes at MAIN 0AAF:00B7,
+after head Sense 00AE returns at 00B3 and its normal callback. All 2884 recorded
+requests match its pinned capsule/physical plan and preserve guest CPU, tick
+and 640KiB RAM. A first hybrid incorrectly admitted changes at the next head:
+position diverged at 4043, pools at 4045 and Game Over stopped it at 4926. Its 9854
+sampler polls remain CPU-consistent, but no dialogue window or literal-player
+witness was reached. Keep this real failed prefix and missing trace footer.
 
-Fresh GNU 90 programs/86 CTests, five selected UBSan programs and two Windows
-x64 cross-compiles pass. Windows was not run. The independent original CPU
-sampler/movement composition still agrees with 15209 fresh MAIN/player updates;
-its repeated-host-translation negative fails 11073 cases. Both unmodified host
-adapter regressions retain all 130 complete output hashes through 13377 Stage3
-updates. Stock 407 blink pixels/1805 keys and the separate physical-device
-scenario's two literal-player failures/1803 keys remain unresolved.
+The corrected private GNU driver admits those same requests after the current
+head. It links unchanged new cold core/main/audio/ymfm objects and calls the
+real typed frontend. All 13377 Stage3 updates complete; all 13378 nine-pool/stable
+snapshots, 13377 raw score/resident/RNG rows and four actual original player-entry
+witnesses agree. All 22 complete live-font 640x400 RGB, 8000 active TRAM bytes,
+48 DAC channels and raw tone samples agree, including 12889. All 52 timed physical
+edges and four tails survive UI exit. All 29616 poll transitions and fresh
+BIOS conversions agree with separate unchanged original CPU sampler instances.
+No expected latch, state, clock, hold or pixels are supplied.
 
-This connects real frontend ownership; it does not measure original BIOS IRQ
-admission, host delivery latency or continuous GDC timing. Existing window
-traces record frame host input, not every new BIOS poll. Next add a read-only
-per-poll witness, preserve all 52 physical edges/four UI tails, and compare a
-bounded continuous sampled frontend route using existing original witnesses.
-Do not seed expected latches, blindly carry host words or fit holds/clocks.
-No new original emulator campaign, Stage4 acceptance or exactness promotion.
+The strict result remains false: 40 post-tail key_det words differ. Original
+actor capture 0AAF:01B3 and native actor observation are both after tail reset;
+all 13377 native input fields equal their actual last reset witness. They are
+not pre-player words. Four literal player witnesses pass, but an additional
+nonblocking original 7836 head 32/native 7837 player 8192 pair differs. The blocking
+7834 head 32/player 8192 difference is real dialogue input and separately supported
+by its literal player witness. Original BIOS admission and UI timing remain
+candidates; no fixed hold or phase assignment is justified.
 
-Use --sampled-input-checks with a fresh muted output path for the real frontend
-controls. `th04-port64-sampled-ui-contracts --dialog-samples SCRIPT INPUT` replays
-BIOS/joystick fixture samples; the input contains no expected action word or clock.
-Current 571-file source closure andbuild/recovery paths are in docs/RE_HANDOFF.md.
+The two unmodified GNU/UBSan host-adapter regressions still retain all 130 prior
+complete output hashes through 13377 updates. Their 407 blink pixels/1805 keys,
+the older v1477 physical case's two player failures/1803 keys, and the new 40-word
+case are distinct scenarios. Do not subtract their counts or borrow acceptance.
+The corrected case follows stock Stage1/2 stimuli and is a private recorded
+Stage3 experiment, not a common-reset full sampled campaign, Windows/NP2 runtime
+or new Stage4 observation. Complete DOS/native goals remain active.
+
+`--window-trace PATH` preserves window.tsv andadds input.tsv. The latter is a
+separate read-only BIOS witness with its own footer. `verify_host_window.input_rows`
+checks complete records; an aborted producer remains explicitly incomplete.
+`--sampled-input-checks PATH` compares actual frontend observation on/off, including
+complete nine pools andrecorded frame/input/RNG fields. All 31 polls per GNU/UBSan
+case also agree with unchanged original sampler instructions in the phase Oracle.
 
 `pc98_input.hpp` separates BIOS keyboard samples and active-low joystick pins
 from the accumulated game input latch. Reset clears actions before sampling;
