@@ -5,9 +5,10 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-Current v1460: 8000 Stage2 updates and 1018 Kurumi battle updates are compared;
-current 566/bcd114bb cold GNU/UBSan state/full-pool/input checks pass. DOS key/rawGDC,
-Boss defeat/clear andnativeStage2 pictures/timing remain open. See [handoff](RE_HANDOFF.md).
+Current v1461: actual original/source Stage2 clear at 10394 and Stage3 init/first
+update match configured vectors. Current 566/4c3c50cb cold GNU/UBSan match full
+state/pool/input checks. DOS key/raw-GDC, native Stage2 pictures, physical timing
+and full campaigns remain open. See [handoff](RE_HANDOFF.md).
 
 Updated 2026-10-17. The full native goal remains active on `port/modern-64`.
 The historical v1432 route snapshot was recorded under

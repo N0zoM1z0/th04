@@ -5,48 +5,51 @@ Use [the actionable handoff](NEXT_AGENT_HANDOFF.md). Keep code/docs English,
 heavy jobs on one low-priority CPU and one Borland/Wine writer. All launches
 muted/headless;no Windows GUI, focus changes or host-key injection.
 
-## Active clear observation (v1461)
+## Verified clear and Stage3 entry (v1461)
 
-Original MAIN now completes 10394 Stage2 updates, returns after the final score
-with quit=2, initializes Stage3 and completes its first update. Independent
-readback validates 31196 CPU/DGROUP/video boundaries, full memories, own MZ/CFG
-and continuous raw RNG (1062 LCG and 10574 ring calls). There is no terminal
-Stage2 loop after the score requests departure. Current cold GNU matches
-20795 selected scalar records and 10397 complete nine-pool snapshots, actual
-player inputs, Boss/Midboss, homing and RNG. Its 356 volatile post-reset key
-samples remain separately measured. Optimized UBSan completes the same route;
-all seven output wires are directly verified identical to GNU. Full paired
-DOS reductions remain pending the currently running reconstructed DOS capture.
-The accepted original/reconstructed DOS frontier remains 8000 until that closes.
+Original and reconstructed DOS complete **10394 Stage2 updates**, actually
+defeat Kurumi at 9809, return after the final score with quit=2 and complete
+Stage3 initialization plus its first actor/score update. All comparable fields,
+11636 ordered RNG calls (1062 LCG/10574 ring),
+nine full pools, 22 states and 38 configured video regions agree across
+31196 boundaries and 20233 independent raw loops. Each own-MZ capture
+has 254 complete conventional-memory witnesses. The DOS aggregate remains
+false: 544 post-reset key and 31196 raw-GDC records differ. Twelve
+additional UI records have equal fields, full pools/states, actual player
+inputs and configured video; their 12 raw-GDC differences remain explicit.
 
-All four waits use real FrontEnd input: Continue 5363/8132, pre-dialogue 6982
-and post-dialogue 9905, with 189/400/189/76 polls. The post-dialogue observer
-now records player -> run -> return at 9905. Both earlier failed capsules and
-their partial evidence remain unchanged. Three actual-output mutations reject
-a bad unused-input count, a Stage3 LCG bit and an inactive custom-pool tail byte.
+Current 566/4c3c50cb cold GNU and optimized UBSan match
+20795 selected scalar records and 10397 full nine-pool snapshots, consumed
+input, homing, Boss/Midboss and continuous RNG. All seven output wires are
+identical. The 356 volatile native key samples remain separately measured.
+Continue 5363/8132 and dialogue 6982/9905 use 189/400/189/76 real logical
+FrontEnd polls. Post-dialogue observes player -> run -> return; pre-dialogue
+observes run -> return -> player. There is no terminal Stage2 loop after quit=2.
+The 11000-row budget leaves 606 syntax-checked, unconsumed inputs.
 
-Original full memory retains 52 nonzero custom bytes at Stage2 return/free and
-Stage3 init entry, then all 832 bytes are zero at init completion and the first
-actor. The native full-pool comparison agrees; no exporter/gameplay correction
-is needed. Own MZ 0AAF:7456 calls 0AAF:185E for B204/208 dwords. The helper
-clears AX and executes REP STOSD; do not infer a general upper-EAX guarantee.
-Use the actual full-memory reset observation for this scenario.
+Six defeat/explosion memories plus final actor/score and eight complete
+return/free/init/first-update memories agree across both files. All 32 selected
+full memories independently verify CPU, own MZ code, DGROUP, resident and stack.
+Both DOS initial/final CFG/SCR files and both native final files match; all ten
+16-bit score checksums validate. Nine actual-tail mutations, three native
+clear/Stage3 mutations and thirteen malformed clear plans reject. Legacy
+3500/8000 wires and 59 RGB/TRAM pairs with 177 observations still pass, with
+cold GNU 87 programs/83 CTests and two optimized UBSan programs.
 
-Current 566/4c3c50cb cold GNU 87/83 CTests and optimized UBSan 2 retain legacy
-3500/8000 wires and 59 RGB/TRAM pairs with 177 observations. Thirteen malformed
-clear plans reject. Root-owned `.analysis/reconstruction/probes/dos-kurumi-clear-v1461/`
-contains the live post capture, producers, independent reductions and memory
-proofs. Next: finish both complete DOS/native reducers and physical-file/lifecycle
-checks, run verified final retention/recovery, then both CIs and diff checks.
-Do not restart a live capture on timeout or modify a completed capsule.
+The custom pool retains 52 nonzero bytes through Stage2 return/free and Stage3
+init entry, then all 832 bytes are zero after init and the first actor. The
+current native exporter agrees; no gameplay/exporter fix is needed. Own MZ
+0AAF:7456 calls 0AAF:185E for B204/208 dwords. The helper clears AX and executes
+REP STOSD; its upper-EAX behavior is not generalized beyond the observed case.
 
-Early scout retention/recovery passes: 54 owned files, 17 recipes, 1908.8125 MiB
-released and 38326 protected hashes. Twelve replay wires reproduce and three
-owned aliases verify SHA/size/mode/nsmtime before retirement. The final journal
-must chain `scout-retention/retention.json` and count its retired files once.
-Preserve both failed capsules, all parent late identities and old/current caches.
-Both full goals remain active; native Stage2 pictures, timing, campaigns, NP2,
-Windows, pristine provenance and historical exactness remain open.
+Both failed earlier collector capsules and their actual partial evidence stay
+recoverable. Current successful capsules are `capture-post/` and runtime
+`dos-kurumi-clear-v1461-post-original`/`-candidate` under the root-owned probe.
+Next close final archive/recovery, both CIs and clean pushed heads. Then extend
+the actual continuous Stage3 route with a new bounded event/budget and complete
+state/pool/input/RNG checks. Native Stage2 pictures, natural UI/IRQ/GDC timing,
+campaigns, NP2, Windows, pristine provenance and historical exactness remain open.
+Both full goals remain active. No accepted exact unit or DOS source changed.
 
 ## Current Stage2 Boss frontier (v1460)
 
