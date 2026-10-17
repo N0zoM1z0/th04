@@ -30,6 +30,32 @@ def row(line):
         raise ValueError('incomplete refresh trace')
     return {key: value if key == 'scene' else int(value) for key, value in zip(FIELDS + EXTRA_FIELDS + ADVICE_FIELDS, parts[1:])}
 
+def input_rows(path):
+    """Read the separate BIOS poll witness; historical window.tsv stays unchanged."""
+    lines=Path(path).read_text().splitlines()
+    header=lines[0].split()
+    assert len(header)==4 and header[:3]==['TH04_INPUT_TRACE','1','host_epoch_ns']
+    epoch=int(header[3]);assert epoch>0
+    keys='ordinal seq begin end operation bios shift joystick_enabled pins before before_shift after after_shift focused scene program generation frame stage'.split()
+    rows=[];ended=False
+    for line in lines[1:]:
+        if line.startswith('#'):continue
+        parts=line.split();assert parts and not ended,'trailing/incomplete input witness'
+        if parts[0]=='E':
+            assert len(parts)==2 and int(parts[1])==len(rows);ended=True;continue
+        assert parts[0]=='I' and len(parts)==20,'input witness record width'
+        record={key:(value if key in ('operation','bios','scene') else int(value)) for key,value in zip(keys,parts[1:])}
+        assert record['ordinal']==len(rows) and record['seq']>0
+        assert record['operation'] in ('R','S') and len(bytes.fromhex(record['bios']))==10
+        assert 0<=record['begin']<=record['end']
+        assert 0<=record['before']<=65535 and 0<=record['after']<=65535 and 0<=record['pins']<=255
+        assert all(record[key] in (0,1) for key in ('shift','joystick_enabled','before_shift','after_shift','focused'))
+        if not record['focused']:assert record['bios']=='00'*10 and not record['shift']
+        if rows:assert record['begin']>=rows[-1]['end'] and record['seq']>=rows[-1]['seq']
+        rows.append(record)
+    assert ended,'input witness producer has not closed'
+    return dict(version=1,host_epoch_ns=epoch,records=rows)
+
 def latest(path):
     if not path.exists():
         return None
@@ -102,11 +128,15 @@ def assess(path, actions):
             assert any(r['scene'] == 'main' and r['held'] == 0 and r['shots'] == 0 for r in selected)
         trials.setdefault(name, dict(samples=len(selected)))
     assert {'enter', 'keypad-enter', 'right', 'shift-left', 'shot', 'release', 'background'} <= trials.keys()
+    sidecar=path.with_name('input.tsv');samples=input_rows(sidecar)['records'] if sidecar.exists() else []
+    for sample in samples:
+        refresh=rows[sample['seq']-1]
+        assert refresh['begin']<=sample['begin']<=sample['end']<=refresh['end']
     assert max(abs(d) for d in trials['shift-left']['deltas_q12_4']) < min(trials['right']['deltas_q12_4'])
     def quantiles(values):
         values=sorted(values)
         return {str(p):values[min(len(values)-1, int((len(values)-1)*p/100))] for p in (50,95,99,100)}
-    return dict(refreshes=len(rows),presents=len(presents),resyncs=len(drops),trials=trials,
+    return dict(refreshes=len(rows),presents=len(presents),resyncs=len(drops),trials=trials,input_polls=len(samples),input_trace_sha256=sha(sidecar) if sidecar.exists() else None,
                 advance_ns=quantiles([r['end']-r['begin'] for r in rows]),
                 presentation_ns=quantiles([p[2]-p[1] for p in presents]),audio_opens=0,
                 limitations='Read-only trace adds observer I/O cost. CPU advance/render and host presentation are measured separately. No physical keyboard/display/audio or dense Lunatic/full route timing acceptance.')

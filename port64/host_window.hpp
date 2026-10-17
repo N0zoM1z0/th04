@@ -49,11 +49,13 @@ public:
     explicit operator bool()const{return enabled_;}
     void refresh(std::uint64_t sequence,std::int64_t begin,std::int64_t end,
         std::int64_t deadline,Input,bool focused,unsigned before,unsigned after,const Snapshot&);
+    void input_poll(std::uint64_t sequence,std::int64_t begin,std::int64_t end,
+        const pc98_input::Observation&,bool focused,const Snapshot&);
     void present(std::uint64_t sequence,std::int64_t begin,std::int64_t end,bool updated);
     void resync(std::int64_t now,std::int64_t discarded,unsigned slowdown);
     void finish(const Snapshot&);
 private:
     bool enabled_=false,finished_=false;std::int64_t epoch_=0;
-    std::ofstream stream_;std::uint64_t refreshes_=0,presents_=0,resyncs_=0;
+    std::ofstream stream_,input_stream_;std::uint64_t refreshes_=0,presents_=0,resyncs_=0,input_polls_=0;
 };
 }

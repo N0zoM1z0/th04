@@ -38,11 +38,15 @@ Trace::Trace(const std::string& directory,bool muted){
     if(!muted || std::filesystem::exists(directory))throw std::runtime_error("window trace needs muted fresh outputs");
     std::filesystem::create_directories(directory);
     stream_.open(std::filesystem::path(directory)/"window.tsv",std::ios::binary);
-    if(!stream_)throw std::runtime_error("cannot create window trace");
+    input_stream_.open(std::filesystem::path(directory)/"input.tsv",std::ios::binary);
+    if(!stream_ || !input_stream_)throw std::runtime_error("cannot create window/input trace");
     enabled_=true;epoch_=now_ns();
     stream_<<"TH04_WINDOW_TRACE 3 period_ns "<<period_ns<<" catchup_limit "<<catchup_limit<<" muted 1\n";
     stream_<<"# R seq begin_ns end_ns deadline_ns held shift focused before after scene program generation frame stage rank character shot x y bullets shots lives bombs misses invincibility audio_frames audio_opens audio_failed score_units credits power bombing respawn slow_frames run_frames score_digits_units score_delta advice_held advice_shift\n";
     stream_.flush();
+    input_stream_<<"TH04_INPUT_TRACE 1 host_epoch_ns "<<epoch_<<"\n"
+        <<"# I ordinal seq begin_ns end_ns op bios shift joystick_enabled pins before before_shift after after_shift focused scene program generation frame stage\n";
+    input_stream_.flush();
 }
 void Trace::refresh(std::uint64_t seq,std::int64_t begin,std::int64_t end,std::int64_t deadline,
     Input in,bool focused,unsigned before,unsigned after,const Snapshot& s){
@@ -56,6 +60,18 @@ void Trace::refresh(std::uint64_t seq,std::int64_t begin,std::int64_t end,std::i
         <<s.audio_frames<<' '<<s.audio_opens<<' '<<s.audio_failed<<' '
         <<s.score_units<<' '<<s.credits<<' '<<s.power<<' '<<s.bombing<<' '<<s.respawn<<' '
         <<s.slow_frames<<' '<<s.run_frames<<' '<<s.score_digits_units<<' '<<s.score_delta<<' '<<s.advice_held<<' '<<s.advice_shift<<'\n';stream_.flush();
+}
+void Trace::input_poll(std::uint64_t seq,std::int64_t begin,std::int64_t end,
+    const pc98_input::Observation& sample,bool focused,const Snapshot& s) {
+    if(!enabled_)return;
+    constexpr char digits[]="0123456789abcdef";
+    input_stream_<<"I "<<input_polls_++<<' '<<seq<<' '<<begin-epoch_<<' '<<end-epoch_<<' '
+        <<(sample.operation==pc98_input::Operation::reset ? 'R' : 'S')<<' ';
+    for(const auto value:sample.physical.keys)input_stream_<<digits[value>>4]<<digits[value&15];
+    input_stream_<<' '<<sample.physical.shift<<' '<<sample.physical.joystick_enabled<<' '
+        <<unsigned(sample.physical.joystick_pins)<<' '<<sample.before.actions<<' '<<sample.before.shift<<' '
+        <<sample.after.actions<<' '<<sample.after.shift<<' '<<focused<<' '<<s.scene<<' '<<s.program<<' '
+        <<s.generation<<' '<<s.frame<<' '<<s.stage<<'\n';input_stream_.flush();
 }
 void Trace::present(std::uint64_t seq,std::int64_t begin,std::int64_t end,bool updated){
     if(!enabled_)return;
@@ -72,6 +88,7 @@ void Trace::finish(const Snapshot& s){
     finished_=true;
     stream_<<"E "<<refreshes_<<' '<<presents_<<' '<<resyncs_<<' '<<s.audio_frames<<' '
         <<s.audio_opens<<' '<<s.audio_failed<<'\n';stream_.flush();
-    if(!stream_)throw std::runtime_error("window trace write failed");
+    input_stream_<<"E "<<input_polls_<<'\n';input_stream_.flush();
+    if(!stream_ || !input_stream_)throw std::runtime_error("window/input trace write failed");
 }
 }

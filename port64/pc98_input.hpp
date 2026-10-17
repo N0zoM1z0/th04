@@ -42,6 +42,9 @@ struct Snapshot {
 enum class Operation {reset,sense};
 using SampleSource=std::function<Sample(Operation)>;
 using Poll=std::function<Snapshot(Operation)>;
+// Observation values never supply samples or modify the game latch.
+struct Observation {Operation operation;Sample physical;Snapshot before,after;};
+using Observer=std::function<void(const Observation&)>;
 class Latch {
 public:
     void reset_sense(const Sample& sample) { actions_=0;sense(sample); }

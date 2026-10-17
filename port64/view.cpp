@@ -1648,10 +1648,13 @@ public:
         const auto first=sprites_->stage_slots[128],second=sprites_->stage_slots[132];
         return sprites_->stage_end==140 && first.sheet && second.sheet && first.sheet->width()==32 && first.sheet->height()==48 && first.sheet->count()==4 && second.sheet->width()==64 && second.sheet->height()==80 && second.sheet->count()==8;
     }
-    void advance_sampled(std::uint16_t held,bool shift,const pc98_input::SampleSource& source,bool repaint=true) {
+    void advance_sampled(std::uint16_t held,bool shift,const pc98_input::SampleSource& source,bool repaint=true,const pc98_input::Observer& observer={}) {
         require_view(bool(source) && !input_source_,"invalid frontend input source");
-        struct Restore {const pc98_input::SampleSource*& slot;~Restore(){slot=nullptr;}} restore{input_source_};
-        input_source_=&source;advance(held,shift,repaint);
+        struct Restore {
+            const pc98_input::SampleSource*& source;const pc98_input::Observer*& observer;
+            ~Restore(){source=nullptr;observer=nullptr;}
+        } restore{input_source_,input_observer_};
+        input_source_=&source;input_observer_=&observer;advance(held,shift,repaint);
     }
     pc98_input::Snapshot sampled_input() const {return input_latch_.snapshot();}
     void advance(std::uint16_t held_input, bool shift,bool repaint=true) {
@@ -2143,9 +2146,11 @@ public:
 private:
     pc98_input::Snapshot poll_main(pc98_input::Operation operation) {
         require_view(bool(input_source_),"MAIN input source missing");
-        const auto sample=(*input_source_)(operation);
+        const auto before=input_latch_.snapshot();const auto sample=(*input_source_)(operation);
         if(operation==pc98_input::Operation::reset)input_latch_.reset_sense(sample);else input_latch_.sense(sample);
-        return input_latch_.snapshot();
+        const auto after=input_latch_.snapshot();
+        if(input_observer_ && *input_observer_)(*input_observer_)({operation,sample,before,after});
+        return after;
     }
     pc98_input::Poll main_poll() {return [this](pc98_input::Operation op){return poll_main(op);};}
     void begin_main_input() {
@@ -2594,6 +2599,7 @@ private:
     Frame pause_graphics_;registration::TextPlane pause_text_;
     Bytes dialog_resume_indices_;unsigned dialog_resume_frame_=0;
     const pc98_input::SampleSource* input_source_=nullptr;
+    const pc98_input::Observer* input_observer_=nullptr;
     pc98_input::Latch input_latch_;
     bool input_initialized_=false,input_loop_active_=false;
     const MainAssets* assets_=nullptr;
@@ -2751,13 +2757,20 @@ LRESULT CALLBACK title_window_proc(
                 };
                 const bool active=GetForegroundWindow()==window;
                 const auto in=host_window::input(platform_keys(),active);
+                std::int64_t sample_begin=0;bool sample_focused=false;
                 const pc98_input::SampleSource source=[&](pc98_input::Operation) {
-                    return host_window::bios_input(platform_keys(),GetForegroundWindow()==window);
+                    if(title->trace)sample_begin=host_window::now_ns();
+                    const auto keys=platform_keys();sample_focused=GetForegroundWindow()==window;
+                    return host_window::bios_input(keys,sample_focused);
+                };
+                const pc98_input::Observer observer=[&](const pc98_input::Observation& sample) {
+                    title->trace.input_poll(title->schedule.total()+1,sample_begin,host_window::now_ns(),
+                        sample,sample_focused,title->front_end.window_snapshot());
                 };
                 const auto before=title->front_end.slowdown();const auto deadline=title->schedule.next();
                 const auto begin=title->trace ? host_window::now_ns() : 0;
                 const bool was_animated=title->front_end.animated();
-                title->front_end.advance_sampled(in.held,in.shift,source);
+                title->front_end.advance_sampled(in.held,in.shift,source,true,title->trace ? observer : pc98_input::Observer{});
                 const auto end=title->trace ? host_window::now_ns() : 0;
                 dirty|=was_animated || title->front_end.animated();
                 title->schedule.completed(title->front_end.slowdown());
@@ -2967,12 +2980,19 @@ void show_window(
             };
             const bool focused=(SDL_GetWindowFlags(window)&SDL_WINDOW_INPUT_FOCUS)!=0;
             const auto in=host_window::input(platform_keys(),focused);
+            std::int64_t sample_begin=0;bool sample_focused=false;
             const pc98_input::SampleSource source=[&](pc98_input::Operation) {
-                return host_window::bios_input(platform_keys(),(SDL_GetWindowFlags(window)&SDL_WINDOW_INPUT_FOCUS)!=0);
+                if(trace)sample_begin=host_window::now_ns();
+                const auto keys=platform_keys();sample_focused=(SDL_GetWindowFlags(window)&SDL_WINDOW_INPUT_FOCUS)!=0;
+                return host_window::bios_input(keys,sample_focused);
+            };
+            const pc98_input::Observer observer=[&](const pc98_input::Observation& sample) {
+                trace.input_poll(schedule.total()+1,sample_begin,host_window::now_ns(),sample,
+                    sample_focused,front_end.window_snapshot());
             };
             const auto before=front_end.slowdown();const auto deadline=schedule.next();
             const auto begin=trace ? host_window::now_ns() : 0;
-            const bool was_animated=front_end.animated();front_end.advance_sampled(in.held,in.shift,source);
+            const bool was_animated=front_end.animated();front_end.advance_sampled(in.held,in.shift,source,true,trace ? observer : pc98_input::Observer{});
             const auto end=trace ? host_window::now_ns() : 0;
             dirty|=was_animated || front_end.animated();schedule.completed(front_end.slowdown());
             if(trace)trace.refresh(schedule.total(),begin,end,deadline,in,focused,before,
