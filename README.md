@@ -32,11 +32,12 @@ RGB/TRAM/palette samples pass. Source strict aggregate retains 19 postactor keys
 and 23 raw GDC differences. Native 12889 still differs by 407 blinking pixels;
 1805 native keys remain separate. No emulator is live. See the current handoff.
 
-The v1477 private physical-device experiment preserves all 52 keyboard edges,
-including four tails after UI exit. Nine-pool/stable-state gates and all 22 full
-Stage3 RGB samples pass, but two of four literal-player inputs fail. Actual
-original/source RAM shows BIOS Enter released while key_det retains8192; the
-native input-latch model remains unresolved. No game-code or campaign claim.
+The v1478 maintained PC-98 input sampler passes fresh GNU/UBSan component checks,
+12288 unchanged-target instruction calls and 2921 actual original samples. A new
+original capture observes Enter release between head sampling andplayer entry;
+MAIN/UI delivery integration remains open. Verified terminal-file cleanup frees
+203.95703125MiB locally after recovery costs/reserve. Full game verdicts retain
+their prior source identities and unresolved differences.
 
 The prior v1473 native repair propagates and consumes Elly's scythe hit flag.
 Cold GNU/UBSan reproduce original hit8046/GameOver8085 and retain all 79 old8000

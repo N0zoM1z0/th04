@@ -5,6 +5,71 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Actual input polls and maintained sampler (v1478)
+
+A fresh bounded original run completes Stage3 score 12891 in 802.802s, exit0,
+without timeout. Both dialogue packets contain 2923 paired input-sense calls;
+2921 calls replay from the first observed reset in each packet, with zero errors.
+The two initial head calls do not seed replay. All 53575 ordered raw records
+(1 load, 20452 RNG, 33122 state/resident) are a byte-identical prefix of v1474.
+Eight literal-player CPU/full-RAM samples bind to the original MZ and own caller.
+No dense actor stream or native game replay is added by this capture.
+
+At 7835/12889 the actual head sample still reads BIOS Enter and key_det 8192.
+The player begins 1.544944/1.594111ms after that sample returns: BIOS Enter is
+clear but key_det remains 8192. Prior tail reset samples also retain Enter.
+Sampling order and keyboard delivery time must stay distinct. A direct held word
+at player time loses this input; simply carrying the previous host word is also
+unsupported. No clock/phase/expected-latch assignment is used.
+
+Native pc98_input.hpp now owns reset/sense accumulation, 18 keyboard predicates,
+distinct keypad diagonals, Shift replacement and active-low low6 joystick input.
+Fresh standalone GNU/optimized UBSan CMake targets and CTests pass. Independent
+unchanged original instructions in pinned Unicorn 16 agree for 6144 controlled
+cases/12288 calls. Both maintained C++ programs replay all 2921 actual samples.
+Actual replay uses observed BIOS and the separately masked joystick return;
+it does not independently attest physical OPNA transactions or Shift delivery.
+MAIN/UI integration and sub-refresh keyboard delivery remain open.
+
+The parent v1477 device queue still passes 52-edge intent, all 13378 configured
+pool/stable snapshots and 22 RGB samples, while two literal-player words and 1803
+postactor keys retain the false aggregate. These old game verdicts are not
+reclassified by component agreement. Source 19 keys/23 GDC and stock 407 pixels/
+1805 keys retain their original scenarios. No Stage4/native campaign is added.
+
+The actual entry/RETF taps are original MAIN 130E:06C4/07C4;reset06BC falls
+through after clearing the game latch. Stack/caller bytes distinguish every
+reset versus sense call, including UI loops. Each function keeps a stable BIOS
+matrix;joystick returns are masked to63. The packet observer uses at most four
+hardware watchpoints, suspends the unexpected-GameOver guard only during each
+packet, and restores it after closure. Every tap retains unchanged CPU context,
+raw PIC/CPU counters and rational millisecond timestamps. Literal-player
+MAIN 0AAF:5FCF/near-return00F4 binds independently to target code and full RAM.
+
+| Player frame | Head sample keyboard | Player BIOS keyboard | Player latch | ms since head return |
+| --- | ---: | ---: | ---: | ---: |
+|7835|8192|0|8192|1.5449444444444445|
+|12889|8192|0|8192|1.594111111111111|
+
+Both preceding tail resets sample Enter too. These observations reject an
+assumption that the head necessarily sees already released BIOS input. They
+bound release between the head return andplayer entry;they do not identify the
+precise keyboard IRQ transaction. Never replace the timestamps with a fitted
+one-frame hold. The maintained component's actual replay receives fresh BIOS,
+operation and separately observed joystick wrapper return;the expected key_det
+is compared only after execution. Shift is unused/observed zero in this route;
+controlled CPU cases separately coverShift0/1 and all 256 joystick pin values.
+Unicorn scratch BIOS/ready-OPNA stubs are explicit functional controls, not PC-98
+IRQ/timing orfull-game evidence. Its engine/interpreter/compiler hashes are pinned.
+
+Replay main-input-polls-v1478/frozen_reader.py with --reader identity|polls|prefix|
+component, --capture, --output and component --attestation. Recover exact named
+paths only. The capture stops12891 andadds no Stage4 orwhole-pool claim. Keep
+all prior failed game scenarios. Current source 568/1972cd96 adds only a standalone
+input component;old full game products remain566/a7606e66. Next integrate target
+sampling seams anddelivery ownership, then run independent literal-player, state
+andRGB gates. Root 582/native354 CI pass;full new game build/campaign is pending.
+
 ## Continuous device edges and MAIN latch mismatch (v1477)
 
 A fresh private GNU observer replays the physical Stage3 baseline and all 52

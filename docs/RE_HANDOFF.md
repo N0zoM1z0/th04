@@ -5,34 +5,37 @@ goals remain active. Use `taskset -c 1 nice -n 19`, muted headless runs,
 serialized Borland/Wine and no host keys/focus. Keep English code/docs and
 `gpt-6.1-sol: ...` commits; push main and native `HEAD:port/modern-64`.
 
-## Continuous device edges and MAIN latch mismatch (v1477)
+## Actual input polls and maintained sampler (v1478)
 
-A fresh private GNU observer replays the physical Stage3 baseline and all 52
-recorded keyboard edges through one persistent held-device owner. Four final
-release/Shot-restoration edges execute after UI exit; unchanged baseline keys
-never overwrite pending releases. An independent event-prefix reader checks every
-caller sample. Compiled controls retain tails at two clock origins and reject a
-consumer that stops at UI exit. No expected latch,clock,phase or state is assigned.
+A fresh bounded original run completes Stage3 score 12891 in 802.802s, exit0,
+without timeout. Both dialogue packets contain 2923 paired input-sense calls;
+2921 calls replay from the first observed reset in each packet, with zero errors.
+The two initial head calls do not seed replay. All 53575 ordered raw records
+(1 load, 20452 RNG, 33122 state/resident) are a byte-identical prefix of v1474.
+Eight literal-player CPU/full-RAM samples bind to the original MZ and own caller.
+No dense actor stream or native game replay is added by this capture.
 
-All 13377 updates complete. All 13378 complete nine-pool/21-stable snapshots and
-13377 raw-score/resident/RNG-count rows agree with the original. All 22 Stage3
-full640x400 RGB/TRAM/DAC/raw-tone samples now pass, including 12889. This is a
-changed physical-input experiment, not a repair of the stock 407-pixel scenario.
-125 of 130 stock output hashes stay equal. Native Stage4 is not observed here.
+At 7835/12889 the actual head sample still reads BIOS Enter and key_det 8192.
+The player begins 1.544944/1.594111ms after that sample returns: BIOS Enter is
+clear but key_det remains 8192. Prior tail reset samples also retain Enter.
+Sampling order and keyboard delivery time must stay distinct. A direct held word
+at player time loses this input; simply carrying the previous host word is also
+unsupported. No clock/phase/expected-latch assignment is used.
 
-The overall verdict remains false: literal players 7835/12889 read native 32 versus
-original 8192 (two of four pairs fail);1803 postactor keys remain separate. Both
-actual DOS artifacts independently show BIOS Enter clear/fresh keyboard 0 but
-key_det 8192 at those same literal entries. Own-MZ reset/head/tail instructions
-and the OR-accumulating sampler preserve old bits; ordinary callbacks are RET.
-Joystick is enabled but its wrapper masks returns to 63, excluding Enter, and
-observed joystick state is 0. Physical device state,BIOS state and key_det are
-separate surfaces. Do not substitute direct held actions for the game latch.
+Native pc98_input.hpp now owns reset/sense accumulation, 18 keyboard predicates,
+distinct keypad diagonals, Shift replacement and active-low low6 joystick input.
+Fresh standalone GNU/optimized UBSan CMake targets and CTests pass. Independent
+unchanged original instructions in pinned Unicorn 16 agree for 6144 controlled
+cases/12288 calls. Both maintained C++ programs replay all 2921 actual samples.
+Actual replay uses observed BIOS and the separately masked joystick return;
+it does not independently attest physical OPNA transactions or Shift delivery.
+MAIN/UI integration and sub-refresh keyboard delivery remain open.
 
-Actual dialogue budgets are 1165/149 refreshes (1165/148 calls);12889 reports 37344.
-The pre-execution 1164/148 prediction is rejected and retained. No origins or
-sampling rules were fitted to pixels. Source 19 keys/23 GDC differences and the
-prior stock 407 pixels/1805 keys remain under their original scenario identities.
+The parent v1477 device queue still passes 52-edge intent, all 13378 configured
+pool/stable snapshots and 22 RGB samples, while two literal-player words and 1803
+postactor keys retain the false aggregate. These old game verdicts are not
+reclassified by component agreement. Source 19 keys/23 GDC and stock 407 pixels/
+1805 keys retain their original scenarios. No Stage4/native campaign is added.
 
 ## Actual original/source Elly defeat and Stage4 (v1475)
 
@@ -66,11 +69,13 @@ with 49 keys; do not subtract or merge their counts.
 
 ## Native comparison and current products
 
-Native 566-file closure remains
-`a7606e662f68a60abbd0e50b6b7d0177dc11fab7154099d1edf4edf5da23352c`.
-No maintained DOS/native game-source or cold game-build changes in this batch.
-Current GNU 87 programs/83 CTests and UBSan 2/session products/link inputs remain at
-`.analysis/native/port64-recovery-v1445/.analysis/port64/stage3-hit-bridge-v1473-final`.
+Maintained native source now has568 files, closure
+`1972cd9632f30d1d5f3a242d1b404e42b8cfcba9dbc246a762c90774ca7fc162`.
+Only the new input component has fresh GNU/UBSan target/CTest validation.
+The prior full GNU 87-program/83-CTest and UBSan2/session game products/link
+inputs remain at stage3-hit-bridge-v1473-final with their original 566-file
+`a7606e662f68a60abbd0e50b6b7d0177dc11fab7154099d1edf4edf5da23352c` closure.
+They are not a full rebuild of the new closure. DOS game source is unchanged.
 The v1473 repair propagates/consumes/resets Elly's existing hit flag; retain
 original hit8046/GameOver8085 and its partial actor-stream failure as evidence.
 
@@ -100,24 +105,28 @@ inherited aliases; do not rerun completed DOS captures or treat RAM as a resume.
 
 ## Current recovery and next work
 
-Phase entry heads are main 57b532b/native 8364e67; read actual heads and finish
-publication. Current game source stays 566/a7606e66 and current cold products/link
-inputs remain physical. No maintained game source or cold game build changes.
-Current ui-edge-replay-v1477 recovery carries 1804 aliases:1662 inherited plus 142
-new. Keep 70434 parent identities,every current/late/finish identity and provider.
-All 142 aliases restore exact metadata;five real/archive readers preserve 133 full
-outputs,the edge-intent pass,22 RGB pass and false literal-player/overall verdict.
-Private game/device-check executables stay physical;the unused view object is
-archived. Local cleanup net 87.79296875MiB includes recovery artifacts and 2MiB
-reserve; whole-phase retained costs plus 32MiB reserve are separate. No old or
-never-created raw FIFO credit. Replay analyze_device.py,attest_input_latch.py,
-verify_outputs.py and frozen_reader.py --reader native|rgb in the DOS batch.
+Phase entry heads:main 2c1dd54/native0873657. The maintained component is committed
+separately;read actual heads and the finish publication. Both complete goals stay
+active. Current main-input-polls-v1478/recover.py carries 1825 exact aliases:
+1804 inherited plus 21 newly terminal files. All 21 restore SHA, size, mode, nsmtime;
+eight real/archive consumers preserve all Micro/full identities, polls, raw prefix
+and maintained component replay. Keep 70685 parent identities and every current,
+late, finish and provider identity. All sparse RAM/font/video and executed capsules,
+current game/component executables and link inputs remain physical. No emulator
+is live. Do not restart completed captures or treat RAM as a resume point.
 
-Next recover the reset-before-wait/head-OR sampling order as a native input
-owner,including BIOS/IRQ delivery timing where necessary. Use the eight actual
-RAM witnesses and own-code bindings before designing a fresh bounded poll-time
-capture. Do not force 8192,hold Enter one extra frame,blindly OR a previous host
-word or fit a clock phase. Keep the successful physical request queue separate
-from the missing game-latch model. Continue the existing differential note.
-Finish focused comparisons,tracking,both CIs and git diff --check. Complete DOS/
-native goals stay active;timing,continuous display,NP2/Windows and campaigns remain.
+Exact XOR HDI archives use the immutable initial image;five corruption controls
+reject. Raw-prefix dedup uses the existing original gzip and a bounded slice.
+Actual207.10546875MiB deallocation costs 0.94921875MiB new archives and
+1.1484375MiB total cleanup artifacts. With 2MiB metadata reserve, local net release
+is203.95703125MiB. Whole-phase costs plus 32MiB reserve are separate. No older
+cleanup, never-created file or replaced-provider double credit.
+
+Next integrate the verified input component with MAIN/UI sampling seams and a
+physical-device/BIOS delivery owner. The new raw PIC timestamps show release
+between head sample and player entry;do not set8192, hold Enter an extra fitted
+frame, blindly OR host arguments or fit visibility. Preserve pending physical
+tail releases. Use existing captures first;resolve only genuinely missing IRQ/
+scheduling evidence with another bounded experiment. Continue the differential
+note. Finish focused checks, tracking, both CIs andgit diff --check. Timing, continuous
+display, NP2/Windows and complete four-source/native campaigns remain open.
