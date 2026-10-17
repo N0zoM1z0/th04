@@ -5,6 +5,51 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Complete sampled Stage3 live-font RGB (v1465)
+
+The489.65s sparse original route completes actual Stage1 9837,Stage2 10394 and
+Stage3 4000 updates. Full own1136-relocation MZ/CPU/RAM evidence and6 same-context
+528384-byte font/video snapshots bind original MAIN0AAF:0207 at Stage3
+frames1/400/1601/2228/2357/4000. Every full640x400 RGB picture and8000 active TRAM
+bytes match authenticated566/88575 GNU outputs;each corresponding prior actual
+UBSan file hash agrees. No native program executes anew. All6 font hashes are
+46198044,all38 programmed-video regions reproduceoldoriginal,and raw graphics
+indices/blink states stay unequal. Combined with the separate8 Stage2 samples
+below,14 sampled complete RGB/TRAM pairs pass;this does not cover every frame.
+
+Actual completed init0AAF:007E activates the physical-input loop/GameOver watches.
+Every4000 Stage3 consumed sample and57 actual API edges matches the normal
+Bomb/movement plan;each call preservesCPU,tick and640KiB RAM. The guard does not
+fire. V3 independently compares all24231 complete raw loop fields/counts and
+14472 ordered RNG PC/SS/SP/stack-word records with retainedoriginal. Only observer
+hook indices translate because this profile omits demo termination. The old
+final Stage3 loop4000 remains unpaired:the new endpoint is its completed score.
+At all6 selected points,whole9-pool bytes,private3 and configured fields/RNG
+counts agree with independently hashed old full conventional-memory witnesses.
+
+The450-loop/10-edge Stage1 Micro and default400-loop path pass. Four rebased
+Micro controls reject consumed sample/edge/guard/init-register mutations. Four
+complete-route controls reject dropped plans,missing prior-stage coverage and
+single legal raw-loop/RNG stack-word mutations;the last2 retain passing selected
+9-pool/private3/field/input witnesses but fail exactly1 raw record. A decoded
+pixel mutation fails1 pixel at each6 complete picture while TRAM remains equal.
+V1/V2 source bytes remain preserved;V3 adds full-route requirements/comparison.
+Receipts/readers: `.analysis/reconstruction/probes/dos-stage3-font-v1465`.
+
+Recovery restores 15 owned image/raw/font-BMP/boot-log aliases with SHA, size,
+mode and nanosecond mtime, then runs all three original consumers and full RGB
+again. Every output reproduces byte-identically before aliases retire. All
+52896 protected identities verify. Retiring 39 owned generated aliases releases
+at least 119.59 MiB after all phase evidence, archives, reader versions, recovery
+metadata, public-source costs and 1 MiB reserved final metadata. Earlier cleanup
+and temporary/borrowed/missing files receive no new credit. See
+[retention](../../ANALYSIS_RETENTION.md) for the fresh-output replay command.
+
+Next forecast a guarded physical Stage3Boss/later-stage extension in native
+before another long original prefix. Preserve all original/source raw input/
+GDC and native raw-index failures. No natural timing,physical scanout,every-frame
+display,NP2,Windows,campaign,pristine-provenance or artifact-exact claim follows.
+
 ## Complete sampled Stage2 live-font RGB (v1464)
 
 The new sparse original collector retains normal OP seed64 and physical keyboard
@@ -40,9 +85,8 @@ evidence,recovery costs and1MiB reserved final metadata. No earlier cleanup or
 temporary/borrowed/missing-file credit is included. See
 [retention](../../ANALYSIS_RETENTION.md) for the replay command.
 
-Next extend sparse coverage through Stage3 using the existing actual Bomb/
-movement transport and GameOver guard. The current6 Stage3 score samples still
-lack complete fonts/RGB. These8 Stage2 samples prove no every-frame display,
+The6 Stage3 score samples above now have their own complete fonts/RGB. These8
+Stage2 samples prove no every-frame display,
 natural timing,physical scanout,cross-emulator,Windows,campaign,pristine-target
 provenance or artifact-exact claim.
 
@@ -60,7 +104,8 @@ input wires remain identical; all 58 current picture/index/text/palette outputs
 agree across configurations. Both legacy 3500/8000 routes and 177 old display
 observations (59 RGB/TRAM pairs) reproduce. Four actual malformed picture plans
 and 2 semantic output mutations reject. Current full active TRAM passes 14;
-raw full graphics indices fail 14 and full live fonts/RGB remain unproved.
+raw full graphics indices fail14. Later sparse captures supply live fonts and
+passing fullRGB for14 selected scores;continuous display remains unproved.
 Preserve the failed recovery-count and legacy-path consumers; fixed V2 readers
 retain the same inputs and program identities. No DOS source or exact state changes.
 
@@ -74,8 +119,7 @@ Keep native `.analysis/port64/stage-pictures-v1463-final` main/session/link inpu
 and all prior backing dependencies. Use fresh build/output directories.
 Receipts: `.analysis/reconstruction/probes/native-stage2-pictures-v1463`.
 
-Next obtain current full live-font evidence for the sampled Stage2/3 boundaries
-and compare complete composited RGB. Reuse current captures and minimize
+Extend the verified sparse route above. Reuse current captures and minimize
 observer stops before another long prefix. Raw indices include duplicate colors
 and hidden cache bytes; their failure is not interchangeable with RGB failure.
 Natural UI/IRQ/init-interior/scanout timing, Stage3 Boss/later stages/campaigns,

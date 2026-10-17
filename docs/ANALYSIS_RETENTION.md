@@ -1,5 +1,42 @@
 # Private build and analysis retention
 
+## Sparse Stage3 live-font/RGB recovery (v1465)
+
+Thirty-nine owned aliases retire: three completed captures' initial/execution
+HDIs, raw traces, font-BMP copies and boot logs, plus 24 restored native picture/
+index/TRAM/palette copies. Initial HDIs and font BMPs reuse authenticated live
+parent providers; remaining exact content has verified compressed backing.
+Complete compressed font/video/DGROUP/640 KiB RAM witnesses, source capsules,
+V1/V2/V3 readers and all prior backings stay live. All 52896 protected hashes
+verify, including 52678 parent/late/finish identities. Current native programs
+and link inputs remain unchanged and available.
+
+Actual recovery restores 15 owned aliases with SHA, size, mode and nanosecond
+mtime. It executes three original MZ/RAM/font/input readers and the six-picture
+RGB reducer using immutable parent dependencies. Every output reproduces,
+including all 24231 loops, 14472 ordered RNG records, 4000 physical inputs/57
+edges, six whole nine-pool/private-field samples and complete RGB/TRAM. The old
+final Stage3 loop4000 remains unpaired. Aliases and temporary pictures retire
+without new credit. This reruns recorded-evidence consumers; the emulator and
+native game producers do not execute during recovery.
+
+Run from the DOS root with a fresh output:
+
+```sh
+taskset -c 1 nice -n 19 python3 \
+  .analysis/reconstruction/probes/dos-stage3-font-v1465/replay_restored.py \
+  --output-dir .analysis/reconstruction/probes/NEW-stage3-font-recovery
+```
+
+`recover.py --restore --path EXACT` restores individual owned aliases. Verify
+and retire them after use. The conservative net release is at least 119.59 MiB,
+subtracting every retained phase artifact, reader version, archive, journal,
+recovery/public-source cost and 1 MiB reserved final metadata. Count39 aliases
+once; exclude preceding cleanup and temporary, borrowed or historical missing
+files. The next journal must chain final retention, every finish.late_protected
+identity and finish itself. Full Stage3 Boss/later-stage parity, every-frame
+display, natural timing, scanout and campaigns remain open.
+
 ## Sparse Stage2 live-font/RGB recovery (v1464)
 
 Forty-one owned generated aliases retire:the three completed successful/failed

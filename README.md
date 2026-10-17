@@ -25,11 +25,15 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
-Current v1463 repairs a carried clear-bonus palette tone at stage-session
-completion. Both cold programs match 14 complete original WORD/DAC samples;
-all eight state wires, legacy routes and 177 prior display observations remain
-unchanged. Full current fonts/RGB and raw graphics-index differences remain
-open. See [current handoff](docs/RE_HANDOFF.md) for evidence and recovery.
+The v1464/v1465 captures validate 14 sampled complete RGB/TRAM pairs across
+Stage2/3, using each original score boundary's full live font/video/RAM.
+Authenticated 566/88575 GNU pictures match every 640x400 RGB pixel and all 8000
+active TRAM bytes; prior actual UBSan file hashes agree. The new 489.65s Stage3
+route also reproduces 24231 raw loops, 14472 ordered RNG records, 4000 physical
+input samples/57 edges and six complete pool/private-field witnesses. Native
+programs did not execute again. Raw index/GDC failures, Stage3 Boss/later stages,
+every-frame display, natural timing and campaigns remain open.
+See [current handoff](docs/RE_HANDOFF.md).
 
 
 Current v1462 completes actual original/source4000-update Stage3 routes after
@@ -56,8 +60,9 @@ the pinned originals. It does not establish a complete four-source campaign.
 Closed 566/4c3c50cb cold GNU and optimized UBSan match 20795 selected scalar
 records and 10397 full nine-pool snapshots, actual consumed inputs, homing and
 Boss/Midboss/RNG. Physical CFG/SCR files and the legacy 3500/8000 plus 59 RGB/TRAM
-fixtures pass. Native Stage2 pictures, natural clocks, complete campaigns, NP2,
-Windows, pristine provenance and historical exactness remain open. Both full
+fixtures pass. At that closure ordinary Stage2 RGB was unproved;the later14
+samples above now pass. Natural clocks,complete campaigns,NP2,Windows,pristine
+provenance and historical exactness remain open. Both full
 goals stay active; see the [current handoff](docs/RE_HANDOFF.md).
 
 Development is active. All four DOS products build from maintained local source.
