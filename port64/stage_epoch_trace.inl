@@ -8,6 +8,16 @@
             magic=="TH04_STAGE_EPOCH" && version==1 && extent>0 && extent<=65535 && final_keys<=65535 && final_shift==0,"epoch fixture header/input");
         std::ifstream wait_plan(fs::path(assets.save_directory)/"stage-epoch-waits.txt");
         const bool wait_inputs=bool(wait_plan);
+        std::ifstream clear_plan(fs::path(assets.save_directory)/"stage-epoch-clear.txt");
+        const bool until_clear=bool(clear_plan);
+        unsigned stage3_updates=0,stage3_keys=0,stage3_shift=0;
+        if(until_clear) {
+            require_view(wait_inputs && bool(clear_plan>>magic>>version>>stage3_updates>>stage3_keys>>stage3_shift) &&
+                magic=="TH04_STAGE_CLEAR" && version==1 && stage3_updates==1 && stage3_keys<=65535 && stage3_shift==0,
+                "epoch clear plan header/input");
+            clear_plan>>std::ws;
+            require_view(clear_plan.peek()==std::char_traits<char>::eof(),"epoch trailing clear input");
+        }
         std::vector<std::pair<unsigned,std::string>> wait_frames,observed_wait_frames;
         std::ofstream wait_blocks,player_samples;
         if(wait_inputs) {
@@ -29,6 +39,15 @@
         require_view(bool(epoch)&&bool(epoch_pools)&&bool(tail_pools),"epoch output unavailable");
         epoch_pools.write("TH04OP1\n",8);tail_pools.write("TH04OP1\n",8);
         const stage::Program stage2_program(assets.stage2.standard);
+        std::optional<stage::Program> stage3_program;
+        std::ofstream stage3_pools,stage3_player;
+        if(until_clear) {
+            stage3_program.emplace(assets.stage3.standard);
+            stage3_pools.open(output/"stage3-pools.bin",std::ios::binary);
+            stage3_player.open(output/"stage3-consumed.txt");
+            require_view(bool(stage3_pools)&&bool(stage3_player),"epoch Stage3 output unavailable");
+            stage3_pools.write("TH04OP1\n",8);
+        }
         std::uint64_t ring_offset=0;unsigned ordinal=0;
         const auto observe=[&](const char* label,const gameplay::State& s) {
             const auto dump=[&](const auto& bytes){constexpr char digits[]="0123456789abcdef";for(auto v:bytes)epoch<<digits[unsigned(v)>>4]<<digits[unsigned(v)&15];};
@@ -36,6 +55,7 @@
             const auto field=[&](const char* name,const auto& bytes) {if(comma)epoch<<',';comma=true;epoch<<'"'<<name<<"\":\"";dump(bytes);epoch<<'"';};
             const auto integer=[&](const char* name,std::uint64_t value,unsigned size) {std::vector<std::uint8_t> b;for(unsigned i=0;i<size;++i)b.push_back(std::uint8_t(value>>(i*8)));field(name,b);};
             if(wait_inputs && std::string(label)=="stage2-actor")player_samples<<s.frames()<<' '<<s.player_input()<<'\n';
+            if(until_clear && std::string(label)=="stage3-actor")stage3_player<<s.frames()<<' '<<s.player_input()<<'\n';
             const auto& life=s.life();const auto& board=s.scoreboard();const auto& resident=scene.resident();
             epoch<<"{\"ordinal\":"<<ordinal++<<",\"label\":\""<<label<<"\",\"resource_stage\":"<<+resident.resource_stage<<",\"resident_stage\":"<<+resident.stage<<",\"fields\":{";
             integer("frame",s.frames(),2);integer("stage",resident.resource_stage,1);integer("input",s.consumed_input(),2);
@@ -54,7 +74,11 @@
         const auto translate=[](unsigned keys) {return std::uint16_t((keys&0x2fu)|(keys&0x10u?0x800u:0)|(keys&0x1000u?0x2000u:0)|(keys&0x2000u?0x1000u:0));};
         scene.main_state().set_actor_observer([&](const gameplay::State& s) {
             if(scene.resident().resource_stage==0) {th04::portable::demo_wire::pools(tail_pools,0,s,program);observe("stage1-actor",s);}
-            else {th04::portable::demo_wire::pools(epoch_pools,0,s,stage2_program);observe("stage2-actor",s);}
+            else if(scene.resident().resource_stage==1) {th04::portable::demo_wire::pools(epoch_pools,0,s,stage2_program);observe("stage2-actor",s);}
+            else {
+                require_view(until_clear && scene.resident().resource_stage==2 && bool(stage3_program),"epoch unexpected actor resource owner");
+                th04::portable::demo_wire::pools(stage3_pools,0,s,*stage3_program);observe("stage3-actor",s);
+            }
         });
         unsigned guard=0;
         while(!scene.main_state().next_stage_requested()) {
@@ -63,9 +87,15 @@
         }
         observe("stage1-return",scene.main_state());ring_offset=scene.main_state().random_samples();
         scene.set_stage_init_observer([&](const gameplay::State& s) {
-            require_view(s.frames()==0 && scene.resident().resource_stage==1,"epoch initialization boundary");
-            th04::portable::demo_wire::pools(epoch_pools,0,s,stage2_program);observe("init_return",s);
+            require_view(s.frames()==0,"epoch initialization frame");
+            if(scene.resident().resource_stage==1) {
+                th04::portable::demo_wire::pools(epoch_pools,0,s,stage2_program);observe("init_return",s);
+            } else {
+                require_view(until_clear && scene.resident().resource_stage==2 && bool(stage3_program),"epoch initialization boundary");
+                th04::portable::demo_wire::pools(stage3_pools,0,s,*stage3_program);observe("stage3-init",s);
+            }
         });
+        unsigned completed=0;
         for(unsigned frame=0;frame<extent;++frame) {
             unsigned number,keys,shift;require_view(bool(epoch_plan>>number>>keys>>shift)&&number==frame&&keys<=65535&&shift==0,"epoch Stage2 input/order/width");
             if(wait_inputs) {
@@ -98,6 +128,30 @@
             } else scene.advance(translate(keys),false,false);
             require_view(scene.main_state().frames()==frame+1&&scene.resident().resource_stage==1&&!scene.dialog_active()&&!scene.main_state().game_over(),"epoch unexpected owner or incomplete Stage2 update");
             observe("stage2-score",scene.main_state());
+            completed=frame+1;
+            if(until_clear && scene.main_state().next_stage_requested())break;
+        }
+        if(until_clear) {
+            require_view(completed>0 && completed<=extent && scene.main_state().next_stage_requested() &&
+                scene.resident().resource_stage==1 && scene.resident().stage==2,"epoch Stage2 clear not observed");
+            observe("stage2-return",scene.main_state());
+            // A bounded input schedule can extend past the actual clear. Check
+            // every declared unused row without pretending it was consumed.
+            for(unsigned frame=completed;frame<extent;++frame) {
+                unsigned number,keys,shift;
+                require_view(bool(epoch_plan>>number>>keys>>shift) && number==frame && keys<=65535 && shift==0,
+                    "epoch unused Stage2 input/order/width");
+            }
+            ring_offset+=scene.main_state().random_samples();
+            scene.advance(translate(stage3_keys),false,false);
+            require_view(scene.resident().resource_stage==2 && scene.main_state().frames()==stage3_updates &&
+                !scene.dialog_active() && !scene.main_state().game_over(),"epoch incomplete Stage3 update");
+            observe("stage3-score",scene.main_state());
+            std::ofstream summary(output/"stage-clear.json");
+            summary<<"{\"complete\":true,\"stage2_update_budget\":"<<extent
+                <<",\"stage2_complete_updates\":"<<completed<<",\"unused_stage2_inputs\":"<<(extent-completed)
+                <<",\"stage3_complete_updates\":"<<scene.main_state().frames()<<"}\n";
+            require_view(bool(summary),"epoch clear summary unavailable");
         }
         epoch_plan>>std::ws;require_view(epoch_plan.peek()==std::char_traits<char>::eof(),"epoch trailing input");
         require_view(observed_wait_frames==wait_frames,"epoch configured wait not observed");

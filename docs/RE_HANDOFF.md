@@ -5,6 +5,31 @@ Use [the actionable handoff](NEXT_AGENT_HANDOFF.md). Keep code/docs English,
 heavy jobs on one low-priority CPU and one Borland/Wine writer. All launches
 muted/headless;no Windows GUI, focus changes or host-key injection.
 
+## Active clear observation (v1461)
+
+The v1461 batch follows Stage2 defeat/clear. Fresh own-MZ CFG binds the
+post-score quit test at original 0AAF:0207/source0708:07BD; a nonzero quit
+returns without another Stage2 loop. The incorrect loop-exit prototype was
+controlled-stopped during an unfinished Stage1 prefix; its data stays failed.
+The distinct score-exit capture now records actual quit2, return/free, Stage3
+initialization and one complete update within an 11000 budget. It is still running.
+
+Current 566/4c3c50cb cold GNU 87/83 CTests and optimized UBSan 2 pass all prior 3500,
+8000 four-wire and 9835/59 RGB-TRAM/177-observation regressions, including physical
+saves. Thirteen actual CLI negatives reject; 35676 complete old raw rows decode
+unchanged. The optional `stage-epoch-clear.txt` drives the real FrontEnd and
+existing Kurumi/Elly owners, observes actual clear and checks unused declared
+inputs separately. It never assigns expected game/RNG/phase state. Native-only
+forecasts are Continue 8132, defeat 9809, postdialog 9905 and departure 10394.
+The accepted target frontier remains 8000 until independent new reads pass.
+
+Use `.analysis/reconstruction/probes/dos-kurumi-clear-v1461/`:
+`run_score_captures.py`, `capture-score/`, `watch_original.py` and `run_legacy.py`.
+New cold programs/cache are native `.analysis/port64/kurumi-clear-v1461-final/`.
+Keep old bcd/3747 caches, the stopped capsule/data, all 38121 parent hashes, all 22
+late hashes and that finish identity. Four borrowed legacy aliases have retired
+with no cleanup credit. Full goals remain active.
+
 ## Current Stage2 Boss frontier (v1460)
 
 Original and reconstructed DOS complete 8000 Stage2 updates after the same

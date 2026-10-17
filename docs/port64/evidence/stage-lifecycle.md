@@ -2562,3 +2562,58 @@ attested original DOS8000 files exactly, including the second Continue update.
 The separate native-physical-files-attested.json binds both producer receipts.
 Both full goals stay active; Stage2 Boss defeat/clear, native pictures, timing,
 campaigns, NP2, Windows, pristine provenance and historical exactness remain open.
+
+## Post-score Stage2 exit ownership (v1461)
+
+The v1461 batch follows Stage2 defeat/clear. Fresh target/source own-MZ CFG
+proves nonzero quit returns after score, without a following Stage2 loop
+(original0AAF:0207, source0708:07BD). The first new loop-exit collector was
+controlled-stopped during its unfinished Stage1 prefix and remains failed.
+A distinct score-exit capsule now observes actual quit2/return/free/Stage3 init
+and one full update under a11000 budget. Twelve host-only dispatch mutations
+reject; actual original/source clear acceptance is pending. Native-only scouts
+forecast Continue8132, defeat9809, postdialog9905 and departure10394; these do
+not widen the accepted8000 frontier. Current bundle:
+`.analysis/reconstruction/probes/dos-kurumi-clear-v1461/`, score-captures.log and
+capture-score/. Keep the stopped capsule/data and all parent38121+22 late hashes.
+
+The initial host-only dispatch test passed its own incorrect loop-exit model.
+Pinned target cmp/JE/RET instructions falsified that model before completion.
+Retain the failed experiment;do not manufacture a missing loop sample or
+rewrite its source/receipt. The score-exit stream will contain finalactor/scoreN,
+raw Stage2loops0..N-1 and returnN, then the actual Stage3 init/update.
+
+### Optional clear owner and cold legacy preservation
+
+The v1461 batch follows Stage2 defeat/clear. Fresh own-MZ CFG binds the
+post-score quit test at original 0AAF:0207/source0708:07BD; a nonzero quit
+returns without another Stage2 loop. The incorrect loop-exit prototype was
+controlled-stopped during an unfinished Stage1 prefix; its data stays failed.
+The distinct score-exit capture now records actual quit2, return/free, Stage3
+initialization and one complete update within an 11000 budget. It is still running.
+
+Current 566/4c3c50cb cold GNU 87/83 CTests and optimized UBSan 2 pass all prior 3500,
+8000 four-wire and 9835/59 RGB-TRAM/177-observation regressions, including physical
+saves. Thirteen actual CLI negatives reject; 35676 complete old raw rows decode
+unchanged. The optional `stage-epoch-clear.txt` drives the real FrontEnd and
+existing Kurumi/Elly owners, observes actual clear and checks unused declared
+inputs separately. It never assigns expected game/RNG/phase state. Native-only
+forecasts are Continue 8132, defeat 9809, postdialog 9905 and departure 10394.
+The accepted target frontier remains 8000 until independent new reads pass.
+
+Use `.analysis/reconstruction/probes/dos-kurumi-clear-v1461/`:
+`run_score_captures.py`, `capture-score/`, `watch_original.py` and `run_legacy.py`.
+New cold programs/cache are native `.analysis/port64/kurumi-clear-v1461-final/`.
+Keep old bcd/3747 caches, the stopped capsule/data, all 38121 parent hashes, all 22
+late hashes and that finish identity. Four borrowed legacy aliases have retired
+with no cleanup credit. Full goals remain active.
+
+```text
+TH04_STAGE_CLEAR 1 1 32 0
+```
+
+The one followup update takes a declared logical input. A11000-row Stage2
+schedule can finish early only after an actual next-stage request; every unused
+row is syntax-checked and counted as unconsumed. Separate Stage3 pools/input
+records retain the complete observed owner. No fixed future frame or expected
+RNG/HP/phase is assigned. New original/source clear acceptance is pending.

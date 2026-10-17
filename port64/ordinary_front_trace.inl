@@ -39,12 +39,16 @@ void run_ordinary_front_trace(const PiImage& background,const CdgSheet& numerals
     std::ofstream title_rows(output/"title-rows.bin",std::ios::binary);
     require_view(bool(title_rows),"ordinary title rows unavailable");title_rows.write("TH04TI1\n",8);
     FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&assets,gameplay::Mode::ordinary);
+    if(fs::exists(fs::path(assets.save_directory)/"stage-epoch-clear.txt"))
+        require_view(fs::exists(fs::path(assets.save_directory)/"stage-epoch-plan.txt") &&
+            fs::exists(fs::path(assets.save_directory)/"stage-epoch-waits.txt"),"epoch clear requires stage and wait inputs");
     if(recorded_display) {
         require_view(scene.text_refreshes()==1,"recorded display requires the common first refresh");
         scene.observe_text_time(0);
     }
     if(fs::exists(fs::path(assets.save_directory)/"stage-epoch-plan.txt")) {
-        if(fs::exists(fs::path(assets.save_directory)/"stage-epoch-waits.txt"))scene.enable_kurumi();
+        if(fs::exists(fs::path(assets.save_directory)/"stage-epoch-clear.txt"))scene.enable_elly();
+        else if(fs::exists(fs::path(assets.save_directory)/"stage-epoch-waits.txt"))scene.enable_kurumi();
         else scene.enable_stage2();
     }
     scene.enable_configuration();scene.enable_registration();
