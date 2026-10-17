@@ -17,7 +17,7 @@ def require(value, message):
         raise ValueError(message)
 
 
-def parse_raw(raw, main, profile, load_segment):
+def parse_raw(raw, main, profile, load_segment, allowed_stages=(0, 1)):
     counts = {"lcg": 0, "ring": 0}
     rows = {}
     pending = []
@@ -81,7 +81,7 @@ def parse_raw(raw, main, profile, load_segment):
             frame = int.from_bytes(bytes.fromhex(fields["frame"]), "little")
             key = (stage, frame)
             require(
-                key not in rows and stage in [0, 1], "duplicate/invalid raw stage/frame"
+                key not in rows and stage in allowed_stages, "duplicate/invalid raw stage/frame"
             )
             resident = bytes.fromhex(c[-1])
             require(

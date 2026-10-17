@@ -10,6 +10,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [prepare_product_hdi.py](../prepare_product_hdi.py) | command | Prepare a disposable original-data image with verified source or original products. |
 | [probes/attest_th04_continue_checkpoints.py](../probes/attest_th04_continue_checkpoints.py) | command | Attest original player/Game Over/Continue code-fetch, caller and complete memory evidence at the consumed-input boundary. |
 | [probes/attest_th04_dialog_checkpoints.py](../probes/attest_th04_dialog_checkpoints.py) | command | Attest original STD/dialog/player code-fetch, caller and memory evidence without conflating input boundaries. |
+| [probes/attest_th04_stage_clear.py](../probes/attest_th04_stage_clear.py) | command | Attest actual post-score Stage2 exit, own-MZ cleanup/init and the first complete Stage3 update. |
 | [probes/build_th04_cpu_fault_emulator.py](../probes/build_th04_cpu_fault_emulator.py) | command | Build a private, pinned DOSBox-X observer without changing game bytes. |
 | [probes/build_th04_demo_emulator.py](../probes/build_th04_demo_emulator.py) | command | Build a resource-limited pinned read-only normal-core demo observer. |
 | [probes/calibrate_th04_cpu_fault_emulator.py](../probes/calibrate_th04_cpu_fault_emulator.py) | command | Falsify a private emulator observer using an independent DIV-zero COM. |
@@ -29,6 +30,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/compare_th04_dos_titles.py](../probes/compare_th04_dos_titles.py) | command | Historical v1450 callback replay: BB calls reconstructed from after-scroll state are invalidated; use actual entry reader. State/row observations remain scoped. |
 | [probes/compare_th04_ordinary_pools.py](../probes/compare_th04_ordinary_pools.py) | command | Compare complete ordinary actor pools against pinned scalar controls and target/MAP owners. |
 | [probes/compare_th04_ordinary_video.py](../probes/compare_th04_ordinary_video.py) | command | Compare complete ordinary VRAM/palettes/display state with independent scalar controls. |
+| [probes/compare_th04_stage_clear.py](../probes/compare_th04_stage_clear.py) | command | Compare complete DOS/native Stage2 clear and Stage3 entry pools/state/input/RNG while retaining key/GDC failures. |
 | [probes/inspect_th04_cpu_fault_trace.py](../probes/inspect_th04_cpu_fault_trace.py) | command | Decode private MAIN exception frames without claiming normal gameplay. |
 | [probes/inspect_th04_demo_snapshots.py](../probes/inspect_th04_demo_snapshots.py) | command | Read back DGROUP snapshots against complete ordinary demos and diagnose actor differences. |
 | [probes/inspect_th04_emulator_cpu_fault.py](../probes/inspect_th04_emulator_cpu_fault.py) | command | Locate emulator-side CPU faults in attested, unmodified native MAIN code. |

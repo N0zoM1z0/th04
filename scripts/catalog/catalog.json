@@ -385,6 +385,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/attest_th04_stage_clear.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Attest actual post-score Stage2 exit, own-MZ cleanup/init and the first complete Stage3 update.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/audit_th04_native_bullet_switches.py",
     "category": "hardware",
     "role": "command",
@@ -663,6 +670,13 @@
     "role": "support",
     "purpose": "Replay the bounded DOS stage-epoch comparison and optional native observations.",
     "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/compare_th04_stage_clear.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Compare complete DOS/native Stage2 clear and Stage3 entry pools/state/input/RNG while retaining key/GDC failures.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/probes/inspect_dialog_fixup_order.py",
