@@ -2,7 +2,8 @@
 
 ## Current source-latch recovery (v1469)
 
-Ten closed Micro aliases and92 superseded native `.a`/`.o` inputs retire after
+Ten closed Micro aliases,92 superseded native `.a`/`.o` inputs and64 historical
+native main/session programs retire after
 exact SHA/size/mode/nanosecond-mtime restoration. Actual restored Micro files
 reproduce the independent original/source300 reader; the unchanged parent
 reader verifies all63324 inherited hashes after link-input restoration. Current
@@ -20,9 +21,17 @@ Use `--restore --path EXACT` for one explicit root-relative historical alias
 before running an older physical-only recovery reader or linker; retire it after
 the consumer. Keep every provider and journal. Local cleanup nets59.664MiB for
 Micro aliases and253.578MiB for old link inputs after their own costs/reserves.
-These are intermediate local sums,not final phase accounting; charge the active
-capture,new snapshots,journal and final reserve before publishing a phase net.
+Historical programs separately free196.461MiB after their own costs/reserve.
+The closed transport/cleanup checkpoint conservatively frees472.793MiB after
+all its new immutable materials and32MiB final reserve. Its63578 identities and
+166 aliases verify. It deliberately excludes the evolving live source capture;
+this is not final whole-phase or system-free-space accounting. Charge that
+capture and its eventual recovery costs before any later combined verdict.
 Earlier phase releases are not credited again.
+
+Use the current verifier for routine inherited-chain checks. An older
+physical-only chain verifier needs every affected historical alias materialized;
+a single program/link replay restores only its explicitly needed aliases.
 
 ## Pause intent/latch capture recovery (v1468)
 

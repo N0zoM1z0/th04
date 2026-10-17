@@ -29,6 +29,11 @@ SHA/size/mode/nsmtime before the unchanged parent reader checks all63324 hashes.
 Current v1469 recovery preserves those inherited identities through exact
 providers. Restore explicit historical link aliases before their consumers;
 keep current GNU/UBSan stage3-tiles inputs and all providers.
+Sixty-four superseded native main/session programs subsequently retire with
+the same exact restore checks. The closed transport/cleanup checkpoint binds
+63578 identities and166 aliases, conservatively freeing472.793MiB with32MiB
+final reserve. Evolving source8000 capture costs are explicitly excluded;
+its pending independent readers and source-DOS frontier are not promoted.
 
 ## Pause delivery and declared latch expectations (v1468)
 

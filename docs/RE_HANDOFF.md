@@ -25,12 +25,18 @@ player entry is MAIN0708:7463 with unique gameplay return06AA. Do not restart
 the live prefix. Keep the paired accepted frontier at4000 until the enclosing
 capture and independent comparison finish. No product source changed.
 
-Ten closed Micro aliases and92 superseded native link inputs retire after
+Ten closed Micro aliases,92 superseded native link inputs and64 historical
+native main/session programs retire after
 exact SHA/size/mode/nsmtime restoration and reader checks. All63324 inherited
 identities remain readable through current exact recipes. Use v1469 recover.py
 before deep historical replay; restore only explicit needed aliases. Latest
-stage3-tiles GNU/UBSan programs and inputs remain physical. Final phase storage
-accounting follows the live capture; do not recredit previous phases.
+stage3-tiles GNU/UBSan programs and inputs remain physical. The completed
+transport/cleanup checkpoint conservatively frees472.793MiB after all new
+immutable materials and32MiB final reserve. It explicitly excludes the separate
+live source capture and is not final whole-phase accounting. Current recovery
+verifies63578 identities and166 aliases; do not recredit previous phases.
+Prepared private route/player/paired-state readers have compiled but have not
+validated the unfinished capture. Preserve runtime helper versions while it runs.
 
 ## Input intent and latch contract (v1468)
 
