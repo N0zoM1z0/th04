@@ -21,14 +21,21 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Current v1467 records a complete original 8000-update Stage3 route. Native
+Current v1473 propagates and consumes Elly's scythe hit through MAIN's player
+latch. Cold GNU/UBSan reproduce original hit8046 and GameOver8085 with8082 complete
+nine-pool/state snapshots and8086 raw score/state/resident/RNG-count rows. All79
+old8000 outputs remain unchanged. Stage4 and campaigns stay open; see the
+[current handoff](docs/RE_HANDOFF.md). Current closure is566/a7606e66.
+
+The retained v1467 records a complete original 8000-update Stage3 route. Native
 566/4787233c replays its literal inputs: both cold GNU/optimized UBSan programs
 agree on all 79 files, 8001 nine-pool snapshots, 8010 stable-state records and
 nine complete RGB/TRAM/DAC samples. Palette-bearing dialogue loads refresh the
 player palette; enemy opcode8F tile writes preserve background-prefix order.
 Fresh GNU 83 CTests and UBSan/session checks pass. One requested/readback input
 mismatch and 712 volatile post-actor keys remain separate. Original/source-DOS
-paired MAIN remains at completed Stage3 4000; continuous display, physical timing,
+paired MAIN was then at completed Stage3 4000; current source8000 is documented
+in the handoff. Continuous display, physical timing,
 full campaigns and artifact exactness remain open. Completed products retire
 after recovery checks; see the [current handoff](docs/RE_HANDOFF.md).
 
@@ -45,7 +52,7 @@ complete pictures, physical timing and Windows remain open; see the
 
 ## Build and run
 
-Current v1463 repairs a carried clear-bonus palette tone at stage-session
+The retained v1463 repair covers a carried clear-bonus palette tone at stage-session
 completion. Both cold programs match 14 complete original WORD/DAC samples;
 all eight state wires, legacy routes and 177 prior display observations remain
 unchanged. The later 14 sampled full RGB/TRAM comparisons above pass; raw graphics

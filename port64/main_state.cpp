@@ -410,7 +410,8 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     const auto collision_hit=[this] {
         return bullets_.snapshot().player_hit || enemies_.snapshot().player_hit ||
             thick_lasers_.snapshot().player_hit || (gengetsu_ && gengetsu_->snapshot().lasers.player_hit) ||
-            (reimu_active_ && reimu_->snapshot().player_hit) || (marisa_active_ && marisa_->snapshot().player_hit);
+            (reimu_active_ && reimu_->snapshot().player_hit) || (marisa_active_ && marisa_->snapshot().player_hit) ||
+            (elly_active_ && elly_->snapshot().player_hit);
     };
     if(demo_exit_requested_)return;
     if(demo_ && !gameover_ && !player_frame_suspended_ && !frame_suspended_) {
@@ -509,6 +510,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         if(gengetsu_)gengetsu_->set_player_hit(0);
         if(reimu_active_)reimu_->set_player_hit(0);
         if(marisa_active_)marisa_->set_player_hit(0);
+        if(elly_active_)elly_->set_player_hit(0);
         if(boss_active())life_.synchronize_graphics(boss_snapshot().palette_tone,boss_snapshot().circle_color);
         auto player_context=life_context();
         // Record this executed player prefix. Blocking suffixes keep live UI

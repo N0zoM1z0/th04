@@ -1,80 +1,59 @@
 # Native TH04 current handoff
 
-Updated 2026-10-18. Complete maintained DOS and native fidelity goals stay active.
-Use one low-priority CPU, muted/headless runs and serialized Borland/Wine builds.
-Code/docs and `gpt-6.1-sol: ...` commit messages are English. Clean closed products
-regularly; retain current programs, required evidence and exact archive providers.
+Updated 2026-10-18. Complete maintained DOS and faithful native x64 goals remain
+active. Use one low-priority CPU, muted/headless runs and serialized Borland/Wine
+builds. No host keys or focus changes. Keep code/docs/commits English; use
+`gpt-6.1-sol: ...` and push `HEAD:port/modern-64`.
 
-Native game closure remains 566 files,
-`4787233c1074df806c6dfdef6697030b8c2885ecf2911bfaf2fb7df11c33ba7e`.
-The retained v1467 GNU 87 programs/83 CTests and UBSan 2 programs/session pass.
-Both frontends agree on 79 outputs. Original/native Stage3 recorded-input replay
-matches 8001 nine-pool snapshots,8010 stable-state rows, consumed inputs and nine
-full RGB/TRAM/DAC samples. Keep 712 volatile native post-actor keys separate.
-There is no new native build or game-source change in the source8000 batch.
-Current binaries and link inputs stay at `.analysis/port64/stage3-tiles-v1467-final`.
+Native source is566 files,
+`a7606e662f68a60abbd0e50b6b7d0177dc11fab7154099d1edf4edf5da23352c`.
+Current programs/link inputs: `.analysis/port64/stage3-hit-bridge-v1473-final`.
+Fresh GNU87 programs/83 CTests and optimized UBSan2 programs/session checks pass.
 
+The Elly helper already detected strict24-pixel scythe overlap; main_state.cpp
+now publishes that flag through its composite hit and resets it on player-prefix
+consumption. Both unmodified cold stock frontends replay actual original inputs,
+reproducing hit8046 and the GameOver8085/Continue block. All8082 complete init/actor
+nine-pool/21-stable-field snapshots and8086 available raw loop/completed-score
+state,resident,RNG-count rows agree. Keep716 postactor key differences separate.
+The requested8086-update fixture exits1 intentionally at undeclared Continue;
+this is a matching guarded endpoint, not a successful clear.
 
-Current DOS-root v1472 privately forecasts Elly phase4/HP-11 at12991,
-explosion254 at13023, post-Boss dialogue13087 and natural Stage3 departure13576.
-A normal FrontEnd advance with existing enable_stage4 configuration observes
-Stage4 init/actor1/score1 at zero-based resource/resident index3. All prior8000
-wire prefixes and complete Stage3 V2/V3 pools/scalars/inputs match byte-for-byte.
-Only private view observers are compiled against unchanged cold gameplay inputs;
-there is no new maintained native product build or new original acceptance.
+All79 complete old8000 output hashes stay identical, preserving the existing
+8001 nine-pool snapshots,8010 stable rows and nine full RGB/TRAM/DAC sample gates
+by exact output identity. All78 extended hashes agree across GNU/UBSan. The actual
+before-fix hit8046/pool8047 failure and original13A9:8195 collision-store Oracle
+remain independent evidence and the causal negative control. No collision math,
+invulnerability, route, RNG or maintained DOS source changes.
 
-The actual original experiment instead terminates incomplete at GameOver8085,
-with all8086 actual inputs matching plan. Its old8000 raw prefix and 8001
-pool/state snapshots reproduce. First tracked mismatch is hit8046, then shots/
-sparks8047. Original13A9:8195 writes global DS4669 after strict24-pixel scythe
-collision; independent captured-coordinate/boundary fixtures pass. Native Elly
-already sets a private player_hit, but main_state.cpp's composite hit/reset
-paths omit it. Fix and regress that bridge against this retained failed route
-before forecasting another long original. Do not change target collision or
-invulnerability behavior. Partial actor data ends8081 plus35710 bytes, without
-footer. The source/native product closure remains unchanged; no emulator is live.
+The original is terminal/incomplete at GameOver8085, not timed out. Actor gzip
+has8081 complete records plus35710 partial bytes and no footer. Never fabricate
+later records. Its old8000 raw/pool prefix agrees and all8086 loop inputs match.
+The earlier defective-bridge private forecast of Elly defeat12991/departure13576
+and Stage4 init is not a safe original route. No emulator remains.
 
-The own-MAP source sparse Micro now passes300 inputs/301 nine-pool/22-state
-snapshots and six whole live-font/RGB samples. New literal-tap original Micro
-preserves raw bytes, pools/stable fields and six pictures, while strict whole
-DGROUP retains39 stack-address offsets/five post-actor input bytes. Their cause
-is not proved. Short Micro does not establish source Stage3 RGB or a campaign.
-Eighty-seven closed forecast/Micro/compiler aliases restore exact metadata and
-three independent real/virtual readers reproduce; local cleanup134.809MiB has
-separate new witness/live-capture costs. Keep current programs, link inputs and
-all287 inherited/new exact providers. Use current DOS-root recovery readers.
+Original/source MAIN-only Stage3 selected vector reaches8000: all8001 nine-pool/
+22-state/private3 snapshots,8000 actual inputs,28231 common raw observations and
+nine configured video regions pass. Strict aggregate retains49 postactor keys
+and nine raw GDC samples. Original OP/MAINE/ZUN/assets remain installed. Source
+own-MAP sparse Micro300/six full-font/RGB samples pass; source full Stage3 RGB,
+natural timing, continuous effects, NP2/Windows, campaigns and exactness stay open.
+Original MAIN remains candidate-local-attested, not an official pristine claim.
 
-Main-checkout v1470 now independently validates actual reconstructed MAIN through
-8000 Stage3 updates after real Stage1/2 completion at9837/10394. All 8001 snapshots
-of nine whole pools,22 states and three private bytes match original. All 8000
-actual Stage3 inputs and 28231 common raw-loop field/resident80/RNG observations
-match. Nine configured raw-video-region samples pass. Source player MAIN0708:7463
-and original0AAF:5FCF both read8192 after dialogue7834; their own near returns are
-06AA/00F4. The earlier loop's32 remains a distinct observation. Final score8000
-RAM and pending RNG tail bind counts1062/16467 without inventing an original
-terminal loop. Source actual1119 plan edges and 44 UI events retain full guards.
+DOS-root `elly-hit-bridge-v1473` owns current probes/recovery. It carries683 exact
+aliases (287 inherited plus396 new), with exact metadata restoration, four real
+frontend output maps and both real/archive paired readers. Fifteen superseded
+build files and269 duplicate outputs use exact providers; current builds and
+all inherited providers stay physical. Explicitly restore old retired paths
+before historical readers. Use fresh build paths, and retire restored files after
+use. Carry65734 parent identities plus every late/finish identity and provider.
+Do not recredit prior cleanup; keep current compression, additional cleanup and
+whole-phase retained costs separate. Clean during and after long batches.
 
-Strict source/original aggregate remains false for49 post-actor input differences
-and nine raw GDC samples. Source live fonts/full RGB were not captured. Only MAIN
-is replaced; original OP/MAINE/ZUN/assets stay installed. Full four-source
-campaigns, natural IRQ/UI timing, continuous effects, NP2/Windows and artifact
-exactness remain open. The old source8000 capture is terminal; the separate
-original Elly/Stage4 experiment above failed and is terminal.
-
-The DOS main checkout owns `source8000-v1470` evidence and frozen consumers.
-Nine closed source aliases restore exact SHA/size/mode/nsmtime; four real-file
-and four virtual readers reproduce byte-identically. Full raw/prefix/suffix
-share one exact gzip/slice provider. Use current DOS-root recover.py for explicit
-historical aliases and frozen_source_reader.py for archived replay. Keep full
-compressed wire, RAM/UI witnesses and every inherited provider. Prior cleanup
-of92 historical link inputs/64 main-session binaries remains valid; restore
-those explicitly before old consumers. Latest GNU/UBSan inputs stay physical.
-
-Reuse retained8000 evidence for regressions. Independently validate the new
-original Elly/Stage4 terminal observations, then freeze actual tail inputs for
-source/native comparison. The own-MAP sparse source Micro is already validated. A future target extension needs
-its own original run; stored DOS RAM is not an attested emulator save-state.
-Do not rebuild unchanged producers or rerun the completed8000 scenario.
-Push using `HEAD:port/modern-64`; both complete goals stay active.
+Next forecast legal inputs using the fixed collision behavior, then collect fresh
+actual original/source Elly defeat and Stage4 observations. Preserve the passing
+8000 vector and failed aggregates. Never weaken collision/invulnerability or
+restart the old unsafe plan. Stored RAM is not an attested emulator save-state.
+Finish focused comparisons, both public CIs, tracking and `git diff --check`.
 See the [main comparison note](https://github.com/N0zoM1z0/th04/blob/main/docs/reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md)
 and [main handoff](https://github.com/N0zoM1z0/th04/blob/main/docs/RE_HANDOFF.md).

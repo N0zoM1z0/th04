@@ -5,10 +5,10 @@ Read [current native state](RE_HANDOFF.md), the
 [main resume instructions](https://github.com/N0zoM1z0/th04/blob/main/docs/NEXT_AGENT_HANDOFF.md).
 Both complete maintained DOS and faithful native x64 goals remain active.
 
-The v1472 entry baselines are main `d23993d` and native `064397d`; read actual
-Git heads and the newest private finish publication before acting. Native game
-closure stays566/4787233c; current GNU/UBSan products/link inputs remain under
-`.analysis/port64/stage3-tiles-v1467-final`. Private scouts do not replace them.
+The v1473 entry baselines are main `67076b1` and native `4b082b8`; read actual
+Git heads and the newest finish publication. Native game closure is566/a7606e66;
+current GNU/UBSan programs and link inputs are at
+`.analysis/port64/stage3-hit-bridge-v1473-final`.
 
 Original/source selected Stage3 vector reaches8000 with49 key/nine raw-GDC
 aggregate differences. Original/native8000 pools/states and nine sampled
@@ -16,15 +16,18 @@ RGB/TRAM/DAC pairs pass with712 separate post-actor keys. Source sparse Micro
 passes300 loops and six full-font/RGB samples. Source Stage3 full RGB, campaigns,
 physical timing, NP2/Windows and historical exactness remain open.
 
-The private native forecast reaches Elly defeat/Stage4, but the actual original
-fails at GameOver8085 with matching8086 inputs. Its old8000 prefix/pools agree;
-first tracked native mismatch is hit8046. Original13A9:8195 writes global DS4669
-after scythe overlap. Main_state.cpp's composite hit/reset paths omit Elly's
-existing private player_hit flag. Fix and regress this bridge using the retained
-failed route before another expensive original forecast. Never bypass target
-collision/invulnerability. Partial actor data ends8081 plus35710 bytes, no footer.
-No emulator is live. DOS-root current recovery preserves287 aliases and all five
-real/virtual readers, including the failed verdict. Both complete goals stay active.
+The Elly hit/reset integration is fixed. Both cold stock GNU/UBSan replays match
+actual original hit8046 and guarded GameOver8085. All8082 complete init/actor
+nine-pool/21-stable-field snapshots and8086 raw score/state/resident/RNG-count
+rows agree;716 postactor keys stay separate. All79 old8000 hashes remain unchanged,
+and78 extended hashes agree across roles. Original actor data still ends8081 plus
+35710 bytes, no footer. The actual original is incomplete; Stage4 is unaccepted.
+
+Next forecast legal inputs with the corrected collision behavior, then collect
+fresh original/source Elly defeat/Stage4. Do not weaken collision/invulnerability
+or reuse the earlier defective-bridge clear forecast. No emulator remains.
+Current DOS-root recovery carries683 aliases and real/archive readers reproduce;
+keep current programs/link inputs and inherited providers physical.
 
 Use one low-priority CPU, headless/muted runs, no host keys and serialized
 Borland/Wine builds. Clean closed products during and after batches; verify
