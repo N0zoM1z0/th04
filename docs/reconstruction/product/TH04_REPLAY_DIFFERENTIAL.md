@@ -5,6 +5,69 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Continuous device edges and MAIN latch mismatch (v1477)
+
+A fresh private GNU observer replays the physical Stage3 baseline and all 52
+recorded keyboard edges through one persistent held-device owner. Four final
+release/Shot-restoration edges execute after UI exit; unchanged baseline keys
+never overwrite pending releases. An independent event-prefix reader checks every
+caller sample. Compiled controls retain tails at two clock origins and reject a
+consumer that stops at UI exit. No expected latch,clock,phase or state is assigned.
+
+All 13377 updates complete. All 13378 complete nine-pool/21-stable snapshots and
+13377 raw-score/resident/RNG-count rows agree with the original. All 22 Stage3
+full640x400 RGB/TRAM/DAC/raw-tone samples now pass, including 12889. This is a
+changed physical-input experiment, not a repair of the stock407-pixel scenario.
+125 of 130 stock output hashes stay equal. Native Stage4 is not observed here.
+
+The overall verdict remains false: literal players7835/12889 read native 32 versus
+original8192 (two of four pairs fail);1803 postactor keys remain separate. Both
+actual DOS artifacts independently show BIOS Enter clear/fresh keyboard0 but
+key_det 8192 at those same literal entries. Own-MZ reset/head/tail instructions
+and the OR-accumulating sampler preserve old bits; ordinary callbacks are RET.
+Joystick is enabled but its wrapper masks returns to63, excluding Enter, and
+observed joystick state is 0. Physical device state,BIOS state and key_det are
+separate surfaces. Do not substitute direct held actions for the game latch.
+
+Actual dialogue budgets are1165/149 refreshes (1165/148 calls);12889 reports37344.
+The pre-execution1164/148 prediction is rejected and retained. No origins or
+sampling rules were fitted to pixels. Source 19 keys/23 GDC differences and the
+prior stock407 pixels/1805 keys remain under their original scenario identities.
+
+The independent device reader checks all 14688 normal calls against a merged
+prefix of physical baseline changes and 52 due edges. All four final release/
+Shot-restoration edges execute with UI inactive. The queue passes input intent;
+it does not emulate keyboard-controller/BIOS/key_det timing. Three complete
+pre-Stage3 pool wires stay identical. Only five stock outputs differ: stage3
+12889 BMP,stage-native JSON,UI blocks,picture counters and consumed inputs.
+
+The two failed literal entries are original/source frame 7835 and 12889, compared
+with native actor7836/12890. Each DOS RAM snapshot has BIOS byte052D Enter clear,
+fresh keyboard actions0 and key_det 8192. The other pairs7834/12888 retain fresh
+8192/32 and match native. All eight own-player CPU/RAM identities remain bound
+by parent attestations; original load10FC/DS3230 and source load10FC/DS352A.
+
+Observed original MAIN 130E:06BC resets key_det 3974 and joystick state;130E:06C4
+accumulates keyboard actions with OR. MAIN 0AAF:00A9/00AE/0153 are initial reset,
+head sense and tail reset. Own source bindings are10A5:481E/4826, key_detCB2C,
+with source MAIN 0708:065F/0664/0709 calls. The Enter predicate reads BIOS0000:052D
+mask10 and ORs2000. Ordinary callbacks are actual RET. Joystick wrapper return
+AND 003F dominates RETF in both files, so it cannot supply Enter; high-mask
+mutations reject. Source saves BX/DX and uses PUSH CS/CALL NEAR lowering, unlike
+the original wrapper. The reader preserves these ABI/layout differences and
+unsigned16 displacement semantics; initial failed assumptions/logs remain.
+These are distinct target,compiler-artifact and runtime observations,not a new
+exact-unit or code-generation claim. Exact poll/IRQ timestamps remain unknown.
+
+Replay ui-edge-replay-v1477/analyze_device.py,attest_input_latch.py,verify_outputs.py
+and frozen_reader.py --reader native|rgb. The pure C++ request queue/prefix and
+truncated-consumer controls are in check_device.py;private executable/headers
+stay recoverable. Do not promote the queue alone into a faithful native input
+pipeline. Full22RGB and 13378 configured-state agreement cannot waive the two
+actual player failures. Stage4 is outside this native fixture;old Stage4 evidence
+is not borrowed. Common reset,precise poll/IRQ admission,continuous display,
+NP2/Windows,full four-source/native campaigns and executable exactness stay open.
+
 ## Measured native dialogue clock budgets (v1476)
 
 A private read-only FrontEnd observer, linked to the unchanged current cold game

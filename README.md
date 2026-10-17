@@ -32,11 +32,11 @@ RGB/TRAM/palette samples pass. Source strict aggregate retains 19 postactor keys
 and 23 raw GDC differences. Native 12889 still differs by 407 blinking pixels;
 1805 native keys remain separate. No emulator is live. See the current handoff.
 
-The v1476 read-only native observer preserves all 130 stock outputs and measures
-automatic dialogue confirmation at 464/122 refreshes versus DOS loop intervals
-of 20633/2624 ms. All 52 original/source device edges share relative timing. The
-407-pixel native failure remains;next replay those edges continuously across UI
-exit,with explicit clock/input scope and no fitted phase. No game-code changes.
+The v1477 private physical-device experiment preserves all 52 keyboard edges,
+including four tails after UI exit. Nine-pool/stable-state gates and all 22 full
+Stage3 RGB samples pass, but two of four literal-player inputs fail. Actual
+original/source RAM shows BIOS Enter released while key_det retains8192; the
+native input-latch model remains unresolved. No game-code or campaign claim.
 
 The prior v1473 native repair propagates and consumes Elly's scythe hit flag.
 Cold GNU/UBSan reproduce original hit8046/GameOver8085 and retain all 79 old8000

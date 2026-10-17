@@ -1,55 +1,44 @@
 # Resume TH04 reconstruction
 
-Updated 2026-10-18. Read current RE_HANDOFF,ARCHITECTURE,RE_WORKFLOW,the DOS main
-branch differential note and retention rules. Both complete DOS four-product and
-faithful native x64 goals remain active. Phase entry heads: main 8d06452/native 4050bf6;
-read actual heads and latest finish publication. Current game closure remains566/
-a7606e662f68a60abbd0e50b6b7d0177dc11fab7154099d1edf4edf5da23352c.
+Updated 2026-10-18. Both complete maintained DOS four-product and faithful native
+x64 goals remain active. Read RE_HANDOFF,ARCHITECTURE,RE_WORKFLOW,ORACLES and the
+main-branch differential note. Phase entry heads main 57b532b/native 8364e67; read
+actual heads and latest finish publication. Game closure stays 566/a7606e66.
 
-Actual original/source MAIN-only Elly defeat12792/departure13377/Stage4 initialization/score1
-remain captured. All 13378 nine-pool/state snapshots,13377 words,33609 raw/RNG rows
-and 23 full source RGB/font samples pass. Original OP/MAINE/ZUN/assets remain.
-Source strict aggregate keeps19 keys/23 raw GDC differences. Native actual-word
-stock comparison keeps407 blink pixels at 12889 and 1805 keys; all 130 outputs match
-between GNU/UBSan. Stock exit1 is its final departure guard.
+The new private Stage3 device queue preserves all 52 original/source-shared input
+edges and four tail releases after UI exit. It completes 13377 updates with all
+13378 nine-pool/stable snapshots and 13377 raw-score/resident/RNG-count rows equal.
+All 22 full RGB/TRAM/DAC/raw-tone samples pass.125/130 stock outputs stay equal.
+The overall verdict stays false: literal players 7835/12889 are native 32 versus
+original 8192;two of four pairs fail and 1803 postactor keys remain. This is a
+physical-input experiment,not a stock blink fix or a native Stage4 observation.
 
-A new read-only native account reproduces all 130 outputs,13960 advance calls,
-14513 refreshes and 22 independent picture counters. Dialogue loops 7834/12888 use
-464/122 native refreshes versus 20633/2624 ms original/source loop intervals.
-Native automatic rapid confirmation differs from actual21/3 Enter pulses. All 52
-physical edges share relative integer-ms timing in both DOS captures. The +1
-rebased counter-tail control fails independent picture counters. Initial epoch,
-other work and exact causal contribution to407 pixels remain unproved.
+The independent own-MZ/BIOS Oracle reads eight actual original/source player RAM
+witnesses. At both failed entries BIOS Enter is clear but key_det still8192;
+joystick is enabled but low6-masked with observed state0 and ordinary callback
+RET. Target reset-before-wait/head-OR semantics differ from a direct held word.
+Original input_reset/sense130E:06BC/06C4;main calls0AAF:00A9/00AE/0153. Source own
+input10A5:481E/4826,keyCB2C andmain0708:065F/0664/0709. Preserve separate artifact
+bindings,ABI differences and decoder-correction negatives. No product edits yet.
 
-Next build a bounded recorded-device input replay through the normal FrontEnd
-held-input interface. Use DOS-root text-blink-v1476/physical-dialogue-windows.json;
-retain pending release/Shot restoration after UI exit and use one device owner.
-Keep normal time admission,report quantization and compare full state,literal
-players and RGB independently. Do not fit phase,set expected clock/visibility,
-drop pending edges or replace physical inputs with expected latch assignments.
-Start with a fresh private observer/fixture;preserve every failed vector.
+Next implement a target-attested native input owner for both sampling seams,
+including BIOS/IRQ delivery timing if needed. Start from existing RAM/code and
+use a fresh bounded poll-time observer only for missing evidence. Preserve the
+working device queue across UI exit. Do not force 8192,extend Enter by a fitted
+frame,blindly OR previous host input or assign clock/visibility. Keep device
+intent,BIOS matrix and key_det distinct;compare literal players and all state/
+RGB gates independently. Raw source 19 keys/23 GDC and old stock 407 pixels/1805
+keys retain their original identities. Actual source MAIN Elly/Stage4 remains
+verified;original OP/MAINE/ZUN/assets stay installed,not a full four-source route.
 
-Current 1662-alias recovery carries 70224 parent identities plus current/late/finish.
-All 142 new aliases restore metadata;two real/archive readers preserve all 130 full
-stock outputs and false display/accounting distinction. Current GNU 87/83CTest and
-UBSan 2/session builds/cold links stay at native .analysis/port64/stage3-hit-bridge-v1473-final.
-Keep the private clock-observer executable too;its unused link object is archived.
-No new game source/cold game build in the clock batch. Local cleanup net89.359375MiB
-is separate from whole-phase costs plus 32MiB reserve;no older/FIFO raw credit.
-
-```text
-Continue both complete TH04 goals. Inspect both Git trees; attest target/database
-and the entire current recovery chain. Reuse completed original/source captures,
-not old RAM as a resume snapshot. Next implement/execute a bounded physical
-UI-edge replay with one input owner and normal clock admission;carry queued
-releases across UI exit and keep original/source/native scope distinct. Preserve
-all 19/1805 volatile keys,23 source raw-GDC failures and 407 native pixels until a
-properly scoped actual replay proves otherwise. Use one low-priority CPU,
-headless/muted runs,no host keys and serialized Borland/Wine. Clean unused files
-during and after work;verify exact recovery before retiring evidence. Carry all
-1662 aliases,70224 parent identities,every late/finish/provider;charge all new
-retained costs. Keep current game builds physical. Finish focused comparisons,
-tracking,both CIs and git diff --check. Use English code/docs andgpt-6.1-sol: commits;
-push main and native HEAD:port/modern-64. Timing,NP2/Windows andcomplete campaigns
-remain open;the goals are active,not complete.
-```
+Current recovery ui-edge-replay-v1477/recover.py carries 1804 exact aliases and
+70434 parent identities plus current/late/finish. All 142 new aliases restore
+metadata;five real/archive readers preserve 133 outputs and all passing/false
+verdicts. Keep current game builds/cold links at native .analysis/port64/
+stage3-hit-bridge-v1473-final and private executables physical. Local cleanup net
+87.79296875MiB is separate from whole-phase costs plus 32MiB reserve;no older or
+never-created raw FIFO credit. Use one low-priority CPU,muted/headless runs,
+no host keys and serialized Borland/Wine. Clean during and after work;verify
+recovery before retirement. Finish focused comparisons,tracking,both CIs and
+git diff --check. English code/docs and gpt-6.1-sol: commits;push main and native
+HEAD:port/modern-64. Timing,NP2/Windows and complete campaigns remain open.

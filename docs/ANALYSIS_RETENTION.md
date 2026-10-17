@@ -1,5 +1,26 @@
 # Private build and analysis retention
 
+## Continuous UI-edge experiment recovery (v1477)
+
+Current DOS-root ui-edge-replay-v1477/recover.py carries 1804 exact aliases:
+1662 inherited plus 142 new closed outputs,inputs,compressed wires andunused
+private link object. All 142 restore SHA,size,mode,nsmtime. Five actual restored/
+archive readers reproduce133 complete outputs,physical-edge intent,22RGB pass,
+the false literal-player/state verdict and the separate own-MZ/BIOS latch Oracle.
+
+Keep 70434 parent identities,every current/late/finish identity andphysical
+provider. Current game builds/cold links and private game/device-check programs
+remain physical. Original/source captures are reused without restart. Keep the
+failed pre-execution prediction and signed-displacement/same-CS-call/wrapper
+reader corrections. They do not alter target/source bytes or restore state.
+
+Actual new closed-file release90.76171875MiB charges0.76171875MiB new archives;
+all cleanup artifacts/readers cost 0.96875MiB. After 2MiB metadata reserve, local
+net release is 87.79296875MiB. Raw FIFO files never existed andearn zero credit.
+Do not recredit older cleanup or claim system-wide free space. Whole-phase
+retained evidence plus 32MiB reserve is charged separately. Restore explicit
+paths only,verify,then retire; future producers use fresh paths.
+
 ## Read-only dialogue clock probe recovery (v1476)
 
 Current DOS-root text-blink-v1476/recover.py carries 1662 direct exact aliases:
