@@ -43,6 +43,7 @@
 #include "hud_popup.hpp"
 #include "hud_titles.hpp"
 #include "demo.hpp"
+#include "pc98_input.hpp"
 #include "sound_runtime.hpp"
 #include <memory>
 
@@ -61,6 +62,10 @@ public:
     explicit State(application::State& application,Mode mode=Mode::ordinary,
                    player::LifeState player_checkpoint={},score_file::HostStore* storage=nullptr);
     void update(std::uint16_t held_input, bool shift, bool pull_items = false,
+                motion::Subpixel scroll_delta = 0,stage::Background* background=nullptr);
+    // Consume an already sampled game latch without host key translation.
+    // Sampling, waits and BIOS delivery remain owned by the caller.
+    void update(pc98_input::Snapshot input, bool pull_items = false,
                 motion::Subpixel scroll_delta = 0,stage::Background* background=nullptr);
     void load_stage(const stage::Program::Bytes& standard);
     void set_demo_replay(const std::vector<std::uint8_t>& bytes);
@@ -129,7 +134,8 @@ public:
     const shot::System& shots() const { return shots_; }
     // Read-only checkpoint at the original stage_frame increment, before
     // periodic performance and score/extend processing.
-    // The last update argument after host-key translation; this never polls.
+    // The last game-latch argument; this never polls. The host overload alone
+    // translates its frontend key encoding before entering the common body.
     std::uint16_t consumed_input() const { return last_input_; }
     // Literal executed player prefix, preserved while later UI polls run.
     std::uint16_t player_input() const { return player_input_; }

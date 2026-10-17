@@ -32,6 +32,12 @@ struct Sample {
     // Active-low OPNA input pins. The original wrapper inverts AL and masks AX.
     std::uint8_t joystick_pins=0xff;
 };
+// A value read from the game latch, after sampling. This is a different domain
+// from the frontend's host key encoding and from a fresh physical sample.
+struct Snapshot {
+    std::uint16_t actions=0;
+    bool shift=false;
+};
 class Latch {
 public:
     void reset_sense(const Sample& sample) { actions_=0;sense(sample); }
@@ -42,6 +48,7 @@ public:
     }
     std::uint16_t actions() const { return actions_; }
     bool shift() const { return shift_; }
+    Snapshot snapshot() const { return {actions_,shift_}; }
 private:
     std::uint16_t actions_=0;
     bool shift_=false;

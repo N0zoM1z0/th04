@@ -407,6 +407,12 @@ void State::apply_pause_text(const pause::Event& event) {
         hud_text_.put_character(26+int(i),event.row,std::uint8_t(event.text[i]),std::uint16_t(event.attribute));
 }
 void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion::Subpixel scroll_delta,stage::Background* background) {
+    // Keep the explicit host adapter, including its existing demo Q exit bit.
+    const auto actions=std::uint16_t(player::input_from_host_actions(held_input)|
+        (demo_ ? (held_input&0x4000u) : 0));
+    update(pc98_input::Snapshot{actions,shift},pull_items,scroll_delta,background);
+}
+void State::update(pc98_input::Snapshot input, bool pull_items,motion::Subpixel scroll_delta,stage::Background* background) {
     const auto collision_hit=[this] {
         return bullets_.snapshot().player_hit || enemies_.snapshot().player_hit ||
             thick_lasers_.snapshot().player_hit || (gengetsu_ && gengetsu_->snapshot().lasers.player_hit) ||
@@ -415,15 +421,14 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
     };
     if(demo_exit_requested_)return;
     if(demo_ && !gameover_ && !player_frame_suspended_ && !frame_suspended_) {
-        const auto physical=std::uint16_t(player::input_from_host_actions(held_input)|(held_input&0x4000u));
-        demo_sample_=demo_->sample(std::uint16_t(frames_),physical,shift);
+        demo_sample_=demo_->sample(std::uint16_t(frames_),input.actions,input.shift);
         if(demo_sample_.finished) {demo_exit_requested_=true;demo_.reset();return;}
-        held_input=demo::host_input(std::uint8_t(demo_sample_.input));shift=demo_sample_.shift!=0;
+        input={player::input_from_host_actions(demo::host_input(std::uint8_t(demo_sample_.input))),demo_sample_.shift!=0};
     }
     if(background)scroll_line_=background->scroll_line();
-    score_events_.clear();gameover_events_.clear();last_input_=player::input_from_host_actions(held_input);
+    score_events_.clear();gameover_events_.clear();last_input_=input.actions;
     if(gameover_) {
-        gameover_->advance(player::input_from_host_actions(held_input));
+        gameover_->advance(input.actions);
         if(!gameover_->finished())return;
         if(gameover_->phase()!=gameover::Phase::continue_run) {
             if(life_.suspended())life_.resolve_game_over(1);
@@ -515,8 +520,8 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         auto player_context=life_context();
         // Record this executed player prefix. Blocking suffixes keep live UI
         // input and skip this block rather than consuming the prefix again.
-        player_input_=player::input_from_host_actions(held_input);
-        life_.update(player_input_,shift,player_context);
+        player_input_=input.actions;
+        life_.update(player_input_,input.shift,player_context);
         bullets_.set_clear_time(life_.state().clear_time);
         application_->publish_player_statistics(life_.state().misses,life_.state().bombs_used);
         application_->publish_main_resources(score_.remaining_lives,score_.remaining_bombs);

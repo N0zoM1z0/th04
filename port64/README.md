@@ -2,6 +2,16 @@
 
 ## PC-98 input sampler component
 
+`Latch::snapshot()` now supplies an explicit PC-98 action/Shift value to
+`gameplay::State::update(Snapshot, ...)`. MAIN passes this value to its real
+player lifecycle, retaining keypad diagonals and the complete action word.
+The existing integer/Shift overload remains the frontend host-key adapter.
+The caller owns sampling and BIOS/IRQ delivery; this consumer change does not
+supply that timing model. Fresh GNU 89 programs/85 CTests and four selected
+UBSan programs pass. Independent original sampler/movement instructions agree
+with 15,209 MAIN/player updates; a repeated-host-conversion consumer fails
+11,073 cases. Full frontend delivery and campaign acceptance remain pending.
+
 `pc98_input.hpp` separates BIOS keyboard samples and active-low joystick pins
 from the accumulated game input latch. Reset clears actions before sampling;
 ordinary sense ORs actions and replaces Shift. Keypad diagonals retain their
