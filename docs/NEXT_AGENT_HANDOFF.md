@@ -2,21 +2,28 @@
 
 Updated 2026-10-18. Complete maintained DOS four-product and faithful native x64
 goals remain active. Read RE_HANDOFF, ARCHITECTURE, RE_WORKFLOW, ORACLES and the main
-branch differential note. Phase entry main c64f58b/native 0bdcac7; code `6832631` adds
+branch differential note. Phase entry main 567c6e9/native 7594d53; native code `6832631` adds
 read-only sampler observation. Read actual heads/latest finish publication.
 Use English code/docs, gpt-6.1-sol: commits; push main/native HEAD:port/modern-64.
 Use one low-priority CPU, muted/headless runs, no host keys and serialized Borland.
 Clean periodically and after each batch; verify exact recovery before retirement.
 
-## Current interim cleanup checkpoint (v1482)
+## Current BIOS/UART frontier (v1483)
 
-Use DOS-root `bios-admission-v1482/recover.py` for 9710 aliases (134 new).
-All new restores preserve SHA/size/mode/nsmtime; actual/archive state and RGB
-consumers retain the same failed gates. Local cleanup releases at least 85 MiB
-net after costs/reserve. Current v1481 products and unique pending experiment
-inputs stay physical. See RE_HANDOFF and ANALYSIS_RETENTION for the checkpoint.
-The BIOS-admission research remains open; do not treat this cleanup as phase or
-goal completion, or rerun completed original captures.
+Main-branch Oracle code b2747d7 adds the replayable authored-guest UART probe.
+The real frontend accepts 2923 original BIOS polls plus two declared adoption
+resets. All 2925 original CPU checks, 13378 pools/states, four literal players
+and 22 complete RGB samples pass. Native player 7837 now reads Shot32. Outside
+the two recorded windows, stock host stimuli remain and 1803 tail words keep
+the strict aggregate false. This hybrid does not establish physical input,
+common-reset or full-campaign parity.
+
+UART transfer of 55/96 ms and CLI-delayed BIOS admission are observed only under
+the pinned internal-DOS real-mode fixture. Original V86 timing needs measurement.
+Use bios-packets-v1483/recover.py: 9846 aliases, 136 new exact restores, three
+actual/archive consumers, 85502 preceding identities and at least 85 MiB local
+cleanup net. Keep current v1443 DOS/v1481 native products and unique witnesses;
+read RE_HANDOFF and the latest finish receipt. Both complete goals remain active.
 
 ## Recorded sampler and original request ownership (v1481)
 

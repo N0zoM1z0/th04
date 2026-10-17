@@ -5,6 +5,75 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Original BIOS through the real frontend (v1483)
+
+Raw original BIOS packets now drive the unchanged real native frontend across
+Stage3 loops 7833..7836 and 12887..12890. All 2923 target sampler-return words and
+2925 unchanged-original-instruction CPU checks agree. Two genuine adoption
+resets repeat the first physical sample and are outside the target call count;
+no expected latch or clock seeds state. All 13378 whole nine-pool/stable snapshots,
+13377 raw score/resident/RNG rows, four literal-player witnesses and 22 complete
+live-font RGB/TRAM/DAC/tone samples pass. Native player 7837 now reads Shot32,
+matching original 7836 head, instead of the prior physical model's Enter8192.
+
+Only these eight actor-loop frames use recorded BIOS; all other frames retain
+the stock host adapter. Their 1803 post-tail differences keep the strict aggregate
+false. This is frontend/latch composition, not physical IRQ delivery, common-reset,
+Stage4, Windows/NP2 or full-campaign acceptance. The v1482 external Schedule
+variant still fails one literal player despite equal state/RGB; do not use a
+nominal frame clock as an input-delivery fix or borrow another case's verdict.
+
+The main-branch run_pc98_keyboard_uart.py launcher, GDB observer, authored COM
+fixture and reducer reproduce eight actual requests/RX/IRQ/BIOS transitions on
+the pinned emulator. Both old and fresh internal-DOS runs give serialized
+55/96 ms bytes; queued bytes wait and guest CLI postpones BIOS admission.
+Six corrupted event/scope controls reject. This is real-mode emulator evidence;
+original TH04 uses V86/paging. No production delay or target timing is established.
+
+Current DOS and native product source and cold cohorts remain v1443/v1481.
+Use DOS-root bios-packets-v1483/recover.py for 9846 aliases: 9710 inherited plus
+136 new actual closed duplicate outputs/inputs. All new metadata restores and
+three actual/archive readers retain state, RGB, CPU composition and the strict false result.
+All 85502 preceding identities/late/finish/providers survive. Gross retirement is 87.58203125 MiB;
+cleanup costs plus a 2 MiB reserve leave at least 85 MiB local release. Current private
+link inputs and unique BIOS/UART witnesses remain physical. FIFO raw files never
+existed and earn no credit. See ANALYSIS_RETENTION and the main differential note.
+
+Next capture actual original V86 keyboard API -> UART -> IRQ -> BIOS admission
+with fractional PIC context around the remaining intervals, preserving the
+independently attested after-head request owner. Reuse these tested observers;
+never fit holds/phases or feed expected latch/state words. Both full goals remain
+active; no artifact/unit exactness changes.
+
+The maintained Oracle runs without a TH04 image or host keyboard/focus:
+
+```sh
+python3 scripts/probes/run_pc98_keyboard_uart.py \
+  --emulator .analysis/runtime/emulators/demo-observer-build-v1365/source/dosbox-x-199aa35f34ea637cca901ada3a431939fcca13f2/src/dosbox-x \
+  --font-bmp .analysis/runtime/candidates/dos-op-v1394-gaiji-cpu36000-delay0/FREECG98.BMP \
+  --output-dir .analysis/reconstruction/probes/NEW-uart
+python3 scripts/probes/reduce_pc98_keyboard_uart.py \
+  --capture .analysis/reconstruction/probes/NEW-uart \
+  --output .analysis/reconstruction/probes/NEW-uart/verdict.json
+```
+
+The launcher requires an absent output directory, pins emulator/font/NASM and
+ELF symbols, runs on one low-priority CPU with muted dummy video/audio, and limits
+address space to 1536 MiB. Its 60 s deadline first interrupts its owned inferior,
+then grants 5 s before killing its owned group; failures remain. Input calls occur
+outside debugger stop callbacks and preserve guest CPU, 640 KiB RAM and fractional
+time. Receive callbacks, IRQ requests and BIOS stores are separately observed.
+The authored guest reads BIOS bytes and uses explicit CLI/STI; it never writes
+the BIOS matrix. Each eight-request run finishes naturally in about 1 s.
+
+Measured transfer is 55/96 ms. A second queued byte reaches RX after 55/48 ms from
+its request. Seven enabled-interrupt BIOS stores follow RX by 1/2250 ms (16 cycles);
+the CLI-controlled store follows by 3751/3000 ms instead. The mode-valid bit is false
+in this emulator's initial UART state; the receive path still runs. This is not a
+hardware initialization claim. Original TH04 runs with V86/paging and its own
+interrupt workload. A fixed 0.573 ms native delay would conflate transport, queueing
+and BIOS admission; it is not justified by this fixture.
+
 ## Recorded sampler and original request ownership (v1481)
 
 The maintained Win32/SDL bridges now emit input.tsv alongside the unchanged

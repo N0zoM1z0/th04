@@ -1,5 +1,24 @@
 # Private build and analysis retention
 
+## BIOS packet and UART probe recovery (v1483)
+
+DOS-root bios-packets-v1483/recover.py carries 9846 exact aliases: 9710 inherited
+plus 136 new closed duplicate files. All 136 restore SHA, size, mode and nsmtime.
+Three actual/archive consumers retain complete state/four literal players,
+22 full RGB samples and 2923 original returns/2925 original CPU polls. The strict
+false result with 1803 tail words and the v1482 failed fourth-player case remain
+separate and unchanged.
+
+Preserve 85502 parent identities, every current/late/finish identity and all
+providers. Current v1443 DOS/v1481 native cold products, private link inputs and
+unique BIOS/UART traces remain physical. Four compressed pool duplicates reuse
+existing exact providers. Five FIFO raw wires never existed and earn no credit.
+No new archive is created. Gross retirement is 87.58203125 MiB; cleanup-specific
+costs plus a 2 MiB reserve leave at least 85 MiB local net. Whole retained phase
+allocations are reported separately. Do not interpret this as a system-wide
+free-space change or reuse prior cleanup credit. Historical caches remain named
+recovery inputs, never incremental build directories or CTest destinations.
+
 ## Interim cleanup checkpoint (v1482)
 
 The ongoing BIOS-admission experiment now uses DOS-root

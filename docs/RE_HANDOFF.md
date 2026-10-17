@@ -5,32 +5,45 @@ goals remain active. Use `taskset -c 1 nice -n 19`, muted headless runs,
 serialized Borland/Wine and no host keys/focus. Keep English code/docs and
 `gpt-6.1-sol: ...` commits; push main and native `HEAD:port/modern-64`.
 
-## Interim cleanup checkpoint (v1482)
+## Original BIOS through the real frontend (v1483)
 
-The ongoing BIOS-admission experiment now uses DOS-root
-`bios-admission-v1482/recover.py`: 9710 exact aliases, including 134 newly
-retired closed duplicate outputs/inputs. All 134 restore SHA, size, mode and
-nanosecond mtime. Actual-file and archive readers reproduce the same complete
-state and 22-picture RGB reports, including the failed fourth literal-player
-gate and 40 tail-word differences. No prior result is promoted by cleanup.
+Raw original BIOS packets now drive the unchanged real native frontend across
+Stage3 loops 7833..7836 and 12887..12890. All 2923 target sampler-return words and
+2925 unchanged-original-instruction CPU checks agree. Two genuine adoption
+resets repeat the first physical sample and are outside the target call count;
+no expected latch or clock seeds state. All 13378 whole nine-pool/stable snapshots,
+13377 raw score/resident/RNG rows, four literal-player witnesses and 22 complete
+live-font RGB/TRAM/DAC/tone samples pass. Native player 7837 now reads Shot32,
+matching original 7836 head, instead of the prior physical model's Enter8192.
 
-Actual retired allocation is 87.34375 MiB. Existing providers are reused;
-no new archive is needed. After cleanup-specific costs and a 2 MiB metadata/log
-reserve, conservative local release is at least 85 MiB. No FIFO raw files,
-previous cleanup or temporary restoration writes are counted. Current cold
-products, unique probe outputs, input traces and private link inputs remain
-physical. All 85258 preceding identities and 9576 preceding aliases remain
-protected. Use the checkpoint's named recovery rather than rebuilding old paths.
+Only these eight actor-loop frames use recorded BIOS; all other frames retain
+the stock host adapter. Their 1803 post-tail differences keep the strict aggregate
+false. This is frontend/latch composition, not physical IRQ delivery, common-reset,
+Stage4, Windows/NP2 or full-campaign acceptance. The v1482 external Schedule
+variant still fails one literal player despite equal state/RGB; do not use a
+nominal frame clock as an input-delivery fix or borrow another case's verdict.
 
-This is an intermediate cleanup checkpoint, not a completed v1482 research
-phase. The private external-admission-clock variant completes 13377 updates and
-all 22 RGB comparisons but passes only three of four literal-player witnesses;
-it does not fix input timing. The authored internal-DOS UART micro has completed
-its eight requests/nine markers; its reduction and reusable Oracle are pending.
-Keep its real-mode evidence separate from original V86 TH04 execution. Next
-investigate original BIOS packets through the real frontend without supplying
-expected latch words, fitted holds or phases. Maintained source and the v1481
-cold product cohort are unchanged; both full goals remain active.
+The main-branch run_pc98_keyboard_uart.py launcher, GDB observer, authored COM
+fixture and reducer reproduce eight actual requests/RX/IRQ/BIOS transitions on
+the pinned emulator. Both old and fresh internal-DOS runs give serialized
+55/96 ms bytes; queued bytes wait and guest CLI postpones BIOS admission.
+Six corrupted event/scope controls reject. This is real-mode emulator evidence;
+original TH04 uses V86/paging. No production delay or target timing is established.
+
+Current DOS and native product source and cold cohorts remain v1443/v1481.
+Use DOS-root bios-packets-v1483/recover.py for 9846 aliases: 9710 inherited plus
+136 new actual closed duplicate outputs/inputs. All new metadata restores and
+three actual/archive readers retain state, RGB, CPU composition and the strict false result.
+All 85502 preceding identities/late/finish/providers survive. Gross retirement is 87.58203125 MiB;
+cleanup costs plus a 2 MiB reserve leave at least 85 MiB local release. Current private
+link inputs and unique BIOS/UART witnesses remain physical. FIFO raw files never
+existed and earn no credit. See ANALYSIS_RETENTION and the main differential note.
+
+Next capture actual original V86 keyboard API -> UART -> IRQ -> BIOS admission
+with fractional PIC context around the remaining intervals, preserving the
+independently attested after-head request owner. Reuse these tested observers;
+never fit holds/phases or feed expected latch/state words. Both full goals remain
+active; no artifact/unit exactness changes.
 
 ## Recorded sampler and original request ownership (v1481)
 
@@ -145,7 +158,7 @@ identity/state/RGB/transition readers. Its Micro300 inactive-byte and full-route
 RNG-return controls remain preserved. Use the latest recovery below for all
 inherited aliases; do not rerun completed DOS captures or treat RAM as a resume.
 
-## Current recovery and next work
+## Prior accepted sampler recovery (v1481)
 
 DOS-root sampled-device-v1481/recover.py carries 9576 exact aliases:
 5969 inherited plus 3607 new closed raw/duplicate/cache files. Every new alias
@@ -172,13 +185,9 @@ Actual retired allocation:2093.73828125 MiB. New archives cost
 reserve are separately charged in retention/retention.json. No prior cleanup,
 nonexistent/FIFO raw files or temporary restoration-write credit.
 
-Next identify actual BIOS admission/PC-98 polling around the first remaining
-Shot tail difference at actor 6, and the post-dialogue7835..7836 reset/head interval.
-Use the existing original controller, PIC, poll and player witnesses first. Keep
-original 0AAF:0153/0158 tail reset, 01B3 frame-store seam and actual player 5FCF distinct.
-Native7837 retains Enter where original 7836 head has Shot; do not infer a new
-literal original player word from that head snapshot alone. Preserve all 52
-edges, four tails and both negative cases; never fit a hold, delay or clock phase.
-Continuous timing/display, common-reset sampled routes, Windows/NP2 and complete
-four-source/native campaigns remain open. Finish focused checks, tracking, both
-CIs and git diff --check, then commit/push both branches. No exactness change.
+Current next work is the V86 admission capture described above. Keep original
+0AAF:0153/0158 tail reset, 01B3 frame-store seam and literal player 5FCF distinct.
+Native 7837 now agrees under the raw-BIOS movie; the physical-device scenario's
+extra Enter remains a separate uncorrected delivery-model result. Complete
+four-source/native campaigns, continuous display, Windows/NP2 and provenance remain
+open. Finish focused checks, tracking, both CIs and git diff --check; push both branches.

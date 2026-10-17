@@ -23,6 +23,10 @@ CATEGORIES = {
 }
 EXTENSIONS = {'.py', '.sh', '.ps1', '.cmd', '.bat', '.java', '.asm', '.gdb'}
 OVERRIDES = {
+    'run_pc98_keyboard_uart.py': ('runtime', 'Run an authored internal-DOS UART/IRQ/BIOS fixture on one pinned, muted PC-98 emulator.'),
+    'pc98_keyboard_uart_gdb.py': ('runtime', 'Observe serialized keyboard reception, IRQ requests and BIOS stores while preserving guest state across real input API calls.'),
+    'reduce_pc98_keyboard_uart.py': ('runtime', 'Verify UART queue timing and CLI/STI admission controls without generalizing the real-mode fixture to TH04 V86 timing.'),
+    'pc98_keyboard_uart.asm': ('runtime', 'Authored COM fixture that reads BIOS keys and controls IF to distinguish UART readiness from BIOS admission.'),
     'capture_th04_dos_sparse_fonts.py': ('runtime', 'Capture sparse original or own-MZ/MAP source MAIN font/video/RAM samples and optional declared-stage actor streams.'),
     'th04_sparse_profile.py': ('runtime', 'Validate sparse observer fields, frame store, score return, initialization and GameOver seams against the executing MAIN and its own MAP.'),
     'attest_th04_stage_clear.py': ('runtime', 'Attest actual post-score Stage2 exit, own-MZ cleanup/init and the first complete Stage3 update.'),

@@ -700,6 +700,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/fixtures/pc98_keyboard_uart.asm",
+    "category": "runtime",
+    "role": "fixture",
+    "purpose": "Authored COM fixture that reads BIOS keys and controls IF to distinguish UART readiness from BIOS admission.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/inspect_dialog_fixup_order.py",
     "category": "matching",
     "role": "command",
@@ -789,6 +796,13 @@
     "role": "command",
     "purpose": "Partition OP/MAINE DIET packed residual among three MZ input surfaces.",
     "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/pc98_keyboard_uart_gdb.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Observe serialized keyboard reception, IRQ requests and BIOS stores while preserving guest state across real input API calls.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/probes/prepare_th04_good_ending.py",
@@ -2401,6 +2415,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/reduce_pc98_keyboard_uart.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Verify UART queue timing and CLI/STI admission controls without generalizing the real-mode fixture to TH04 V86 timing.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/replay_diet145f.py",
     "category": "boundaries",
     "role": "command",
@@ -3519,6 +3540,13 @@
     "role": "command",
     "purpose": "Calibrate DIET restore/repack on private copies of pinned packed targets.",
     "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/run_pc98_keyboard_uart.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Run an authored internal-DOS UART/IRQ/BIOS fixture on one pinned, muted PC-98 emulator.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/probes/run_th04_maine_diagnostic_hdi.py",
