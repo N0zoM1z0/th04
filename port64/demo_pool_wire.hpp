@@ -1,5 +1,6 @@
 #pragma once
 #include "main_state.hpp"
+#include <algorithm>
 #include <ostream>
 #include <stdexcept>
 
@@ -48,11 +49,28 @@ inline void pools(std::ostream& output,unsigned demo,const gameplay::State& stat
         w.byte(e.group);w.byte(e.unused);w.byte(e.speed);w.byte(e.angle);w.byte(e.phase);w.byte(e.movement);
         w.byte(e.special);w.byte(e.final_speed);w.byte(e.timer_or_turns);w.byte(e.delta_or_angle);w.word(e.pattern);
     });
+    const auto custom_begin=w.data.size();
     w.pool(state.yuuka6_entities().snapshot().slots,26,[&](const auto& e) {
         w.byte(e.flag);w.byte(e.angle);w.point(e.center);for(auto byte:e.unused_position)w.byte(byte);
         w.point(e.velocity);w.word(e.age);w.word(e.filled_radius);w.word(e.ring_distance);
         w.word(e.hp);w.word(e.damage);w.byte(e.speed);w.byte(e.padding);
     });
+    if(state.kurumi_active()) {
+        // Both systems own views of the same832-byte target pool. Keep the
+        // full backing extent, then encode all six actual Stage2 ray records,
+        // including free flags, retained coordinates and unused bytes.
+        const auto* kurumi=state.kurumi();
+        if(!kurumi)throw std::logic_error("active Kurumi has no custom-entity owner");
+        Writer rays;
+        rays.pool(kurumi->snapshot().rays,26,[&](const auto& e) {
+            rays.byte(e.flag);rays.byte(e.unused);rays.point(e.target);
+            rays.point(e.origin);rays.point(e.velocity);
+            for(auto byte:e.padding)rays.byte(byte);
+        });
+        if(rays.data.size()!=6*26 || custom_begin+rays.data.size()>w.data.size())
+            throw std::logic_error("Kurumi custom-entity view extent");
+        std::copy(rays.data.begin(),rays.data.end(),w.data.begin()+custom_begin);
+    }
     w.pool(state.circles().snapshot().entities,10,[&](const auto& e) {
         w.byte(e.flag);w.byte(e.age);w.point(e.center);w.word(e.radius);w.word(e.delta);
     });
