@@ -7,28 +7,31 @@ muted/headless;no Windows GUI, focus changes or host-key injection.
 
 ## Active clear observation (v1461)
 
-The v1461 batch follows Stage2 defeat/clear. Fresh own-MZ CFG binds the
-post-score quit test at original 0AAF:0207/source0708:07BD; a nonzero quit
-returns without another Stage2 loop. The incorrect loop-exit prototype was
-controlled-stopped during an unfinished Stage1 prefix; its data stays failed.
-The distinct score-exit capture now records actual quit2, return/free, Stage3
-initialization and one complete update within an 11000 budget. It is still running.
+Original-only full-memory witnesses now independently prove Kurumi defeat:
+phase 5/HP 6 at 9808, phase 6/HP -1 at 9809, explosion 254 at 9841 and phase 255 at 9905.
+The complete original/source accepted frontier is still 8000. The score-exit
+capture remains incomplete: its 11 UI records show post-dialog run/return both
+at 9905, then the next player at 9906. The current player had already run before
+boss_update. The caller/return did not change; the failed assumption was player
+ownership after every dialogue. No gameplay change follows from this failure.
 
-Current 566/4c3c50cb cold GNU 87/83 CTests and optimized UBSan 2 pass all prior 3500,
-8000 four-wire and 9835/59 RGB-TRAM/177-observation regressions, including physical
-saves. Thirteen actual CLI negatives reject; 35676 complete old raw rows decode
-unchanged. The optional `stage-epoch-clear.txt` drives the real FrontEnd and
-existing Kurumi/Elly owners, observes actual clear and checks unused declared
-inputs separately. It never assigns expected game/RNG/phase state. Native-only
-forecasts are Continue 8132, defeat 9809, postdialog 9905 and departure 10394.
-The accepted target frontier remains 8000 until independent new reads pass.
+The distinct `capture-post/` sets `player_first: true` for the 9905 post-dialogue
+and captures player -> dialog_run -> return. Pre-dialogue keeps run -> return ->
+player; Continue keeps player -> menu -> return. All five own-file codepoints and
+bounded 15 registered objects stay fixed. Exception paths now retain actual CPU/
+full memory evidence before exit. The closed 12 default wait records still decode
+identically with old/new readers. New original/source clear capture is running;
+full Stage2 clear and Stage3 first update acceptance remain pending.
 
-Use `.analysis/reconstruction/probes/dos-kurumi-clear-v1461/`:
-`run_score_captures.py`, `capture-score/`, `watch_original.py` and `run_legacy.py`.
-New cold programs/cache are native `.analysis/port64/kurumi-clear-v1461-final/`.
-Keep old bcd/3747 caches, the stopped capsule/data, all 38121 parent hashes, all 22
-late hashes and that finish identity. Four borrowed legacy aliases have retired
-with no cleanup credit. Full goals remain active.
+The current 566-file source closure (4c3c50cb) passes cold GNU builds of 87
+programs and 83 CTests, plus two optimized UBSan programs. Both preserve the
+3500/8000 legacy wires and 59 RGB/TRAM pairs with 177 observations. Thirteen
+invalid CLI plans reject. The root-owned probe directory
+`.analysis/reconstruction/probes/dos-kurumi-clear-v1461/` contains
+`run_post_captures.py`, `watch_post_original.py`, `compare_post_all.py` and
+`original-defeat-partial.json`. Preserve all failed capsules and data, the
+parent's 38121 protected hashes, all 22 late files and finish receipt, and the
+old bcd/3747 caches. Both full goals remain active.
 
 ## Current Stage2 Boss frontier (v1460)
 

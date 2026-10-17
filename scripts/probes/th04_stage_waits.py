@@ -92,6 +92,8 @@ def attest_waits(capture, main, original, profile, load_segment, raw_rows):
             type(v["frame"]) is int
             and 0 < v["frame"] < profile["stage2_updates"]
             and v["kind"] in ["dialogue", "continue"]
+            and type(v.get("player_first", False)) is bool
+            and (not v.get("player_first", False) or v["kind"] == "dialogue")
             for v in cues
         ),
         "wait ordered cue extent/kind",
@@ -144,6 +146,8 @@ def attest_waits(capture, main, original, profile, load_segment, raw_rows):
         labels = (
             ["player_update", "continue_menu", "continue_return"]
             if cue["kind"] == "continue"
+            else ["player_update", "dialog_run", "dialog_return"]
+            if cue.get("player_first", False)
             else ["dialog_run", "dialog_return", "player_update"]
         )
         prior_counts = (

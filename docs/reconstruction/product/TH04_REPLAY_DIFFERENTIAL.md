@@ -6045,3 +6045,27 @@ schedule can finish early only after an actual next-stage request; every unused
 row is syntax-checked and counted as unconsumed. Separate Stage3 pools/input
 records retain the complete observed owner. No fixed future frame or expected
 RNG/HP/phase is assigned. New original/source clear acceptance is pending.
+
+### Observed defeat and post-dialog player ownership
+
+Original-only full-memory witnesses now independently prove Kurumi defeat:
+phase 5/HP 6 at 9808, phase 6/HP -1 at 9809, explosion 254 at 9841 and phase 255 at 9905.
+The complete original/source accepted frontier is still 8000. The score-exit
+capture remains incomplete: its 11 UI records show post-dialog run/return both
+at 9905, then the next player at 9906. The current player had already run before
+boss_update. The caller/return did not change; the failed assumption was player
+ownership after every dialogue. No gameplay change follows from this failure.
+
+The distinct `capture-post/` sets `player_first: true` for the 9905 post-dialogue
+and captures player -> dialog_run -> return. Pre-dialogue keeps run -> return ->
+player; Continue keeps player -> menu -> return. All five own-file codepoints and
+bounded 15 registered objects stay fixed. Exception paths now retain actual CPU/
+full memory evidence before exit. The closed 12 default wait records still decode
+identically with old/new readers. New original/source clear capture is running;
+full Stage2 clear and Stage3 first update acceptance remain pending.
+
+The original six selected conventional-memory observations are independently
+replayed by attest_original_defeat_partial.py. The failed capture is not
+promoted or rewritten. Initial speculation about a different dialog return or
+a one-frame gameplay error is disproved by the eleven saved actual records;
+the collector ordering is the diagnosed failure.

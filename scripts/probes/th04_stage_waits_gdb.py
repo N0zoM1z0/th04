@@ -40,6 +40,19 @@ class Point(gdb.Breakpoint):
             d.record(self.label, regs, segs)
             return False
         except Exception as error:
+            # Preserve the actual failing owner before the batch debugger exits.
+            # A semantic assertion must not erase its CPU/frame evidence.
+            try:
+                memory = m.ram.read_range(0, 655360)[0]
+                path = m.output / "stage-wait-error-memory.bin.gz"
+                path.write_bytes(gzip.compress(memory, mtime=0, compresslevel=1))
+                (m.output / "stage-wait-error.json").write_text(
+                    json.dumps(dict(label=self.label, cue=d.current, frame=d.frame(),
+                        cpu_regs=regs.hex(), segments=segs.hex(),
+                        memory=path.name, memory_sha256=sha(memory), error=repr(error)), indent=2) + "\n"
+                )
+            except Exception as evidence_error:
+                gdb.write("TH04_WAIT_ERROR_EVIDENCE " + repr(evidence_error) + "\n")
             m.error = "stage wait: " + repr(error)
             return True
 
@@ -106,6 +119,8 @@ class StageWaits:
         self.labels = (
             ["player_update", "continue_menu", "continue_return"]
             if kind == "continue"
+            else ["player_update", "dialog_run", "dialog_return"]
+            if self.current.get("player_first", False)
             else ["dialog_run", "dialog_return", "player_update"]
         )
         m = self.boundary.m
