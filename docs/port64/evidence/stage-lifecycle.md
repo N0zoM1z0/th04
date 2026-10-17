@@ -1,5 +1,23 @@
 # Stage Lifecycle evidence
 
+## Active stage-picture diagnosis (v1463)
+
+A real native picture observer now samples14 completed Stage2/3 score boundaries
+from the retained v1462 route; all8 established state/pool/input wires remain
+identical. Full active TRAM agrees at every sample; raw graphics indices differ.
+Full live-font snapshots are absent here,so complete RGB acceptance is unavailable.
+
+A separate original MZ/runtime Oracle identifies a palette initialization gap.
+MAIN0AAF:0675 stores100 to PaletteTone WORD DS2134:03A4,then067B calls0000:1F04.
+Fourteen actual DGROUP/DAC samples observe100. Before repair,native retains the
+preceding clear bonus's60 at7samples,each differing35of48actual DAC channels.
+The native stage-session completion now restores this reset. The new optional
+observer also records the palette actually used by render_main; no target
+pixels,colors or clock phase enter the program. Fresh GNU/UBSan cold gates,
+post-repair DAC checks and regressions remain pending. All old raw index/GDC/
+key failures stay recorded. Evidence is under
+`.analysis/reconstruction/probes/native-stage2-pictures-v1463`.
+
 ## Continuous Stage3 comparison (v1462)
 
 The original now completes4000 Stage3 actor/score updates after actual Stage1

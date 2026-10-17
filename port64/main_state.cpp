@@ -299,6 +299,9 @@ void State::prepare_next_stage_actors(const stage::Program::Bytes& standard) {
     // persist. Asset replacement has a separate owner;
     // never run the Stage1 midboss callback under the new stage identity.
     initialize_hud();
+    // MAIN 0AAF:0675 completes stage_session_init with PaletteTone=100
+    // and palette_show, after the preceding clear bonus left tone60.
+    life_.synchronize_graphics(100,life_.state().circle_color);
 }
 void State::finish_post_boss_dialog() {
     if(!post_boss_dialog_pending_ || clear_bonus_) throw std::logic_error("invalid stage-clear bonus handoff");

@@ -127,6 +127,7 @@ struct Frame {
     std::vector<uint32_t> pixels;
     // Kept for partial-plane sprite writes; RGB cannot recover duplicate colors.
     Bytes indices;
+    std::optional<std::array<std::uint8_t,48>> graphics_palette;
     Frame()=default;
     Frame(unsigned w,unsigned h,std::vector<uint32_t> p):width(w),height(h),pixels(std::move(p)) {}
 };
@@ -761,6 +762,7 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     frame.indices.assign(640*400,std::uint8_t(background_index));
     palette.palette=th04::portable::pc98_palette::shown_palette(palette.palette,
         displayed_tone.value_or(state.life().palette_tone));
+    frame.graphics_palette=palette.palette;
     std::fill(frame.pixels.begin(),frame.pixels.end(),palette_color(palette,background_index));
     const auto& bomb_frame=state.bomb_frame();
     const unsigned display_line=sprites.background.display_line();

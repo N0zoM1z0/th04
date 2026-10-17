@@ -5,6 +5,24 @@ Code/docs stay English. Use one low-priority CPU, serialize Borland/Wine builds,
 launch muted/headless, and clean unused products after each bounded batch.
 The user uses Windows: no GUI, focus changes or host-key injection.
 
+## Active stage-picture diagnosis (v1463)
+
+A real native picture observer now samples14 completed Stage2/3 score boundaries
+from the retained v1462 route; all8 established state/pool/input wires remain
+identical. Full active TRAM agrees at every sample; raw graphics indices differ.
+Full live-font snapshots are absent here,so complete RGB acceptance is unavailable.
+
+A separate original MZ/runtime Oracle identifies a palette initialization gap.
+MAIN0AAF:0675 stores100 to PaletteTone WORD DS2134:03A4,then067B calls0000:1F04.
+Fourteen actual DGROUP/DAC samples observe100. Before repair,native retains the
+preceding clear bonus's60 at7samples,each differing35of48actual DAC channels.
+The native stage-session completion now restores this reset. The new optional
+observer also records the palette actually used by render_main; no target
+pixels,colors or clock phase enter the program. Fresh GNU/UBSan cold gates,
+post-repair DAC checks and regressions remain pending. All old raw index/GDC/
+key failures stay recorded. Evidence is under
+`.analysis/reconstruction/probes/native-stage2-pictures-v1463`.
+
 ## Verified bounded frontier (v1462)
 
 Original and reconstructed DOS complete actual Stage1 return at 9837, Stage2
@@ -66,7 +84,7 @@ Paired checkpoint commits: root e13523a (`main`), native 9eb8b01
 (`work/port64-recovery-v1445`, pushed as `port/modern-64`). Later recovery commits
 are identified by finish.json's actual clean/local/remote head audit.
 Native checkout: `.analysis/native/port64-recovery-v1445`.
-Current source closure: 566 files,
+Closed v1462 source closure: 566 files,
 `1ad0ea4cd788f58ff075516f3c5265ca41089f33a6d454c9636b18e9f603e076`.
 Keep native `.analysis/port64/stage3-route-v1462-final` main/session/link inputs;
 archived unused tests/objects require explicit restoration. Use fresh cold builds.

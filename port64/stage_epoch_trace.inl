@@ -75,6 +75,64 @@
             stage3_blocks.open(output/"stage3-blocks.txt");
             require_view(bool(stage3_blocks),"epoch Stage3 wait output unavailable");
         }
+        // Optional pictures observe completed score boundaries only. They use
+        // the live renderer and never import target pixels or clock phases.
+        std::vector<std::pair<unsigned,unsigned>> picture_points,observed_pictures;
+        std::ifstream stage_picture_plan(fs::path(assets.save_directory)/"stage-epoch-pictures.txt");
+        std::ofstream stage_pictures,stage_palettes;
+        if(stage_picture_plan) {
+            unsigned count;
+            require_view(bool(stage_picture_plan>>magic>>version>>count) &&
+                magic=="TH04_STAGE_PICTURES" && version==1 && count>0 && count<=128,
+                "epoch picture header/extent");
+            for(unsigned i=0;i<count;++i) {
+                unsigned stage,frame;
+                require_view(bool(stage_picture_plan>>stage>>frame) && (stage==1 || stage==2) &&
+                    frame>0 && frame<=(stage==1 ? extent : stage3_updates) &&
+                    (stage==1 || until_clear),"epoch picture stage/frame extent");
+                const auto point=std::make_pair(stage,frame);
+                require_view(picture_points.empty() || point>picture_points.back(),"epoch picture point order");
+                picture_points.push_back(point);
+            }
+            stage_picture_plan>>std::ws;
+            require_view(stage_picture_plan.peek()==std::char_traits<char>::eof(),"epoch trailing picture points");
+            stage_pictures.open(output/"stage-pictures.txt");
+            stage_palettes.open(output/"stage-palettes.txt");
+            require_view(bool(stage_pictures) && bool(stage_palettes),"epoch picture output unavailable");
+        }
+        const auto picture=[&](unsigned resource_stage,const stage::Program& active_program) {
+            const auto& main=scene.main_state();
+            const auto point=std::make_pair(resource_stage,unsigned(main.frames()));
+            if(std::find(picture_points.begin(),picture_points.end(),point)==picture_points.end())return;
+            const auto random=scene.process_random_state();const auto draws=scene.process_random_draws();
+            const auto samples=main.random_samples();const auto cursor=main.random_cursor();
+            std::ostringstream before;th04::portable::demo_wire::pools(before,0,main,active_program);
+            scene.repaint();const auto pictured=scene.frame();scene.repaint();
+            std::ostringstream after;th04::portable::demo_wire::pools(after,0,main,active_program);
+            require_view(main.frames()==point.second && scene.process_random_state()==random &&
+                scene.process_random_draws()==draws && main.random_samples()==samples &&
+                main.random_cursor()==cursor && before.str()==after.str() &&
+                pictured.pixels==scene.frame().pixels && pictured.indices==scene.frame().indices,
+                "epoch repaint advanced state or changed picture");
+            require_view(pictured.indices.size()==640*400,"epoch graphics observation extent");
+            const auto stem="stage"+std::to_string(resource_stage+1)+"-"+std::to_string(point.second);
+            require_view(bool(pictured.graphics_palette),"epoch actual rendered palette unavailable");
+            std::ofstream palette(output/(stem+"-palette.bin"),std::ios::binary);
+            palette.write(reinterpret_cast<const char*>(pictured.graphics_palette->data()),48);
+            require_view(bool(palette),"epoch rendered palette bytes unavailable");
+            stage_palettes<<resource_stage<<' '<<point.second<<' '<<main.life().palette_tone<<' '
+                <<main.palette_tone_before_frame()<<'\n';
+            write_bmp((output/(stem+".bmp")).string(),pictured);
+            std::ofstream graphics(output/(stem+"-graphics.bin"),std::ios::binary);
+            graphics.write(reinterpret_cast<const char*>(pictured.indices.data()),pictured.indices.size());
+            const auto text=main_text_plane(main).physical_bytes(0xa0000,0x4000);
+            std::ofstream tram(output/(stem+"-text.bin"),std::ios::binary);
+            tram.write(reinterpret_cast<const char*>(text.data()),text.size());
+            require_view(bool(graphics) && bool(tram),"epoch picture bytes unavailable");
+            stage_pictures<<resource_stage<<' '<<point.second<<' '<<scene.text_refreshes()<<' '
+                <<scene.text_blink_visible()<<' '<<stem<<'\n';
+            observed_pictures.push_back(point);
+        };
         std::uint64_t ring_offset=0;unsigned ordinal=0;
         const auto observe=[&](const char* label,const gameplay::State& s) {
             const auto dump=[&](const auto& bytes){constexpr char digits[]="0123456789abcdef";for(auto v:bytes)epoch<<digits[unsigned(v)>>4]<<digits[unsigned(v)&15];};
@@ -162,6 +220,7 @@
             } else scene.advance(translate(keys),false,false);
             require_view(scene.main_state().frames()==frame+1&&scene.resident().resource_stage==1&&!scene.dialog_active()&&!scene.main_state().game_over(),"epoch unexpected owner or incomplete Stage2 update");
             observe("stage2-score",scene.main_state());
+            picture(1,stage2_program);
             completed=frame+1;
             if(until_clear && scene.main_state().next_stage_requested())break;
         }
@@ -217,6 +276,7 @@
                 require_view(scene.resident().resource_stage==2 && scene.main_state().frames()==frame+1 &&
                     !scene.dialog_active() && !scene.main_state().game_over(),"epoch incomplete Stage3 update");
                 observe("stage3-score",scene.main_state());
+                picture(2,*stage3_program);
                 require_view(!scene.main_state().next_stage_requested(),"epoch Stage3 departed before budget");
             }
             if(extended_stage3) {
@@ -231,4 +291,5 @@
         }
         epoch_plan>>std::ws;require_view(epoch_plan.peek()==std::char_traits<char>::eof(),"epoch trailing input");
         require_view(observed_wait_frames==wait_frames,"epoch configured wait not observed");
+        require_view(observed_pictures==picture_points,"epoch requested picture not observed");
     }
