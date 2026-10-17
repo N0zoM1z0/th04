@@ -36,9 +36,15 @@ reproduce; nine completed native payload sets compress and deduplicate.
 Do not bulk-expand them. The next journal must merge all protected parent,
 late and finish identities.
 
-Next resolve physical API-to-latch timing with a cheap real Pause/Resume control,
-then extend paired source-DOS beyond4000 using verified actual inputs. Reuse the
-existing original8000 capture. Continuous effects, full campaigns, NP2/Windows
+Main-checkout v1468 controls now measure a0.009889ms lateShot-to-latch gap,
+shorter than DOSBox-X UART's0.572917ms delivery. An experimental confirmation-
+release batch passes400. Public sparse V2 separates physical requests from
+strictly asserted latch words; a wrong expectation still rejects. This changes
+no native game source or accepted fidelity frontier.
+
+Next extend the legacy paired source-DOS transport/reader to V2, validate a
+cheap original/source Micro, then run source-DOS8000 against the existing
+original8000 golden. Do not repeat the long original capture. Continuous effects, full campaigns, NP2/Windows
 and artifact exactness remain open. Push using `HEAD:port/modern-64`.
 See the [main comparison note](https://github.com/N0zoM1z0/th04/blob/main/docs/reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md)
 and [main handoff](https://github.com/N0zoM1z0/th04/blob/main/docs/RE_HANDOFF.md).
