@@ -1,5 +1,39 @@
 # Private build and analysis retention
 
+## Sparse Stage2 live-font/RGB recovery (v1464)
+
+Forty-one owned generated aliases retire:the three completed successful/failed
+sparse collectors' initial/execution HDIs and raw traces,plus32 restored native
+picture/index/TRAM/palette copies. Initial images reuse the pinned parent HDI;
+other exact content has verified compressed backing. All compressed full live
+fonts/video/DGROUP/640KiB RAM,source capsules,failed observations and readers stay
+live. All52654 protected identities verify,including52496 parent/late/finish
+identities. Current native programs/link inputs and every parent backing remain.
+
+Actual recovery restores9 image/raw aliases with SHA,size,mode and nanosecond
+mtime. Both original MZ/RAM/font/input readers and the complete8-picture RGB
+consumer execute with immutable parent reader/native dependencies;outputs
+reproduce byte-identically. Restored aliases and temporary pictures retire
+without new cleanup credit. This reruns recorded-evidence consumers;neither the
+emulator nor native programs execute again. Stage3 fonts/RGB remain unproved.
+
+Run from the DOS root with a fresh output:
+
+```sh
+taskset -c 1 nice -n 19 python3 \
+  .analysis/reconstruction/probes/dos-stage-font-v1464/replay_restored.py \
+  --output-dir .analysis/reconstruction/probes/NEW-sparse-font-recovery
+```
+
+`recover.py --restore --path EXACT` restores individual owned aliases. Verify
+and retire them after use. The conservative net release is at least120.086MiB,
+subtracting all retained bounded-phase files/evidence,archives,journals,recovery
+metadata,new public sources and1MiB reserved final metadata. Count41 aliases
+once;exclude prior cleanup and borrowed,temporary or historically missing files.
+The next journal must chain final retention,every finish.late_protected entry
+and finish itself. Keep current Stage2 visible-RGB passes separate from raw
+graphics-index/GDC failures,every-frame display,scanout and campaign acceptance.
+
 ## Stage-session palette repair recovery (v1463)
 
 Final retirement removes 878 owned completed outputs and unused current

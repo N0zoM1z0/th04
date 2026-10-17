@@ -5,10 +5,17 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-Current v1463 repairs the carried clear-bonus palette tone at completed stage
+Current v1464 validates eight complete Stage2 RGB/TRAM samples using newly
+captured original same-context live fonts/video/RAM at MAIN0AAF:0207. Every
+640x400 RGB picture and8000 active TRAM bytes match authenticated566/88575 GNU
+outputs,whose hashes equal prior actual UBSan outputs. The sparse run takes
+399.18s on one low-priority CPU. Raw indices/clock differences stay recorded;
+Stage3 full fonts/RGB,every-frame display,scanout and campaigns remain open.
+
+The v1463 repair resets the carried clear-bonus palette tone at completed stage
 initialization. Both fresh native configurations match 14 full original raw WORD
 and DAC samples, preserving all eight state wires, legacy routes and 177 prior
-display observations. Current full fonts/RGB and raw full-index differences
+display observations. Stage3 full fonts/RGB and raw full-index differences
 remain open. See [handoff](RE_HANDOFF.md) for recovery and remaining work.
 
 Current v1462: actual original/source Stage3 reaches4000 after10394 Stage2

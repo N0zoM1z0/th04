@@ -5,6 +5,47 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Complete sampled Stage2 live-font RGB (v1464)
+
+The new sparse original collector retains normal OP seed64 and physical keyboard
+device edges. Between checkpoints it reads small frame/stage counters; at actual
+MAIN0AAF:0207 it reads the complete528384-byte live font,video,DGROUP and640KiB
+RAM with unchanged CPU context. A four-point Stage1 Micro validates400 old loop
+records. The Stage2 run completes in399.18s and validates the complete own
+1136-relocation loaded image,9836 old Stage1 loops and all sampled Stage2
+configured fields/RNG counts. Preserve the initial missed-zero-watch failure;
+hardware value-change watches require readiness initialized from current RAM.
+
+Stage2 frames1/74/100/400/2601/3349/6983/9809 all pass complete640x400 RGB and
+8000-byte active TRAM comparisons. Every point uses its own same-context font
+and raw GDC phase/count,with no mask or fitted phase. Fonts all hash46198044.
+Compared native GNU files are restored from authenticated v1463 backing and
+equal every corresponding actual prior UBSan output hash. This batch does not
+rerun native programs. All38 programmed-video regions equal the prior original
+capture; raw blink states differ and large raw graphics-index failures remain.
+Those failures do not contradict these sampled visible RGB observations.
+
+Three rebased observation mutations fail semantic checks for IP,font length and
+RAM frame. A separate one-bit decoded-native-pixel mutation fails exactly1 pixel
+per complete picture while TRAM remains equal. Captures/readers/controls are
+under `.analysis/reconstruction/probes/dos-stage-font-v1464`; preserve all failed
+observations and parent dependencies. `frozen_reader.py` uses immutable parent
+reader/native snapshots for repeatable recorded-evidence reduction.
+
+Recovery restores9 owned image/raw aliases and reruns both original integrity/
+state consumers and full RGB;all outputs reproduce byte-identically before
+aliases retire. All52654 protected identities verify. Forty-one owned generated
+aliases retire with at least120.086MiB net release after all bounded-phase
+evidence,recovery costs and1MiB reserved final metadata. No earlier cleanup or
+temporary/borrowed/missing-file credit is included. See
+[retention](../../ANALYSIS_RETENTION.md) for the replay command.
+
+Next extend sparse coverage through Stage3 using the existing actual Bomb/
+movement transport and GameOver guard. The current6 Stage3 score samples still
+lack complete fonts/RGB. These8 Stage2 samples prove no every-frame display,
+natural timing,physical scanout,cross-emulator,Windows,campaign,pristine-target
+provenance or artifact-exact claim.
+
 ## Verified stage-session palette repair (v1463)
 
 Native 566/88575 restores the original completed-stage PaletteTone reset:
