@@ -107,7 +107,9 @@ class Frame(gdb.Breakpoint):
             assert stage in (0,1,2) and frame==self.previous+1, (stage,frame,self.stage,self.previous)
             self.stage=stage;self.previous=frame;m.current.sequence.frames=frame
             if m.actor_stream is not None:m.actor_stream.observe(stage,frame)
-            m.score.enabled=(stage,frame) in m.wanted
+            wanted=(stage,frame) in m.wanted
+            if wanted:self.enabled=False
+            m.score.enabled=wanted
             if frame%1000==0:gdb.write('SPARSE_FRAME %d %d\n'%(stage,frame))
             for cue in m.plan['ui_cues']:
                 if (stage,frame)==(cue['stage'],cue['frame']):
@@ -160,6 +162,7 @@ class Score(gdb.Breakpoint):
                      unchanged_context=True)
             (directory/(stem+'.json')).write_text(json.dumps(row,indent=2)+'\n')
             m.observed.append(row);m.wanted.remove(point);self.enabled=False
+            m.frame.enabled=True
             gdb.write('SPARSE_FONT_CHECKPOINT '+stem+'\n')
             if not m.wanted:
                 m.terminal=dict(stage=stage,frame=frame,cs=cs,ip=ip)

@@ -5,102 +5,83 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
-## Current repaired-route capture (v1467)
+## Complete original8000 and native palette/tile repair (v1467)
 
-Native566/e1233854 (`81e59db`) now completes the frozen ordinary8000-frame
-Stage3 forecast with dialogue7834 and Elly activation7835,one life remaining.
-Both actual cold GNU/optimized UBSan agree on all79 outputs. This is a forecast;
-no new original/source Boss acceptance is claimed while the V4 capture is live.
-Capture: `.analysis/runtime/candidates/dos-stage3-wait-v1467-corrected-v4`.
-Keep its plan/capsule/public Python inputs unchanged until it closes.
+The [current handoff](../../RE_HANDOFF.md) is the active queue. Receipts and
+immutable readers/source snapshots are under
+`.analysis/reconstruction/probes/stage3-wait-v1467`. Current native closure
+566/4787233c passes fresh GNU 87 programs/83 CTests and optimized UBSan
+2 programs/session. Both actual frontends agree on all 79 files.
+Original/source-DOS paired MAIN remains Stage3 completed4000; this batch extends
+original/native recorded-input coverage.
 
-A cheap original400-frame pressure control reproduces the debugger resource bug:
-old Frame/Score plus UIclock exceeds four hardware watches at100. Reusing
-Frame/Score and Loop/Player keeps four active at100/101 and completes400;
-all711787raw load/loop/RNG bytes equal the normalMicro and four full snapshots
-validate. V2/V3 long setups were proactively stopped before suspected overlaps;
-they remain incomplete,not timed out or gameplay failures. The V4 private
-collector uses the proven paired watches and includes a literal player-entry
-CPU/fullRAM tap after the actual Stage3 dialogue. Promote the frame/score fix
-only after the active run closes. Receipts: `stage3-wait-v1467` below `.analysis/reconstruction/probes/`.
+The original8000 capture completes in 770.517s. Its own 1136-relocated MZ,
+all 28231 loops, requested physical API edges and complete actor stream/footer
+validate. Prior 24231 loops and 14472 ordered RNG records reproduce. The old
+terminal loop4000 remains40 versus continued Bomb56; that raw aggregate stays
+false. One actual/requested mismatch remains: loop7835 reads8192 rather than32.
+Private diagnostic mode records it; public strict sampling still rejects it.
+Native uses literal target words from `literal-stage3-inputs.txt`. A literal
+MAIN0AAF:5FCF player entry, near caller00F1/return00F4 and full640KiB RAM
+independently bind actor7835's post-dialogue8192, distinct from earlier
+loop7834's32. All 8001 nine-pool snapshots, 8010 stable-state records and consumed
+inputs match. Keep 712 volatile post-actor keys separate.
 
-Cleanup has removed416 disposable build files after all relevant checks/link
-consumers finished. Three completed forecast payloads compress and restore
-exactly;duplicate backings share storage. Closed capture aliases restore exact
-metadata and independent readers reproduce before retirement. Keep actual
-main/session/link inputs,compressed witnesses andimmutable source/reader copies;
-use fresh build directories. Final combined net accounting is still pending.
+At MAIN0AAF:0207, nine original score-return witnesses include complete live
+font/video/DGROUP/640KiB RAM/CPU for1/4000/6000/7834/7835/7873/7900/7901/8000.
+Native matches every 640x400 RGB pixel, all 8000 active TRAM bytes and all
+48 DAC channels/raw tone at each point. Raw graphics indices and GDC phases
+remain measured separately and unequal. This accepts sampled display only.
 
-## Observed Stage3 dialogue wait (v1467)
+The original palette14 changes AA to80 across a palette-bearing dialogue BFNT
+load. Native's cached player entry overrode the new bank, causing three DAC
+failures despite identical sampled RGB/TRAM. A resource-load callback now
+publishes the decoded palette entry. The initial focused view-only cold compile
+reused byte-identical attested main/audio/core/ymfm inputs; the final broader
+repair has a fresh complete cold cohort. Both source snapshots and all negative
+reports remain frozen.
 
-The real original deadline capture resolves the earlier wait hypothesis:
-Stage3 frame7834 has scroll0/backpage1, active STD13A9:4341 and pending
-wave7900/count2. Its unchangedCPU/full640KiB RAM stops at MAIN130E:00E3.
-Six own-MZ callsites and the mixed near/far stack bind frame_delay(1) inside
-input_wait_for_change(0)'s release loop, called through dialogue to
-MAIN0AAF:2454. key_det32 is held Shot; the input plan wrongly declares9202.
-This is an observed dialogue wait, not evidence of a dead timer. The run stays
-incomplete after809.886s/idle120 and proves no post-dialogue Boss parity.
+The palette-only frame8000 has 105 extra RGB pixels atx208..239/y192..207.
+A read-only drawing diagnostic produces all 79 files byte-identical to that
+negative build and shows the difference comes from background tiles. Its
+19-byte scythe private state equals the original. Original DS4D40 row12
+columns11/12 change6474 to72 at7901. Native emitted opcode8F's tile event but
+never applied it. Independent execution of unchanged MAIN13A9:2042..2054
+through its real far setter0AAF:0B92 stores raw VRAM72/74; these decode to
+images0/25. Native now converts that operand, applies the event and retains
+the background prefix before actor writes, including scroll-tail refilled-row
+copies. The regression distinguishes current storage from next-prefix drawing.
+Only frame8000's BMP and graphics-index output change; all other77 files remain
+identical to the palette-only run. No target color/pixel/clock/RNG/state is assigned.
 
-Independent original Elly13A9:8855 phase0 execution retains the STD VM; the
-raw main loop always invokes it at0AAF:00D3. The native regression rejects
-its old extra EOF predicate. Stage3 readiness/handoff and pending-wave dispatch
-now pass fresh GNU87 programs/83CTest and optimized UBSan2/session builds.
-Current native closure is566/e1233854;the new regression rejects the old gate.
-Reforecast the ordinary
-route with dialogue7834 before another original capture; keep other stage
-callback ownership separate. Receipts: `stage3-wait-v1467` below `.analysis/reconstruction/probes/`.
+Preserve failed and incomplete observations: the actual7834 wait is130E:00E3
+inside input_wait_for_change's held-Shot release; V2/V3 were controlled observer
+stops; V4 rejects loop7835's8192/32. Real Pause80 controls reject timer-only and
+proposed frame-return API scheduling at81 (actual0/requested32). That candidate
+was reverted. Only proven Frame/Score watch reuse remains public; actual
+pressure400 retains four watches and all711787 raw bytes. Rebased one-pixel,
+one-DAC-channel and one-consumed-word controls fail independently while the
+other dimensions pass. Real target/program/output files stay unchanged.
 
-Mid-batch cleanup restores15closed capture aliases with SHA/size/mode/nsmtime,
-reruns all3 independent readers identically, then retires them. Net127.570MiB
-includes retention costs and1MiBreserve. Preserve allcompressed witnesses,
-capsules andexact providers. No earlier cleanup credit is counted again.
+Storage retirement restores 55 owned capture aliases with SHA/size/mode/nsmtime
+and reruns independent readers identically, including the prior105-pixel failure.
+Nine completed native payload sets compress losslessly and share duplicate
+backings. Unused objects/test programs retire after checks; keep actual main/
+session programs, link inputs, source/commands and compressed witnesses.
+Combined accounting and the53946-parent identity chain are in
+`retention/retention.json`. Use `recover.py --restore --path EXACT`, then verify
+and retire explicit aliases. Exclude earlier-phase and transient-output credit.
 
-## Earlier Stage3 wait checkpoint (v1467)
+Next resolve API-to-input-latch timing using a cheap real Pause/Resume control,
+then extend source-DOS beyond4000 with independently bound actual inputs.
+Reuse this complete original8000 golden. Natural UI/IRQ/scanout timing,
+NP2/Windows, continuous effects, full campaigns, pristine provenance and artifact
+exactness remain open. Both global goals stay active.
 
-Six complete original score-return snapshots at Stage3
-1/4000/4011/4357/4448/6000 now match every640x400 RGB pixel,8000 active TRAM
-bytes and48 DAC channels/raw tone. Four points are new:18 unique sampled
-Stage2/3 full RGB/TRAM comparisons now pass. The enclosing original run remains
-failed/incomplete and raw graphics-index differences remain. Its final receipt
-and all files verify through53946 parent/late/finish identities or exact recipes.
-Two fully rebased pixel/DAC-only controls reject independently.
+## Historical checkpoints before v1467
 
-The optional `--idle-timeout` watches appended actual input-loop samples using
-monotonic time after the first sample. A normal400-frame Micro with idle2
-completes despite its stale last-edge JSON. An observer-only write suppression
-after55 samples triggers idle2 and saves actual frame125 CPU/full640KiB RAM;
-independent own-MZ/register/opcode checks pass. This is a recorder-fault control,
-not a game hang. The default idle deadline stays disabled.
-
-Target MAIN0AAF:2454..24CD checks only scroll speed0 and back page1 before
-dialogue. Independent execution of its unmodified bytes reaches the dialogue
-call with either active or no-op STD VM. Native currently also waits for STD
-exhaustion. The earlier actor7832/STD inference is now confirmed by the actual
-7834 score-return and deadline witnesses above. The diagnostic run has ended;
-its complete inputs and incomplete result remain frozen.
-Receipts: `.analysis/reconstruction/probes/stage3-wait-v1467`.
-
-## Optional bounded after-actor DGROUP stream
-
-`capture_th04_dos_sparse_fonts.py` accepts an optional plan member
-`"actor_dgroup": {"stage": 2, "extent": 12000}`. It must match the separately
-hash-pinned physical input plan and final score checkpoint. Initialization at
-original MAIN 0AAF:007E records a full DGROUP; each actual 0AAF:01B3 frame store
-then records its complete 64 KiB using the existing TH04OG1 XOR/header wire.
-Every record checks own load/CS/IP/DS/opcode/AX/frame and unchanged CPU context.
-Fonts, video and full conventional memory remain sparse; no guest state is
-assigned. The original Stage3/Boss run is pending independent reduction.
-
-The real 400-frame Stage1 Micro completes in 36.43 seconds. An independent
-existing-format reader compares 3600 complete pool snapshots and all 35 stable
-fields at every frame with the retained original prefix. All agree. Eleven
-raw post-actor input fields differ, so that aggregate stays false; the separate
-physical-input/MZ reader validates all 400 consumed inputs and raw loop fields.
-V1's initial input rejection remains retained. Four fully rebased hypothetical
-controls reject an inactive item byte, record order, init IP and truncated body.
-Receipts: `.analysis/reconstruction/probes/stage3-boss-v1466/actor-*.json` and
-`actor-controls/receipt.json`. These Micro results do not establish Boss parity.
+The following sections preserve earlier bounded observations. Resolved blockers
+and old source hashes below do not override the current queue above.
 
 ## Current Stage3 frontier and blocker (v1466)
 

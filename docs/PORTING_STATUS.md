@@ -5,15 +5,18 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
-Current v1465 adds six complete Stage3 RGB/TRAM samples with new same-context
-live fonts/video/RAM at MAIN0AAF:0207. All640x400 RGB/8000 active TRAM match
-authenticated566/88575 GNU outputs,whose hashes equal prior actual UBSan files.
-All24231 actual raw loop records/14472 ordered RNG records,4000 physical inputs/
-57 API edges and6 whole9-pool/private3 samples reproduce the prior original.
-The sparse run takes489.65s on one low-priority CPU. Together with the separate
-v1464 eight-point Stage2 capture,14 sampled complete RGB/TRAM comparisons pass.
-Raw indices/clock differences remain;Stage3Boss/later stages,every-frame display,
-natural timing,scanout and campaigns stay open. No new native execution is claimed.
+Current v1467 records a complete original 8000-update Stage3 route. Native
+566/4787233c replays its literal inputs: both cold GNU/optimized UBSan programs
+agree on all 79 files, 8001 nine-pool snapshots, 8010 stable-state records and
+nine complete RGB/TRAM/DAC samples. Palette-bearing dialogue loads refresh the
+player palette; enemy opcode8F tile writes preserve background-prefix order.
+Fresh GNU 83 CTests and UBSan/session checks pass. One requested/readback input
+mismatch and 712 volatile post-actor keys remain separate. Original/source-DOS
+paired MAIN remains at completed Stage3 4000; continuous display, physical timing,
+full campaigns and artifact exactness remain open. Completed products retire
+after recovery checks; see the [current handoff](RE_HANDOFF.md).
+
+Historical checkpoints below retain their original producer scope.
 
 The v1463 repair resets the carried clear-bonus palette tone at completed stage
 initialization. Both fresh native configurations match 14 full original raw WORD

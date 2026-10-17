@@ -1,5 +1,41 @@
 # Private build and analysis retention
 
+## Complete Stage3 dialogue/tile batch recovery (v1467)
+
+Retire 397 owned archival aliases: 55 closed capture files and 342 large
+payload files from nine completed native runs. Every capture alias restores
+SHA, size, mode and nanosecond mtime; independent recorded-evidence readers
+reproduce, including rejected inputs and the prior 105-pixel failure. All nine
+native payload reducers reproduce after exact gzip recovery. Keep complete
+compressed font/video/RAM/actor witnesses, source capsules and every provider.
+Delete 835 unused completed build objects/test executables separately; these
+are disposable and have no archival restoration claim. Use fresh build dirs.
+
+The conservative release for the entire v1467 batch is **7065.539 MiB
+(6.90 GiB)**. This includes previously reported interim v1467 cleanup once.
+It charges all retained new logical paths (including hardlinks), actual native
+programs/link inputs, source/public/witness/recovery files, the journal itself
+and a 32 MiB final-public/metadata reserve. Exclude preceding v1466 credit,
+transient diagnostic/control/recovery copies, borrowed inputs and Python caches.
+This is accounting for retired products, not a claim about system-wide free space.
+
+All 61929 protected identities verify, including 53946 parent/late/finish
+identities. Current native closure566/4787233c has fresh GNU/UBSan programs,
+source snapshots and replay evidence. Both complete product goals stay active.
+The next journal must merge retention, every finish.late_protected identity and
+finish itself. Run from the DOS main checkout:
+
+```sh
+taskset -c 1 nice -n 19 python3 \
+  .analysis/reconstruction/probes/stage3-wait-v1467/recover.py
+```
+
+Use `--restore --path EXACT` for one journal-relative owned alias; verify its
+metadata and retire it after use. Avoid bulk expansion. The complete original
+8000 golden is retained; reuse it while resolving physical input timing and
+extending paired source-DOS beyond4000. No raw-index, timing, campaign or artifact
+exactness claim is promoted by sampled RGB/state agreement.
+
 ## Incomplete Stage3 extension and deadline diagnostics (v1466)
 
 The original 12000-update proposal times out after 1800.85 seconds at raw loop

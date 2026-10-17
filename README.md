@@ -18,29 +18,23 @@ Native builds need not reproduce the original executable bytes. MAIN's two
 remaining historical exactness cases are deferred.
 
 [New-agent handoff](docs/NEXT_AGENT_HANDOFF.md) records both branch baselines,
-comparison limits, next tasks and the current missing-worktree recovery issue.
+comparison limits, next tasks and the verified recovery chain.
 [Current state and remaining work](docs/RE_HANDOFF.md) indexes retained evidence.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
 ## Current products and navigation
 
-Current v1466 retains a failed original Stage3 capture at loop7834. Its complete
-7832-frame actor prefix matches nine whole native pools and 21 stable fields;
-Boss parity remains open. The collector now saves stopped CPU/RAM on a deadline,
-validated by an actual controlled Micro and independent mutation checks.
-See the current handoff before another long original/source run.
-
-The v1464/v1465 captures validate 14 sampled complete RGB/TRAM pairs across
-Stage2/3, using each original score boundary's full live font/video/RAM.
-Authenticated 566/88575 GNU pictures match every 640x400 RGB pixel and all 8000
-active TRAM bytes; prior actual UBSan file hashes agree. The new 489.65s Stage3
-route also reproduces 24231 raw loops, 14472 ordered RNG records, 4000 physical
-input samples/57 edges and six complete pool/private-field witnesses. Native
-programs did not execute again. Raw index/GDC failures, Stage3 Boss/later stages,
-every-frame display, natural timing and campaigns remain open.
-See [current handoff](docs/RE_HANDOFF.md).
-
+Current v1467 records a complete original 8000-update Stage3 route. Native
+566/4787233c replays its literal inputs: both cold GNU/optimized UBSan programs
+agree on all 79 files, 8001 nine-pool snapshots, 8010 stable-state records and
+nine complete RGB/TRAM/DAC samples. Palette-bearing dialogue loads refresh the
+player palette; enemy opcode8F tile writes preserve background-prefix order.
+Fresh GNU 83 CTests and UBSan/session checks pass. One requested/readback input
+mismatch and 712 volatile post-actor keys remain separate. Original/source-DOS
+paired MAIN remains at completed Stage3 4000; continuous display, physical timing,
+full campaigns and artifact exactness remain open. Completed products retire
+after recovery checks; see the [current handoff](docs/RE_HANDOFF.md).
 
 Current v1462 completes actual original/source4000-update Stage3 routes after
 real Stage1/Stage2 clears. Across43193 boundaries, configured fields/RNG,
