@@ -38,8 +38,14 @@ without rewriting that receipt.
 Current native source closure566/1ad0ea4c has a version2 input-only Stage3
 observer and a read-only private-state getter. Fresh GNU builds87/83 CTests;
 optimized UBSan builds/checks2 programs. Both reproduce all seven legacy v1461
-wires unchanged. Current/frozen default clear attestors produce identical full
+wires unchanged. Both current version2 programs also reproduce the native-only
+4000 forecast, including8001 private3 records and all eight identical wires.
+Six malformed version2 plans reject. Current/frozen default clear attestors produce identical full
 31196-row reports for both DOS roles, apart from the truthful reader hash.
+The actual changed default native consumer reproduces its full20795-scalar/
+10397-pool report. All20232 original closed raw-loop LCG transitions pass;
+three late-value/count/init semantic controls reject. Both current programs
+also preserve3500/8000 and all177 legacy display observations (59 RGB/TRAM pairs).
 Keep .analysis/port64/stage3-route-v1462-final and all previous4c/bcd/3747
 accepted cold caches live. Extended route consumers are source-present and
 await actual complete inputs and semantic controls.
