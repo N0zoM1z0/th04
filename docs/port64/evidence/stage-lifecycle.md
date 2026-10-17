@@ -61,7 +61,9 @@ all20232 closed original LCG transitions/three mutations pass. The early
 and failed replays reproduce all outputs and metadata. Intermediate884-file
 cleanup chains45796 protected hashes and releases4245.352MiB net; actual restored
 test/object/pool aliases verify and retire. Final frozen retention/recovery
-remains pending and must chain both early journals without recounting files.
+passes:21 owned aliases, both actual cold programs, full GNU paired reducer and
+all independent consumers reproduce. Final56 files/8 blobs chain48486 hashes;
+combined8423.090MiB release counts both early retirements once.
 Native pictures, physical timing, campaigns and exactness are separate goals.
 
 

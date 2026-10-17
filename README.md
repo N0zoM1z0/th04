@@ -42,7 +42,8 @@ Current566/1ad0ea4c GNU/UBSan match28793 selected scalars/14396 nine-pool
 snapshots and9836 current Stage1 pool snapshots. All8 wires and physical saves
 agree;510 native volatile keys remain separate. Both roles68 full memories and
 43193 full resident256 windows pass;12 UI full windows were not captured.
-Frozen archive recovery remains pending. The prior closed extent follows below.
+Frozen recovery executes both actual programs and the full GNU paired reader,
+reproduces all vectors and retires21 restored aliases. The prior extent follows.
 
 The prior v1461 original/reconstructed DOS comparison completes 10394 Stage2
 updates, Kurumi defeat/clear, Stage3 initialization and its first update. Nine

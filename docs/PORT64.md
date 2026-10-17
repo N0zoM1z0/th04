@@ -15,7 +15,8 @@ Current566/1ad0ea4c GNU/UBSan match28793 selected scalars/14396 nine-pool
 snapshots and9836 current Stage1 pool snapshots. All8 wires and physical saves
 agree;510 native volatile keys remain separate. Both roles68 full memories and
 43193 full resident256 windows pass;12 UI full windows were not captured.
-Frozen archive recovery remains pending. The prior closed extent follows below.
+Frozen actual program/reader recovery passes and all21 restored aliases retire.
+The prior closed extent follows below.
 
 ## Original/reconstructed DOS Boss suffix (v1456)
 
