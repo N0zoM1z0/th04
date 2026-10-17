@@ -113,6 +113,7 @@ public:
     const mugetsu::System* mugetsu() const {return mugetsu_ ? &*mugetsu_ : nullptr;}
     bool gengetsu_dialog_pending() const {return mugetsu_ && mugetsu_->snapshot().boss.phase==255;}
     const midboss::Snapshot& midboss_state() const { return midbossx_ ? midbossx_->snapshot() : (stage6_ ? stage6_->midboss : (stage5_ ? stage5_->midboss : (midboss4_ ? midboss4_->snapshot().actor : (midboss3_ ? midboss3_->snapshot().actor : (midboss2_ ? midboss2_->snapshot().actor : midboss_.snapshot()))))); }
+    const midboss3::System* stage3_midboss() const { return midboss3_ ? &*midboss3_ : nullptr; }
     const std::vector<midboss::Draw>& midboss_draws() const { return midbossx_ ? midbossx_->draws() : ((stage5_ || stage6_) ? stage5_midboss_draws_ : (midboss4_ ? midboss4_->draws() : (midboss3_ ? midboss3_->draws() : (midboss2_ ? midboss2_->draws() : midboss_.draws())))); }
     const player::Movement& player() const { return player_; }
     const item::Pool& items() const { return items_; }

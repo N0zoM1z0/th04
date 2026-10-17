@@ -4,7 +4,60 @@ Updated 2026-10-17. Both full DOS reconstruction/native goals remain active.
 Keep code/docs English. Use one low-priority CPU and one Borland/Wine writer;
 launch muted/headless. The user uses Windows: no GUI, focus changes or host keys.
 
-## Current bounded frontier (v1461)
+## Active Stage3 work (v1462)
+
+The latest closed differential extent remains v1461 below. The new continuous
+original/source capture targets 4000 Stage3 actor/score updates after the actual
+Stage1 and Stage2 departures. Neither new complete DOS capture nor extended
+native parity has been accepted yet. Never restart a live capture solely because
+an observation poll expires; inspect its real process and receipt first.
+
+The actual original/source 300-update keyboard Micro Oracle passes all loop
+inputs and eight physical device edges, including two one-frame Bomb pulses and
+left/right changes. Device calls preserve CPU/context, tick and all 640 KiB RAM.
+Four altered host observations reject. The retained 4c cold GNU producer matches
+300 selected scalar records, all 300 literal inputs and 300 complete nine-pool
+post-actor snapshots. Two failed collectors and two failed native consumers
+remain failed and retained; their corrections affect observation only.
+
+Own MZ stores bind Midboss3 pattern/mirror/patterns_done to original
+MAIN DGROUP2134:4258/4259/425A and source DGROUP242E:8CE8/8CE7/48F3.
+Existing complete Stage3 entry memories show all three zero. Original
+MAIN0AAF:3B8A subtracts continues_used at DGROUP4349 from3; actual Stage3 entry
+has3 credits used. An empty credit gate explains the native-only forecast
+failure at933; it is not an observed original GameOver at933.
+
+Native-only normal inputs, with Bomb pulses from400 and horizontal movement
+from2400, complete4000 updates. Forecast Midboss3 activation1601,
+phase1at1620, defeat254/HP-6at2228, collected1UP2255 and reset2357 select
+independent DOS checkpoints; none is an assigned target state or new DOS claim.
+The generic scout receipt's heldShot32 prose is inaccurate for movement/Bomb
+cases; native-forecast-summary.json binds the actual plan and consumed inputs
+without rewriting that receipt.
+
+Current native source closure566/1ad0ea4c has a version2 input-only Stage3
+observer and a read-only private-state getter. Fresh GNU builds87/83 CTests;
+optimized UBSan builds/checks2 programs. Both reproduce all seven legacy v1461
+wires unchanged. Current/frozen default clear attestors produce identical full
+31196-row reports for both DOS roles, apart from the truthful reader hash.
+Keep .analysis/port64/stage3-route-v1462-final and all previous4c/bcd/3747
+accepted cold caches live. Extended route consumers are source-present and
+await actual complete inputs and semantic controls.
+
+The closed scout journal retires71 owned files, with5 new payload recipes,
+43332 protected identities and2719.180 MiB net allocated-byte release before
+its fresh recovery cost. It chains all43077 parent hashes, every24 late parent
+identity and the parent finish receipt. Never count these files again. Its
+owned scout-inputs image remains live. Actual old-program complete4000 and failed933 replays reproduce every saved
+wire, event and failure diagnostic after restoring3 owned aliases. All3 verify
+SHA/size/mode/nsmtime before retirement. The final batch journal remains open.
+
+Replay/input/false-case receipts live below
+.analysis/reconstruction/probes/dos-stage3-route-v1462. Current continuous
+capture directories are dos-stage3-route-v1462-original and -candidate under
+.analysis/runtime/candidates. Read their receipts rather than assuming success.
+
+## Latest closed bounded frontier (v1461)
 
 This runtime pair replaces MAIN only; OP, MAINE, ZUN and game assets remain
 the pinned originals. It does not establish a complete four-source campaign.
@@ -18,7 +71,7 @@ agree across 31196 boundaries and 20233 independent raw loops. Each capture has
 544 post-reset key/31196 raw-GDC differences, plus twelve auxiliary
 UI records with equal fields/pools/input/configured video and 12 raw-GDC differences.
 
-Current 566/4c3c50cb cold GNU and optimized UBSan match 20795 selected scalar
+Closed 566/4c3c50cb cold GNU and optimized UBSan match 20795 selected scalar
 records and 10397 full nine-pool snapshots, consumed input, homing, Boss/Midboss
 and continuous RNG. Both full paired reductions pass their native gates and
 all seven wires are identical. Native's 356 volatile key samples stay separate.
@@ -47,7 +100,7 @@ post-dialogue. Both fixes change observation, not gameplay.
 
 ## Builds, identity and next work
 
-Current source closure is
+The closed v1461 source closure is
 `4c3c50cb96cdac3d3658d5540afac451d2d1640cab40ce883c2a35c083f6aeec` (566 files).
 Cold GNU builds 87 programs/83 CTests; optimized UBSan builds two programs.
 Both preserve legacy 3500/8000 wires and 59 RGB/TRAM pairs with 177 observations.

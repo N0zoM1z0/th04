@@ -11,12 +11,17 @@
         std::ifstream clear_plan(fs::path(assets.save_directory)/"stage-epoch-clear.txt");
         const bool until_clear=bool(clear_plan);
         unsigned stage3_updates=0,stage3_keys=0,stage3_shift=0;
+        bool extended_stage3=false;
         if(until_clear) {
             require_view(wait_inputs && bool(clear_plan>>magic>>version>>stage3_updates>>stage3_keys>>stage3_shift) &&
-                magic=="TH04_STAGE_CLEAR" && version==1 && stage3_updates==1 && stage3_keys<=65535 && stage3_shift==0,
-                "epoch clear plan header/input");
-            clear_plan>>std::ws;
-            require_view(clear_plan.peek()==std::char_traits<char>::eof(),"epoch trailing clear input");
+                magic=="TH04_STAGE_CLEAR" && (version==1 || version==2) && stage3_updates>0 &&
+                stage3_updates<=65535 && (version==2 || stage3_updates==1) &&
+                stage3_keys<=65535 && stage3_shift==0,"epoch clear plan header/input");
+            extended_stage3=(version==2);
+            if(!extended_stage3) {
+                clear_plan>>std::ws;
+                require_view(clear_plan.peek()==std::char_traits<char>::eof(),"epoch trailing clear input");
+            }
         }
         std::vector<std::pair<unsigned,std::string>> wait_frames,observed_wait_frames;
         std::ofstream wait_blocks,player_samples;
@@ -48,6 +53,28 @@
             require_view(bool(stage3_pools)&&bool(stage3_player),"epoch Stage3 output unavailable");
             stage3_pools.write("TH04OP1\n",8);
         }
+        std::vector<std::pair<unsigned,std::string>> stage3_wait_frames,stage3_observed_wait_frames;
+        std::ofstream stage3_blocks;
+        std::ifstream stage3_wait_plan(fs::path(assets.save_directory)/"stage3-epoch-waits.txt");
+        require_view(!stage3_wait_plan || extended_stage3,"epoch unused Stage3 wait plan");
+        if(extended_stage3) {
+            require_view(bool(stage3_wait_plan),"epoch Stage3 wait plan required");
+            unsigned count;
+            require_view(bool(stage3_wait_plan>>magic>>version>>count) && magic=="TH04_STAGE_WAITS" &&
+                version==1 && count<=16,"epoch Stage3 wait header");
+            for(unsigned i=0;i<count;++i) {
+                unsigned frame;std::string kind;
+                require_view(bool(stage3_wait_plan>>frame>>kind) && frame>0 && frame<stage3_updates &&
+                    (kind=="dialogue" || kind=="continue") &&
+                    (stage3_wait_frames.empty() || frame>stage3_wait_frames.back().first),
+                    "epoch Stage3 wait kind/order/extent");
+                stage3_wait_frames.emplace_back(frame,kind);
+            }
+            stage3_wait_plan>>std::ws;
+            require_view(stage3_wait_plan.peek()==std::char_traits<char>::eof(),"epoch trailing Stage3 wait cues");
+            stage3_blocks.open(output/"stage3-blocks.txt");
+            require_view(bool(stage3_blocks),"epoch Stage3 wait output unavailable");
+        }
         std::uint64_t ring_offset=0;unsigned ordinal=0;
         const auto observe=[&](const char* label,const gameplay::State& s) {
             const auto dump=[&](const auto& bytes){constexpr char digits[]="0123456789abcdef";for(auto v:bytes)epoch<<digits[unsigned(v)>>4]<<digits[unsigned(v)&15];};
@@ -68,6 +95,13 @@
             midboss_wire.byte(mid.sprite);midboss_wire.byte(mid.phase);midboss_wire.word(mid.phase_frame);
             midboss_wire.byte(mid.damaged);midboss_wire.byte(mid.unused_angle);
             field("midboss",midboss_wire.data);integer("midboss_active",mid.active,1);
+            if(extended_stage3 && resident.resource_stage==2) {
+                const auto* private_midboss=s.stage3_midboss();
+                require_view(private_midboss!=nullptr,"epoch Stage3 private Midboss owner");
+                const auto& private_state=private_midboss->snapshot();
+                field("midboss3_private",std::array<std::uint8_t,3>{private_state.pattern,
+                    private_state.mirror,private_state.patterns_done});
+            }
             const auto target=s.homing_target().value_or(th04::portable::motion::Point{-15984,-15984});th04::portable::demo_wire::Writer homing;homing.point(target);field("homing",homing.data);
             epoch<<"},\"lives\":"<<+s.score().remaining_lives<<",\"bombs\":"<<+s.score().remaining_bombs<<",\"misses\":"<<+resident.miss_count<<",\"bombs_used\":"<<+resident.bombs_used<<",\"lcg_calls\":"<<scene.process_random_draws()-base_draws<<",\"ring_samples_since_fill\":"<<s.random_samples()<<",\"ring_calls\":"<<ring_offset+s.random_samples()-base_samples<<"}\n";
         };
@@ -143,10 +177,52 @@
                     "epoch unused Stage2 input/order/width");
             }
             ring_offset+=scene.main_state().random_samples();
-            scene.advance(translate(stage3_keys),false,false);
-            require_view(scene.resident().resource_stage==2 && scene.main_state().frames()==stage3_updates &&
-                !scene.dialog_active() && !scene.main_state().game_over(),"epoch incomplete Stage3 update");
-            observe("stage3-score",scene.main_state());
+            for(unsigned frame=0;frame<stage3_updates;++frame) {
+                unsigned keys=stage3_keys;
+                if(extended_stage3) {
+                    unsigned number,shift;
+                    require_view(bool(clear_plan>>number>>keys>>shift) && number==frame && keys<=65535 && shift==0,
+                        "epoch Stage3 input/order/width");
+                    require_view(frame!=0 || keys==stage3_keys,"epoch Stage3 initial input disagreement");
+                }
+                for(unsigned attempt=0;;++attempt) {
+                    require_view(attempt<10000 && scene.live_main() && !scene.pause_active(),"epoch Stage3 unconfigured blocking owner");
+                    const bool blocked=scene.dialog_active();const auto status=scene.dialog_status();
+                    const auto* go=scene.main_state().game_over();const int go_before=go ? int(go->phase()) : -1;
+                    auto held=blocked ? std::uint16_t((status==th04::portable::dialog::Status::press ||
+                        status==th04::portable::dialog::Status::running) ? 0x1000 : 0) : translate(keys);
+                    if(go) {
+                        const bool waiting=go->phase()==gameover::Phase::press || go->phase()==gameover::Phase::menu;
+                        held=std::uint16_t(waiting && attempt%20<10 ? 0x1000 : 0);
+                    }
+                    scene.advance(held,false,false);
+                    require_view(scene.live_main(),("epoch Stage3 MAIN departed at frame "+std::to_string(frame)).c_str());
+                    if(blocked || scene.dialog_active() || go || scene.main_state().game_over()) {
+                        const std::string kind=go || scene.main_state().game_over() ? "continue" : "dialogue";
+                        const auto cue=std::make_pair(frame,kind);
+                        stage3_blocks<<frame<<' '<<attempt<<' '<<kind<<' '<<unsigned(status)<<' '<<go_before<<' '
+                            <<held<<' '<<scene.main_state().frames()<<' '<<scene.dialog_offset()<<' '
+                            <<scene.main_state().player_input()<<' '<<scene.main_state().consumed_input()<<' '
+                            <<scene.process_random_draws()-base_draws<<' '
+                            <<ring_offset+scene.main_state().random_samples()-base_samples<<'\n';
+                        require_view(extended_stage3 && std::find(stage3_wait_frames.begin(),stage3_wait_frames.end(),cue)!=stage3_wait_frames.end(),
+                            ("epoch undeclared Stage3 wait "+std::to_string(frame)+" "+kind).c_str());
+                        if(stage3_observed_wait_frames.empty() || stage3_observed_wait_frames.back()!=cue)
+                            stage3_observed_wait_frames.push_back(cue);
+                    }
+                    if(scene.main_state().frames()==frame+1)break;
+                    require_view(scene.main_state().frames()==frame && (scene.dialog_active() ||
+                        scene.main_state().game_over()),"epoch Stage3 non-UI stalled frame");
+                }
+                require_view(scene.resident().resource_stage==2 && scene.main_state().frames()==frame+1 &&
+                    !scene.dialog_active() && !scene.main_state().game_over(),"epoch incomplete Stage3 update");
+                observe("stage3-score",scene.main_state());
+                require_view(!scene.main_state().next_stage_requested(),"epoch Stage3 departed before budget");
+            }
+            if(extended_stage3) {
+                clear_plan>>std::ws;require_view(clear_plan.peek()==std::char_traits<char>::eof(),"epoch trailing Stage3 inputs");
+                require_view(stage3_observed_wait_frames==stage3_wait_frames,"epoch configured Stage3 wait not observed");
+            }
             std::ofstream summary(output/"stage-clear.json");
             summary<<"{\"complete\":true,\"stage2_update_budget\":"<<extent
                 <<",\"stage2_complete_updates\":"<<completed<<",\"unused_stage2_inputs\":"<<(extent-completed)
