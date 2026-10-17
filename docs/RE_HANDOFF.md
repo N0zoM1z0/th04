@@ -5,6 +5,34 @@ Code/docs stay English. Use one low-priority CPU, serialize Borland/Wine builds,
 launch muted/headless, and clean unused products after each bounded batch.
 The user uses Windows: no GUI, focus changes or host-key injection.
 
+## Verified sparse Stage2 full RGB (v1464)
+
+Original MAIN0AAF:0207 now has complete same-context live font/video/DGROUP/
+640KiB RAM at Stage2 frames1/74/100/400/2601/3349/6983/9809. Every full640x400
+RGB picture and8000 active TRAM bytes equal authenticated current566/88575 GNU
+outputs; prior actual UBSan output hashes match every compared file. No new
+native execution is claimed. All8 full fonts hash46198044. The own complete
+1136-relocation load image,CPU/RAM,first9836 Stage1 loops and all selected
+Stage2 fields/RNG counts validate. All38 programmed video regions reproduce;
+raw blink phases/counts and full raw graphics indices remain unequal.
+
+The sparse original run takes399.18s on one low-priority CPU. Three rebased
+capture mutations and one decoded-pixel mutation reject. Preserve the first
+failed collector: already-zero RAM never triggered its zero-value write watch;
+readiness now reads initial RAM. The fixed Stage1 four-point Micro also passes.
+Receipts: `.analysis/reconstruction/probes/dos-stage-font-v1464`.
+Recorded-evidence recovery restores9 owned aliases and reruns both original
+readers plus complete RGB,with byte-identical outputs. All52654 protected
+identities verify. Retiring41 owned generated aliases releases at least120.086
+MiB after all retained phase evidence/recovery costs and1MiB final-metadata
+reserve. Keep the compressed font/video/RAM witnesses and every parent backing;
+use `replay_restored.py --output-dir NEW` from the DOS root for recovery.
+Stage3 full fonts/RGB remain missing. Extend the sparse monitor with the retained
+actual Bomb/movement keyboard transport and GameOver guard,then collect its6
+declared score points. Do not substitute a Stage1/demo font for current Stage3.
+Every-frame RGB,natural UI/IRQ/scanout timing,later stages and campaigns remain
+open. The earlier palette repair and complete state/pool limitations still apply.
+
 ## Verified stage-session palette repair (v1463)
 
 Native 566/88575 restores the original completed-stage PaletteTone reset:
