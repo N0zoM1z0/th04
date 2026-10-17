@@ -1,5 +1,36 @@
 # Private build and analysis retention
 
+## Current native Elly repair recovery (v1473)
+
+Current `elly-hit-bridge-v1473/recover.py` carries683 exact aliases:287 inherited
+and396 new. All396 restore SHA,size,mode,nsmtime. Four actual restored frontend
+output maps and both independent original/fixed-native paired readers reproduce;
+the same paired reports reproduce with every new alias absent. Current builds
+and all inherited providers stay physical. Fifteen superseded v1467 build files,
+269 duplicate replay files and112 closed raw producer files use direct providers.
+
+```sh
+python3 .analysis/reconstruction/probes/elly-hit-bridge-v1473/recover.py
+python3 .analysis/reconstruction/probes/elly-hit-bridge-v1473/compare_replay.py --role gnu
+python3 .analysis/reconstruction/probes/elly-hit-bridge-v1473/compare_replay.py --role ubsan
+```
+
+Actual extra duplicate/build deallocation is121.453125MiB; new recovery archives
+cost8.65625MiB. After recovery scripts/replay metadata and1MiB reserve, the local
+net release exceeds111MiB. Separately,3012.3828125MiB of actual regular frontend
+outputs were compressed and verified immediately after each producer terminated.
+These raw files did exist; they were not FIFO-avoided intermediates. Do not combine
+this local closed-file compression with a system-wide or whole-phase free-space
+claim. The journal separately charges all new retained evidence, current cold
+builds, source overlays, public snapshots and32MiB final reserve. No prior cleanup
+is credited again.
+
+The current source is566/a7606e66; keep latest `stage3-hit-bridge-v1473-final`
+GNU/UBSan programs and link inputs. Restore old retired files only explicitly
+with `--restore --path EXACT`; retire them after use. Use fresh build paths.
+Carry65734 parent identities, all parent/late/finish identities, new aliases and
+physical providers. Both complete goals remain active; no emulator is live.
+
 ## Elly forecast and actual failed original recovery (v1472)
 
 Ninety-three owned aliases retire after exact SHA/size/mode/nsmtime recovery:
@@ -88,7 +119,7 @@ exact SHA/size/mode/nanosecond-mtime restoration. Actual restored Micro files
 reproduce the independent original/source300 reader; the unchanged parent
 reader verifies all63324 inherited hashes after link-input restoration. Current
 recovery checks protected retired paths through exact file/gzip recipes.
-Latest `stage3-tiles-v1467-final` GNU/UBSan programs and inputs remain physical.
+Then-current `stage3-tiles-v1467-final` GNU/UBSan programs and inputs remain physical.
 The source8000 capture is live; do not delete or restart it.
 
 ```sh

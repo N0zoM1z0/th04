@@ -25,21 +25,20 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
-The v1472 private native forecast reaches Elly defeat and natural Stage4
-initialization/first update while preserving the complete prior8000 wire prefix.
-The actual original experiment instead reaches GameOver8085 with every input
-matching its plan. First tracked native hit divergence8046 identifies an Elly
-collision bridge to validate; see the current handoff. This is not Stage4 DOS
-parity or full campaign acceptance.
+The v1473 native repair propagates and consumes Elly's scythe hit flag. Both
+fresh cold GNU/UBSan frontends reproduce actual original hit8046/GameOver8085:
+8082 complete nine-pool/21-stable-field snapshots and8086 raw score/state/resident/
+RNG-count rows agree. All79 old8000 output hashes remain unchanged. The original
+capture is incomplete and716 post-actor inputs remain separate; Elly defeat,
+Stage4 DOS parity and full campaigns are still open. See the current handoff.
 
 The v1470 original/source DOS vector reaches8000 Stage3 updates: all8001 nine-pool,
 22-state/private3 snapshots, actual inputs and nine configured video-region samples
 match. Literal post-dialogue player inputs agree. The strict aggregate retains49
 post-actor key/nine raw-GDC differences; source fonts/full RGB and campaigns remain
-open. That source8000 producer is terminal; the new original Elly/Stage4 probe
-is separate. See the current handoff and recovery instructions.
+open. Both source8000 and the failed original Elly probe are terminal. See the current handoff and recovery instructions.
 
-Current v1467 records a complete original 8000-update Stage3 route. Native
+The retained v1467 records a complete original 8000-update Stage3 route. Native
 566/4787233c replays its literal inputs: both cold GNU/optimized UBSan programs
 agree on all 79 files, 8001 nine-pool snapshots, 8010 stable-state records and
 nine complete RGB/TRAM/DAC samples. Palette-bearing dialogue loads refresh the

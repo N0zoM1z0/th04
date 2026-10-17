@@ -1,9 +1,49 @@
 # Original DOS, reconstructed DOS and native fidelity
 
-Updated 2026-10-17. The user's primary requested comparison
+Updated 2026-10-18. The user's primary requested comparison
 is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
+
+## Native Elly hit propagation and consumption (v1473)
+
+Elly's existing component flag now participates in main_state.cpp's composite
+hit and clears at the same consumed player prefix as other collision owners.
+The new public setter only exposes that existing latch. Target collision math,
+invulnerability, route and RNG are unchanged. Native566/a7606e66 replaces the
+previous566/4787233c game closure; no maintained DOS source changes.
+
+Fresh GNU87 programs/83 CTests and UBSan2 programs/session checks pass. Four
+unmodified stock frontend replays use actual captured original loop words and
+the existing dialogue cue, without an adviser or gameplay assignments. Both roles
+retain all79 complete old8000 output hashes. Thus existing original-bound pools,
+states and nine complete RGB/TRAM/DAC sample gates are preserved by output
+identity. All78 extended output hashes agree between GNU and UBSan.
+
+The independent reducer compares all8082 complete init/actor snapshots of nine
+whole pools,21 stable fields and all8086 available raw loop/completed-score
+state,resident,RNG-count rows: zero differences. It reproduces hit8046, consumes
+and resets that latch, then reaches the original GameOver8085/Continue block.
+The requested8086-update fixture exits1 intentionally at undeclared Continue;
+this accepted endpoint is not a completed route. Keep716 post-actor keys separate.
+The first hit anywhere in Stage3 was1734;8046 is the first after8000. The V1
+reader's incorrect first-ever-hit expectation is retained with its failed log.
+
+The real pre-fix hit8046/pool8047 failure remains the causal negative control;
+the independent original13A9:8195 store/boundary Oracle remains original evidence.
+Only8081 original actor records plus35710 partial bytes exist, without footer.
+No actor8082..8085 records or new original run are manufactured. Source Stage3
+full RGB, legal Elly defeat/Stage4, continuous display, natural timing, NP2,
+Windows, campaigns and exactness remain open. The prior defective-bridge clear
+forecast must be replaced with legal inputs on the fixed product before another
+expensive original capture.
+
+Replay with `.analysis/reconstruction/probes/elly-hit-bridge-v1473/compare_replay.py
+--role gnu|ubsan` and `verify_replays.py`. Current recovery adds396 aliases to287
+inherited ones. All restore SHA,size,mode,nsmtime; four real frontend hash maps
+and both independent real/archive readers reproduce. Current build inputs and
+all inherited providers stay physical; use current recovery for old retired
+builds. Keep local cleanup and whole-phase retained costs separate.
 
 ## Actual original collision rejects the safe Elly forecast (v1472)
 
@@ -23,8 +63,8 @@ coordinates. The instruction at8195 writes global DGROUP4669=1. Six fixtures
 include four exact-boundary negatives; all pass. These are bounded synthetic
 unit fixtures based on actual state, not a second live runtime or whole-helper
 claim. Native Elly's component already sets its private player_hit flag, but the
-main composite hit/reset paths omit Elly. A future fix must replay the retained
-failed path and old8000 regression; do not alter target collision/invulnerability.
+then-current main composite hit/reset paths omit Elly. The v1473 repair above
+replays the retained failed path and old8000 without altering collision/invulnerability.
 
 The failed actor stream contains8081 complete records plus35710 bytes of the
 next record, without gzip footer. Metadata records8000 because that was its last
