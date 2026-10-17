@@ -7,37 +7,46 @@ muted/headless;no Windows GUI, focus changes or host-key injection.
 
 ## Active clear observation (v1461)
 
-Original-only full-memory witnesses now independently prove Kurumi defeat:
-phase 5/HP 6 at 9808, phase 6/HP -1 at 9809, explosion 254 at 9841 and phase 255 at 9905.
-The complete original/source accepted frontier is still 8000. The score-exit
-capture remains incomplete: its 11 UI records show post-dialog run/return both
-at 9905, then the next player at 9906. The current player had already run before
-boss_update. The caller/return did not change; the failed assumption was player
-ownership after every dialogue. No gameplay change follows from this failure.
+Original MAIN now completes 10394 Stage2 updates, returns after the final score
+with quit=2, initializes Stage3 and completes its first update. Independent
+readback validates 31196 CPU/DGROUP/video boundaries, full memories, own MZ/CFG
+and continuous raw RNG (1062 LCG and 10574 ring calls). There is no terminal
+Stage2 loop after the score requests departure. Current cold GNU matches
+20795 selected scalar records and 10397 complete nine-pool snapshots, actual
+player inputs, Boss/Midboss, homing and RNG. Its 356 volatile post-reset key
+samples remain separately measured. Optimized UBSan completes the same route;
+all seven output wires are directly verified identical to GNU. Full paired
+DOS reductions remain pending the currently running reconstructed DOS capture.
+The accepted original/reconstructed DOS frontier remains 8000 until that closes.
 
-The distinct `capture-post/` sets `player_first: true` for the 9905 post-dialogue
-and captures player -> dialog_run -> return. Pre-dialogue keeps run -> return ->
-player; Continue keeps player -> menu -> return. All five own-file codepoints and
-bounded 15 registered objects stay fixed. Exception paths now retain actual CPU/
-full memory evidence before exit. The closed 12 default wait records still decode
-identically with old/new readers. New original/source clear capture is running;
-full Stage2 clear and Stage3 first update acceptance remain pending.
+All four waits use real FrontEnd input: Continue 5363/8132, pre-dialogue 6982
+and post-dialogue 9905, with 189/400/189/76 polls. The post-dialogue observer
+now records player -> run -> return at 9905. Both earlier failed capsules and
+their partial evidence remain unchanged. Three actual-output mutations reject
+a bad unused-input count, a Stage3 LCG bit and an inactive custom-pool tail byte.
 
-The current 566-file source closure (4c3c50cb) passes cold GNU builds of 87
-programs and 83 CTests, plus two optimized UBSan programs. Both preserve the
-3500/8000 legacy wires and 59 RGB/TRAM pairs with 177 observations. Thirteen
-invalid CLI plans reject. The root-owned probe directory
-`.analysis/reconstruction/probes/dos-kurumi-clear-v1461/` contains
-`run_post_captures.py`, `watch_post_original.py`, `compare_post_all.py` and
-`original-defeat-partial.json`. Preserve all failed capsules and data, the
-parent's 38121 protected hashes, all 22 late files and finish receipt, and the
-old bcd/3747 caches. Both full goals remain active.
+Original full memory retains 52 nonzero custom bytes at Stage2 return/free and
+Stage3 init entry, then all 832 bytes are zero at init completion and the first
+actor. The native full-pool comparison agrees; no exporter/gameplay correction
+is needed. Own MZ 0AAF:7456 calls 0AAF:185E for B204/208 dwords. The helper
+clears AX and executes REP STOSD; do not infer a general upper-EAX guarantee.
+Use the actual full-memory reset observation for this scenario.
 
-Early scout retention and actual restored-program replay pass: 54 owned files,
-17 recipes, 1908.8125 MiB released and 38326 protected hashes. All 12 replay
-wires reproduce; three owned aliases verify metadata and retire. The final
-journal must chain `scout-retention/retention.json`; do not count those files
-again. See [retention](ANALYSIS_RETENTION.md).
+Current 566/4c3c50cb cold GNU 87/83 CTests and optimized UBSan 2 retain legacy
+3500/8000 wires and 59 RGB/TRAM pairs with 177 observations. Thirteen malformed
+clear plans reject. Root-owned `.analysis/reconstruction/probes/dos-kurumi-clear-v1461/`
+contains the live post capture, producers, independent reductions and memory
+proofs. Next: finish both complete DOS/native reducers and physical-file/lifecycle
+checks, run verified final retention/recovery, then both CIs and diff checks.
+Do not restart a live capture on timeout or modify a completed capsule.
+
+Early scout retention/recovery passes: 54 owned files, 17 recipes, 1908.8125 MiB
+released and 38326 protected hashes. Twelve replay wires reproduce and three
+owned aliases verify SHA/size/mode/nsmtime before retirement. The final journal
+must chain `scout-retention/retention.json` and count its retired files once.
+Preserve both failed capsules, all parent late identities and old/current caches.
+Both full goals remain active; native Stage2 pictures, timing, campaigns, NP2,
+Windows, pristine provenance and historical exactness remain open.
 
 ## Current Stage2 Boss frontier (v1460)
 
