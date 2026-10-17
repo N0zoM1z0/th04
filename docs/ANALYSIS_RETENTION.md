@@ -1,5 +1,32 @@
 # Private build and analysis retention
 
+## Interim cleanup checkpoint (v1482)
+
+The ongoing BIOS-admission experiment now uses DOS-root
+`bios-admission-v1482/recover.py`: 9710 exact aliases, including 134 newly
+retired closed duplicate outputs/inputs. All 134 restore SHA, size, mode and
+nanosecond mtime. Actual-file and archive readers reproduce the same complete
+state and 22-picture RGB reports, including the failed fourth literal-player
+gate and 40 tail-word differences. No prior result is promoted by cleanup.
+
+Actual retired allocation is 87.34375 MiB. Existing providers are reused;
+no new archive is needed. After cleanup-specific costs and a 2 MiB metadata/log
+reserve, conservative local release is at least 85 MiB. No FIFO raw files,
+previous cleanup or temporary restoration writes are counted. Current cold
+products, unique probe outputs, input traces and private link inputs remain
+physical. All 85258 preceding identities and 9576 preceding aliases remain
+protected. Use the checkpoint's named recovery rather than rebuilding old paths.
+
+This is an intermediate cleanup checkpoint, not a completed v1482 research
+phase. The private external-admission-clock variant completes 13377 updates and
+all 22 RGB comparisons but passes only three of four literal-player witnesses;
+it does not fix input timing. The authored internal-DOS UART micro has completed
+its eight requests/nine markers; its reduction and reusable Oracle are pending.
+Keep its real-mode evidence separate from original V86 TH04 execution. Next
+investigate original BIOS packets through the real frontend without supplying
+expected latch words, fitted holds or phases. Maintained source and the v1481
+cold product cohort are unchanged; both full goals remain active.
+
 ## Recorded sampler and periodic cleanup (v1481)
 
 DOS-root sampled-device-v1481/recover.py carries 9576 exact aliases:

@@ -8,6 +8,16 @@ Use English code/docs, gpt-6.1-sol: commits; push main/native HEAD:port/modern-6
 Use one low-priority CPU, muted/headless runs, no host keys and serialized Borland.
 Clean periodically and after each batch; verify exact recovery before retirement.
 
+## Current interim cleanup checkpoint (v1482)
+
+Use DOS-root `bios-admission-v1482/recover.py` for 9710 aliases (134 new).
+All new restores preserve SHA/size/mode/nsmtime; actual/archive state and RGB
+consumers retain the same failed gates. Local cleanup releases at least 85 MiB
+net after costs/reserve. Current v1481 products and unique pending experiment
+inputs stay physical. See RE_HANDOFF and ANALYSIS_RETENTION for the checkpoint.
+The BIOS-admission research remains open; do not treat this cleanup as phase or
+goal completion, or rerun completed original captures.
+
 ## Recorded sampler and original request ownership (v1481)
 
 The maintained Win32/SDL bridges now emit input.tsv alongside the unchanged
