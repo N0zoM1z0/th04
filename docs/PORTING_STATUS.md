@@ -5,6 +5,12 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
+Current v1463 repairs the carried clear-bonus palette tone at completed stage
+initialization. Both fresh native configurations match 14 full original raw WORD
+and DAC samples, preserving all eight state wires, legacy routes and 177 prior
+display observations. Current full fonts/RGB and raw full-index differences
+remain open. See [handoff](RE_HANDOFF.md) for recovery and remaining work.
+
 Current v1462: actual original/source Stage3 reaches4000 after10394 Stage2
 clear. Configured state/pools/private3/RNG/video pass43193 boundaries; both
 566/1ad0ea4c cold native programs pass28793 scalars/14396 nine-pool snapshots.

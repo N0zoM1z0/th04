@@ -5,23 +5,40 @@ Code/docs stay English. Use one low-priority CPU, serialize Borland/Wine builds,
 launch muted/headless, and clean unused products after each bounded batch.
 The user uses Windows: no GUI, focus changes or host-key injection.
 
-## Active stage-picture diagnosis (v1463)
+## Verified stage-session palette repair (v1463)
 
-A real native picture observer now samples14 completed Stage2/3 score boundaries
-from the retained v1462 route; all8 established state/pool/input wires remain
-identical. Full active TRAM agrees at every sample; raw graphics indices differ.
-Full live-font snapshots are absent here,so complete RGB acceptance is unavailable.
+Native 566/88575 restores the original completed-stage PaletteTone reset:
+MAIN 0AAF:0675 writes 100 to DS 2134:03A4, then 067B calls 0000:1F04 palette_show.
+Before repair, the preceding bonus's 60 persisted into 7 sampled early Stage2/3
+scores, each differing 35 of 48 actual DAC channels. Both new cold programs now
+match all 14 raw WORD tones and all 48 DAC channels at each score; the original
+MZ owner and independent actual DGROUP/DAC snapshots bind this claim.
 
-A separate original MZ/runtime Oracle identifies a palette initialization gap.
-MAIN0AAF:0675 stores100 to PaletteTone WORD DS2134:03A4,then067B calls0000:1F04.
-Fourteen actual DGROUP/DAC samples observe100. Before repair,native retains the
-preceding clear bonus's60 at7samples,each differing35of48actual DAC channels.
-The native stage-session completion now restores this reset. The new optional
-observer also records the palette actually used by render_main; no target
-pixels,colors or clock phase enter the program. Fresh GNU/UBSan cold gates,
-post-repair DAC checks and regressions remain pending. All old raw index/GDC/
-key failures stay recorded. Evidence is under
-`.analysis/reconstruction/probes/native-stage2-pictures-v1463`.
+GNU 87 programs / 83 CTests and optimized UBSan 2 pass. All 8 established state/pool/
+input wires remain identical; all 58 current picture/index/text/palette outputs
+agree across configurations. Both legacy 3500/8000 routes and 177 old display
+observations (59 RGB/TRAM pairs) reproduce. Four actual malformed picture plans
+and 2 semantic output mutations reject. Current full active TRAM passes 14;
+raw full graphics indices fail 14 and full live fonts/RGB remain unproved.
+Preserve the failed recovery-count and legacy-path consumers; fixed V2 readers
+retain the same inputs and program identities. No DOS source or exact state changes.
+
+Actual final recovery reruns both programs and 14x48 DAC/WORD readers, restores
+and retires 3 owned aliases; earlier recovery reruns the actual bad program and
+reproduces 7 faults. All 52473 protected hashes verify. Final 878 owned files
+plus 14 early scouts release 4415.926 MiB (4.312 GiB) net, counted once.
+The complete 566-file native source snapshot reproduces closure
+`88575c59c800b7b0062602691b6455278d65e3a45bd98c7f36e422e14d132867`.
+Keep native `.analysis/port64/stage-pictures-v1463-final` main/session/link inputs
+and all prior backing dependencies. Use fresh build/output directories.
+Receipts: `.analysis/reconstruction/probes/native-stage2-pictures-v1463`.
+
+Next obtain current full live-font evidence for the sampled Stage2/3 boundaries
+and compare complete composited RGB. Reuse current captures and minimize
+observer stops before another long prefix. Raw indices include duplicate colors
+and hidden cache bytes; their failure is not interchangeable with RGB failure.
+Natural UI/IRQ/init-interior/scanout timing, Stage3 Boss/later stages/campaigns,
+NP2, Windows, pristine provenance and full-artifact exactness remain open.
 
 ## Verified bounded frontier (v1462)
 
@@ -38,7 +55,7 @@ DOS aggregate stays false: 682 post-reset keys / 31563 raw-GDC records, plus 12
 auxiliary UI raw-GDC differences. Native 510 volatile post-actor keys remain
 separate. Preserve every raw failure; configured passes do not waive them.
 
-Both current 566/1ad0ea4c cold GNU/optimized UBSan match 28793 selected scalars,
+Both closed v1462 566/1ad0ea4c cold GNU/optimized UBSan match 28793 selected scalars,
 14396 whole 9-pool component snapshots, private3, actual loop/UI-owned inputs,
 homing/Boss/Midboss and continuous RNG. All 8 output wires and physical CFG/SCR
 files agree. Both also match 9836 current original Stage1 actor-pool checkpoints;
