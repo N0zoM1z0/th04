@@ -5,6 +5,49 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Active Stage3 transport and owner observations (v1462)
+
+The latest closed two-stage/Stage3-entry vector is v1461 below. The new4000
+Stage3 continuous captures and extended native vector remain pending. Current
+source adds only an input observer/read-only Midboss3 getter; gameplay is not
+changed. See [current handoff](../../RE_HANDOFF.md) for live paths and caches.
+
+Both actual DOS roles pass300 ordinary loop inputs and8 physical keyboard
+edges: held Shot, left64..127/right128..191 and one-frame Bomb96/224. Every
+KEYBOARD_AddKey call preserves the complete640KiB RAM, CPU/context and tick.
+Four host mutations reject. The retained4c native normal FrontEnd matches all
+300 selected scalars, literal consumed inputs and complete nine-pool actor
+snapshots. The required P300 input row is parsed syntax only; it is not an
+observed target loop or advanced native update. Native pool records begin at1.
+Two failed GDB capsules (unbound helper, then deleted clock) and two failed
+native consumers (missing syntax row, then false frame0 assumption) remain
+failed. The fix binds via Load.stop and tests clock.is_valid before toggling.
+
+Original Midboss3 stores13A9:0A4E/0A56/0A59 own DS4258/4259/425A;
+source157C:25A6/25AE/25B1 stores its own MAP8CE8/8CE7/48F3.
+Their complete Stage3 init/first-actor memories independently show000000.
+Original0AAF:3B8A subtracts DGROUP4349 continues_used from3 and returns1 via
+0AAF:3CE8 when empty. Entry has3 credits used. This supports the native forecast
+failure933 but does not observe an original Stage3 GameOver there.
+
+The actual native-only4000 input forecast defeats Midboss3 at2228 and resets
+it at2357 using ordinary Bomb/movement inputs. Those are checkpoint proposals,
+not assigned states. native-forecast-summary.json corrects the generic scout
+receipt's inaccurate heldShot32 prose by checking every saved/consumed input;
+the old receipt stays immutable. The long DOS producer adds one bounded
+GameOver guard and uses the same verified one-loop-ahead transport. Its helper
+is frozen privately; changing public support must never change the live capsule.
+
+Current566/1ad0ea4c cold GNU87/83 tests and optimized UBSan2 pass; both old
+seven-wire clear vectors are byte-identical. Default old/new full clear reader
+reports agree for both DOS roles, apart from reader hash. New extended consumers
+remain source-present, pending complete route and mutation checks. The early
+scout archive chains43332 protected hashes and retires71 owned aliases; its
+current net2719.180MiB is before fresh recovery costs. Actual old-program
+complete4000 and failed933 runs reproduce all wires/events/diagnostics after
+restoring3 owned aliases; metadata verifies before retirement. Keep final verdicts and
+all old failed observations separate from the active extension.
+
 ## Original/reconstructed DOS Boss suffix (v1456)
 
 The primary DOS comparison now reaches **9836 after-actor checkpoints**, with

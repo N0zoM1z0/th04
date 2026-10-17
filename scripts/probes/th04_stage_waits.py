@@ -65,7 +65,9 @@ def own_entries(main, original, profile):
     }
 
 
-def attest_waits(capture, main, original, profile, load_segment, raw_rows):
+def attest_waits(capture, main, original, profile, load_segment, raw_rows, extra_registered_watchpoints=0):
+    require(type(extra_registered_watchpoints) is int and extra_registered_watchpoints in [0, 1],
+            "wait explicit additional observer registry")
     """Validate extra records without changing or weakening the first-stage receipt."""
     data = (capture / "stage2-waits.json").read_bytes()
     summary = json.loads((capture / "stage-boundary-summary.json").read_text())
@@ -134,7 +136,7 @@ def attest_waits(capture, main, original, profile, load_segment, raw_rows):
     )
     require(
         doc["auxiliary_registered_watchpoints"] == len(entries)
-        and summary["baseline_registered_breakpoints"] == len(entries) + 3
+        and summary["baseline_registered_breakpoints"] == len(entries) + 3 + extra_registered_watchpoints
         and len(doc["rows"]) == 3 * len(cues),
         "wait bounded auxiliary registry/record extent",
     )

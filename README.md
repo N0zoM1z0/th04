@@ -25,6 +25,13 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
+Active v1462 Stage3 work has verified300 real DOS Bomb/movement inputs and
+all300 native scalar/input/nine-pool snapshots. The new4000 Stage3 original/source
+capture and extended native parity are pending. Current566/1ad0ea4c cold GNU
+87-build/83CTest and optimized UBSan2 pass; both reproduce all seven old clear
+wires. A native-only4000 forecast selects Midboss3 checkpoints without assigning
+target state. See the current handoff for the active capture and protected caches.
+
 The primary original/reconstructed DOS comparison completes 10394 Stage2
 updates, Kurumi defeat/clear, Stage3 initialization and its first update. Nine
 full pools, 22 states, 11636 ordered RNG calls and 38 configured video regions
@@ -35,7 +42,7 @@ agree over 31196 boundaries. The DOS aggregate retains
 This runtime pair replaces MAIN only; OP, MAINE, ZUN and game assets remain
 the pinned originals. It does not establish a complete four-source campaign.
 
-Current 566/4c3c50cb cold GNU and optimized UBSan match 20795 selected scalar
+Closed 566/4c3c50cb cold GNU and optimized UBSan match 20795 selected scalar
 records and 10397 full nine-pool snapshots, actual consumed inputs, homing and
 Boss/Midboss/RNG. Physical CFG/SCR files and the legacy 3500/8000 plus 59 RGB/TRAM
 fixtures pass. Native Stage2 pictures, natural clocks, complete campaigns, NP2,

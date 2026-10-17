@@ -28,7 +28,7 @@ def file_sha(path):
     return digest.hexdigest()
 
 
-def compare_dos(a, b, ar, br, am, bm, raw, braw, events, bevents, target, output):
+def compare_dos(a, b, ar, br, am, bm, raw, braw, events, bevents, target, output, stage3_extents=()):
     require([(m["label"], m["stage"], m["frame"]) for m in am] ==
             [(m["label"], m["stage"], m["frame"]) for m in bm], "clear paired complete boundary order")
     require(list(raw) == list(braw), "clear paired actual raw extents")
@@ -39,7 +39,7 @@ def compare_dos(a, b, ar, br, am, bm, raw, braw, events, bevents, target, output
     states, _ = attest_fields(target, Path(bp["main_path"]).read_bytes(), symbols, profile["dgroup"])
     extents += states
     owners = {name: dict(differing_records=0, first_difference=None,
-                        original=hashlib.sha256(), candidate=hashlib.sha256()) for name, *_ in extents}
+                        original=hashlib.sha256(), candidate=hashlib.sha256()) for name, *_ in [*extents, *stage3_extents]}
     raw_errors = []
     for key, left in raw.items():
         changed = {name: dict(original=value, candidate=braw[key]["fields"][name])
@@ -51,7 +51,7 @@ def compare_dos(a, b, ar, br, am, bm, raw, braw, events, bevents, target, output
 
     def paired():
         for (ma, ga, va), (mb, gb, vb) in zip(records(a), records(b), strict=True):
-            for name, oa, ob, count, stride in extents:
+            for name, oa, ob, count, stride in [*extents, *(stage3_extents if ma["stage"] == 2 else ())]:
                 x, y = ga[oa:oa + count * stride], gb[ob:ob + count * stride]
                 row = owners[name]
                 row["original"].update(x)
@@ -101,7 +101,7 @@ def compare_dos(a, b, ar, br, am, bm, raw, braw, events, bevents, target, output
     report = dict(passed=not raw_errors and events == bevents and all(v["passed"] for v in owners.values()) and
                   not input_changes and not quit_changes and video["passed"] and
                   video["raw_gdc_differing_frames"] == 0 and waits["passed"],
-                  stage2_complete_updates=ar["stage2_complete_updates"], stage3_complete_updates=1,
+                  stage2_complete_updates=ar["stage2_complete_updates"], stage3_complete_updates=ar["stage3_complete_updates"],
                   boundary_records=len(am), scalar_rng_passed=not raw_errors and events == bevents,
                   scalar_differences=raw_errors, pools_and_states=owners, quit_differences=quit_changes,
                   post_reset_input_differences=len(input_changes), post_reset_input_first_differences=input_changes[:12],
@@ -112,7 +112,11 @@ def compare_dos(a, b, ar, br, am, bm, raw, braw, events, bevents, target, output
     return states
 
 
-def compare_native(capture, ar, metadata, raw, states, native_root, frontend, producer_path, output):
+def compare_native(capture, ar, metadata, raw, states, native_root, frontend, producer_path, output,
+                   stage3_updates=1, stage3_private_offsets=()):
+    require(type(stage3_updates) is int and 0 < stage3_updates <= 65535, "clear native configured Stage3 extent")
+    extended = stage3_updates != 1 or bool(stage3_private_offsets)
+    require(not extended or len(stage3_private_offsets) == 3, "clear native three private Stage3 owners")
     sys.path.insert(0, str(native_root / "port64"))
     from verify_demo_pools import POOLS, read_frame
     receipt = json.loads(producer_path.read_text())
@@ -121,34 +125,40 @@ def compare_native(capture, ar, metadata, raw, states, native_root, frontend, pr
     require(file_sha(Path(receipt["command"][0])) == receipt["program_sha256"], "clear native actual program identity")
     names = ["stage-native.jsonl", "stage2-pools.bin", "stage2-consumed.txt", "stage2-blocks.txt",
              "stage3-pools.bin", "stage3-consumed.txt", "stage-clear.json"]
+    if extended: names.append("stage3-blocks.txt")
     require(set(receipt["diagnostic_files"]) == set(names) and
             all(file_sha(frontend / name) == receipt["diagnostic_files"][name] for name in names),
             "clear native complete output identity")
     updates = ar["stage2_complete_updates"]
     clear = json.loads((frontend / "stage-clear.json").read_text())
-    require(clear["complete"] and clear["stage2_complete_updates"] == updates and clear["stage3_complete_updates"] == 1
+    require(clear["complete"] and clear["stage2_complete_updates"] == updates and clear["stage3_complete_updates"] == stage3_updates
             and clear["stage2_update_budget"] == ar["stage2_update_budget"]
             and clear["unused_stage2_inputs"] == ar["stage2_update_budget"] - updates, "clear native independently observed extent")
     native = [json.loads(line) for line in (frontend / "stage-native.jsonl").open()]
     expected = [("stage1-actor", 9836), ("stage1-score", 9836), ("stage1-actor", 9837),
                 ("stage1-score", 9837), ("stage1-return", 9837), ("init_return", 0)]
     expected += [(label, frame) for frame in range(1, updates + 1) for label in ["stage2-actor", "stage2-score"]]
-    expected += [("stage2-return", updates), ("stage3-init", 0), ("stage3-actor", 1), ("stage3-score", 1)]
+    expected += [("stage2-return", updates), ("stage3-init", 0)]
+    expected += [(label, frame) for frame in range(1, stage3_updates + 1)
+                 for label in ["stage3-actor", "stage3-score"]]
     require([(v["ordinal"], v["label"], int.from_bytes(bytes.fromhex(v["fields"]["frame"]), "little")) for v in native]
             == [(i, label, frame) for i, (label, frame) in enumerate(expected)], "clear native full record order")
     required = {"frame", "stage", "input", "score_digits", "score_delta", "score_delta_frame", "lcg", "ring", "ring_cursor",
                 "player_pos", "power", "hit", "invincibility", "respawn", "boss", "boss_statebyte", "boss_hitbox_radius",
                 "boss_phase_timed_out", "homing", "midboss", "midboss_active"}
-    require(all(set(v["fields"]) == required for v in native), "clear native complete stable fields")
+    require(all(set(v["fields"]) == required | ({"midboss3_private"} if extended and v["resource_stage"] == 2 else set())
+                for v in native), "clear native complete stable fields")
     raw_extents = {name: (left, count * stride) for name, left, _, count, stride in states}
     require({"midboss", "midboss_active"} <= raw_extents.keys(), "clear native Midboss owners")
     by = {(v["label"], int.from_bytes(bytes.fromhex(v["fields"]["frame"]), "little")): v for v in native}
     consumed = {}
-    for stage, file, size in [(1, "stage2-consumed.txt", updates), (2, "stage3-consumed.txt", 1)]:
+    for stage, file, size in [(1, "stage2-consumed.txt", updates), (2, "stage3-consumed.txt", stage3_updates)]:
         cells = [list(map(int, line.split())) for line in (frontend / file).read_text().splitlines()]
         require(len(cells) == size and all(len(row) == 2 and row[0] == i + 1 and 0 <= row[1] <= 65535
                                         for i, row in enumerate(cells)), "clear actual player input order/extent")
         consumed.update({(stage, f): value.to_bytes(2, "little").hex() for f, value in cells})
+    if extended:
+        require((frontend / "stage3-blocks.txt").read_bytes() == b"", "clear no undeclared Stage3 wait")
     initial = raw[(0, 0)]["lcg_calls"]
     ui = attest_native_waits(frontend, ar["stage2_waits"], raw, initial)
     checks, input_errors, homing_errors, volatile, counterfactual = [], [], [], [], []
@@ -182,6 +192,10 @@ def compare_native(capture, ar, metadata, raw, states, native_root, frontend, pr
                     expected_value = group[off:off + size].hex()
                     if nn["fields"][name] != expected_value:
                         changed[name] = dict(original=expected_value, native=nn["fields"][name])
+                if extended and stage == 2:
+                    private = bytes(group[off] for off in stage3_private_offsets).hex()
+                    if nn["fields"]["midboss3_private"] != private:
+                        changed["midboss3_private"] = dict(original=private, native=nn["fields"]["midboss3_private"])
                 if nn["fields"]["homing"] != group[0x4642:0x4646].hex():
                     homing_errors.append(dict(label=label, frame=frame, original=group[0x4642:0x4646].hex(), native=nn["fields"]["homing"]))
                 resident = bytes.fromhex(m["resident"])
@@ -207,7 +221,7 @@ def compare_native(capture, ar, metadata, raw, states, native_root, frontend, pr
                         if item["first_difference"] is None:
                             item["first_difference"] = dict(stage=pool_stage, frame=frame,
                                 changes=[dict(offset=i, original=x[i], native=y[i]) for i in range(size) if x[i] != y[i]][:24])
-        require(pool_counts == {1: updates + 1, 2: 2} and compared == 2 * updates + 7,
+        require(pool_counts == {1: updates + 1, 2: stage3_updates + 1} and compared == 2 * updates + 2 * stage3_updates + 5,
                 "clear native full scalar/pool extents")
         require(all(stream.read(1) == b"" for stream in streams.values()), "clear native trailing pool bytes")
     finally:
@@ -222,6 +236,9 @@ def compare_native(capture, ar, metadata, raw, states, native_root, frontend, pr
                   native_input_files={name: file_sha(frontend / name) for name in names},
                   native_producer_receipt_sha256=file_sha(producer_path),
                   scope="Complete actual Stage2 clear/Stage3 first update against actual original DOS. Every declared scalar field, nine complete pools, Midboss, consumed input and continuous RNG is checked. All post-reset volatile keys remain separately measured. Native does not expose the DOS free routine's intermediate ABI state; native entry/exit and completed initialization/update are compared. Native pictures, physical timing, campaigns and exactness remain open.")
+    if extended:
+        report.update(stage3_complete_updates=stage3_updates, stage3_private_offsets=list(stage3_private_offsets),
+                      scope="Complete original DOS two-stage prefix and bounded Stage3 route against actual native consumed inputs, all declared scalars, nine complete pools, three private Midboss3 bytes and continuous RNG. Volatile keys remain separate. Configured no-wait Stage3 only; pictures, physical timing, campaigns and exactness remain open.")
     (output / "native-comparison.json").write_text(json.dumps(report, indent=2) + "\n")
     return report
 

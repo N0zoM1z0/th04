@@ -10,6 +10,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [prepare_product_hdi.py](../prepare_product_hdi.py) | command | Prepare a disposable original-data image with verified source or original products. |
 | [probes/attest_th04_continue_checkpoints.py](../probes/attest_th04_continue_checkpoints.py) | command | Attest original player/Game Over/Continue code-fetch, caller and complete memory evidence at the consumed-input boundary. |
 | [probes/attest_th04_dialog_checkpoints.py](../probes/attest_th04_dialog_checkpoints.py) | command | Attest original STD/dialog/player code-fetch, caller and memory evidence without conflating input boundaries. |
+| [probes/attest_th04_stage3_route.py](../probes/attest_th04_stage3_route.py) | command | Attest continuous Stage3 inputs, bounded observers, own private Midboss stores and process RNG. |
 | [probes/attest_th04_stage_clear.py](../probes/attest_th04_stage_clear.py) | command | Attest actual post-score Stage2 exit, own-MZ cleanup/init and the first complete Stage3 update. |
 | [probes/build_th04_cpu_fault_emulator.py](../probes/build_th04_cpu_fault_emulator.py) | command | Build a private, pinned DOSBox-X observer without changing game bytes. |
 | [probes/build_th04_demo_emulator.py](../probes/build_th04_demo_emulator.py) | command | Build a resource-limited pinned read-only normal-core demo observer. |
@@ -30,6 +31,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/compare_th04_dos_titles.py](../probes/compare_th04_dos_titles.py) | command | Historical v1450 callback replay: BB calls reconstructed from after-scroll state are invalidated; use actual entry reader. State/row observations remain scoped. |
 | [probes/compare_th04_ordinary_pools.py](../probes/compare_th04_ordinary_pools.py) | command | Compare complete ordinary actor pools against pinned scalar controls and target/MAP owners. |
 | [probes/compare_th04_ordinary_video.py](../probes/compare_th04_ordinary_video.py) | command | Compare complete ordinary VRAM/palettes/display state with independent scalar controls. |
+| [probes/compare_th04_stage3_route.py](../probes/compare_th04_stage3_route.py) | command | Compare continuous Stage3 DOS and native state, pools and private Midboss bytes. |
 | [probes/compare_th04_stage_clear.py](../probes/compare_th04_stage_clear.py) | command | Compare complete DOS/native Stage2 clear and Stage3 entry pools/state/input/RNG while retaining key/GDC failures. |
 | [probes/inspect_th04_cpu_fault_trace.py](../probes/inspect_th04_cpu_fault_trace.py) | command | Decode private MAIN exception frames without claiming normal gameplay. |
 | [probes/inspect_th04_demo_snapshots.py](../probes/inspect_th04_demo_snapshots.py) | command | Read back DGROUP snapshots against complete ordinary demos and diagnose actor differences. |
@@ -82,6 +84,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_primary_cpu_fault.gdb](../probes/th04_primary_cpu_fault.gdb) | fixture | Run the primary-emulator fault observer with configured symbols/event inputs. |
 | [probes/th04_product_surface.py](../probes/th04_product_surface.py) | support | Attest a same-run four-product source cohort and derive OP counter hooks from its own MAP and bytes. |
 | [probes/th04_score_video_checkpoints_gdb.py](../probes/th04_score_video_checkpoints_gdb.py) | support | Observe original complete video, font and DGROUP at the actual score-return instruction boundary. |
+| [probes/th04_stage_inputs_gdb.py](../probes/th04_stage_inputs_gdb.py) | support | Queue real keyboard edges one loop ahead, verify actual input samples and preserve an unexpected Game Over witness. |
 | [probes/th04_stage_waits.py](../probes/th04_stage_waits.py) | support | Attest own-file Stage2 Continue/dialogue calls, CPU/full-memory and actual player-input ownership. |
 | [probes/th04_stage_waits_gdb.py](../probes/th04_stage_waits_gdb.py) | support | Capture Stage2 blocking call/return/player checkpoints with five persistent read-only watchpoints. |
 | [probes/th04_title_draw_checkpoints_gdb.py](../probes/th04_title_draw_checkpoints_gdb.py) | support | Record original BB code-entry registers, caller and scroll state on declared updates. |

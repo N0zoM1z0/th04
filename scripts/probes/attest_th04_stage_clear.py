@@ -75,11 +75,16 @@ def attest_clear(
     source_snapshot=None,
     stage2_updates=11000,
     require_bounded_watchpoints=False,
+    stage3_updates=1,
+    extra_registered_watchpoints=0,
 ):
     require(
         type(stage2_updates) is int and 0 < stage2_updates <= 65535,
         "epoch configured Stage2 extent",
     )
+    require(type(stage3_updates) is int and 0 < stage3_updates <= 65535, "clear configured Stage3 extent")
+    require(type(extra_registered_watchpoints) is int and extra_registered_watchpoints in [0, 1],
+            "clear explicit additional observer registry")
     prefix = load(capture, target, source_snapshot)
     receipt = prefix["receipt"]
     require(
@@ -147,7 +152,7 @@ def attest_clear(
         and summary["stage2_update_budget"] == profile["stage2_updates"] == budget
         and type(summary["stage2_complete_updates"]) is int
         and 9905 < summary["stage2_complete_updates"] <= budget
-        and summary["stage3_complete_updates"] == profile["stage3_updates"] == 1
+        and summary["stage3_complete_updates"] == profile["stage3_updates"] == stage3_updates
         and summary["stage2_final_score_quit"] == 2,
         "clear observed post-score exit/budget/followup",
     )
@@ -187,7 +192,7 @@ def attest_clear(
         [key for key in raw_rows if key[0] == 0] == [(0, f) for f in range(9837)]
         and [key for key in raw_rows if key[0] == 1]
         == [(1, f) for f in range(stage2_updates)]
-        and [key for key in raw_rows if key[0] == 2] == [(2, 0), (2, 1)],
+        and [key for key in raw_rows if key[0] == 2] == [(2, f) for f in range(stage3_updates + 1)],
         "epoch complete raw stage/frame ranges",
     )
     module = relocated_module(main, load_segment)
@@ -199,10 +204,12 @@ def attest_clear(
         "stage_init",
         "init_return",
     ]
-    tail_labels = ["stage2-return", "stage2-free", "stage3-init", "stage3-init-return",
-                   "stage3-loop", "stage3-actor", "stage3-score", "stage3-loop"]
-    tail_frames = [stage2_updates] * 3 + [0, 0, 1, 1, 1]
-    tail_stages = [1, 1, 1, 2, 2, 2, 2, 2]
+    tail_labels = ["stage2-return", "stage2-free", "stage3-init", "stage3-init-return", "stage3-loop"]
+    tail_labels += [label for _ in range(stage3_updates)
+                    for label in ["stage3-actor", "stage3-score", "stage3-loop"]]
+    tail_frames = [stage2_updates] * 3 + [0, 0]
+    tail_frames += [frame for frame in range(1, stage3_updates + 1) for _ in range(3)]
+    tail_stages = [1] * 3 + [2] * (3 * stage3_updates + 2)
     regular_extent = 3 * stage2_updates + 6
     rows = []
     fields = profile["fields"]
@@ -228,7 +235,8 @@ def attest_clear(
             ti = ordinal - regular_extent
             require((row["stage"], row["frame"]) == (tail_stages[ti], tail_frames[ti]),
                     "clear actual return/init/first-update frame order")
-            require(bool(row["memory"]), "clear mandatory complete tail memory")
+            if ti < 8 or ti >= len(tail_labels) - 3:
+                require(bool(row["memory"]), "clear mandatory complete tail memory")
         regs = bytes.fromhex(row["cpu_regs"])
         segs = bytes.fromhex(row["segments"])
         require(
@@ -336,7 +344,7 @@ def attest_clear(
             )
             full_mem += 1
         rows.append(row)
-    require(len(rows) == 3 * stage2_updates + 14, "clear complete boundary extent")
+    require(len(rows) == 3 * stage2_updates + 3 * stage3_updates + 11, "clear complete boundary extent")
     attest_clear_tail(rows, raw_rows, events, stage2_updates, profile)
     b = rows[:6]
     require(
@@ -370,10 +378,11 @@ def attest_clear(
         stage3_init_lcg_draws=rows[regular_extent + 3]["lcg_calls"] - rows[regular_extent]["lcg_calls"],
         stage3_init_ring_draws=rows[regular_extent + 3]["ring_calls"] - rows[regular_extent]["ring_calls"],
         stage2_clear_checkpoint="score",
-        stage3_complete_updates=1,
+        stage3_complete_updates=stage3_updates,
         exit_cfg=exit_cfg,
         clear_bridge=[{k: v[k] for k in ["label", "frame", "stage", "quit", "lcg_calls", "ring_calls", "cs", "ip", "dgroup_segment", "resident"]}
-                      for v in rows[regular_extent:]],
+                      for v in (rows[regular_extent:] if stage3_updates == 1
+                                else rows[regular_extent:regular_extent + 8] + rows[-3:])],
         full_conventional_snapshots=full_mem,
         bridge=[
             {
@@ -396,9 +405,9 @@ def attest_clear(
         raw_loop_samples=len(raw_rows),
         raw_rng_counts=counts,
         stage_init_lcg_draws=353,
-        loop_contexts_bound=stage2_updates + 2,
+        loop_contexts_bound=stage2_updates + stage3_updates + 1,
         scope=__doc__
-        + f" Own-MZ/MAP/raw/CPU/DGROUP/video/full-memory/CFG attest {stage2_updates} complete Stage2 updates and one complete Stage3 update. Post-score quit2 returns without another loop. Raw RNG suffixes independently bind the final update and next initialization; LCG continuity is checked. Native fidelity, physical timing, NP2, Windows, campaigns and historical exactness remain separate.",
+        + f" Own-MZ/MAP/raw/CPU/DGROUP/video/full-memory/CFG attest {stage2_updates} complete Stage2 updates and {'one' if stage3_updates == 1 else stage3_updates} complete Stage3 update{'s' if stage3_updates != 1 else ''}. Post-score quit2 returns without another loop. Raw RNG suffixes independently bind the final update and next initialization; LCG continuity is checked. Native fidelity, physical timing, NP2, Windows, campaigns and historical exactness remain separate.",
     )
     resources = watchpoint_resources(
         summary, rows, len(profile["entries"]), require_bounded_watchpoints
@@ -413,7 +422,7 @@ def attest_clear(
         from th04_stage_waits import attest_waits
 
         report["stage2_waits"] = attest_waits(
-            capture, main, target, profile, load_segment, raw_rows
+            capture, main, target, profile, load_segment, raw_rows, extra_registered_watchpoints
         )
     return report, rows, raw_rows, events
 

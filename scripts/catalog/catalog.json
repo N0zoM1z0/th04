@@ -378,6 +378,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/attest_th04_stage3_route.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Attest continuous Stage3 inputs, bounded observers, own private Midboss stores and process RNG.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/attest_th04_stage_boundary.py",
     "category": "boundaries",
     "role": "command",
@@ -662,6 +669,13 @@
     "category": "runtime",
     "role": "command",
     "purpose": "Compare complete ordinary VRAM/palettes/display state with independent scalar controls.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/compare_th04_stage3_route.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Compare continuous Stage3 DOS and native state, pools and private Midboss bytes.",
     "purpose_source": "maintained-description"
   },
   {
@@ -3708,6 +3722,13 @@
     "role": "support",
     "purpose": "Read-only code-fetch checkpoints across the actual next-stage lifecycle.",
     "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/th04_stage_inputs_gdb.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Queue real keyboard edges one loop ahead, verify actual input samples and preserve an unexpected Game Over witness.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/probes/th04_stage_waits.py",
