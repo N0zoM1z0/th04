@@ -41,6 +41,9 @@ agree over 31196 boundaries. The DOS aggregate retains
 544 post-reset key/31196 raw-GDC differences and
 12 additional UI raw-GDC differences. Older vectors remain separate.
 
+This runtime pair replaces MAIN only; OP, MAINE, ZUN and game assets remain
+the pinned originals. It does not establish a complete four-source campaign.
+
 Current 566/4c3c50cb cold GNU and optimized UBSan match 20795 selected scalar
 records and 10397 full nine-pool snapshots, actual consumed inputs, homing and
 Boss/Midboss/RNG. Physical CFG/SCR files and the legacy 3500/8000 plus 59 RGB/TRAM

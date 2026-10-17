@@ -1,184 +1,114 @@
-# TH04 reconstruction and native handoff
+# TH04 actionable handoff
 
-Updated2026-10-17. Both full development goals remain active. Work on one
-bounded claim, keep code/docs English and publish frequent gpt-6.1-sol: commits.
+Updated 2026-10-17. Both full DOS reconstruction/native goals remain active.
+Keep code/docs English. Use one low-priority CPU and one Borland/Wine writer;
+launch muted/headless. The user uses Windows: no GUI, focus changes or host keys.
 
-## Current baselines
+## Current bounded frontier (v1461)
 
-DOS tools:main0223bc1 plus current wait-owner/evidence commits.
-Native:port/modern-64 8b55013 plus correctedcustom-wire/evidence commits.
+This runtime pair replaces MAIN only; OP, MAINE, ZUN and game assets remain
+the pinned originals. It does not establish a complete four-source campaign.
 
-Native checkout: `.analysis/native/port64-recovery-v1445/`; current programs/cache:
-`.analysis/port64/stage2-boss-v1460-wire-final/{gnu,ubsan}` inside it.
-Full 566-file closure:
-`bcd114bb581588aaaf1fc0de804c04f182ea97ee5439b34027736caec895dab4`.
-Prior 3747 cold programs/cache remain live; superseded 6a is recoverable.
-DOS source/compat is unchanged since 07f69d3. Cohort:
-`.analysis/build/dos-four-products-v1443/MAIN.EXE`,200279 bytes/1183 relocations,
-SHA778641ab...; own MAP42d7d2c7... at
-`.analysis/reconstruction/probes/product-20261016-065147-3427b48f-main/source/obj/main-native.map`.
-Original MAIN 156258 bytes/SHA077440a3...,header 6144/1136 relocations,entry 0000:0000.
-Targets stay candidate-local-attested; pristine provenance remains open.
+Original and reconstructed DOS complete 10394 Stage2 updates, actual Kurumi
+defeat at 9809, post-score quit=2 return, Stage3 initialization and its first
+complete actor/score update. Comparable fields, 11636 ordered RNG calls
+(1062 LCG/10574 ring), nine full pools, 22 states and 38 configured video regions
+agree across 31196 boundaries and 20233 independent raw loops. Each capture has
+254 complete conventional-memory witnesses. DOS aggregate remains false:
+544 post-reset key/31196 raw-GDC differences, plus twelve auxiliary
+UI records with equal fields/pools/input/configured video and 12 raw-GDC differences.
 
-## Startup
+Current 566/4c3c50cb cold GNU and optimized UBSan match 20795 selected scalar
+records and 10397 full nine-pool snapshots, consumed input, homing, Boss/Midboss
+and continuous RNG. Both full paired reductions pass their native gates and
+all seven wires are identical. Native's 356 volatile key samples stay separate.
+Both DOS initial/final CFG/SCR files and both native final files agree; ten
+full 16-bit score checksums validate. The 32 selected complete lifecycle memories
+independently verify CPU, own MZ code, DGROUP, resident and stack.
 
-Read AGENTS.md,RE_HANDOFF,ARCHITECTURE,RE_WORKFLOW,ORACLES,KNOWLEDGE_BASE and
-relevant skills; query the knowledge ledger before new experiments.
+## Input and ownership facts
 
-```sh
-git status --short
-git ls-remote --heads origin main port/modern-64
-git -C .analysis/native/port64-recovery-v1445 status --short
-taskset -c 1 nice -n 19 python3 scripts/preflight.py
-python3 scripts/status.py
-python3 scripts/ghidra.py th04-main check
-```
+Continue 5363/8132 and pre/post dialogues 6982/9905 use 189/400/189/76 actual
+logical FrontEnd polls. Resume frames 5364/6983/8133/9906 consume 32/8192/32/32.
+The pre-dialogue player input differs from its preceding loop's 32. Post-dialogue
+player prefix precedes run/return; its `player_first` observer order is explicit.
+No terminal Stage2 loop follows score quit=2. The 11000-row budget leaves 606
+syntax-checked, unconsumed inputs. Five auxiliary watches and seven cached
+boundary points keep each debugger at fifteen registered objects.
 
-Use one low-priority CPU and one Borland/Wine writer. Keep launches muted/
-headless; no Windows GUI, focus changes or host keys. Keyboard stimuli stay
-inside the private recorded emulator. Never inject expected state/RNG/phase.
+The custom pool has 52 nonzero bytes through return/free/Stage3 init entry,
+then all 832 bytes are zero after init and the first actor. The exporter needs
+no new fix. Original MAIN 0AAF:7456 calls 0AAF:185E for B204/208 dwords; AX clearing
+plus REP STOSD does not prove a general upper-EAX guarantee. Later stages need
+new owner observations. Nine tail mutations, three native clear/Stage3 mutations
+and thirteen malformed plans reject. Both failed prior collectors are preserved:
+waiting for quit at a nonexistent next loop, then sampling player after the
+post-dialogue. Both fixes change observation, not gameplay.
 
-## Verified clear and Stage3 entry (v1461)
+## Builds, identity and next work
 
-Original and reconstructed DOS complete **10394 Stage2 updates**, actually
-defeat Kurumi at 9809, return after the final score with quit=2 and complete
-Stage3 initialization plus its first actor/score update. All comparable fields,
-11636 ordered RNG calls (1062 LCG/10574 ring),
-nine full pools, 22 states and 38 configured video regions agree across
-31196 boundaries and 20233 independent raw loops. Each own-MZ capture
-has 254 complete conventional-memory witnesses. The DOS aggregate remains
-false: 544 post-reset key and 31196 raw-GDC records differ. Twelve
-additional UI records have equal fields, full pools/states, actual player
-inputs and configured video; their 12 raw-GDC differences remain explicit.
+Current source closure is
+`4c3c50cb96cdac3d3658d5540afac451d2d1640cab40ce883c2a35c083f6aeec` (566 files).
+Cold GNU builds 87 programs/83 CTests; optimized UBSan builds two programs.
+Both preserve legacy 3500/8000 wires and 59 RGB/TRAM pairs with 177 observations.
+Keep `.analysis/port64/kurumi-clear-v1461-final` in the native checkout and the
+prior bcd/3747 caches live; future affected changes require fresh cold outputs.
 
-Current 566/4c3c50cb cold GNU and optimized UBSan match
-20795 selected scalar records and 10397 full nine-pool snapshots, consumed
-input, homing, Boss/Midboss and continuous RNG. All seven output wires are
-identical. The 356 volatile native key samples remain separately measured.
-Continue 5363/8132 and dialogue 6982/9905 use 189/400/189/76 real logical
-FrontEnd polls. Post-dialogue observes player -> run -> return; pre-dialogue
-observes run -> return -> player. There is no terminal Stage2 loop after quit=2.
-The 11000-row budget leaves 606 syntax-checked, unconsumed inputs.
+Root `main` owns the probe bundle and standalone DOS source. Native checkout
+`.analysis/native/port64-recovery-v1445/` pushes `HEAD:port/modern-64` separately.
+Both current README/ledgers and the focused differential/lifecycle notes are
+updated. No DOS source or accepted exact unit changed. Original MAIN SHA is
+`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`;
+the source MAIN cohort remains `778641ab845bcd67c6888bacc049e2cfa20fddda844681d3d2fd164f8386abc9`.
+Original canonicality remains candidate-local-attested, not a pristine dump proof.
 
-Six defeat/explosion memories plus final actor/score and eight complete
-return/free/init/first-update memories agree across both files. All 32 selected
-full memories independently verify CPU, own MZ code, DGROUP, resident and stack.
-Both DOS initial/final CFG/SCR files and both native final files match; all ten
-16-bit score checksums validate. Nine actual-tail mutations, three native
-clear/Stage3 mutations and thirteen malformed clear plans reject. Legacy
-3500/8000 wires and 59 RGB/TRAM pairs with 177 observations still pass, with
-cold GNU 87 programs/83 CTests and two optimized UBSan programs.
-
-The custom pool retains 52 nonzero bytes through Stage2 return/free and Stage3
-init entry, then all 832 bytes are zero after init and the first actor. The
-current native exporter agrees; no gameplay/exporter fix is needed. Own MZ
-0AAF:7456 calls 0AAF:185E for B204/208 dwords. The helper clears AX and executes
-REP STOSD; its upper-EAX behavior is not generalized beyond the observed case.
-
-Both failed earlier collector capsules and their actual partial evidence stay
-recoverable. Current successful capsules are `capture-post/` and runtime
-`dos-kurumi-clear-v1461-post-original`/`-candidate` under the root-owned probe.
-Next close final archive/recovery, both CIs and clean pushed heads. Then extend
-the actual continuous Stage3 route with a new bounded event/budget and complete
-state/pool/input/RNG checks. Native Stage2 pictures, natural UI/IRQ/GDC timing,
+Next extend the actual continuous Stage3 route to an independently justified
+event/budget, retaining full scalar/pool/input/RNG and own-file CPU witnesses.
+Read the required docs/skills, git status and preflight; attest the active
+database before target work. Reuse scoped knowledge/evidence rather than older
+progress labels. Native Stage2 full pictures, natural UI/IRQ/GDC timing, complete
 campaigns, NP2, Windows, pristine provenance and historical exactness remain open.
-Both full goals remain active. No accepted exact unit or DOS source changed.
-
-## Verified frontier
-
-Original and reconstructed DOS complete 8000 Stage2 updates after the same
-Stage1 return at 9837. Comparable fields, 10161 ordered RNG calls (708 LCG/9453 ring),
-nine full pools, 22 states and 38 configured video regions agree across 24007
-bridge/actor/score/loop snapshots; 17838 independent raw loops bind the route.
-The aggregate remains false: 422 post-reset key and 24007 raw-GDC records differ.
-Six additional own-file blocking CPU/stack/full-memory observations have equal
-fields, full pools/states and configured video, with six raw-GDC differences.
-These are MAIN replacements with original OP/MAINE/ZUN/assets; older failed
-vectors remain independent.
-
-Continue at 5363 and pre-Boss dialogue at 6982 are independently observed on both
-DOS files. Own player entries establish 5364 input 32 and 6983 input 8192, although
-the preceding 6982 loop input is 32. The native adapter uses real FrontEnd keys;
-189 Continue and 400 dialogue polls suspend gameplay and resume one update each.
-All other loop-to-player input checks stay strict. Five fixed auxiliary watches
-plus seven cached boundary points keep each debugger at 15 registered objects.
-Fourteen target-record and 12 native-record mutations reject; 11 earlier actual
-CLI plan negatives and 21014 old/new reader records remain valid.
-
-Current complete 566/bcd114bb cold GNU 87 programs/83 CTests and optimized UBSan 2
-match 16003 selected scalar records and 8001 complete nine-pool snapshots, actual
-consumed input, homing, Boss/Midboss and continuous RNG. 278 volatile native
-post-reset key samples remain separately measured. Both actual programs also
-reproduce the legacy 3500 wires and the separate 9835 selected updates/59 full
-RGB-TRAM pairs/177 observations with recorded elapsed inputs.
-
-The superseded 6a cold program failed 602 custom-pool records at 7399..8000. Its
-exporter always used the Yuuka6 view and omitted six existing Kurumi rays.
-Pinned original MAIN 13A9:4F84 independently observes a byte flag, word members,
-26-byte stride and six entries at DGROUP 2134:B204; source own MAP locates the
-allocator 157C:335C and pool 242E:4544. The corrected exporter writes all six
-actual records into the first 156/832 bytes and preserves the full tail and
-inactive coordinates. All other exported bytes stay identical. Gameplay logic
-was unchanged; keep the failed program/report as a counterexample.
-
-Boss initialization is observed at 6983 with 4800 HP; phase 1 starts at 7303 and phase 2
-starts at 7334. All 1018 battle actor updates through 8000 match; the final Boss is
-phase 2/3811 HP. Defeat and clear remain open. The prior Midboss defeat at 3349 and
-reset at 3414 remain accepted under their separate callback/lifecycle gate. Complete
-initial/final physical CFG/SCR files agree and all ten 16-bit score checksums pass.
-
-## Next work
-
-Advance the actual Stage2 Boss toward defeat/clear using own-file inputs,
-RNG and segment/layout evidence. Add native Stage2 pictures only with independent
-original elapsed checkpoints. Resolve the 422 post-reset key and raw-GDC
-failures; equal consumed inputs do not accept IRQ/CPU/display timing. Full
-original/source/native campaigns, four-product routes, NP2, native Windows,
-every-frame/raw-plane rendering, audio/input clocks, pristine provenance and
-historical exactness remain open. Keep both full goals active and leave the
-two deferred MAIN exactness cases alone.
-
-Use --stage2-updates N --require-midboss --require-bounded-watchpoints
---require-stage2-waits on compare_th04_stage_boundary.py for this route.
-A fixed stop cannot accept Boss defeat. Freeze producer/readers before new
-captures; never modify closed capsules or their live backing inputs.
-
-Root-owned evidence: `.analysis/reconstruction/probes/dos-stage2-boss-v1460/`. Run private recovery from the main checkout.
+Never restart a live capture merely on an observation timeout or alter a completed
+capsule. The two old public capture/keyboard backing files remain frozen inputs.
 
 ## Verified recovery
 
-Verified retention archives 3095 owned generated files into 1678 content blobs,
-releasing 5238.078 MiB after archive, gzip, both journal files and new frozen replay snapshots. All 38121
-protected identities verify, including 33549 parents, all 38 previous late
-identities and that finish identity. Current 566/bcd114bb GNU 87/cache/UBSan 2 and
-prior 3747 programs/cache stay live. Complete compressed original/source CPU,
-DGROUP, video, conventional memory, raw/RNG/keyboard/UI data remain preserved.
-The superseded 6a 602-record failure and its exact program are recoverable.
+Verified final retention archives 352 additional owned generated files
+into 6 content blobs, reusing hash-verified inherited gzip/file recipes.
+It releases 2933.418 MiB after new archive/gzip costs, both journals, frozen
+replay snapshots, both recovery metadata trees and accounting receipt. Together
+with the earlier 54-file/17-recipe scout archive, verified release is
+4842.230 MiB (4.729 GiB). The early files are counted once.
+All 43077 protected identities verify, chaining all 38326 scout identities,
+all 38121 preceding parents, all 22 previous late files and that finish identity.
 
-Actual recovery restores 12 owned capture aliases and the exact old 6a GNU program.
-It executes that program and both current cold GNU/optimized UBSan programs with
-fresh original-input-only 8000 fixtures. All four output wires reproduce: old 602
-custom failures and current zero differences. Frozen paired DOS/native/UI
-reducers execute for before and current GNU; UBSan's four wires equal GNU and its
-original full paired report. No second restored UBSan reducer is claimed. Both
-actual reductions retain 422 key/24007 main-GDC/6 auxiliary-GDC failures. All 13 aliases
-verify SHA, size, mode and nsmtime before retirement. The earlier borrowed one HDI
-plus four legacy aliases retire separately with no new cleanup credit.
+Actual recovery restores twelve owned complete capture aliases and the failed
+original's raw witness. Both current cold GNU/optimized UBSan programs execute
+fresh original-input-only clear fixtures. All seven state/pool/input/UI/clear
+wires and physical saves reproduce. The frozen full paired DOS/native/UI
+reducer executes for GNU and reproduces the original configured vectors,
+including the failed 544 key/31196 main-GDC/12 UI-GDC aggregate fields.
+UBSan reproduces its original seven wire identities and files; no second
+restored UBSan reduction is claimed. Both the 32-memory complete lifecycle and
+the failed capture's six-memory defeat consumers execute again. SHA, size,
+mode and nanosecond mtime verify before all thirteen aliases retire.
+
+Current 566/4c3c50cb GNU 87/cache/UBSan 2 and prior bcd/3747 cold programs/caches
+remain live. Complete compressed original/source CPU, DGROUP, raw/RNG, video,
+full memory and UI evidence remains preserved. Both failed collector capsules
+retain their incomplete verdicts. The verified original-only defeat witness
+comes from a failed capture; it does not establish a complete successful run. Earlier borrowed one HDI
+and four elapsed aliases retired separately, with no cleanup credit.
 
 ```sh
-python3 .analysis/reconstruction/probes/dos-stage2-boss-v1460/replay_restored.py \
-  --output-dir .analysis/reconstruction/probes/NEW-stage2-boss-recovery
+python3 .analysis/reconstruction/probes/dos-kurumi-clear-v1461/replay_restored.py \
+  --output-dir .analysis/reconstruction/probes/NEW-kurumi-clear-recovery
 ```
 
-Run from the main checkout. This reexecutes native programs and recorded DOS
-consumers, not the emulator. Use fresh outputs; recover.py --restore --path EXACT
-supports manual recovery. Subsequent journals must merge all 38121 protected
-identities, every finish.json late_protected entry and that finish identity.
-The two old public capture/keyboard files remain frozen live backing inputs.
-Historical missing worktrees, native v1432's 94 files and v1437 MAIN/MAP remain explicit
-gaps; never recreate frozen paths, rebind receipts or count missing files as cleanup.
-Actual current GNU/UBSan final MIKO.CFG and GENSOU.SCR bytes also match the
-attested original DOS8000 files exactly, including the second Continue update.
-The separate native-physical-files-attested.json binds both producer receipts.
-Both full goals stay active; Stage2 Boss defeat/clear, native pictures, timing,
-campaigns, NP2, Windows, pristine provenance and historical exactness remain open.
+Run from the main checkout. This executes native programs and frozen recorded
+DOS consumers, not the emulator. Use fresh outputs. `recover.py --restore --path
+EXACT` restores individual owned aliases; verify SHA/size/mode/nsmtime before
+retiring them. The next journal must merge every protected identity, every
+`finish.json` late_protected entry and that finish identity. Never count missing
+historical worktrees, native v1432's 94 files or v1437 MAIN/MAP as cleanup, and
+never recreate a frozen path to hide those recorded recovery gaps.
