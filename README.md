@@ -25,25 +25,19 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
-The actual v1474 original defeats Elly at 12792, departs Stage3 at 13377 and
-captures Stage4 init/score1. Both current cold stock native roles replay actual
-loop words with 130 identical outputs;all 13378 pool/state snapshots and four
-literal players match. Full RGB passes22/23 samples;407 blinking-text pixels
-at 12889 and 1805 postactor keys remain separate. No emulator is live. The next
-step is the corresponding maintained-source capture;see the current handoff.
+The v1475 actual source MAIN defeats Elly at 12792 and reaches Stage4 init/score1
+with original OP/MAINE/ZUN/assets. All 13378 pool/state snapshots,13377 actual
+words and 33609 raw/resident/RNG rows match the original. All 23 full live-font
+RGB/TRAM/palette samples pass. Source strict aggregate retains 19 postactor keys
+and 23 raw GDC differences. Native 12889 still differs by 407 blinking pixels;
+1805 native keys remain separate. No emulator is live. See the current handoff.
 
-The v1473 native repair propagates and consumes Elly's scythe hit flag. Both
-fresh cold GNU/UBSan frontends reproduce actual original hit8046/GameOver8085:
-8082 complete nine-pool/21-stable-field snapshots and8086 raw score/state/resident/
-RNG-count rows agree. All79 old8000 output hashes remain unchanged. The original
-capture is incomplete and716 post-actor inputs remain separate; Elly defeat,
-Stage4 DOS parity and full campaigns are still open. See the current handoff.
-
-The v1470 original/source DOS vector reaches8000 Stage3 updates: all8001 nine-pool,
-22-state/private3 snapshots, actual inputs and nine configured video-region samples
-match. Literal post-dialogue player inputs agree. The strict aggregate retains49
-post-actor key/nine raw-GDC differences; source fonts/full RGB and campaigns remain
-open. Both source8000 and the failed original Elly probe are terminal. See the current handoff and recovery instructions.
+The prior v1473 native repair propagates and consumes Elly's scythe hit flag.
+Cold GNU/UBSan reproduce original hit8046/GameOver8085 and retain all 79 old8000
+output hashes. That failed original capture stays incomplete. The older v1470
+DOS comparison covers8000 updates with49 volatile keys/nine raw GDC differences;
+its observer scope differs from the new sparse route. Both remain recorded
+separately. Full campaigns are still open.
 
 The retained v1467 records a complete original 8000-update Stage3 route. Native
 566/4787233c replays its literal inputs: both cold GNU/optimized UBSan programs

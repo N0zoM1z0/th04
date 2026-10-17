@@ -1,5 +1,27 @@
 # Private build and analysis retention
 
+## Terminal source Elly/Stage4 recovery (v1475)
+
+Current DOS-root `source-elly-v1475/recover.py` carries1520 exact aliases:
+1513 inherited and seven new source initial/execution/font/raw/log/input files.
+Every new alias restores SHA,size,mode,nsmtime. Identity, state/RNG, complete
+live-font RGB and Stage4/player consumers reproduce byte-identical reports with
+real restored files and aliases absent. All19 volatile keys and23 raw GDC
+failures remain;selected source RGB/state gates pass. No emulator is live.
+
+Keep69967 parent identities, all current/late/finish identities and every
+physical provider. Current game builds/link inputs, compressed actor stream,
+all23 own font/video/RAM samples, player/init RAM and immutable source capsule
+stay physical. Use `frozen_reader.py --reader identity|pair|rgb|transition`.
+Restore only explicit paths,verify,then retire. Future producers use fresh paths.
+
+Actual newly retired source files total96.3828125MiB; new recovery gzip archives
+cost9.11328125MiB. Recovery artifacts total9.1796875MiB including archives; after a2MiB metadata
+reserve, local net release is85.203125MiB. These are local new-file figures, not a system-wide or
+whole-phase free-space claim. Do not credit v1474 orolder cleanup again. The
+whole-phase journal charges all new retained witnesses/public snapshots and
+32MiB reserve. No new maintained game build orhypothetical-file credit.
+
 ## Current terminal legal-route recovery (v1474)
 
 Current `elly-legal-route-v1474/recover.py` carries1513 direct exact aliases:

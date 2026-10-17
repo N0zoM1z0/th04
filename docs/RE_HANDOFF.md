@@ -1,98 +1,90 @@
 # TH04 current handoff
 
 Updated 2026-10-18. Complete maintained DOS four-product and faithful native x64
-goals remain active. Use one low-priority CPU (`taskset -c 1 nice -n 19`), muted
-headless runs and serialized Borland/Wine builds. No host focus or key injection.
-Keep code/docs/commits English. Use `gpt-6.1-sol: ...`;push main and native
-`HEAD:port/modern-64`. Read actual Git heads and the latest finish publication.
+goals remain active. Use `taskset -c 1 nice -n 19`, muted headless runs,
+serialized Borland/Wine and no host keys/focus. Keep English code/docs and
+`gpt-6.1-sol: ...` commits; push main and native `HEAD:port/modern-64`.
 
-## Actual original Elly defeat and Stage4 (v1474)
+## Actual original/source Elly defeat and Stage4 (v1475)
 
-The original run `dos-elly-legal-v1474-original` completes in 996.426s without
-timeout, exit0. No owned emulator remains. HP6/phase3 at 12791 becomes-8/phase4
-at 12792; phase254 follows at 12824, phase255/dialogue cue12888, then departure
-at 13377 and actual Stage4 initialization/score1. Own-MZ/CPU/fullRAM, all 13377
-loop words,23 full live-font/video/RAM samples and three rebased player controls
-attest. The complete29146871-byte old8000 raw prefix reproduces.
+The maintained normal source MAIN completes the actual Elly route and reaches
+Stage4 initialization/score1 in 929.884s, without timeout, exit0. Original
+OP/MAINE/ZUN and all assets remain installed; all 17 other starting game files
+match the original image. This is a MAIN-only DOS comparison, not a full
+four-source campaign. No owned emulator remains.
 
-Both unchanged cold stock GNU/UBSan products replay all actual loop words and
-agree on130 files. Target comparison passes13378 complete init/actor snapshots
-of nine whole pools/21 stable fields and all 13377 available raw-score/state/
-resident/RNG-count rows. Four literal players agree. Actual Stage4 init/score1
-pools/state and terminal RNG counts match the separate normal-advance GNU
-observer; stock diagnostics stop before Stage4. Their exit1 is the existing
-natural-departure guard after the final complete score, not fixture success.
+All 13378 complete init/actor snapshots of nine whole pools, 22 pointer-free
+states and three independently bound Midboss3 bytes agree with the original.
+All 13377 physical/actual loop words, 33609 common raw-loop configured-field,
+resident80 and ordered RNG observations agree. No extra raw loops occur.
+Four independently attested literal-player pairs agree: 7834/7835=8192,
+12888=32 and 12889=8192. Source player 0708:7463/near return06AA is owned by its
+own MZ/MAP, separate from original 0AAF:5FCF/00F4.
 
-Physical Shot32 reads back asEnter8192 at 7835 and 12889. The12888 player reads32;
-12889 reads8192. The physical-input native forecast misses that fourth literal
-word despite passing selected state/pools; actual-word replay fixes it. Keep both
-cases and 1805 volatile postactor keys. Loop samples are not every-player traces.
+Both actual score13377 CMP operands read quit2 (original DS:5392, source
+DS:CB4C), followed by actual own-init Stage4/frame0 and score1. At both Stage4
+points, nine pools, 22 states, configured stable fields and resident80 agree.
+Midboss3 private-byte ownership is claimed only for Stage3. This directly
+observed departure does not rely on a native forecast or the planned budget.
 
-Full RGB passes22/23 samples, including actual Stage4 score1. At12889,407 text
-pixels differ while all 23 active TRAM/DAC/raw-tone samples agree. Every differing
-pixel has a blink attribute: original rawGDC phase2 is visible, native reports
-hidden. Actual-word replay retains the failure. The cause of clock divergence
-remains open; no phase fitting, masking or expected-visibility assignment.
+All 23 full640x400 RGB, complete528384-byte live-font, active8000-byte TRAM,
+48-channel DAC, text-palette and own-MAP raw-tone samples agree, including
+post-dialogue12889 and Stage4 score1. Each side supplies its own fonts and raw
+GDC; no phase fitting, glyph masks or expected-state writes. All 23 raw GDC
+records differ and 19 volatile postactor keys remain separate. The strict DOS
+aggregate stays false. This observer differs from the older dense8000 vector
+with 49 keys; do not subtract or merge their counts.
 
-Current recovery carries1513 direct aliases (683 inherited plus 463+367 new).
-All830 new aliases restore exact SHA,size,mode,nsmtime. Real/archive readers
-preserve original identity, state and the false RGB/derived aggregate verdicts.
-Current builds andinherited providers stay physical. Alloriginal costs nowenter
-the final journal;thereis no live exclusion orprior cleanup credit.
+## Native comparison and current products
 
-## Product identities and retained build
-
-Phase entry heads are main `f2ff777` and native `95cc935`;theinterim checkpoint
-is main `96a188c`/native `1e98b7c`. Native game source stays 566 files,
+Native 566-file closure remains
 `a7606e662f68a60abbd0e50b6b7d0177dc11fab7154099d1edf4edf5da23352c`.
-Current GNU87 programs/83 CTests andUBSan2/session products/link inputs remain at
+No maintained DOS/native game-source or cold game-build changes in this batch.
+Current GNU 87 programs/83 CTests and UBSan 2/session products/link inputs remain at
 `.analysis/native/port64-recovery-v1445/.analysis/port64/stage3-hit-bridge-v1473-final`.
-There is no new maintained game-source change orcold game build in this batch.
-Only the private const input advisor adds scythe avoidance; full stock replay
-falsifies scout-only state changes. Elly hit propagation/consume/reset remains
-the previous v1473 fix. Keep theolder actual8046 hit/GameOver8085 failure and
-partial8081+35710/no-footer actor stream as causal evidence.
+The v1473 repair propagates/consumes/resets Elly's existing hit flag; retain
+original hit8046/GameOver8085 and its partial actor-stream failure as evidence.
 
-Original MAIN remains 156258 bytes/1136 relocations,
+The v1474 original completes in 996.426s. Both unchanged stock native roles replay
+all actual 13377 loop words with 130 identical files. Nine-pool/state and four
+literal-player gates pass. Stock exit1 is its final natural-departure diagnostic
+guard; native Stage4 uses a separate normal-advance GNU observer. Native RGB
+passes 22/23;12889 has407 blinking-text pixels despite matching TRAM/DAC/tone.
+Keep 1805 native postactor keys separate from the 19 source-DOS keys. Original
+GDC phase2 is visible and native reports hidden; clock divergence is unresolved.
+
+Original MAIN156258/1136 relocations remains
 `077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
-Normal source MAIN remains 200279 bytes/1183 relocations,
+Normal source MAIN200279/1183 relocations remains
 `778641ab845bcd67c6888bacc049e2cfa20fddda844681d3d2fd164f8386abc9`.
-The maintained four-product cohort is `.analysis/build/dos-four-products-v1443`.
-Target provenance stays `candidate-local-attested`,not official pristine proof.
-No artifact/unit exactness state changes.
+Four-product cohort: `.analysis/build/dos-four-products-v1443`.
+Phase entry heads: main `ec3f7c6`, native `a75d43e`; read actual heads and the
+latest finish receipt. Target provenance stays `candidate-local-attested`.
+No artifact/unit exactness changes.
 
-## Original/source DOS frontier and next work
+## Recovery, controls and next work
 
-The MAIN-only source frontier still reaches8000 Stage3 updates after actual
-Stage1/2 clears at 9837/10394. Original OP/MAINE/ZUN/assets remain installed.
-All8001 nine-pool/22-state/private3 snapshots,8000 actual inputs,28231 common
-raw-loop/resident80/RNG observations and nine video-region samples match. Strict
-aggregate retains49 postactor keys and nine raw GDC differences. Source Stage3
-full live fonts/RGB, Elly defeat andStage4 have not yet been captured.
+Current `source-elly-v1475/recover.py` carries 1520 exact aliases:1513 inherited
+plus seven terminal source duplicates/raw files. All seven restore SHA, size, mode,
+nsmtime. Identity, state/RNG, full-font RGB and Stage4/player readers reproduce
+with restored files and archived aliases; strict failures remain. Keep 69967
+parent identities, every late/finish and every physical provider. Current game
+builds, compressed actor stream, all 23 font/video/RAM samples, player/init RAM
+and immutable source capsule stay physical. Cleanup retires 96.3828125MiB gross
+with 9.11328125MiB new archives; net local release is85.203125MiB after own
+recovery artifacts and a2MiB metadata reserve.
+Do not credit older cleanup. The final journal charges all new retained costs.
 
-Next use the current actual original scenario for a sparse maintained-source
-capture. `elly-legal-route-v1474/source-stage3-inputs.txt` preserves every physical
-edge andfreezes actual expected words. Use the candidate's own MZ/MAP/build receipt
-and 0708:7463 player/return06AA,not original0AAF:5FCF/00F4 offsets. Reuse the
-validated own-MAP sparse observer;copy the frozen driver/helper into a fresh
-batch and keep them immutable during capture. Do not restart the completed original
-orpretend stored RAM is an emulator save state. Current source fonts are proven
-only inthe300-loop/six-sample Micro. Its whole-DGROUP stack/input negative remains.
+Use `frozen_reader.py --reader identity|pair|rgb|transition`. Restore historical
+files only explicitly with `recover.py --restore --path EXACT`, verify, then
+retire. Use fresh producer paths; never restart either completed capture or
+pretend recorded RAM is a resume snapshot. The comparator rejects rebased
+inactive-pool-byte and ordered-RNG-return mutations. Micro300 has no ring-return
+event, so that control uses the full actual route.
 
-Continuous display, natural IRQ/UI timing, physical-input frontend fidelity,
-NP2/Windows and full four-source/native campaigns remain open. Do not replace a
-false display gate with fitted phase or weaken collision/invulnerability.
-
-## Recovery and batch closure
-
-Use `elly-legal-route-v1474/recover.py` and `frozen_reader.py --reader
-original|native|rgb|actual|legal`. Restore historical files only explicitly with
-`--restore --path EXACT`, then verify and retire them. Use fresh build/capture
-paths. Keep all parent/late/finish identities,68705 inherited identities andevery
-physical provider. Thefinal journal separates current cleanup,actual regular
-output compression andwhole-phase retained costs plus 32MiB reserve. Never
-recredit old cleanup orcredit hypothetical FIFO raw files.
-
+Next investigate the native12889 blink/clock discrepancy with an independent
+clock/visibility Oracle before editing game semantics. Source RGB now passes at
+that same sample while its raw GDC still differs. Keep timing, physical-input
+frontend fidelity, continuous scanout, NP2/Windows and full four-source/native
+campaigns open. Finish focused comparisons,tracking,both CIs and `git diff --check`.
 Continue [the differential note](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md).
-Finish focused comparisons,tracking,both `python3 scripts/ci.py` runs and
-`git diff --check` before closure. Both complete goals remain active.

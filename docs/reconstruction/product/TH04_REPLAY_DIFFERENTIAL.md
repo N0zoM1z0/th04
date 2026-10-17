@@ -5,6 +5,66 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Actual source MAIN Elly defeat, full RGB and Stage4 (v1475)
+
+The maintained normal source MAIN completes the actual Elly route and reaches
+Stage4 initialization/score1 in 929.884s, without timeout, exit0. Original
+OP/MAINE/ZUN and all assets remain installed; all 17 other starting game files
+match the original image. This is a MAIN-only DOS comparison, not a full
+four-source campaign. No owned emulator remains.
+
+All 13378 complete init/actor snapshots of nine whole pools, 22 pointer-free
+states and three independently bound Midboss3 bytes agree with the original.
+All 13377 physical/actual loop words, 33609 common raw-loop configured-field,
+resident80 and ordered RNG observations agree. No extra raw loops occur.
+Four independently attested literal-player pairs agree: 7834/7835=8192,
+12888=32 and 12889=8192. Source player 0708:7463/near return06AA is owned by its
+own MZ/MAP, separate from original 0AAF:5FCF/00F4.
+
+Both actual score13377 CMP operands read quit2 (original DS:5392, source
+DS:CB4C), followed by actual own-init Stage4/frame0 and score1. At both Stage4
+points, nine pools, 22 states, configured stable fields and resident80 agree.
+Midboss3 private-byte ownership is claimed only for Stage3. This directly
+observed departure does not rely on a native forecast or the planned budget.
+
+All 23 full640x400 RGB, complete528384-byte live-font, active8000-byte TRAM,
+48-channel DAC, text-palette and own-MAP raw-tone samples agree, including
+post-dialogue12889 and Stage4 score1. Each side supplies its own fonts and raw
+GDC; no phase fitting, glyph masks or expected-state writes. All 23 raw GDC
+records differ and 19 volatile postactor keys remain separate. The strict DOS
+aggregate stays false. This observer differs from the older dense8000 vector
+with 49 keys; do not subtract or merge their counts.
+
+Both captures use their own attested MZ, relocated full image, CPU/player entry,
+near caller, MAP and source build receipt. Source runtime load10FC/DS352A,
+score0708:07BD and player0708:7463/return06AA are independently owned; original
+uses load10FC/DS3230, score0AAF:0207 and player0AAF:5FCF/00F4. Source raw tone is
+MAP `_PaletteTone` at relative242E:1C12, not a guessed `_palette_tone` symbol.
+The first failed symbol lookup/log is retained before the reader correction.
+
+The paired reader first replays real Micro300 (301 snapshots/300 raw rows,
+four volatile keys). Rebased synthetic observation copies reject an inactive
+shot trailing byte (281 changed records from20..300) and one ordered RNG return
+(one RNG error, no state/raw errors). Micro300 contains no ring-return hook;
+the full actual13377 pair supplies that independent negative control. Actual
+capture/source/target bytes remain unchanged. Disposable control copies are gone.
+
+Replay DOS-root `.analysis/reconstruction/probes/source-elly-v1475/frozen_reader.py`
+with `--reader identity|pair|rgb|transition`. Four real-restored/archive readers
+preserve byte-identical selected passes and false strict vectors. Seven terminal
+source aliases restore exact SHA,size,mode,nsmtime;1520 total aliases carry all
+1513 inherited providers. Keep69967 parent identities andall late/finish entries.
+Retire96.3828125MiB physical duplicates/raw files, charge9.11328125MiB newarchives
+and own recovery metadata/reserves; never recredit prior cleanup. Current game
+builds and actual compressed observation witnesses remain physical.
+
+Native12889 still differs by407 blinking pixels in the separate v1474 comparison.
+Source RGB now passes that same checkpoint despite differing raw GDC. This does
+not establish the cause of native clock divergence or authorize phase fitting.
+Next isolate clock/visibility semantics with an independent Oracle; natural UI/
+input timing, continuous scanout, cross-emulator and complete campaigns stay open.
+No maintained DOS/native game-code or exactness changes in this evidence batch.
+
 ## Actual original Elly defeat and Stage4 (v1474)
 
 The original run `dos-elly-legal-v1474-original` completes in 996.426s without
