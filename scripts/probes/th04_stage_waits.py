@@ -280,3 +280,79 @@ def attest_waits(capture, main, original, profile, load_segment, raw_rows):
         observations=observations,
         scope=__doc__,
     )
+
+
+def attest_native_waits(frontend, original_waits, raw_rows, initial_lcg_calls):
+    """Check actual native UI polls and retained player prefixes against target owners."""
+    rows = []
+    for line in (frontend / "stage2-blocks.txt").read_text().splitlines():
+        cells = line.split()
+        require(len(cells) == 12, "native wait observation width")
+        rows.append([int(cells[0]), int(cells[1]), cells[2], *map(int, cells[3:])])
+    groups = []
+    for row in rows:
+        cue = row[0], row[2]
+        if not groups or groups[-1][0] != cue:
+            groups.append((cue, []))
+        groups[-1][1].append(row)
+    require(
+        [cue for cue, _ in groups]
+        == [(v["frame"], v["kind"]) for v in original_waits["cues"]],
+        "native actual wait owner sequence",
+    )
+    observations = []
+    for (frame, kind), group in groups:
+        require(
+            len(group) >= 2
+            and [row[1] for row in group] == list(range(len(group)))
+            and all(row[6] == frame for row in group[:-1])
+            and group[-1][6] == frame + 1,
+            "native UI suspension and one actual resumed update",
+        )
+        expected = int.from_bytes(
+            bytes.fromhex(original_waits["player_inputs"][str(frame + 1)]), "little"
+        )
+        require(group[-1][8] == expected, "native wait actual resumed player input")
+        require(
+            all(row[8] == group[0][8] for row in group[:-1])
+            and (kind != "continue" or group[0][8] == expected),
+            "native wait retained player prefix",
+        )
+        require(
+            any(row[5] == 0 for row in group)
+            and any(row[5] == 0x1000 for row in group)
+            and (
+                any(row[4] >= 0 for row in group)
+                if kind == "continue"
+                else all(row[4] == -1 for row in group)
+            ),
+            "native real release/confirmation and typed blocking owner",
+        )
+        lower = raw_rows[(1, frame)]
+        upper = raw_rows[(1, frame + 1)]
+        before = lower["lcg_calls"] - initial_lcg_calls, lower["ring_calls"]
+        limit = upper["lcg_calls"] - initial_lcg_calls, upper["ring_calls"]
+        for row in group:
+            current = row[10], row[11]
+            require(
+                all(
+                    a <= b <= c for a, b, c in zip(before, current, limit, strict=True)
+                ),
+                "native UI independent ordered RNG bounds",
+            )
+            before = current
+        observations.append(
+            dict(
+                frame=frame,
+                kind=kind,
+                polls=len(group),
+                resumed_frame=group[-1][6],
+                player_input=group[-1][8],
+                last_input=group[-1][9],
+            )
+        )
+    return dict(
+        passed=True,
+        observations=observations,
+        scope="Actual logical FrontEnd key polls suspend gameplay and resume exactly one update. Retained Continue prefixes and dialogue player entries use independently attested target input owners; natural UI timing and native pictures remain open.",
+    )

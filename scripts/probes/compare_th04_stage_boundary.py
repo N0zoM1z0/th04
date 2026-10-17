@@ -256,6 +256,7 @@ require(
     "native stage executable identity",
 )
 consumed = None
+native_waits = None
 native_files = ["stage-native.jsonl", "stage2-pools.bin"]
 loop_input_counterfactual = []
 if has_waits:
@@ -281,6 +282,11 @@ if has_waits:
         "native actual player-input extent/order/width",
     )
     consumed = {frame: value.to_bytes(2, "little").hex() for frame, value in samples}
+    from th04_stage_waits import attest_native_waits
+
+    native_waits = attest_native_waits(
+        frontend, ar["stage2_waits"], raw, raw[(0, 0)]["lcg_calls"]
+    )
 native = [
     json.loads(s) for s in (frontend / "stage-native.jsonl").read_text().splitlines()
 ]
@@ -504,6 +510,7 @@ report = dict(
         name: sha((frontend / name).read_bytes()) for name in native_files
     },
     native_producer_receipt_sha256=sha(args.native_receipt.read_bytes()),
+    native_waits=native_waits,
     extra_state_fields=sorted(extra_fields),
     original_attestation=ar,
     candidate_attestation=br,
