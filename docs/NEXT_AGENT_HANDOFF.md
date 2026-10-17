@@ -5,6 +5,27 @@ Code/docs stay English. Use one low-priority CPU, serialize Borland/Wine builds,
 launch muted/headless, and clean unused products after each bounded batch.
 The user uses Windows: no GUI, focus changes or host-key injection.
 
+## Validated native Stage3 Boss forecast (v1466)
+
+Unmodified current cold GNU and optimized UBSan consume the same recorded normal
+input plan through 12000 Stage3 updates; all 41 outputs agree byte-for-byte with
+the private const adviser. The accepted first 4000 inputs remain unchanged.
+A declared dialogue at 9202 precedes Boss phases 1/2/3 at 9203/9241/9273.
+Original and reconstructed DOS Boss parity are still pending. Static sweep,
+diamond and upper continuations fail in native at 4448/4357/4242; preserve these
+failed forecasts and the rejected undeclared-dialogue run.
+
+The first private include overlay compiled but did not execute its adviser.
+V3 preserves both nested include owners and requires actual compiler dependency
+paths plus a mandatory runtime advice sidecar. Compilation alone is insufficient.
+Receipts and the normal-input plan are under
+`.analysis/reconstruction/probes/stage3-boss-v1466`. Next capture original
+Stage3 after-actor DGROUP continuously plus sparse own-font/video/RAM at Boss
+checkpoints, then compare complete pools/state/RNG with the stock programs.
+Early cleanup retires 44 completed payloads with verified recovery, conservatively
+releasing 1628.43 MiB; all 52921 parent identities and current source verify.
+Keep current programs, link inputs, recorded advice and every compressed backing.
+
 ## Verified Stage3 RGB samples (v1465)
 
 Original MAIN 0AAF:0207 has six complete font/video/DGROUP/640 KiB RAM/CPU
