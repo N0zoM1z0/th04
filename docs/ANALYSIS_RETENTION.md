@@ -1,5 +1,43 @@
 # Private build and analysis retention
 
+## Complete Stage3 route frozen recovery (v1462)
+
+Final retention retires56 additional owned files into8 content blobs,
+reusing authenticated gzip/file recipes. It releases1458.559 MiB after archive,
+journals, frozen snapshots and actual final/scout recovery metadata costs.
+Combined with the earlier71-file scout and884-file closed-output retirements,
+release is8423.090 MiB (8.226 GiB); early files count once.
+All48486 chained protected identities verify, including both early journals,
+all preceding parents, all24 previous late identities and that finish identity.
+
+Actual recovery restores21 owned aliases:12 continuous-route,8 complete Micro
+and1 failed raw witness. Both actual current cold GNU/optimized UBSan programs
+run fresh original-input-only prefix/clear/4000Stage3 fixtures. All8 state/pool/
+input/UI/private3 wires,2 prefix pool files and physical saves reproduce.
+The frozen full paired GNU reader reproduces the entire original verdict vector,
+including failed682keys/31563mainGDC/12UI GDC. UBSan reproduces wires and saves;
+no second restored UBSan reducer is claimed. Independent68 full-memory,
+300-input/8-edge and failed64-loop consumers reproduce. All21 aliases verify
+SHA, size, mode and nanosecond mtime before retirement; temporary outputs are
+removed without new cleanup credit. Failed captures and consumers remain failed.
+
+Run from the DOS main checkout; the native branch indexes this root-owned bundle:
+
+```sh
+python3 .analysis/reconstruction/probes/dos-stage3-route-v1462/replay_restored.py \
+  --output-dir .analysis/reconstruction/probes/NEW-stage3-recovery
+```
+
+This runs retained programs and frozen recorded-DOS consumers, not the emulator.
+Use fresh outputs. `recover.py --restore --path EXACT` restores individual aliases;
+verify and remove them after use. Keep current1ad main/session executables and
+link inputs, prior4c/bcd/3747 backings and all compressed CPU/DGROUP/video/RAM/
+raw/RNG/UI evidence live. Future builds use fresh directories. The next journal
+must merge every protected identity, every `finish.json` late_protected entry
+and that finish identity. Historical missing worktrees/nativev1432's94 files/
+v1437 MAIN+MAP remain explicit gaps, never recreated or credited as cleanup.
+
+
 ## Completed probe and unused build cleanup (v1462)
 
 Intermediate cleanup retires 884 owned files: 331 objects, 85 test programs

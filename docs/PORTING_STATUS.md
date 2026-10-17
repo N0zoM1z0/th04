@@ -8,8 +8,9 @@ window/input acceptance stays open under this constraint.
 Current v1462: actual original/source Stage3 reaches4000 after10394 Stage2
 clear. Configured state/pools/private3/RNG/video pass43193 boundaries; both
 566/1ad0ea4c cold native programs pass28793 scalars/14396 nine-pool snapshots.
-DOS682 key/31563 raw-GDC plus12 UI GDC differences remain failed; frozen archive
-recovery, native pictures, physical timing and full campaigns remain open.
+DOS682 key/31563 raw-GDC plus12 UI GDC differences remain failed. Frozen actual
+program/reader recovery passes; native pictures, physical timing and full
+campaigns remain open.
 See [handoff](RE_HANDOFF.md).
 
 Updated 2026-10-17. The full native goal remains active on `port/modern-64`.
