@@ -21,6 +21,11 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
+Current v1466 retains an incomplete original Stage3 run at loop7834. Its complete
+7832-frame actor prefix matches nine whole native pools and 21 stable fields.
+Boss/source parity remains open. A controlled Micro validates the new read-only
+deadline CPU/RAM diagnostic in the DOS main checkout; see the current handoff.
+
 Current 566/88575 has 14 sampled complete Stage2/3 RGB/TRAM matches using new
 original font/video/RAM captures. Every 640x400 RGB pixel and all 8000 active TRAM
 bytes equal authenticated GNU outputs; prior actual UBSan file hashes agree.
@@ -45,8 +50,8 @@ complete pictures, physical timing and Windows remain open; see the
 Current v1463 repairs a carried clear-bonus palette tone at stage-session
 completion. Both cold programs match 14 complete original WORD/DAC samples;
 all eight state wires, legacy routes and 177 prior display observations remain
-unchanged. Full current fonts/RGB and raw graphics-index differences remain
-open. See [current handoff](docs/RE_HANDOFF.md) for evidence and recovery.
+unchanged. The later 14 sampled full RGB/TRAM comparisons above pass; raw graphics
+indices and every-frame display remain open. See [current handoff](docs/RE_HANDOFF.md) for evidence and recovery.
 
 
 Current v1462 completes actual original/source4000-update Stage3 routes after

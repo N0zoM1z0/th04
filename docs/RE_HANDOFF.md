@@ -5,6 +5,40 @@ Code/docs stay English. Use one low-priority CPU, serialize Borland/Wine builds,
 launch muted/headless, and clean unused products after each bounded batch.
 The user uses Windows: no GUI, focus changes or host-key injection.
 
+## Current Stage3 frontier and blocker (v1466)
+
+The original collector stops producing loops at Stage3 7834 and reaches its
+1800.85-second deadline. Exit 0 does not make it complete: timeout is true and
+the completion marker is absent. Its own stopped CPU was not captured, so the
+waiting instruction and cause remain unknown. Full Boss/source-DOS parity is
+still unproved. Do not restart another long prefix without deadline diagnostics.
+
+An immutable partial stream yields 7832 complete after-actor records. All nine
+whole pools and 21 stable native fields, including private3/homing/RNG state,
+agree with current GNU; 685 volatile post-actor keys remain separate. Independent whole
+1136-relocation MZ, 28066 raw loops and 7835 actual Stage3 inputs validate.
+The old first 24231 loops and all 14472 ordered RNG stack-word records reproduce.
+The old extra loop4000 differs in one input: its old held40 versus the continued
+plan's normal Bomb pulse56. That raw aggregate stays false. The first 4000
+consumed inputs remain unchanged. Partial gzip/footer and later coverage stay
+explicitly missing; prepared 12000-frame/Boss/RGB reducers do not imply a pass.
+
+Both unmodified current GNU/optimized UBSan consume the frozen normal-input
+plan through 12000 with all 99 outputs identical, including 14 picture sets.
+This remains a native forecast: no new original Boss/RGB acceptance follows.
+The previous 14 sampled Stage2/3 RGB/TRAM matches below remain unchanged.
+
+The collector now saves a read-only CPU/full640KiB RAM witness on its deadline
+SIGINT before TERM/KILL fallback. A real 25-second controlled Micro validates
+original 0AAF:00B7/frame55, own MZ/registers/opcode/RAM and unchanged CPU; two
+rebased mutations reject. That controlled capture remains incomplete. Next use
+this hook to locate the Stage3 wait, then resume original/source/native parity.
+Run collectors from the DOS main checkout. Engine source stays 566/88575.
+The [full comparison history](https://github.com/N0zoM1z0/th04/blob/main/docs/reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md) stays on `main`.
+Receipts: `.analysis/reconstruction/probes/stage3-boss-v1466`. Fifteen capture
+aliases restore with exact metadata and independent readers reproduce before
+retirement. Keep all compressed witnesses, source capsules and current programs.
+
 ## Verified Stage3 RGB samples (v1465)
 
 Original MAIN 0AAF:0207 has six complete font/video/DGROUP/640 KiB RAM/CPU
