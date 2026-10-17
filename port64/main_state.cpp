@@ -148,7 +148,7 @@ void State::start_kurumi_after_dialog(std::array<std::uint8_t,3> palette_zero) {
     titles::request_boss(titles_,overlay_.callback,stage_id_,std::uint8_t(playchar_));
 }
 void State::start_elly_after_dialog(std::array<std::uint8_t,3> palette_zero) {
-    if(stage_id_!=2 || !stage_ || !stage_->stopped() || boss_active() || midboss_state().active || !elly_)
+    if(stage_id_!=2 || !stage_ || boss_active() || midboss_state().active || !elly_)
         throw std::logic_error("invalid Elly dialog handoff");
     elly_->set_palette_zero(palette_zero);elly_active_=true;
     titles::request_boss(titles_,overlay_.callback,stage_id_,std::uint8_t(playchar_));
@@ -470,7 +470,8 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         if(stage_ && !boss_active()) run_frames_.standard_tick();
         // STD dispatch precedes player movement; enemies created here can run
         // their first setup/move instructions later in this same frame.
-        if (stage_ && !boss_active()) for (const auto& spawn:stage_->run(static_cast<std::uint16_t>(frames_),midboss_state().active)) {
+        // Elly retains std_run across dialogue; later scheduled waves still run.
+        if (stage_ && (!boss_active() || elly_active_)) for (const auto& spawn:stage_->run(static_cast<std::uint16_t>(frames_),midboss_state().active)) {
             enemies_.add(spawn,context,ring_);
         }
         if (stage_ && !boss_active()) {

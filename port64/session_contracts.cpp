@@ -79,6 +79,38 @@ stage::Program::Bytes read(const char* name) {
     std::ifstream file(name,std::ios::binary);if(!file) throw std::runtime_error("cannot read stage resource");
     return {std::istreambuf_iterator<char>(file),{}};
 }
+// A stopped scroll stream can enter Stage3 dialogue before its STD waves end.
+// The synthetic resource keeps one wave pending across the real Elly handoff.
+void check_stage3_dialog_waves() {
+    stage::Program::Bytes standard{0,0,5,0,0,0,0,0,6,0,0,0,0,0,0,
+        1,3,0x06,0xff,0x00,0,2,0,1,0,0xe8,3,0xe8,3,0,0,0,0,0};
+    standard[0]=static_cast<std::uint8_t>(standard.size()-2);
+    stage::Program schedule(standard);
+    if(schedule.stopped()) throw std::runtime_error("Stage3 fixture lacks a pending wave");
+    stage::Bytes map(328);map[0]=0x40;map[1]=1;
+    for(unsigned row=0;row<5;++row) for(unsigned column=0;column<24;++column)
+        map[8+row*64+column*2]=72;
+    stage::Background background(map,standard);background.set_speed(0);
+    application::State application;
+    application.start_normal(application::Playchar::reimu,application::ShotType::a);
+    application.advance_main_stage();application.advance_main_stage();
+    application.publish_main_resource_stage(2);
+    gameplay::State main(application,gameplay::Mode::actor_control);main.load_stage(standard);
+    if(!main.stage3_dialog_ready(background))
+        throw std::runtime_error("Stage3 dialogue incorrectly waits for STD exhaustion");
+    const auto random=application.process_random_state();
+    main.update(0,false,false,0,&background);
+    if(main.frames()!=0 || random!=application.process_random_state())
+        throw std::runtime_error("Stage3 pending dialogue consumed an actor frame or RNG");
+    main.start_elly_after_dialog({0,0,0});
+    if(!main.boss_active() || main.stage3_dialog_ready(background))
+        throw std::runtime_error("Stage3 dialogue did not install its Elly owner");
+    for(unsigned i=0;i<3;++i) main.update(0,false,false,0,&background);
+    unsigned alive=0;
+    for(const auto& entity:main.enemies().snapshot().entities) alive+=entity.flag!=enemy::free;
+    if(main.frames()!=3 || alive!=1)
+        throw std::runtime_error("Elly activation suppressed the pending STD wave");
+}
 void replay(char** paths) {
     const auto first=read(paths[0]),map0=read(paths[1]),second=read(paths[2]),map1=read(paths[3]);
     for(unsigned character=0;character<2;++character) for(unsigned rank:{1u,3u}) {
@@ -142,6 +174,7 @@ int main(int argc,char** argv) {
             }
         } else {
             reset(318,255,1997011721,20,0x12ff,false);
+            check_stage3_dialog_waves();
             std::cout<<"stage_actors=REINITIALIZED pending_score=PRESERVED rng_draws=353 stage2_midboss=2600 pointer_bits=64\n";
         }
         return 0;

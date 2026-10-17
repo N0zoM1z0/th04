@@ -5,7 +5,32 @@ Code/docs stay English. Use one low-priority CPU, serialize Borland/Wine builds,
 launch muted/headless, and clean unused products after each bounded batch.
 The user uses Windows: no GUI, focus changes or host-key injection.
 
-## Current Stage3 frontier and blocker (v1466)
+## Repaired Stage3 dialogue gate (v1467)
+
+Native566/e1233854 removes the verified extra STD-exhaustion predicates from
+Stage3 dialogue readiness and Elly handoff. Elly retains STD dispatch for waves
+still pending after dialogue. Other stages keep their existing callback guards.
+The new session regression fails against the old88575 core and passes both
+fresh GNU/optimized UBSan: stopped scroll enters dialogue with a pending wave,
+holds actor/RNG state, installs Elly, then spawns that wave during the fight.
+GNU87 programs/83 CTests, UBSan2 programs/session and repository CI pass.
+Current cold inputs are `.analysis/port64/stage3-dialog-v1467-final`.
+Use a fresh directory after later retirement; retain main/session and link inputs.
+
+The original7834 deadline CPU/fullRAM and typed stack now prove a held-Shot
+release wait inside dialogue, with scroll0/backpage1 and activeSTD/nextwave7900.
+Original unmodified Elly phase0 execution preserves STD; the raw loop calls it
+unconditionally. Full sampled RGB/TRAM coverage now includes18 unique Stage2/3
+points, with raw index differences retained. The failed run stays incomplete.
+See the [main-branch observation](https://github.com/N0zoM1z0/th04/blob/12f1e03/docs/RE_HANDOFF.md).
+Reforecast ordinary inputs with dialogue7834 before retrying original Boss parity.
+
+Mid-batch cleanup retires15 closed capture aliases after real exact restoration
+and all3 readers reproduce identically. Net127.570MiB includes retention costs
+and1MiBreserve; keep compressed witnesses/providers. Receipts are in the DOS main
+checkout's `.analysis/reconstruction/probes/stage3-wait-v1467`.
+
+## Earlier Stage3 frontier (v1466)
 
 The original collector stops producing loops at Stage3 7834 and reaches its
 1800.85-second deadline. Exit 0 does not make it complete: timeout is true and

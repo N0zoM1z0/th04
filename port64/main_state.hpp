@@ -76,7 +76,8 @@ public:
             dialog::stage_gate(static_cast<std::uint8_t>(background.speed()),static_cast<std::uint8_t>(1u^(frames_&1u)));
     }
     bool stage3_dialog_ready(const stage::Background& background) const {
-        return stage_id_==2 && stage_ && stage_->stopped() && !boss_active() && !midboss_state().active &&
+        // MAIN0AAF:2454 gates on scroll/page while std_run is still active.
+        return stage_id_==2 && stage_ && !boss_active() && !midboss_state().active &&
             dialog::stage_gate(static_cast<std::uint8_t>(background.speed()),static_cast<std::uint8_t>(1u^(frames_&1u)));
     }
     bool stage4_dialog_ready(const stage::Background& background) const {
