@@ -48,6 +48,17 @@ void Menu::advance_sampled(const maine::KeySource& sample) {
         emit(context_->sink,Kind::delay,0,0,1);++ticks_;
     }
 }
+Menu::Menu(Context& c,const pc98_input::Poll& poll):Menu(c,std::uint16_t(0)) {
+    if(choice_==Choice::pending)previous_sample_=poll(pc98_input::Operation::reset).actions;
+}
+void Menu::advance_sampled(const pc98_input::Poll& poll) {
+    if(choice_!=Choice::pending)return;
+    sense(std::uint16_t(previous_sample_|poll(pc98_input::Operation::sense).actions));
+    if(choice_==Choice::pending) {
+        previous_sample_=poll(pc98_input::Operation::reset).actions;
+        emit(context_->sink,Kind::delay,0,0,1);++ticks_;
+    }
+}
 void Menu::sense(std::uint16_t keys) {
     auto& c=*context_;
     bool confirmed=false;
@@ -155,7 +166,14 @@ void Scene::advance(std::uint16_t held) {
     pump(held);
 }
 std::uint64_t Scene::advance_elapsed(std::uint64_t ns,const maine::KeySource& keys,const maine::ElapsedSink& service) {
-    if(!clock_ || !keys)throw std::logic_error("elapsed Game Over requires clock and keys");
+    return advance_impl(ns,keys,{},service);
+}
+std::uint64_t Scene::advance_elapsed_sampled(std::uint64_t ns,const pc98_input::Poll& poll,const maine::ElapsedSink& service) {
+    return advance_impl(ns,{},poll,service);
+}
+std::uint64_t Scene::advance_impl(std::uint64_t ns,const maine::KeySource& keys,const pc98_input::Poll& poll,const maine::ElapsedSink& service) {
+    if(!clock_ || (!keys && !poll))throw std::logic_error("elapsed Game Over requires clock and keys");
+    const auto sample=[&](pc98_input::Operation op){return poll ? poll(op).actions : keys();};
     for(;;) {
         if(finished())return ns;
         if(count_wait_) {
@@ -171,7 +189,7 @@ std::uint64_t Scene::advance_elapsed(std::uint64_t ns,const maine::KeySource& ke
             if(!input_wait_)input_wait_.emplace(std::vector<maine::Request>{{maine::RequestKind::wait,0}},clock_);
             const auto before=input_wait_->ticks();
             ns=input_wait_->advance_elapsed(ns,[&] {
-                const auto held=keys();
+                const auto held=sample(input_before_ ? pc98_input::Operation::reset : pc98_input::Operation::sense);
                 if(input_before_)emit(context_->sink,Kind::delay,0,0,1);
                 input_before_=!input_before_;return held;
             },{},{},service);
@@ -180,18 +198,18 @@ std::uint64_t Scene::advance_elapsed(std::uint64_t ns,const maine::KeySource& ke
                 phase_=input_wait_->status()==maine::AnimationStatus::release ? Phase::release : Phase::press;return 0;
             }
             input_wait_.reset();emit(context_->sink,Kind::wipe);
-            menu_=std::make_unique<Menu>(*context_,keys);phase_=Phase::menu;
+            if(poll)menu_=std::make_unique<Menu>(*context_,poll);else menu_=std::make_unique<Menu>(*context_,keys);phase_=Phase::menu;
         } else if(phase_==Phase::blackout) {
             if(!blackout_)blackout_.emplace(std::vector<maine::Request>{{maine::RequestKind::fade,0,0,4}},clock_);
             const auto before=blackout_->ticks();
-            ns=blackout_->advance_elapsed(ns,keys,{},[this](int tone){tone_=tone;emit(context_->sink,Kind::tone,0,0,tone);},service);
+            ns=blackout_->advance_elapsed(ns,[&]{return sample(pc98_input::Operation::reset);},{},[this](int tone){tone_=tone;emit(context_->sink,Kind::tone,0,0,tone);},service);
             ticks_+=blackout_->ticks()-before;
             if(blackout_->status()!=maine::AnimationStatus::stopped)return 0;
             blackout_.reset();emit(context_->sink,Kind::maine);phase_=Phase::maine;return ns;
         }
         if(phase_==Phase::menu) {
             if(menu_->choice()==Choice::pending) {
-                menu_->advance_sampled(keys);
+                if(poll)menu_->advance_sampled(poll);else menu_->advance_sampled(keys);
                 if(menu_->choice()==Choice::pending){delay_=1;count_wait_.emplace(*clock_,1);continue;}
             }
             continued_=menu_->choice()==Choice::continue_run;frame_=32;phase_=Phase::final_out;

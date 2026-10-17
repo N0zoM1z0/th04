@@ -1,4 +1,5 @@
 #pragma once
+#include "pc98_input.hpp"
 #include "item_system.hpp"
 #include "score.hpp"
 #include "maine_animation.hpp"
@@ -33,6 +34,8 @@ public:
     Menu(Context&,const maine::KeySource&);
     void advance(std::uint16_t key_det);
     void advance_sampled(const maine::KeySource&);
+    Menu(Context&,const pc98_input::Poll&);
+    void advance_sampled(const pc98_input::Poll&);
     Choice choice() const {return choice_;}
     unsigned selected() const {return selected_;}
     std::uint16_t previous_input() const {return previous_input_;}
@@ -56,6 +59,7 @@ public:
     Scene(Context&,std::uint16_t initial_keys=0,vsync::RasterClock* clock=nullptr);
     void advance(std::uint16_t key_det);
     std::uint64_t advance_elapsed(std::uint64_t,const maine::KeySource&,const maine::ElapsedSink& service={});
+    std::uint64_t advance_elapsed_sampled(std::uint64_t,const pc98_input::Poll&,const maine::ElapsedSink& service={});
     bool timed() const {return clock_!=nullptr;}
     Phase phase() const {return phase_;}
     bool finished() const {return phase_>=Phase::continue_run;}
@@ -63,6 +67,7 @@ public:
     int tone() const {return tone_;}
     unsigned selected() const {return menu_ ? menu_->selected() : 0;}
 private:
+    std::uint64_t advance_impl(std::uint64_t,const maine::KeySource&,const pc98_input::Poll&,const maine::ElapsedSink&);
     void delay_one();
     void pump(std::uint16_t held);
     vsync::RasterClock* clock_;

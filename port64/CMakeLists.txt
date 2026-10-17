@@ -507,3 +507,7 @@ add_test(NAME input-sampler-contracts COMMAND th04-port64-input-contracts)
 add_executable(th04-port64-main-input-contracts main_input_checks.cpp)
 target_link_libraries(th04-port64-main-input-contracts PRIVATE th04-portable-core)
 add_test(NAME main-sampled-input-contracts COMMAND th04-port64-main-input-contracts)
+
+add_executable(th04-port64-sampled-ui-contracts sampled_ui_checks.cpp)
+target_link_libraries(th04-port64-sampled-ui-contracts PRIVATE th04-portable-core)
+add_test(NAME sampled-ui-contracts COMMAND th04-port64-sampled-ui-contracts)

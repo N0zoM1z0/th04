@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include "pc98_input.hpp"
 #include <fstream>
 #include <string>
 
@@ -25,9 +26,11 @@ private:
     std::int64_t next_;unsigned steps_=0;std::uint64_t total_=0;
 };
 struct Keys {bool up=false,down=false,left=false,right=false,shot=false,
-    enter=false,bomb=false,escape=false,quit=false,shift=false;};
+    enter=false,bomb=false,escape=false,quit=false,shift=false;
+    bool up_left=false,up_right=false,down_left=false,down_right=false,space=false;};
 struct Input {std::uint16_t held=0;bool shift=false;};
 Input input(const Keys&,bool focused);
+pc98_input::Sample bios_input(const Keys&,bool focused);
 
 struct Snapshot {
     const char* scene="unknown";

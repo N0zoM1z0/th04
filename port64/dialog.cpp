@@ -33,7 +33,7 @@ void Script::begin() {
     if (status_!=Status::idle && status_!=Status::stopped) throw std::logic_error("dialog scene already running");
     // The buffer base remains owned, while the consumed cursor survives into
     // the post-boss scene. '#' inside a box only exits that box, not the scene.
-    status_=Status::running;box_=false;tone_=100;
+    status_=Status::running;box_=false;tone_=100;input_mode_=0;
 }
 void Script::stop_command(const Sink& sink) {
     if (box_) box_=false;
@@ -93,13 +93,36 @@ void Script::op(unsigned c,const Sink& sink) {
     }
 }
 void Script::advance(std::uint16_t held,const Sink& sink) {
+    advance_impl(held,sink,nullptr);
+}
+void Script::advance_sampled(const pc98_input::Poll& poll,const Sink& sink) {
+    if(!poll)throw std::invalid_argument("dialog sampler missing");
+    advance_impl(0,sink,&poll);
+}
+void Script::advance_impl(std::uint16_t held,const Sink& sink,const pc98_input::Poll* poll) {
     if(status_==Status::idle || status_==Status::stopped) return;
-    if(status_==Status::release) {
+    const auto mode=std::uint8_t(poll ? 2 : 1);
+    if(input_mode_ && input_mode_!=mode)throw std::logic_error("dialog input owner changed during a scene");
+    input_mode_=mode;
+    if(poll && (status_==Status::release || status_==Status::press)) {
+        held=(*poll)(pc98_input::Operation::sense).actions;
+        if(status_==Status::release && !held) {
+            status_=Status::press;
+            if(press_budget_<0) {status_=Status::running;if(stop_after_wait_)stop_command(sink);}
+        } else if(status_==Status::press &&
+                  (held || (press_budget_ && press_budget_!=9999 && ++press_elapsed_>=press_budget_))) {
+            status_=Status::running;if(stop_after_wait_)stop_command(sink);
+        }
+        if(status_==Status::release || status_==Status::press) {
+            (*poll)(pc98_input::Operation::reset);return;
+        }
+    }
+    if(!poll && status_==Status::release) {
         // Original release always waits one frame and has no timeout.
         if(!held) { status_=Status::press;if(press_budget_<0) { status_=Status::running;if(stop_after_wait_) stop_command(sink); } }
         return;
     }
-    if(status_==Status::press) {
+    if(!poll && status_==Status::press) {
         if(held || (press_budget_ && press_budget_!=9999 && ++press_elapsed_>=press_budget_)) {
             status_=Status::running;if(stop_after_wait_) stop_command(sink);
         }
@@ -123,8 +146,9 @@ void Script::advance(std::uint16_t held,const Sink& sink) {
             if(e.kind==Kind::delay) { ticks_=e.a;status_=Status::delay;return; }
             continue;
         }
+        if(poll && box_)held=(*poll)(pc98_input::Operation::reset).actions;
         const auto c=take();if(separator(c)) continue;
-        if(c=='\\') { op(take(),sink);continue; }
+        if(c=='\\') { op(take(),sink);if(poll && status_==Status::release)(*poll)(pc98_input::Operation::reset);continue; }
         if(!box_) {
             if(c!='0' && c!='1') continue;
             side_=static_cast<std::int16_t>(c-'0');cursor_={static_cast<std::int16_t>(side_ ? 48 : 160),static_cast<std::int16_t>(side_ ? 192 : 320)};

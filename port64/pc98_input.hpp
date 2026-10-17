@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <cstdint>
+#include <functional>
 
 namespace th04::portable::pc98_input {
 // Original MAIN 130E:06BC resets, then falls through to 06C4; sense ORs
@@ -38,6 +39,9 @@ struct Snapshot {
     std::uint16_t actions=0;
     bool shift=false;
 };
+enum class Operation {reset,sense};
+using SampleSource=std::function<Sample(Operation)>;
+using Poll=std::function<Snapshot(Operation)>;
 class Latch {
 public:
     void reset_sense(const Sample& sample) { actions_=0;sense(sample); }
@@ -49,6 +53,9 @@ public:
     std::uint16_t actions() const { return actions_; }
     bool shift() const { return shift_; }
     Snapshot snapshot() const { return {actions_,shift_}; }
+    // The real DEMO callback writes the input globals from its replay banks.
+    // Keyboard polling never uses this explicit game-write entry.
+    void replay_input(Snapshot value) { actions_=value.actions;shift_=value.shift; }
 private:
     std::uint16_t actions_=0;
     bool shift_=false;

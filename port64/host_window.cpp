@@ -21,6 +21,18 @@ Input input(const Keys& k,bool focused){
         (k.shot ? 0x20 : 0)|(k.bomb ? 0x800 : 0)|(k.enter ? 0x1000 : 0)|
         (k.escape ? 0x2000 : 0)|(k.quit ? 0x4000 : 0)),k.shift};
 }
+pc98_input::Sample bios_input(const Keys& keys,bool focused) {
+    pc98_input::Sample sample;if(!focused)return sample;
+    sample.keys[0]=keys.escape ? 1 : 0;
+    sample.keys[2]=keys.quit ? 1 : 0;
+    sample.keys[3]=keys.enter ? 0x10 : 0;
+    sample.keys[5]=std::uint8_t((keys.shot ? 2 : 0)|(keys.bomb ? 4 : 0));
+    sample.keys[6]=keys.space ? 0x10 : 0;
+    sample.keys[7]=std::uint8_t((keys.up ? 4 : 0)|(keys.down ? 0x20 : 0)|(keys.left ? 8 : 0)|(keys.right ? 0x10 : 0));
+    sample.keys[8]=std::uint8_t((keys.up_left ? 4 : 0)|(keys.up_right ? 0x10 : 0));
+    sample.keys[9]=std::uint8_t((keys.down_left ? 4 : 0)|(keys.down_right ? 0x10 : 0));
+    sample.shift=keys.shift;return sample;
+}
 Trace::Trace(const std::string& directory,bool muted){
     if(directory.empty())return;
     if(!muted || std::filesystem::exists(directory))throw std::runtime_error("window trace needs muted fresh outputs");

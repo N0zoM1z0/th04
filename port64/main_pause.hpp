@@ -1,5 +1,6 @@
 #pragma once
 #include "maine_animation.hpp"
+#include "pc98_input.hpp"
 namespace th04::portable::pause {
 enum class Kind {gaiji,ank,wait};
 struct Event {Kind kind;int row=0,attribute=0;std::string text;};
@@ -12,11 +13,13 @@ class Scene {
 public:
     Scene(vsync::RasterClock&,std::uint16_t initial_keys,Sink={});
     std::uint64_t advance_elapsed(std::uint64_t,const maine::KeySource&,const maine::ElapsedSink& service={});
+    std::uint64_t advance_elapsed_sampled(std::uint64_t,const pc98_input::Poll&,const maine::ElapsedSink& service={});
     Result result() const {return result_;}
     unsigned selected() const {return selected_;}
     std::uint16_t key_det() const {return key_det_;}
     unsigned ticks() const {return ticks_;}
 private:
+    std::uint64_t advance_impl(std::uint64_t,const maine::KeySource&,const pc98_input::Poll&,const maine::ElapsedSink&);
     void labels();
     enum class Phase {initial_release,menu,final_release};
     vsync::RasterClock* clock_;Sink sink_;Phase phase_=Phase::initial_release;

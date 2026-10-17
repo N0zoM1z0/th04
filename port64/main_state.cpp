@@ -401,6 +401,13 @@ std::uint64_t State::advance_gameover_elapsed(std::uint64_t ns,std::uint16_t hel
     gameover_events_.clear();last_input_=player::input_from_host_actions(held);
     return gameover_->advance_elapsed(ns,[this]{return last_input_;},service);
 }
+std::uint64_t State::advance_gameover_sampled(std::uint64_t ns,const pc98_input::Poll& poll,const maine::ElapsedSink& service) {
+    if(!gameover_ || !gameover_->timed() || !poll)throw std::logic_error("sampled Game Over requires clock and input");
+    gameover_events_.clear();
+    return gameover_->advance_elapsed_sampled(ns,[&](pc98_input::Operation op) {
+        const auto sample=poll(op);last_input_=sample.actions;return sample;
+    },service);
+}
 void State::apply_pause_text(const pause::Event& event) {
     if(event.kind==pause::Kind::gaiji)hud_text_.put_string(26,event.row,event.text,std::uint16_t(event.attribute));
     else if(event.kind==pause::Kind::ank)for(unsigned i=0;i<event.text.size();++i)
@@ -422,6 +429,8 @@ void State::update(pc98_input::Snapshot input, bool pull_items,motion::Subpixel 
     if(demo_exit_requested_)return;
     if(demo_ && !gameover_ && !player_frame_suspended_ && !frame_suspended_) {
         demo_sample_=demo_->sample(std::uint16_t(frames_),input.actions,input.shift);
+        if(demo_sample_.replaced && replay_input_writer_)
+            replay_input_writer_({demo_sample_.input,demo_sample_.shift!=0});
         if(demo_sample_.finished) {demo_exit_requested_=true;demo_.reset();return;}
         input={player::input_from_host_actions(demo::host_input(std::uint8_t(demo_sample_.input))),demo_sample_.shift!=0};
     }
@@ -864,6 +873,7 @@ void State::update(pc98_input::Snapshot input, bool pull_items,motion::Subpixel 
         stage_id_,std::uint8_t(playchar_),scroll_line_,life_.state().scroll_active!=0);
     popup::update(popup_,hud_text_);
     playfield_shift_=playfield::update(playfield_shake_,std::uint8_t(frames_&1u),std::uint8_t(frames_&3u));
+    if(input_tail_)if(const auto sample=input_tail_())last_input_=sample->actions;
     run_frames_.complete(0,static_cast<std::uint16_t>(slowdown()));
     sound_action(sound::ActionKind::update);
     ++frames_;

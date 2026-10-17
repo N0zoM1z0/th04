@@ -1,5 +1,6 @@
 #pragma once
 #include "motion.hpp"
+#include "pc98_input.hpp"
 #include <functional>
 #include <string>
 #include <vector>
@@ -20,6 +21,7 @@ public:
     explicit Script(Bytes bytes):bytes_(std::move(bytes)) {}
     void begin();
     void advance(std::uint16_t held,const Sink& sink);
+    void advance_sampled(const pc98_input::Poll&,const Sink&);
     Status status() const { return status_; }
     std::size_t offset() const { return at_; }
     motion::Point cursor() const { return cursor_; }
@@ -27,6 +29,8 @@ public:
     std::int16_t number_default() const { return default_; }
     int tone() const { return tone_; }
 private:
+    void advance_impl(std::uint16_t,const Sink&,const pc98_input::Poll*);
+    std::uint8_t input_mode_=0;
     std::uint8_t peek(unsigned ahead=0) const;
     std::uint8_t take();
     int number(int fallback);

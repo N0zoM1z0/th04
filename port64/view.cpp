@@ -45,6 +45,7 @@
 
 namespace {
 namespace pause=th04::portable::pause;
+namespace pc98_input=th04::portable::pc98_input;
 namespace bomb=th04::portable::bomb;
 namespace playfield=th04::portable::playfield;
 
@@ -1233,6 +1234,14 @@ public:
         }
         script_.advance(held,[&](const dialog::Event& event) { events_.push_back(event);apply(event); });
     }
+    void advance_sampled(const pc98_input::Poll& poll) {
+        if(intro_<36) {
+            boxes(intro_/12);++intro_;
+            if(intro_==36){back_=indices_;script_.begin();}
+            return; // The final box tile still waits its twelfth refresh.
+        }
+        script_.advance_sampled(poll,[&](const dialog::Event& event){events_.push_back(event);apply(event);});
+    }
     // dialog_pre copies this page before portraits modify the visible front.
     const Bytes& copied_background() const { return back_; }
     bool finished() const { return intro_==36 && script_.status()==dialog::Status::stopped; }
@@ -1639,12 +1648,20 @@ public:
         const auto first=sprites_->stage_slots[128],second=sprites_->stage_slots[132];
         return sprites_->stage_end==140 && first.sheet && second.sheet && first.sheet->width()==32 && first.sheet->height()==48 && first.sheet->count()==4 && second.sheet->width()==64 && second.sheet->height()==80 && second.sheet->count()==8;
     }
+    void advance_sampled(std::uint16_t held,bool shift,const pc98_input::SampleSource& source,bool repaint=true) {
+        require_view(bool(source) && !input_source_,"invalid frontend input source");
+        struct Restore {const pc98_input::SampleSource*& slot;~Restore(){slot=nullptr;}} restore{input_source_};
+        input_source_=&source;advance(held,shift,repaint);
+    }
+    pc98_input::Snapshot sampled_input() const {return input_latch_.snapshot();}
     void advance(std::uint16_t held_input, bool shift,bool repaint=true) {
         // GDC blink continues through OP, waits and MAIN process replacement.
         // Headless callers admit refreshes; windows supply elapsed time.
         // OP initialization completes before the first waited refresh.
         ensure_op_sound();
-        try_begin_pause(held_input);
+        if(!input_source_){input_initialized_=false;input_loop_active_=false;}
+        begin_main_input();
+        try_begin_pause(input_source_ ? pause::input_to_host(input_latch_.actions()) : held_input);
         if(!text_time_origin_)text_refreshes_+=slowdown();
         if(startup_) {
             advance_tail(std::uint64_t(frame_period.count()),held_input);
@@ -1769,14 +1786,16 @@ public:
         }
         std::uint64_t gameover_remaining=0;
         if(main_ && main_->game_over() && main_->game_over()->timed()) {
-            gameover_remaining=main_->advance_gameover_elapsed(refresh_ns,held_input,
-                [this](std::uint64_t step){sound_timeline_->advance_elapsed(step);});
+            const auto service=[this](std::uint64_t step){sound_timeline_->advance_elapsed(step);};
+            gameover_remaining=input_source_ ? main_->advance_gameover_sampled(refresh_ns,main_poll(),service)
+                : main_->advance_gameover_elapsed(refresh_ns,held_input,service);
             if(!main_->game_over()->finished()) {if(repaint)frame_=render();return;}
         }
         std::uint64_t pause_remaining=0;
         if(pause_) {
-            pause_remaining=pause_->advance_elapsed(refresh_ns,[&]{return pause::input_from_host(held_input);},
-                [this](std::uint64_t step){sound_timeline_->advance_elapsed(step);});
+            const auto service=[this](std::uint64_t step){sound_timeline_->advance_elapsed(step);};
+            pause_remaining=input_source_ ? pause_->advance_elapsed_sampled(refresh_ns,main_poll(),service)
+                : pause_->advance_elapsed(refresh_ns,[&]{return pause::input_from_host(held_input);},service);
             if(pause_->result()==pause::Result::pending){if(repaint)frame_=render();return;}
             pause_quit_pending_|=pause_->result()==pause::Result::quit;
             held_input=pause::input_to_host(pause_->key_det());pause_.reset();
@@ -1793,7 +1812,7 @@ public:
             // transition or dialog gate can inspect the suspended MAIN frame.
             if(!main_->game_over()) {
             if(loaded_stage_==6 && !dialog_scene_ && main_->extra_final_dialog_pending()) {
-                capture_gameover_graphics();main_->update(held_input,shift,false,0,&sprites_->background);
+                capture_gameover_graphics();update_main(held_input,shift,0);
                 gameover_started_in_gate=bool(main_->game_over());
                 if(!gameover_started_in_gate) {
                     require_view(main_->extra_final_dialog_blocked(),"third Extra dialogue did not suspend MAIN");
@@ -1810,15 +1829,17 @@ public:
                 auto next=std::make_unique<StageSprites>(resources,next_id);
                 auto script=std::make_unique<dialog::Script>(next->assets.dialog_scripts[unsigned(application_.resident().playchar)]);
                 main_->prepare_next_stage_actors(next->assets.standard);
+                input_initialized_=false;input_loop_active_=false;
                 sprites_->install_stage(std::move(next));script_=std::move(script);
                 main_->set_player_palette({sprites_->palette.palette[42],sprites_->palette.palette[43],sprites_->palette.palette[44]});
                 loaded_stage_=next_id;post_started_=post_finished_=false;
                 application_.publish_main_resource_stage(static_cast<std::uint8_t>(next_id));
                 load_stage_song();
                 if(stage_init_observer_)stage_init_observer_(*main_);
+                begin_main_input();
             }
             if(loaded_stage_==6 && !dialog_scene_ && main_->gengetsu_dialog_pending()) {
-                capture_gameover_graphics();main_->update(held_input,shift,false,0,&sprites_->background);
+                capture_gameover_graphics();update_main(held_input,shift,0);
                 gameover_started_in_gate=bool(main_->game_over());
                 if(!gameover_started_in_gate) {
                     require_view(main_->extra_post_dialog_blocked(),"second Extra dialogue did not suspend MAIN");
@@ -1841,12 +1862,12 @@ public:
             if(!diagnostic_ && !dialog_scene_ && !post_started_ && !main_->yuuka6_active() && !main_->mugetsu_active() && !main_->gengetsu_active() && main_->boss_active() && main_->boss_snapshot().phase==255 && main_->boss_snapshot().phase_frame==0) {
                 capture_gameover_graphics();
                 const auto dialog_front=render_live_main();
-                main_->update(held_input,shift,false,0,&sprites_->background);
+                update_main(held_input,shift,0);
                 gameover_started_in_gate=bool(main_->game_over());
                 if(!gameover_started_in_gate)begin_dialog(true,&dialog_front);
             }
             if(dialog_scene_) {
-                dialog_scene_->advance(held_input);
+                if(input_source_)dialog_scene_->advance_sampled(main_poll());else dialog_scene_->advance(held_input);
                 if(dialog_scene_->finished()) {
                     if(post_started_) {
                         // Original MAIN0AAF:2C19 saved the boxed front before
@@ -1899,7 +1920,7 @@ public:
             const auto before=main_->frames();
             capture_gameover_graphics();
             if(!gameover_started_in_gate)
-                main_->update(held_input, shift, false, sprites_->background.last_delta(),&sprites_->background);
+                update_main(held_input,shift,sprites_->background.last_delta());
             if(gameover_renderer_ && !main_->game_over())gameover_renderer_.reset();
             if(main_->demo_exit_requested()) {
                 // DemoPlay freed its replay before the blackout. Keep this
@@ -2120,7 +2141,26 @@ public:
     }
 
 private:
+    pc98_input::Snapshot poll_main(pc98_input::Operation operation) {
+        require_view(bool(input_source_),"MAIN input source missing");
+        const auto sample=(*input_source_)(operation);
+        if(operation==pc98_input::Operation::reset)input_latch_.reset_sense(sample);else input_latch_.sense(sample);
+        return input_latch_.snapshot();
+    }
+    pc98_input::Poll main_poll() {return [this](pc98_input::Operation op){return poll_main(op);};}
+    void begin_main_input() {
+        if(!input_source_ || !live_main() || input_loop_active_ || startup_ || ending_ || score_route_ || extra_route_ || demo_fade_ ||
+           main_->next_stage_requested() || main_->good_ending_requested() || main_->bad_ending_requested() ||
+           main_->score_registration_requested() || main_->extra_ending_requested())return;
+        if(!input_initialized_){poll_main(pc98_input::Operation::reset);input_initialized_=true;}
+        poll_main(pc98_input::Operation::sense);input_loop_active_=true;
+    }
+    void update_main(std::uint16_t held,bool shift,th04::portable::motion::Subpixel delta) {
+        if(input_source_)main_->update(input_latch_.snapshot(),false,delta,&sprites_->background);
+        else main_->update(held,shift,false,delta,&sprites_->background);
+    }
     void try_begin_pause(std::uint16_t held) {
+        if(input_source_ && !input_loop_active_)return;
         if(pause_ || !live_main() || demo_active() || dialog_scene_ || main_->game_over() ||
            main_->good_ending_requested() || main_->bad_ending_requested() || main_->extra_ending_requested() ||
            main_->score_registration_requested() || main_->next_stage_requested())return;
@@ -2128,7 +2168,7 @@ private:
         pause_requested_=false;
         pause_graphics_=render_live_main();
         pause_text_=main_text_plane(*main_,application_.resident().demo_number);
-        pause_.emplace(startup_clock_,std::uint16_t(pause::input_from_host(held)|0x1000u),[this](const pause::Event& event) {
+        pause_.emplace(startup_clock_,input_source_ ? input_latch_.actions() : std::uint16_t(pause::input_from_host(held)|0x1000u),[this](const pause::Event& event) {
             main_->apply_pause_text(event);
             if(event.kind==pause::Kind::gaiji)pause_text_.put_string(26,event.row,event.text,std::uint16_t(event.attribute));
             else if(event.kind==pause::Kind::ank)for(unsigned i=0;i<event.text.size();++i)
@@ -2198,6 +2238,7 @@ private:
     }
     void release_sound() {sound_timeline_->leave();sound_.reset();}
     void install_main_scene() {
+        input_latch_=pc98_input::Latch{};input_initialized_=false;input_loop_active_=false;
         dialog_resume_indices_.clear();dialog_resume_frame_=0;
         pause_.reset();pause_requested_=pause_quit_pending_=false;pause_graphics_=Frame{};pause_text_=registration::TextPlane{};
         if(!sprites_ && assets_ && !assets_->reimu.empty())sprites_=std::make_unique<MainSprites>(*assets_);
@@ -2215,6 +2256,11 @@ private:
         }
         if(score_store_)score_store_=std::make_unique<score_file::HostStore>(score_store_->path().parent_path());
         main_=std::make_unique<gameplay::State>(application_,mode_,player::LifeState{},score_store_.get());
+        main_->set_replay_input_writer([this](pc98_input::Snapshot value) {if(input_source_)input_latch_.replay_input(value);});
+        main_->set_input_tail([this]() -> std::optional<pc98_input::Snapshot> {
+            if(!input_source_)return std::nullopt;
+            const auto value=poll_main(pc98_input::Operation::reset);input_loop_active_=false;return value;
+        });
         // MAIN has its own counter BSS; process replacement keeps raster phase.
         startup_clock_.counter()=th04::portable::vsync::Counter{};
         startup_clock_.counter().start();
@@ -2547,6 +2593,9 @@ private:
     std::optional<pause::Scene> pause_;bool pause_requested_=false,pause_quit_pending_=false;
     Frame pause_graphics_;registration::TextPlane pause_text_;
     Bytes dialog_resume_indices_;unsigned dialog_resume_frame_=0;
+    const pc98_input::SampleSource* input_source_=nullptr;
+    pc98_input::Latch input_latch_;
+    bool input_initialized_=false,input_loop_active_=false;
     const MainAssets* assets_=nullptr;
     demo::Idle demo_idle_;
     std::optional<bool> menu_frame_options_;
@@ -2635,6 +2684,7 @@ private:
 
 #include "natural_route_probe.inl"
 #include "ordinary_front_trace.inl"
+#include "sampled_frontend_checks.inl"
 #include "sound_frontend_checks.inl"
 #include "sound_scene_frontend_checks.inl"
 #include "resident_sound_frontend_checks.inl"
@@ -2670,6 +2720,7 @@ struct Win32Title {
                   selection_background_, portraits_, &main_assets) { front_end.enable_audio_output();front_end.enable_configuration();front_end.enable_registration();front_end.enable_host_timing(); }
 
     bool input(menu::Input pressed) {
+        if(pressed==menu::Input::cancel && front_end.live_main())return false;
         return front_end.input(pressed);
     }
 };
@@ -2691,14 +2742,22 @@ LRESULT CALLBACK title_window_proc(
             const auto now = host_window::now_ns();
             title->schedule.wake();bool dirty=title->front_end.observe_text_time(now);
             while(title->schedule.due(now)) {
+                const auto platform_keys=[] {
+                    const auto pressed=[](int key){return (GetAsyncKeyState(key)&0x8000)!=0;};
+                    return host_window::Keys{pressed(VK_UP)||pressed(VK_NUMPAD8),pressed(VK_DOWN)||pressed(VK_NUMPAD2),
+                        pressed(VK_LEFT)||pressed(VK_NUMPAD4),pressed(VK_RIGHT)||pressed(VK_NUMPAD6),
+                        pressed('Z'),pressed(VK_RETURN),pressed('X'),pressed(VK_ESCAPE),pressed('Q'),pressed(VK_SHIFT),
+                        pressed(VK_NUMPAD7),pressed(VK_NUMPAD9),pressed(VK_NUMPAD1),pressed(VK_NUMPAD3),pressed(VK_SPACE)};
+                };
                 const bool active=GetForegroundWindow()==window;
-                const auto pressed=[](int key){return (GetAsyncKeyState(key)&0x8000)!=0;};
-                const auto in=host_window::input({pressed(VK_UP),pressed(VK_DOWN),pressed(VK_LEFT),pressed(VK_RIGHT),
-                    pressed('Z'),pressed(VK_RETURN),pressed('X'),pressed(VK_ESCAPE),pressed('Q'),pressed(VK_SHIFT)},active);
+                const auto in=host_window::input(platform_keys(),active);
+                const pc98_input::SampleSource source=[&](pc98_input::Operation) {
+                    return host_window::bios_input(platform_keys(),GetForegroundWindow()==window);
+                };
                 const auto before=title->front_end.slowdown();const auto deadline=title->schedule.next();
                 const auto begin=title->trace ? host_window::now_ns() : 0;
                 const bool was_animated=title->front_end.animated();
-                title->front_end.advance(in.held,in.shift);
+                title->front_end.advance_sampled(in.held,in.shift,source);
                 const auto end=title->trace ? host_window::now_ns() : 0;
                 dirty|=was_animated || title->front_end.animated();
                 title->schedule.completed(title->front_end.slowdown());
@@ -2885,7 +2944,7 @@ void show_window(
                 dirty = true;
                 break;
             case SDLK_ESCAPE:
-                if (front_end.input(menu::Input::cancel)) running = false;
+                if (!front_end.live_main() && front_end.input(menu::Input::cancel)) running = false;
                 dirty = true;
                 break;
             default:
@@ -2895,16 +2954,25 @@ void show_window(
         if (!running) break;
         const auto now=host_window::now_ns();schedule.wake();dirty|=front_end.observe_text_time(now);
         while(schedule.due(now)) {
-            const auto* keys=SDL_GetKeyboardState(nullptr);
+            const auto platform_keys=[] {
+                SDL_PumpEvents();const auto* keys=SDL_GetKeyboardState(nullptr);
+                return host_window::Keys{bool(keys[SDL_SCANCODE_UP] || keys[SDL_SCANCODE_KP_8]),
+                    bool(keys[SDL_SCANCODE_DOWN] || keys[SDL_SCANCODE_KP_2]),
+                    bool(keys[SDL_SCANCODE_LEFT] || keys[SDL_SCANCODE_KP_4]),
+                    bool(keys[SDL_SCANCODE_RIGHT] || keys[SDL_SCANCODE_KP_6]),bool(keys[SDL_SCANCODE_Z]),
+                    bool(keys[SDL_SCANCODE_RETURN] || keys[SDL_SCANCODE_KP_ENTER]),bool(keys[SDL_SCANCODE_X]),
+                    bool(keys[SDL_SCANCODE_ESCAPE]),bool(keys[SDL_SCANCODE_Q]),
+                    bool(keys[SDL_SCANCODE_LSHIFT] || keys[SDL_SCANCODE_RSHIFT]),bool(keys[SDL_SCANCODE_KP_7]),
+                    bool(keys[SDL_SCANCODE_KP_9]),bool(keys[SDL_SCANCODE_KP_1]),bool(keys[SDL_SCANCODE_KP_3]),bool(keys[SDL_SCANCODE_SPACE])};
+            };
             const bool focused=(SDL_GetWindowFlags(window)&SDL_WINDOW_INPUT_FOCUS)!=0;
-            const auto in=host_window::input({bool(keys[SDL_SCANCODE_UP]),bool(keys[SDL_SCANCODE_DOWN]),
-                bool(keys[SDL_SCANCODE_LEFT]),bool(keys[SDL_SCANCODE_RIGHT]),bool(keys[SDL_SCANCODE_Z]),
-                bool(keys[SDL_SCANCODE_RETURN] || keys[SDL_SCANCODE_KP_ENTER]),bool(keys[SDL_SCANCODE_X]),
-                bool(keys[SDL_SCANCODE_ESCAPE]),bool(keys[SDL_SCANCODE_Q]),
-                bool(keys[SDL_SCANCODE_LSHIFT] || keys[SDL_SCANCODE_RSHIFT])},focused);
+            const auto in=host_window::input(platform_keys(),focused);
+            const pc98_input::SampleSource source=[&](pc98_input::Operation) {
+                return host_window::bios_input(platform_keys(),(SDL_GetWindowFlags(window)&SDL_WINDOW_INPUT_FOCUS)!=0);
+            };
             const auto before=front_end.slowdown();const auto deadline=schedule.next();
             const auto begin=trace ? host_window::now_ns() : 0;
-            const bool was_animated=front_end.animated();front_end.advance(in.held,in.shift);
+            const bool was_animated=front_end.animated();front_end.advance_sampled(in.held,in.shift,source);
             const auto end=trace ? host_window::now_ns() : 0;
             dirty|=was_animated || front_end.animated();schedule.completed(front_end.slowdown());
             if(trace)trace.refresh(schedule.total(),begin,end,deadline,in,focused,before,
@@ -2967,6 +3035,10 @@ void run_title(
     if(!main_assets.ordinary_trace_checks.empty()) {
         require_view(!window && main_assets.muted && !main_assets.full_startup, "ordinary trace requires a muted headless component start");
         run_ordinary_front_trace(background,numerals,labels,cursors,selection_background,portraits,main_assets);return;
+    }
+    if(!main_assets.sampled_input_checks.empty()) {
+        require_view(!window,"sampled frontend checks require a headless run");
+        run_sampled_frontend_checks(background,numerals,labels,cursors,selection_background,portraits,main_assets);return;
     }
     if(!main_assets.natural_route_checks.empty()) {
         require_view(!window && main_assets.muted && main_assets.full_startup,

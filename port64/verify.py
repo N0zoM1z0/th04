@@ -57,6 +57,8 @@ PORT_FILES = (
     "port64/verify_grcg_raster.py",
     "port64/motion_contracts.cpp",
     "port64/verify_motion.py",
+    "port64/sampled_ui_checks.cpp",
+    "port64/sampled_frontend_checks.inl",
     "port64/main_input_checks.cpp",
     "port64/pc98_input.hpp",
     "port64/pc98_input_checks.cpp",

@@ -34,6 +34,7 @@ struct MainAssets {
     std::string natural_route_checks;
     std::string ordinary_trace_checks;
     std::string pause_checks;
+    std::string sampled_input_checks;
     std::array<Bytes,4> replays;
     Bytes point_number_main;
     std::string save_directory;

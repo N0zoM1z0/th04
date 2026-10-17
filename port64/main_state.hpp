@@ -126,6 +126,7 @@ public:
     const item::ScoreState& score() const { return score_; }
     const score::Snapshot& scoreboard() const { return scoreboard_; }
     const registration::TextPlane& hud_text_plane() const { return hud_text_; }
+    std::uint64_t advance_gameover_sampled(std::uint64_t,const pc98_input::Poll&,const maine::ElapsedSink& service={});
     void apply_pause_text(const pause::Event&);
     std::int16_t hud_hp_previous() const { return hud_hp_previous_; }
     const std::array<std::uint8_t,256>& random_ring_bytes() const { return ring_.bytes(); }
@@ -140,6 +141,10 @@ public:
     // Literal executed player prefix, preserved while later UI polls run.
     std::uint16_t player_input() const { return player_input_; }
     std::optional<motion::Point> homing_target() const { return homing_target_; }
+    // The caller samples the shared input latch before MAIN increments its
+    // frame counter. A missing value keeps the literal host replay adapter.
+    void set_replay_input_writer(std::function<void(pc98_input::Snapshot)> writer) {replay_input_writer_=std::move(writer);}
+    void set_input_tail(std::function<std::optional<pc98_input::Snapshot>()> poll) { input_tail_=std::move(poll); }
     void set_actor_observer(std::function<void(const State&)> observer) {actor_observer_=std::move(observer);}
     const bullet::System& bullets() const { return bullets_; }
     // Score/extend runs after foreground rendering. Its clear request belongs
@@ -332,6 +337,8 @@ private:
     bomb::Effect bomb_effect_{};
     bomb::RenderFrame bomb_frame_{};
     BombObserver bomb_observer_;
+    std::function<void(pc98_input::Snapshot)> replay_input_writer_;
+    std::function<std::optional<pc98_input::Snapshot>()> input_tail_;
     std::function<void(const State&)> actor_observer_;
     Mode mode_=Mode::ordinary;
     std::optional<demo::Replay> demo_;

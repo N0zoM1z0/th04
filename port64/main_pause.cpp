@@ -11,7 +11,14 @@ void Scene::labels() {
     if(sink_){sink_({Kind::gaiji,14,selected_ ? 0xc1 : 0xe9,"\xf2\xf3"});sink_({Kind::gaiji,15,selected_ ? 0xe9 : 0xc1,"\xf4\xf5"});}
 }
 std::uint64_t Scene::advance_elapsed(std::uint64_t ns,const maine::KeySource& keys,const maine::ElapsedSink& service) {
-    if(!keys)throw std::invalid_argument("pause keyboard provider missing");
+    return advance_impl(ns,keys,{},service);
+}
+std::uint64_t Scene::advance_elapsed_sampled(std::uint64_t ns,const pc98_input::Poll& poll,const maine::ElapsedSink& service) {
+    return advance_impl(ns,{},poll,service);
+}
+std::uint64_t Scene::advance_impl(std::uint64_t ns,const maine::KeySource& keys,const pc98_input::Poll& poll,const maine::ElapsedSink& service) {
+    if(!keys && !poll)throw std::invalid_argument("pause keyboard provider missing");
+    const auto sample=[&](pc98_input::Operation op){return poll ? poll(op).actions : keys();};
     for(;;) {
         if(result_!=Result::pending)return ns;
         if(phase_!=Phase::menu) {
@@ -21,7 +28,7 @@ std::uint64_t Scene::advance_elapsed(std::uint64_t ns,const maine::KeySource& ke
             }
             poll_.reset();
             if(key_det_) {
-                key_det_=keys();
+                key_det_=sample(pc98_input::Operation::reset);
                 if(key_det_){poll_.emplace(*clock_);continue;}
             }
             if(phase_==Phase::final_release) {
@@ -31,9 +38,9 @@ std::uint64_t Scene::advance_elapsed(std::uint64_t ns,const maine::KeySource& ke
             if(sink_)sink_({Kind::gaiji,12,0xc1,"\xf0\xf1"});labels();phase_=Phase::menu;
         }
         if(!wait_){reset_sample_=true;wait_.emplace(std::vector<maine::Request>{{maine::RequestKind::wait,0}},clock_);}
-        const auto sample=[&]{const auto value=keys();key_det_=reset_sample_ ? value : std::uint16_t(key_det_|value);reset_sample_=!reset_sample_;pair_=std::uint16_t(previous_|value);previous_=value;return value;};
+        const auto pair_sample=[&]{const auto value=sample(reset_sample_ ? pc98_input::Operation::reset : pc98_input::Operation::sense);key_det_=reset_sample_ ? value : std::uint16_t(key_det_|value);reset_sample_=!reset_sample_;pair_=std::uint16_t(previous_|value);previous_=value;return value;};
         const auto sink=[&](const maine::Request& event){if(event.kind==maine::RequestKind::wait && sink_)sink_({Kind::wait});};
-        const auto before=wait_->ticks();ns=wait_->advance_elapsed(ns,sample,sink,{},service);ticks_+=wait_->ticks()-before;
+        const auto before=wait_->ticks();ns=wait_->advance_elapsed(ns,pair_sample,sink,{},service);ticks_+=wait_->ticks()-before;
         if(wait_->status()!=maine::AnimationStatus::stopped)return 0;
         wait_.reset();key_det_=pair_;
         if(key_det_&3u){selected_=1-selected_;labels();}
