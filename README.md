@@ -32,11 +32,11 @@ RGB/TRAM/palette samples pass. Source strict aggregate retains 19 postactor keys
 and 23 raw GDC differences. Native 12889 still differs by 407 blinking pixels;
 1805 native keys remain separate. No emulator is live. See the current handoff.
 
-The v1480 frontend shares a PC-98 input latch across real MAIN/UI poll sites in
-both native windows. All 2907 original dialogue polls and real frontend controls
-pass GNU/UBSan; GNU 90/86 and Windows 2 compile checks pass. Existing host-adapter
-outputs and unresolved timing/display/device verdicts remain explicit. See
-[current handoff](docs/RE_HANDOFF.md) and [storage/recovery](docs/ANALYSIS_RETENTION.md).
+The v1481 sampler witness andpinned original request boundary support a real
+private Stage3 replay:13378 pool/state snapshots, four literal player inputs and
+22 full RGB samples pass. Strict fidelity retains40 tail words and one further
+head/player difference. Stock host-adapter failures remain separate. See
+[current handoff](docs/RE_HANDOFF.md) and[storage/recovery](docs/ANALYSIS_RETENTION.md).
 
 The prior v1473 native repair propagates and consumes Elly's scythe hit flag.
 Cold GNU/UBSan reproduce original hit8046/GameOver8085 and retain all 79 old8000

@@ -1,5 +1,32 @@
 # Private build and analysis retention
 
+## Recorded sampler and periodic cleanup (v1481)
+
+DOS-root sampled-device-v1481/recover.py carries 9576 exact aliases:
+5969 inherited plus 3607 new closed raw/duplicate/cache files. Every new alias
+restores SHA, size, mode, nsmtime. Four real/archive readers retain both 130-output
+host maps, 86 old contracts, two exact GNU/UBSan relinks, the 15209-case consumer
+Oracle and both device verdicts. The incomplete4926/9854-poll negative and the
+full 13377-update/29616-poll case retain their literal failed/positive gates.
+Ten real regular host wires restore individually to limit disk peak.
+
+Keep all 80393 parent identities, every current/late/finish identity andprovider.
+Current cold programs/link inputs, both private programs/objects, unique traces,
+unique game outputs and actual gzip wires stay physical. Eighty-six actual
+closed large device files identical to old native producer files also retire;
+their readers resolve exact archives. No original target pixels are supplied
+to the native renderer. Device FIFO wires never existed as regular files and
+earn no raw cleanup credit. Use fresh build paths andnamed recovery only.
+Never invoke CTest, including --show-only, in protected old builds; read the saved
+registry instead. Current old registry was parsed read-only from its file.
+
+Actual retired allocation:2093.73828125 MiB. New archives cost
+16.30859375 MiB; all cleanup artifacts cost
+19.3125 MiB. After2 MiB reserve, local release is
+2072.42578125 MiB. Whole retained phase/build costs plus 32 MiB
+reserve are separately charged in retention/retention.json. No prior cleanup,
+nonexistent/FIFO raw files or temporary restoration-write credit.
+
 ## Frontend sampling and periodic cleanup (v1480)
 
 DOS-root frontend-input-v1480/recover.py carries 5969 exact aliases:
