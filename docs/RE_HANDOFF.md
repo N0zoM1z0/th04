@@ -12,8 +12,11 @@ return and 10394-update Stage2 clear. Its 43193 boundaries, 24232 raw loops,
 4000 declared loop inputs and 57 physical keyboard edges attest. All device
 calls preserve CPU/context, tick and 640 KiB RAM. One GameOver guard registers
 and never fires; nine baseline objects/seven cached points bound the registry
-at sixteen. The reconstructed DOS capture is still running. Never restart it
-solely because an observation poll expires; inspect its real process/receipt.
+at sixteen. Both original and reconstructed captures are complete. Both full
+paired reductions pass configured fields/RNG, nine pools, 22 states, three
+private bytes and 38 video regions. Their DOS aggregate remains false for
+682 post-reset keys and 31563 raw-GDC records; twelve auxiliary waits also
+retain raw-GDC differences. Do not relabel these aggregate failures as parity.
 
 Both current 566/1ad0ea4c cold GNU and optimized UBSan independently match
 28793 selected scalar records and 14396 complete nine-pool Stage2/Stage3
@@ -23,7 +26,8 @@ Their 510 volatile post-actor keys stay separate. Both also match all nine
 pools at 9836 current original Stage1 after-actor checkpoints; native actor9837
 is checked only for wire framing/EOF, without a target actor-pool comparison.
 Actual final native CFG/SCR bytes equal the new original HDI files; all ten
-full 16-bit score checksums validate. The full source-DOS pair remains pending.
+full 16-bit score checksums validate. Both roles' 68 complete lifecycle memories
+and final physical-save gates also pass; frozen recovery remains pending.
 
 Independent 34 complete original memories bind CPU, own MZ code, DGROUP,
 private3, resident and stack: Midboss3 activation1601, phase1at1620,
@@ -52,7 +56,10 @@ clear wires,3500/8000 routes and177 legacy display observations (59 RGB/TRAM
 pairs). Six malformed version2 plans and four new private/input mutations
 reject. Default full old/new reader reports reproduce; all20232 original
 closed LCG transitions and three mutations pass. Keep current
-.analysis/port64/stage3-route-v1462-final and every prior4c/bcd/3747 cold cache.
+.analysis/port64/stage3-route-v1462-final main/session programs and link inputs,
+and every prior4c/bcd/3747 cold cache. Unused current test programs and objects
+are archived by closed-retention/retention.json; restore explicitly if needed
+and use a fresh directory for the next cold build.
 The old scout heldShot32 prose is corrected by native-forecast-summary.json;
 that forecast receipt stays immutable and is not relabeled target evidence.
 
@@ -63,10 +70,18 @@ failed933 runs reproduce all outputs/events/diagnostics after restoring3 owned
 aliases and verifying SHA/size/mode/nsmtime before retirement. Do not recount
 those files. Its owned scout-inputs image stays live; final retention is open.
 
+Intermediate closed-output cleanup additionally retires884 files
+(331 objects/85 test programs/468 probe outputs), releasing4245.352 MiB net.
+All45796 protected hashes verify; an actual restored Midboss3 test passes and
+its executable/object/pool aliases retire again. See closed-retention,
+closed-archive-replay and closed-cleanup-accounting.json. The final journal
+must chain this journal and avoid recounting either early cleanup.
+
 Receipts are below .analysis/reconstruction/probes/dos-stage3-route-v1462.
-Live capture names are dos-stage3-route-v1462-original and -candidate under
-.analysis/runtime/candidates. Full paired DOS/video, source memory/save gates,
-frozen recovery, native pictures/timing/campaign and exactness remain open.
+Completed capture names are dos-stage3-route-v1462-original and -candidate under
+.analysis/runtime/candidates. Keep their replay inputs until final archive
+recovery finishes. Frozen recovery, native pictures/timing/campaign and
+exactness remain open; raw-GDC and post-reset-key aggregate failures remain.
 
 ## Latest closed bounded frontier (v1461)
 

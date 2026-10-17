@@ -1,5 +1,70 @@
 # Stage Lifecycle evidence
 
+## Continuous Stage3 comparison (v1462)
+
+The original now completes4000 Stage3 actor/score updates after actual Stage1
+return and10394 Stage2 clear:43193 boundaries,24232 raw loops,1062 LCG/13410
+ring calls,704 full conventional-memory witnesses and57 actual keyboard edges.
+All4000 raw loop inputs agree with the declared normal Bomb/movement plan;
+API calls preserve CPU/context/tick/640KiB RAM, and one actual GameOver guard
+never fires. Source DOS also completes the same route. Both full paired readers
+pass configured scalar/RNG,9pools/22states/private3 and38 video regions. Their
+aggregate remains false for682 keys/31563 raw-GDC records plus12 UI GDC records.
+All43193 captured256-byte resident windows agree;12 UI full windows are absent.
+Both roles68 complete RAM witnesses and actual physical files pass. See
+[current handoff](../../RE_HANDOFF.md) for paths/caches.
+
+Both actual current566/1ad0ea4c GNU/UBSan programs match28793 selected scalars
+and14396 whole nine-pool component snapshots, Boss/Midboss/private3, homing,
+inputs and RNG. All eight complete output wires agree;510 volatile post-actor
+keys remain separate. Both also independently match9836 Stage1 after-actor
+pool snapshots from this current capture. Actor9837 has only wire/EOF checks,
+with no same-boundary target actor-pool comparison. Actual native final CFG/SCR
+bytes equal original physical files; all ten full16-bit score checksums pass.
+
+Thirty-four independent full original RAM readbacks verify actual Midboss3
+activation1601/phase1at1620/defeat254 HP-6at2228/collected1UP2255/255at2356/
+reset2357, plus Stage2 defeat/clear and Stage3 entry/final4000. CPU, own MZ code,
+DGROUP, private3, resident and stack verify. Original stores13A9:0A4E/0A56/0A59
+own DS4258/4259/425A; source157C:25A6/25AE/25B1 owns MAP8CE8/8CE7/48F3.
+Original0AAF:3B8A computes3-continues_used at4349 and returns1 via3CE8 when
+empty; actual Stage3 entry has3 credits used. The older failed native-only933
+forecast remains separate. Its generic heldShot32 prose is corrected by the
+actual-input composite without changing or relabeling the old receipt.
+
+Both actual300-loop Micro probes validate two one-frame Bomb pulses and
+left/right transitions. Raw fields/RNG, nine full pools and22 states agree
+between DOS roles, with4 post-reset keys retaining a false aggregate. Retained
+4c native matches300 selected pre-update scalars, literal consumed inputs and
+nine-pool actor snapshots. P300 is syntax only; ordinary pools start1. Keep
+the failed unbound/deleted-clock collectors and missing-row/frame0 consumers.
+Bind via Load.stop and test clock.is_valid before touching the clock object.
+
+A post-actor key_det is not a player-input latch: original actor400 already
+reads48 but still hasBombs1/used0; update401 consumes the Bomb and reads32.
+Four full RAM witnesses prove this counterexample and previous-input field0.
+Use actual loops, specific UI player-entry taps and full state/pool checks;
+this does not observe literal player entry for all4000 Stage3 updates.
+
+The readonly getter leaves GNU main/audio/core/ymfm inputs raw-identical to4c.
+UBSan core retains125 changed bytes, all main_state.hpp source-location lines
+incremented by1; every code, relocation, symbol and other ELF section remains
+identical. A fresh extraction/replay verifies this and retires temporary objects
+with zero cleanup credit. Raw archive equality remains false. Compiler-local
+UBSan labels may be omitted, so the decoder follows filename relocations.
+
+Current cold87/83 tests and UBSan2 pass; both preserve legacy3500/8000/seven
+clear wires and all177 display observations. Six malformed plans and four
+new private/input mutations reject. Default complete readers reproduce and
+all20232 closed original LCG transitions/three mutations pass. The early
+71-file scout journal chains43332 protected hashes; actual old-program complete
+and failed replays reproduce all outputs and metadata. Intermediate884-file
+cleanup chains45796 protected hashes and releases4245.352MiB net; actual restored
+test/object/pool aliases verify and retire. Final frozen retention/recovery
+remains pending and must chain both early journals without recounting files.
+Native pictures, physical timing, campaigns and exactness are separate goals.
+
+
 ## Original/reconstructed DOS Boss suffix (v1456)
 
 The primary DOS comparison now reaches **9836 after-actor checkpoints**, with

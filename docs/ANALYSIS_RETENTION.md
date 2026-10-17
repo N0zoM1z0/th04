@@ -1,5 +1,31 @@
 # Native private-state retention
 
+## Completed probe and unused build cleanup (v1462)
+
+Intermediate cleanup retires 884 owned files: 331 objects, 85 test programs
+and 468 completed probe outputs. Fourteen new gzip recipes supplement existing
+verified backing files. Net release is 4245.352 MiB (4.146 GiB), after archive,
+journals, recovery metadata, cleanup scripts/logs and conservative local Python
+cache costs. The preceding 71-file scout cleanup is excluded from this total.
+
+All 45796 chained protected identities verify. Actual recovery restores one
+test executable, its object and one pool output with identical SHA, size, mode
+and nanosecond mtime; the restored Midboss3 contract test exits zero. All three
+aliases are then removed. Receipts are under
+`.analysis/reconstruction/probes/dos-stage3-route-v1462/`: use
+`closed-retention/retention.json`, `closed-archive-replay/receipt.json` and
+`closed-cleanup-accounting.json` for the manifest, recovery and net accounting.
+
+Current main/session executables, their link inputs and the original/source
+route data needed for final frozen recovery remain live. Individual archived
+files can be restored using `closed_recover.py --restore --path EXACT`.
+Verify and remove restored aliases after use. Build again in a fresh directory;
+the partially retired cold cache must not be incrementally overwritten.
+The final batch journal must chain this closed-output journal and require its
+recovery receipt, counting its retired files only once.
+
+
+
 
 ## Complete Kurumi clear and Stage3 entry recovery (v1461)
 

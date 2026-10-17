@@ -5,6 +5,18 @@ The primary requested differential is original DOS versus reconstructed DOS;
 native x64 also needs state/effect parity. Successful native gameplay routes
 and native-host equality do not establish original complete-game parity.
 
+## Continuous Stage3 comparison (v1462)
+
+Current v1462 completes actual original/source4000-update Stage3 routes after
+real Stage1/Stage2 clears. Across43193 boundaries, configured fields/RNG,
+nine pools,22 states,private3 and38 video regions agree. DOS aggregate remains
+false for682 post-reset keys/31563 raw-GDC records plus12 auxiliary GDC records.
+Current566/1ad0ea4c GNU/UBSan match28793 selected scalars/14396 nine-pool
+snapshots and9836 current Stage1 pool snapshots. All8 wires and physical saves
+agree;510 native volatile keys remain separate. Both roles68 full memories and
+43193 full resident256 windows pass;12 UI full windows were not captured.
+Frozen archive recovery remains pending. The prior closed extent follows below.
+
 ## Original/reconstructed DOS Boss suffix (v1456)
 
 The primary DOS comparison now reaches **9836 after-actor checkpoints**, with
