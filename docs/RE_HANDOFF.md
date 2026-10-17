@@ -5,33 +5,41 @@ goals remain active. Use `taskset -c 1 nice -n 19`, muted headless runs,
 serialized Borland/Wine and no host keys/focus. Keep English code/docs and
 `gpt-6.1-sol: ...` commits; push native `HEAD:port/modern-64` and the DOS main branch.
 
-## Sampled PC-98 input reaches MAIN/player (v1479)
+## Shared frontend MAIN/UI input sampling (v1480)
 
-MAIN now consumes pc98_input::Snapshot directly. Latch::snapshot() captures the
-complete action word and Shift by value; the real player lifecycle receives
-that value. Keypad diagonals retain their high bits. The existing integer/Shift
-entry remains the host-key adapter and delegates to the same MAIN body.
+Both native windows now sample fresh Win32/SDL keyboard state at actual MAIN
+and blocking-UI poll sites through one pc98_input::Latch. Initial reset, loop
+head sense, dialogue token/wait polls, pause/Game Over waits and loop-tail reset
+share that owner. Typed Snapshot reaches the real player; the tail runs before
+the frame counter advances. Genuine DEMO callback writes update the same latch.
+Keypad diagonals, Space, Shift and loss of focus have explicit BIOS adapters.
 
-An independent Oracle executes unchanged original input reset/sense/joystick
-and movement instructions, then compares 15209 fresh MAIN/player updates:
-12288 controlled sample calls and 2921 actual original BIOS samples. GNU and
-optimized UBSan agree. Repeating host translation at this boundary fails 11073
-cases. Keypad movement, sampled Bomb, Shift, Enter persistence and demo Q exit
-also pass direct contracts. Each movement comparison starts a fresh game;
-prior conflicting chords, clamps and full-route timing are outside that Oracle.
+The maintained dialogue parser reproduces all 2907 observed original reset/
+sense operations, complete action words and Shift values across both Stage3
+scenes. No expected key_det or clock is supplied. A compiled discard-on-sense
+negative completes both scenes but returns 21 wrong action words, so exit0 is
+insufficient; the comparator rejects it. A separate prewait-Enter/postwait-
+release control also rejects it. GNU and optimized UBSan agree. The real
+frontend independently checks reset/head/tail order, keypad/Shift player
+movement, actual tail retention and sampled pause/freeze/resume. Dialogue box
+intro keeps the existing three twelve-refresh waits; script-only tick counts
+do not establish original wall-clock or display timing.
 
-Fresh GNU 89 programs/85 CTests and four selected UBSan programs pass. Both
-unmodified new game programs replay all 13377 actual loop words with every one
-of the prior 130 complete output hashes unchanged. This preserves the stock
-scenario's 407 blinking-text pixels and 1805 volatile keys; it does not repair
-physical input delivery. The v1477 device scenario still has two failed literal
-player inputs and 1803 keys. Keep these scenarios separate.
+Fresh GNU 90 programs/86 CTests, five selected UBSan programs and two Windows
+x64 cross-compiles pass. Windows was not run. The independent original CPU
+sampler/movement composition still agrees with 15209 fresh MAIN/player updates;
+its repeated-host-translation negative fails 11073 cases. Both unmodified host
+adapter regressions retain all 130 complete output hashes through 13377 Stage3
+updates. Stock 407 blink pixels/1805 keys and the separate physical-device
+scenario's two literal-player failures/1803 keys remain unresolved.
 
-The existing original poll evidence shows Enter present at the head sample,
-then BIOS Enter clear with key_det8192 at players7835/12889, 1.544944/1.594111ms
-after sampler return. Frontend MAIN/UI polling and physical-device/BIOS IRQ
-admission remain to be integrated. No fitted hold, expected-latch/clock/phase
-assignment, new Stage4 observation or full-campaign acceptance is introduced.
+This connects real frontend ownership; it does not measure original BIOS IRQ
+admission, host delivery latency or continuous GDC timing. Existing window
+traces record frame host input, not every new BIOS poll. Next add a read-only
+per-poll witness, preserve all 52 physical edges/four UI tails, and compare a
+bounded continuous sampled frontend route using existing original witnesses.
+Do not seed expected latches, blindly carry host words or fit holds/clocks.
+No new original emulator campaign, Stage4 acceptance or exactness promotion.
 
 ## Actual original/source Elly defeat and Stage4 (v1475)
 
@@ -65,13 +73,14 @@ with 49 keys; do not subtract or merge their counts.
 
 ## Native comparison and current products
 
-Maintained native source now has 569 files, closure
-`32693566eebbbdc961f139c1b7dca736fc81f8b14d6e620304b358eafe9575d0`.
-Current cold products and link inputs are at main-input-owner-v1479-final:
-GNU 89 programs/85 CTests; UBSan game, session, input and MAIN-input programs.
-DOS game source and the maintained four-product cohort remain unchanged.
-The old stage3-hit-bridge-v1473-final cache is superseded and archived through
-the latest recovery below. Use a fresh directory for subsequent builds.
+Maintained native source now has 571 files, closure
+`34ff6ff534a7537b902ee339ee9522ce08ad8ef064ac36541fa2a6a71bae9708`.
+Current cold products/link inputs: frontend-input-v1480-final, GNU 90 programs/
+86 CTests; UBSan game/session/input/MAIN-input/sampled-UI; Windows game and UI
+compile only. The preceding main-input-owner-v1479-final cache is superseded;
+its inherited archive providers, receipts and logs remain physical. Other old
+cache files are recoverable through the latest chain. Use fresh build paths.
+Maintained DOS source and dos-four-products-v1443 remain unchanged.
 The v1473 repair propagates/consumes/resets Elly's existing hit flag; retain
 original hit8046/GameOver8085 and its partial actor-stream failure as evidence.
 
@@ -88,8 +97,8 @@ Original MAIN 156258/1136 relocations remains
 Normal source MAIN 200279/1183 relocations remains
 `778641ab845bcd67c6888bacc049e2cfa20fddda844681d3d2fd164f8386abc9`.
 Four-product cohort: `.analysis/build/dos-four-products-v1443`.
-Phase entry heads: main `ec3f7c6`, native `a75d43e`; read actual heads and the
-latest finish receipt. Target provenance stays `candidate-local-attested`.
+Phase entry heads: main `a0d4519`, native `8cc3c92`; code `b5f9143`.
+Read actual heads and the latest finish receipt. Target provenance stays `candidate-local-attested`.
 No artifact/unit exactness changes.
 
 ## Prior source Elly recovery (v1475)
@@ -101,42 +110,31 @@ inherited aliases; do not rerun completed DOS captures or treat RAM as a resume.
 
 ## Current recovery and next work
 
-Phase entry heads are main 55cbb1a/native ad7f42c; read actual heads and the finish
-publication. Code commit 65e6115 adds the typed MAIN consumer. Both complete goals
-remain active. Current main-input-owner-v1479/recover.py carries 4513 exact
-aliases:1825 inherited plus 2688 newly closed files. Keep 72700 parent identities
-and all current/late/finish identities and providers. Every new alias restores
-SHA, size, mode and nsmtime. Ten actual regular raw wires restore individually
-to limit disk peak. Three real/archive readers reproduce both 130-output maps,
-83 old contracts, two old exact GNU/UBSan relinks and the typed-consumer Oracle.
+DOS-root frontend-input-v1480/recover.py carries 5969 exact aliases:
+4513 inherited plus 1456 new closed raw/duplicate/cache/pilot files. All new
+aliases restore SHA, size, mode, nsmtime. Three real/archive readers reproduce both
+130-output host maps, 85 old contract commands, two exact GNU/UBSan relinks and
+the 15209-update consumer Oracle. Ten real regular raw wires restore one at a
+time to limit disk peak. Current UI/original-poll evidence remains physical.
 
-The new current cohort and link inputs, private consumer controls, sparse target
-evidence and all inherited providers remain physical. Old receipts/logs and
-providers remain; the old cache is recovery provenance, not an incremental
-build. Named restoration is available for historical readers. The stock
-frontend rejects precreated FIFO output directories; that failed harness is
-preserved. Successful producers use fresh directories and immediately compress,
-verify and unlink their five real regular raw wires after termination.
+Keep all 75819 parent identities, every current/late/finish identity and inherited
+provider. Current frontend-input-v1480-final GNU 90/86, UBSan 5 and Windows 2 products
+and link inputs stay physical. Old main-input-owner-v1479-final is recovery
+provenance, not an incremental build: retain inherited providers/receipts/logs,
+recover only named missing paths and retire them after historical readers.
+Saved old-ctest.json was parsed read-only from CTestTestfile.cmake; never invoke
+CTest in a protected old build, including --show-only, which rewrites LastTest.log.
 
-Actual file deallocation is 1982.83984375MiB. New archives cost 14.51953125MiB;
-all cleanup artifacts cost 16.79296875MiB. After 2MiB metadata reserve, local release
-is 1964.046875MiB. Whole-phase retained costs, including the current full build,
-plus 32MiB reserve are separate. No prior cleanup, rejected-FIFO raw avoidance or
-temporary restore-write credit. No producer is live.
+Actual newly retired allocations are 1953.9375 MiB.
+New archives cost 16.3515625 MiB; all cleanup artifacts cost
+17.5390625 MiB. Charging 2 MiB metadata reserve leaves
+1934.3984375 MiB local release. Whole retained phase/build
+costs plus 32 MiB reserve are separately reported in retention/retention.json.
+No prior cleanup, nonexistent raw, avoided output or temporary restore-write credit.
+Successful stock traces start with absent directories; after termination their
+five real raw wires are immediately compressed/hash-verified and unlinked.
+Replay verify_host.py, verify_consumer.py, check_old_build.py and verify_retired.py.
 
-CTest inspection also writes LastTest.log: this phase's --show-only query
-replaced the old protected log. The final chain rejected it. All 73472 original
-bytes were recovered using retained same-run stdout and CTest format; the full
-SHA remained exactly the immutable original value. This is historical log byte
-recovery, not a fresh execution or original-nsmtime claim. Keep the failed-chain
-record, damaged bytes and recovery provenance. Use saved old-ctest.json or a
-copied build for future queries; do not invoke CTest in protected build trees.
-
-Next connect frontend MAIN/UI sampling and physical-device/BIOS delivery to the
-verified latch/Snapshot consumer. Preserve the host adapter's recorded scenario
-and all 52 device edges/four UI tails. Use the existing raw PIC/poll/player
-witnesses first; isolate genuinely missing IRQ/scheduler evidence. Never seed
-expected key_det, carry a previous host word blindly or fit a hold/clock phase.
-Continue the existing differential note. Finish focused checks, tracking, both
-CIs and git diff --check. Continuous timing/display, NP2/Windows and complete
-four-source/native campaigns remain open. No exactness state changes.
+Next work is the read-only per-poll frontend witness and bounded continuous
+sampled route described above. Complete both CIs/tracking/diffs and push both
+branches. Continuous timing/display and complete campaigns remain open.

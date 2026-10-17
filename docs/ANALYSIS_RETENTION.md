@@ -1,5 +1,32 @@
 # Native private-state retention
 
+## Frontend sampling and periodic cleanup (v1480)
+
+DOS-root frontend-input-v1480/recover.py carries 5969 exact aliases:
+4513 inherited plus 1456 new closed raw/duplicate/cache/pilot files. All new
+aliases restore SHA, size, mode, nsmtime. Three real/archive readers reproduce both
+130-output host maps, 85 old contract commands, two exact GNU/UBSan relinks and
+the 15209-update consumer Oracle. Ten real regular raw wires restore one at a
+time to limit disk peak. Current UI/original-poll evidence remains physical.
+
+Keep all 75819 parent identities, every current/late/finish identity and inherited
+provider. Current frontend-input-v1480-final GNU 90/86, UBSan 5 and Windows 2 products
+and link inputs stay physical. Old main-input-owner-v1479-final is recovery
+provenance, not an incremental build: retain inherited providers/receipts/logs,
+recover only named missing paths and retire them after historical readers.
+Saved old-ctest.json was parsed read-only from CTestTestfile.cmake; never invoke
+CTest in a protected old build, including --show-only, which rewrites LastTest.log.
+
+Actual newly retired allocations are 1953.9375 MiB.
+New archives cost 16.3515625 MiB; all cleanup artifacts cost
+17.5390625 MiB. Charging 2 MiB metadata reserve leaves
+1934.3984375 MiB local release. Whole retained phase/build
+costs plus 32 MiB reserve are separately reported in retention/retention.json.
+No prior cleanup, nonexistent raw, avoided output or temporary restore-write credit.
+Successful stock traces start with absent directories; after termination their
+five real raw wires are immediately compressed/hash-verified and unlinked.
+Replay verify_host.py, verify_consumer.py, check_old_build.py and verify_retired.py.
+
 ## Typed MAIN consumer and superseded-cache recovery (v1479)
 
 Current DOS-root main-input-owner-v1479/recover.py carries 4513 aliases:1825

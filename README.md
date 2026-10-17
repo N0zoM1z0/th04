@@ -28,11 +28,11 @@ RGB/TRAM/palette samples pass. Source strict aggregate retains 19 postactor keys
 and 23 raw GDC differences. Native 12889 still differs by 407 blinking pixels;
 1805 native keys remain separate. No emulator is live. See the current handoff.
 
-The v1479 MAIN consumer accepts sampled PC-98 action/Shift values directly.
-15209 independent target-instruction/MAIN comparisons pass; a repeated-host
-conversion negative fails 11073 cases. Fresh GNU 89/85 and UBSan 4 checks pass, and
-both 13377-frame host-adapter regressions preserve all 130 previous output hashes.
-Frontend BIOS/IRQ/UI delivery and the existing game differences remain open.
+The v1480 frontend shares a PC-98 input latch across real MAIN/UI poll sites in
+both native windows. All 2907 original dialogue polls and real frontend controls
+pass GNU/UBSan; GNU 90/86 and Windows 2 compile checks pass. Existing host-adapter
+outputs and unresolved timing/display/device verdicts remain explicit. See
+[current handoff](docs/RE_HANDOFF.md) and [storage/recovery](docs/ANALYSIS_RETENTION.md).
 
 The prior v1473 repair propagates and consumes Elly's scythe hit through MAIN's player
 latch. Cold GNU/UBSan reproduce original hit8046 and GameOver8085 with8082 complete

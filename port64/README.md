@@ -1,16 +1,45 @@
 # TH04 native 64-bit bring-up
 
-## PC-98 input sampler component
+## Shared frontend MAIN/UI input sampling (v1480)
 
-`Latch::snapshot()` now supplies an explicit PC-98 action/Shift value to
-`gameplay::State::update(Snapshot, ...)`. MAIN passes this value to its real
-player lifecycle, retaining keypad diagonals and the complete action word.
-The existing integer/Shift overload remains the frontend host-key adapter.
-The caller owns sampling and BIOS/IRQ delivery; this consumer change does not
-supply that timing model. Fresh GNU 89 programs/85 CTests and four selected
-UBSan programs pass. Independent original sampler/movement instructions agree
-with 15,209 MAIN/player updates; a repeated-host-conversion consumer fails
-11,073 cases. Full frontend delivery and campaign acceptance remain pending.
+Both native windows now sample fresh Win32/SDL keyboard state at actual MAIN
+and blocking-UI poll sites through one pc98_input::Latch. Initial reset, loop
+head sense, dialogue token/wait polls, pause/Game Over waits and loop-tail reset
+share that owner. Typed Snapshot reaches the real player; the tail runs before
+the frame counter advances. Genuine DEMO callback writes update the same latch.
+Keypad diagonals, Space, Shift and loss of focus have explicit BIOS adapters.
+
+The maintained dialogue parser reproduces all 2907 observed original reset/
+sense operations, complete action words and Shift values across both Stage3
+scenes. No expected key_det or clock is supplied. A compiled discard-on-sense
+negative completes both scenes but returns 21 wrong action words, so exit0 is
+insufficient; the comparator rejects it. A separate prewait-Enter/postwait-
+release control also rejects it. GNU and optimized UBSan agree. The real
+frontend independently checks reset/head/tail order, keypad/Shift player
+movement, actual tail retention and sampled pause/freeze/resume. Dialogue box
+intro keeps the existing three twelve-refresh waits; script-only tick counts
+do not establish original wall-clock or display timing.
+
+Fresh GNU 90 programs/86 CTests, five selected UBSan programs and two Windows
+x64 cross-compiles pass. Windows was not run. The independent original CPU
+sampler/movement composition still agrees with 15209 fresh MAIN/player updates;
+its repeated-host-translation negative fails 11073 cases. Both unmodified host
+adapter regressions retain all 130 complete output hashes through 13377 Stage3
+updates. Stock 407 blink pixels/1805 keys and the separate physical-device
+scenario's two literal-player failures/1803 keys remain unresolved.
+
+This connects real frontend ownership; it does not measure original BIOS IRQ
+admission, host delivery latency or continuous GDC timing. Existing window
+traces record frame host input, not every new BIOS poll. Next add a read-only
+per-poll witness, preserve all 52 physical edges/four UI tails, and compare a
+bounded continuous sampled frontend route using existing original witnesses.
+Do not seed expected latches, blindly carry host words or fit holds/clocks.
+No new original emulator campaign, Stage4 acceptance or exactness promotion.
+
+Use --sampled-input-checks with a fresh muted output path for the real frontend
+controls. `th04-port64-sampled-ui-contracts --dialog-samples SCRIPT INPUT` replays
+BIOS/joystick fixture samples; the input contains no expected action word or clock.
+Current 571-file source closure andbuild/recovery paths are in docs/RE_HANDOFF.md.
 
 `pc98_input.hpp` separates BIOS keyboard samples and active-low joystick pins
 from the accumulated game input latch. Reset clears actions before sampling;
