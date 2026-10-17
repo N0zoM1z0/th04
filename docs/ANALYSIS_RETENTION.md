@@ -1,6 +1,49 @@
 # Private build and analysis retention
 
 
+## Complete Kurumi clear and Stage3 entry recovery (v1461)
+
+Verified final retention archives 352 additional owned generated files
+into 6 content blobs, reusing hash-verified inherited gzip/file recipes.
+It releases 2933.418 MiB after new archive/gzip costs, both journals, frozen
+replay snapshots, both recovery metadata trees and accounting receipt. Together
+with the earlier 54-file/17-recipe scout archive, verified release is
+4842.230 MiB (4.729 GiB). The early files are counted once.
+All 43077 protected identities verify, chaining all 38326 scout identities,
+all 38121 preceding parents, all 22 previous late files and that finish identity.
+
+Actual recovery restores twelve owned complete capture aliases and the failed
+original's raw witness. Both current cold GNU/optimized UBSan programs execute
+fresh original-input-only clear fixtures. All seven state/pool/input/UI/clear
+wires and physical saves reproduce. The frozen full paired DOS/native/UI
+reducer executes for GNU and reproduces the original configured vectors,
+including the failed 544 key/31196 main-GDC/12 UI-GDC aggregate fields.
+UBSan reproduces its original seven wire identities and files; no second
+restored UBSan reduction is claimed. Both the 32-memory complete lifecycle and
+the failed capture's six-memory defeat consumers execute again. SHA, size,
+mode and nanosecond mtime verify before all thirteen aliases retire.
+
+Current 566/4c3c50cb GNU 87/cache/UBSan 2 and prior bcd/3747 cold programs/caches
+remain live. Complete compressed original/source CPU, DGROUP, raw/RNG, video,
+full memory and UI evidence remains preserved. Both failed collector capsules
+retain their incomplete verdicts. The verified original-only defeat witness
+comes from a failed capture; it does not establish a complete successful run. Earlier borrowed one HDI
+and four elapsed aliases retired separately, with no cleanup credit.
+
+```sh
+python3 .analysis/reconstruction/probes/dos-kurumi-clear-v1461/replay_restored.py \
+  --output-dir .analysis/reconstruction/probes/NEW-kurumi-clear-recovery
+```
+
+Run from the main checkout. This executes native programs and frozen recorded
+DOS consumers, not the emulator. Use fresh outputs. `recover.py --restore --path
+EXACT` restores individual owned aliases; verify SHA/size/mode/nsmtime before
+retiring them. The next journal must merge every protected identity, every
+`finish.json` late_protected entry and that finish identity. Never count missing
+historical worktrees, native v1432's 94 files or v1437 MAIN/MAP as cleanup, and
+never recreate a frozen path to hide those recorded recovery gaps.
+
+
 ## Terminal scout recovery during clear capture (v1461)
 
 Four completed native-only scouts and their private observer ELF/object are
