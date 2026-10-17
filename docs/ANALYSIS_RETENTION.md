@@ -1,5 +1,42 @@
 # Native private-state retention
 
+## Typed MAIN consumer and superseded-cache recovery (v1479)
+
+Current DOS-root main-input-owner-v1479/recover.py carries 4513 aliases:1825
+inherited and2688 newly closed regular traces, duplicate outputs/inputs and
+superseded build files. All restore exact SHA, size, mode, nsmtime. Three real/
+archive consumers reproduce both 130-file host maps, 83 old contracts, two exact
+old GNU/UBSan relinks and the15209-update consumer Oracle. Ten actual regular
+raw files restore one at a time to bound peak storage.
+
+Keep 72700 parent identities, every current/late/finish identity and all providers.
+Current main-input-owner-v1479-final GNU 89/85 andUBSan4 programs/link inputs stay
+physical, with 569/32693566 source. Old cache receipts/logs and inherited providers
+remain physical;all other superseded cache files are recoverable. Never run an
+incremental build there. Use check_old_build.py --mode archive for historical
+contracts/relinks; restore only explicitly required paths and retire after use.
+
+Actual 1982.83984375MiB file retirement includes 1714.484375MiB from ten real raw
+wires created in this batch, compressed/hash-verified immediately after producer
+closure. Later compressed-file dedup counts separate actual allocations once.
+New archives cost 14.51953125MiB;all cleanup artifacts cost 16.79296875MiB. After 2MiB
+metadata reserve, local release is 1964.046875MiB. Whole-phase retained evidence
+and full new build costs plus 32MiB reserve are separate. No older cleanup,
+rejected FIFO/raw avoidance, system-wide free-space or temporary restore credit.
+The failed FIFO harness remains;stock output must start with a fresh directory.
+
+CTest inspection also writes LastTest.log: this phase's --show-only query
+replaced the old protected log. The final chain rejected it. All 73472 original
+bytes were recovered using retained same-run stdout and CTest format; the full
+SHA remained exactly the immutable original value. This is historical log byte
+recovery, not a fresh execution or original-nsmtime claim. Keep the failed-chain
+record, damaged bytes and recovery provenance. Use saved old-ctest.json or a
+copied build for future queries; do not invoke CTest in protected build trees.
+
+Replay verify_host.py, verify_consumer.py, check_old_build.py and verify_retired.py.
+Current complete game outputs preserve old failures;sample-to-MAIN agreement
+is not frontend BIOS/IRQ/UI timing or full-campaign acceptance. No emulator lives.
+
 ## Actual input-poll capture recovery (v1478)
 
 DOS-root main-input-polls-v1478/recover.py carries 1825 aliases:1804 inherited

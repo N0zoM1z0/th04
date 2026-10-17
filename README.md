@@ -28,12 +28,11 @@ RGB/TRAM/palette samples pass. Source strict aggregate retains 19 postactor keys
 and 23 raw GDC differences. Native 12889 still differs by 407 blinking pixels;
 1805 native keys remain separate. No emulator is live. See the current handoff.
 
-The v1478 maintained PC-98 input sampler passes fresh GNU/UBSan component checks,
-12288 unchanged-target instruction calls and 2921 actual original samples. A new
-original capture observes Enter release between head sampling andplayer entry;
-MAIN/UI delivery integration remains open. Verified terminal-file cleanup frees
-203.95703125MiB locally after recovery costs/reserve. Full game verdicts retain
-their prior source identities and unresolved differences.
+The v1479 MAIN consumer accepts sampled PC-98 action/Shift values directly.
+15209 independent target-instruction/MAIN comparisons pass; a repeated-host
+conversion negative fails 11073 cases. Fresh GNU 89/85 and UBSan 4 checks pass, and
+both 13377-frame host-adapter regressions preserve all 130 previous output hashes.
+Frontend BIOS/IRQ/UI delivery and the existing game differences remain open.
 
 The prior v1473 repair propagates and consumes Elly's scythe hit through MAIN's player
 latch. Cold GNU/UBSan reproduce original hit8046 and GameOver8085 with8082 complete
