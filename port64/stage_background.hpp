@@ -25,6 +25,12 @@ public:
     bool streams_released() const { return streams_released_; }
     void set_speed(std::uint8_t speed) { speed_=speed; }
     void set_tile(std::int16_t x,std::int16_t y,unsigned image);
+    // Enemy opcode8F stores a raw VRAM source offset, not an image index.
+    void set_tile_vram(std::int16_t x,std::int16_t y,unsigned offset);
+    // The background prefix precedes actor tile writes. The scroll tail can
+    // copy refilled rows afterward; retain both inputs for deferred repaint.
+    void begin_frame();
+    unsigned draw_image_at(unsigned screen_x,unsigned screen_y) const;
     unsigned image_at(unsigned screen_x, unsigned screen_y) const;
     unsigned row_pixel(unsigned screen_y) const { return (screen_y + display_line_) % 16; }
     unsigned scroll_line() const { return scroll_line_; }
@@ -46,6 +52,9 @@ private:
     std::vector<std::array<std::array<unsigned,24>,5>> sections_;
     Bytes order_, speeds_;
     std::array<std::array<unsigned,24>,25> ring_{};
+    std::array<std::array<unsigned,24>,25> draw_ring_{};
+    bool draw_ring_valid_ = false;
+    unsigned draw_copy_top_ = 0, draw_copy_height_ = 0;
     unsigned required_image_count_ = 0;
     unsigned section_cursor_ = 4, speed_cursor_ = 4, row_in_section_ = 0;
     unsigned scroll_line_ = 0, display_line_ = 0, ring_row_previous_ = 0;

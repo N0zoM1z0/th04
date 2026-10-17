@@ -711,14 +711,16 @@ struct MainSprites {
     void require_cdg(unsigned slot) const { require_view(slot<cdg_released.size() && !cdg_released[slot],"released CDG handle used"); }
     const CdgSheet& boss_backdrop() const { require_cdg(16);return extra_backdrop ? *extra_backdrop : (second ? second->backdrop : backdrop); }
     void clean_stage() { for(unsigned i=128;i<256;++i) stage_slots[i]={};loaded_sheets.clear();stage_end=128; }
-    void load_dialog_sprites(std::string name) {
+    bool load_dialog_sprites(std::string name) {
         for(auto& c:name) if(c>='a' && c<='z') c=static_cast<char>(c-'a'+'A');
         const auto it=dialog_files.find(name);require_view(it!=dialog_files.end(),"dialog references absent sprite file");
         auto sheet=std::make_unique<sprite::Sheet>(it->second);
         require_view(sheet->count()<=256-stage_end,"dialog sprite bank overflow");
         for(unsigned i=0;i<sheet->count();++i) stage_slots[stage_end++]={sheet.get(),i};
-        if(sheet->has_palette()) palette.palette=sheet->palette();
+        const bool palette_loaded=sheet->has_palette();
+        if(palette_loaded) palette.palette=sheet->palette();
         loaded_sheets.push_back(std::move(sheet));
+        return palette_loaded;
     }
     void diagnostic_boss_sprites() { clean_stage();load_dialog_sprites("ST00.BB1");load_dialog_sprites("ST00.BB2"); }
 };
@@ -842,7 +844,7 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
                 (physical_y+400-sprites.second->carpet_copy_top)%400<sprites.second->carpet_copy_height;
             const auto image = sprites.second && sprites.second->carpet_draw_ring && !carpet_copy
                 ? (*sprites.second->carpet_draw_ring)[physical_y/16][x/16]
-                : sprites.background.image_at(x,y);
+                : sprites.background.draw_image_at(x,y);
             put_indexed_pixel(frame,palette,32,0,x,y,
                 tiles.pixel(image,x%16,sprites.background.row_pixel(y)));
         }
@@ -1211,8 +1213,8 @@ void put_main_text(Frame& frame,const MainSprites& sprites,const gameplay::State
 
 class DialogScene {
 public:
-    DialogScene(MainSprites& sprites,dialog::Script& script,const Frame& frame,unsigned character,sound::ActionSink audio={})
-        : sprites_(sprites),script_(script),character_(character),audio_(std::move(audio)),indices_(640*400,255) {
+    DialogScene(MainSprites& sprites,dialog::Script& script,const Frame& frame,unsigned character,sound::ActionSink audio={},std::function<void()> palette_loaded={})
+        : sprites_(sprites),script_(script),character_(character),audio_(std::move(audio)),palette_loaded_(std::move(palette_loaded)),indices_(640*400,255) {
         require_view(sprites_.font.present(),"Dialog requires --font-bmp FILE or a local FREECG98.bmp");
         for(unsigned y=0;y<400;++y) for(unsigned x=0;x<640;++x) {
             const auto pixel=frame.pixels[y*640+x];
@@ -1297,13 +1299,16 @@ private:
         case dialog::Kind::bgm_control:if(audio_)audio_({sound::ActionKind::command,std::uint16_t(e.a),{}});break;
         case dialog::Kind::se_force:if(audio_)audio_({sound::ActionKind::force,std::uint16_t(e.a),{}});break;
         case dialog::Kind::clean:sprites_.clean_stage();break;
-        case dialog::Kind::sprite_load:sprites_.load_dialog_sprites(e.name);break;
+        case dialog::Kind::sprite_load:
+            if(sprites_.load_dialog_sprites(e.name) && palette_loaded_)palette_loaded_();
+            break;
         case dialog::Kind::cdg_free:sprites_.free_cdg(static_cast<unsigned>(e.a));break;
         default:break; // Timing/palette is Script-owned; audio/overlay requests are retained.
         }
     }
     MainSprites& sprites_;dialog::Script& script_;unsigned character_,intro_=0;
     sound::ActionSink audio_;
+    std::function<void()> palette_loaded_;
     Bytes indices_,back_;std::vector<dialog::Event> glyphs_,events_;
 };
 
@@ -2370,7 +2375,10 @@ private:
             require_view(assets_ && !assets_->stage5.bad_dialog_scripts[unsigned(application_.resident().playchar)].empty(),"Yuuka5 bad dialogue missing");
             script_=std::make_unique<dialog::Script>(assets_->stage5.bad_dialog_scripts[unsigned(application_.resident().playchar)]);
         }
-        post_started_=post;dialog_scene_=std::make_unique<DialogScene>(*sprites_,*script_,front ? *front : render_live_main(main_->palette_tone_before_frame()),unsigned(application_.resident().playchar),[this](const sound::Action& a){if(sound_)sound_->handle(a);});
+        post_started_=post;dialog_scene_=std::make_unique<DialogScene>(*sprites_,*script_,front ? *front : render_live_main(main_->palette_tone_before_frame()),unsigned(application_.resident().playchar),[this](const sound::Action& a){if(sound_)sound_->handle(a);},[this] {
+            // A palette-bearing BFNT replaces the live player color as well.
+            main_->set_player_palette({sprites_->palette.palette[42],sprites_->palette.palette[43],sprites_->palette.palette[44]});
+        });
     }
     // Immutable decoded archive inputs survive native scenes. Rebuild their
     // active menu owners after Music Room's original cdg_free_all boundary.

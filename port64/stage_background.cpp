@@ -87,6 +87,8 @@ void Background::refill(unsigned ring_row, unsigned section, unsigned row) {
 
 void Background::update(bool scroll_active) {
     if(streams_released_) throw std::logic_error("released MAP/STD streams updated");
+    draw_copy_height_=0;
+    const auto previous_delta=last_delta_;
     // Publish the hardware origin BEFORE advancing the ring for this frame.
     if (previous_advance_ && scroll_active) display_line_ = scroll_line_;
     fraction_ = static_cast<std::uint8_t>(unsigned(fraction_)+speed_);
@@ -118,6 +120,10 @@ void Background::update(bool scroll_active) {
         refill(ring_row,order_[section_cursor_],row_in_section_);
     }
     previous_advance_ = static_cast<std::uint8_t>(advance);
+    if(scroll_active && speed_) {
+        draw_copy_top_=scroll_line_;
+        draw_copy_height_=unsigned(previous_delta+last_delta_)/16;
+    }
 }
 
 void Background::set_display_line(unsigned line) {
@@ -151,5 +157,20 @@ void Background::set_tile(std::int16_t x,std::int16_t y,unsigned image) {
     if (row<0 || row>=25 || col<0 || col>=24) throw std::out_of_range("stage tile write");
     ring_[row][col]=image;
     required_image_count_=std::max(required_image_count_,image+1);
+}
+} // namespace th04::portable::stage
+
+namespace th04::portable::stage {
+void Background::set_tile_vram(std::int16_t x,std::int16_t y,unsigned offset) {
+    set_tile(x,y,image_from_vram(offset));
+}
+void Background::begin_frame() {
+    draw_ring_=ring_;draw_ring_valid_=true;draw_copy_height_=0;
+}
+unsigned Background::draw_image_at(unsigned x,unsigned y) const {
+    if(x>=384 || y>=400)throw std::out_of_range("background draw coordinate");
+    const auto physical=(y+display_line_)%400;
+    const bool copied=(physical+400-draw_copy_top_)%400<draw_copy_height_;
+    return draw_ring_valid_ && !copied ? draw_ring_[physical/16][x/16] : ring_[physical/16][x/16];
 }
 } // namespace th04::portable::stage

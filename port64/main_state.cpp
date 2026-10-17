@@ -499,6 +499,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
             yuuka6_background_.prepare_render(orange_background_phase_,orange_background_frame_,ring_);
             yuuka6_->set_palette_zero(yuuka6_background_.state().palette_zero);
         }
+        if(background) background->begin_frame();
         point_numbers_.update();
         circles_.update();sparks_.update();
         life_.set_clear_time(bullets_.snapshot().clear_time);
@@ -538,8 +539,10 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
         score_.score_delta+=bullets_.snapshot().score_delta-score_before;
         if (stage_) {
             const auto before = enemies_.snapshot().score_delta;
-            enemies_.update(*stage_,context,ring_,shots_,[this,&bullet_context,&bullet_sink](const enemy::Event& event) {
+            enemies_.update(*stage_,context,ring_,shots_,[this,background,&bullet_context,&bullet_sink](const enemy::Event& event) {
                 enemy_events_.push_back(event);
+                if(background && event.type==enemy::EventType::tile_ring)
+                    background->set_tile_vram(event.position.x,event.position.y,event.value);
                 if(event.type==enemy::EventType::sound)sound_action(sound::ActionKind::play,std::uint16_t(event.value));
                 // Tune/add consumes the shared ring immediately, before another
                 // enemy or another immediate opcode can draw from it.

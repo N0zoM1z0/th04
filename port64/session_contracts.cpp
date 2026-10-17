@@ -83,7 +83,7 @@ stage::Program::Bytes read(const char* name) {
 // The synthetic resource keeps one wave pending across the real Elly handoff.
 void check_stage3_dialog_waves() {
     stage::Program::Bytes standard{0,0,5,0,0,0,0,0,6,0,0,0,0,0,0,
-        1,3,0x06,0xff,0x00,0,2,0,1,0,0xe8,3,0xe8,3,0,0,0,0,0};
+        1,5,0x8f,0x4a,0x06,0xff,0x00,0,2,0,1,0,0xe8,3,0xe8,3,0,0,0,0,0};
     standard[0]=static_cast<std::uint8_t>(standard.size()-2);
     stage::Program schedule(standard);
     if(schedule.stopped()) throw std::runtime_error("Stage3 fixture lacks a pending wave");
@@ -110,6 +110,15 @@ void check_stage3_dialog_waves() {
     for(const auto& entity:main.enemies().snapshot().entities) alive+=entity.flag!=enemy::free;
     if(main.frames()!=3 || alive!=1)
         throw std::runtime_error("Elly activation suppressed the pending STD wave");
+    // 0x4A is tile_image_vo(25). An opcode operand is not image74.
+    if(background.image_at(48,64)!=25 || background.draw_image_at(48,64)!=0)
+        throw std::runtime_error("enemy tile write lost its VRAM operand or background-prefix order");
+    main.update(0,false,false,0,&background);
+    if(background.draw_image_at(48,64)!=25)
+        throw std::runtime_error("enemy tile write did not reach the next background prefix");
+    background.set_tile_vram(1000,1000,72);
+    if(background.image_at(48,64)!=0)
+        throw std::runtime_error("raw tile source72 did not select image0");
 }
 void replay(char** paths) {
     const auto first=read(paths[0]),map0=read(paths[1]),second=read(paths[2]),map1=read(paths[3]);

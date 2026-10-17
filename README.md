@@ -21,18 +21,16 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
-Current v1466 retains an incomplete original Stage3 run at loop7834. Its complete
-7832-frame actor prefix matches nine whole native pools and 21 stable fields.
-Boss/source parity remains open. A controlled Micro validates the new read-only
-deadline CPU/RAM diagnostic in the DOS main checkout; see the current handoff.
-
-Current 566/88575 has 14 sampled complete Stage2/3 RGB/TRAM matches using new
-original font/video/RAM captures. Every 640x400 RGB pixel and all 8000 active TRAM
-bytes equal authenticated GNU outputs; prior actual UBSan file hashes agree.
-The new Stage3 route also reproduces 24231 raw loops, 14472 ordered RNG records
-and 4000 physical input samples/57 edges. Native programs did not execute again.
-Raw index/GDC failures, later stages, every-frame display, natural timing and
-original full-campaign parity remain open; see the current handoff.
+Current v1467 records a complete original 8000-update Stage3 route. Native
+566/4787233c replays its literal inputs: both cold GNU/optimized UBSan programs
+agree on all 79 files, 8001 nine-pool snapshots, 8010 stable-state records and
+nine complete RGB/TRAM/DAC samples. Palette-bearing dialogue loads refresh the
+player palette; enemy opcode8F tile writes preserve background-prefix order.
+Fresh GNU 83 CTests and UBSan/session checks pass. One requested/readback input
+mismatch and 712 volatile post-actor keys remain separate. Original/source-DOS
+paired MAIN remains at completed Stage3 4000; continuous display, physical timing,
+full campaigns and artifact exactness remain open. Completed products retire
+after recovery checks; see the [current handoff](docs/RE_HANDOFF.md).
 
 Native development is active. Historical frozen554/31e6b3d7 GNU and optimized
 UBSan passed four strict natural headless routes: Easy ReimuA, Normal ReimuA,
