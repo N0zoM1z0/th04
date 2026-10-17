@@ -5,35 +5,48 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
-## Legal native route and active original experiment (v1474)
+## Actual original Elly defeat and Stage4 (v1474)
 
-Entry heads are main `f2ff777` and native `95cc935`; game closure566/a7606e66
-and current cold products are unchanged. A private const scythe-aware advisor
-selects ordinary keys after the exact old8000 prefix. Both unmodified cold stock
-GNU/UBSan execute all13377 recorded rows, matching complete Stage3 pools/state
-wires and22 picture outputs. They exit1 at the existing diagnostic guard on
-natural departure after the final complete score; this is not a successful stock
-fixture. Private normal advance reaches Stage4 init/actor1/score1. Native defeat
-is12792, post-dialogue12888 and departure13377, retaining one life and no new hit
-flags after8000. This forecast is not original/source acceptance.
+The original run `dos-elly-legal-v1474-original` completes in 996.426s without
+timeout, exit0. No owned emulator remains. HP6/phase3 at 12791 becomes-8/phase4
+at 12792; phase254 follows at 12824, phase255/dialogue cue12888, then departure
+at 13377 and actual Stage4 initialization/score1. Own-MZ/CPU/fullRAM, all 13377
+loop words,23 full live-font/video/RAM samples and three rebased player controls
+attest. The complete29146871-byte old8000 raw prefix reproduces.
 
-`dos-elly-legal-v1474-original` is now live. Poll
-`elly-legal-route-v1474/poll_original.py` before acting. Pinned GDB/emulator IDs
-are4057685/4057718 with start ticks12127943/12127967, one low-priority CPU and
-headless/muted operation. Keep driver/helper/plan/capsule/images immutable.
-Do not restart because a tool observation expires. There is no emulator resume
-from stored RAM. Reduce actual terminal evidence before claiming defeat/Stage4
-or preparing the corresponding source capture. The older failed v1472 producer
-remains terminal and must not be restarted.
+Both unchanged cold stock GNU/UBSan products replay all actual loop words and
+agree on130 files. Target comparison passes13378 complete init/actor snapshots
+of nine whole pools/21 stable fields and all 13377 available raw-score/state/
+resident/RNG-count rows. Four literal players agree. Actual Stage4 init/score1
+pools/state and terminal RNG counts match the separate normal-advance GNU
+observer; stock diagnostics stop before Stage4. Their exit1 is the existing
+natural-departure guard after the final complete score, not fixture success.
 
-Current recovery is `elly-legal-route-v1474/recover.py` and `frozen_reader.py`.
-It carries1146 aliases:683 inherited plus463 newly closed native files. All new
-aliases restore exact metadata; independent real/archive readers reproduce.
-Extra duplicate deallocation is180.046875MiB before metadata/replay costs and
-1MiB reserve. Separately,1805.1875MiB of actual regular stock outputs were
-compressed after closure. Scout FIFO raw streams never existed as regular files.
-Keep current builds and inherited providers physical. The live original's
-changing costs must enter the final journal after closure; no prior credit.
+Physical Shot32 reads back asEnter8192 at 7835 and 12889. The12888 player reads32;
+12889 reads8192. The physical-input native forecast misses that fourth literal
+word despite passing selected state/pools; actual-word replay fixes it. Keep both
+cases and 1805 volatile postactor keys. Loop samples are not every-player traces.
+
+Full RGB passes22/23 samples, including actual Stage4 score1. At12889,407 text
+pixels differ while all 23 active TRAM/DAC/raw-tone samples agree. Every differing
+pixel has a blink attribute: original rawGDC phase2 is visible, native reports
+hidden. Actual-word replay retains the failure. The cause of clock divergence
+remains open; no phase fitting, masking or expected-visibility assignment.
+
+Current recovery carries1513 direct aliases (683 inherited plus 463+367 new).
+All830 new aliases restore exact SHA,size,mode,nsmtime. Real/archive readers
+preserve original identity, state and the false RGB/derived aggregate verdicts.
+Current builds andinherited providers stay physical. Alloriginal costs nowenter
+the final journal;thereis no live exclusion orprior cleanup credit.
+
+Replay original identity,state,RGB andderived aggregate with
+`elly-legal-route-v1474/frozen_reader.py --reader original|native|rgb|actual`.
+The physical-input false fourth-player verdict andRGB407 remain asnegative
+observations;`TH04_REPLAY_NATIVE_CASE=stock-gnu` reproduces thephysical state
+comparison. The original's actual phase/HP checkpoints are separately recorded
+by `record_original_events.py`. No original actor records aremissing inthis run:
+13377 complete records plusinitialization andvalid gzip footer are present.
+The older v1472 partial capture remains unchanged.
 
 ## Native Elly hit propagation and consumption (v1473)
 

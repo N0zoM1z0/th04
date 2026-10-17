@@ -1,22 +1,28 @@
 # Private build and analysis retention
 
-## Closed legal-route native recovery during original capture (v1474)
+## Current terminal legal-route recovery (v1474)
 
-Current `elly-legal-route-v1474/recover.py` carries1146 direct exact aliases:
-683 inherited and463 new closed native files. Exact SHA,size,mode,nsmtime restores
-and independent real/archive whole legal-route reader replay pass. Extra duplicate
-deallocation is180.046875MiB; deduct new recovery/replay metadata and1MiB reserve
-for the local net. Separately,1805.1875MiB of actual regular stock outputs were
-compressed after producer closure. Scout FIFO raw streams never existed as regular
-files, so they earn no raw cleanup credit. No prior cleanup is credited again.
+Current `elly-legal-route-v1474/recover.py` carries1513 direct exact aliases:
+683 inherited plus 463 closed-native and 367 terminal actual-native/original files.
+All830 new aliases restore SHA,size,mode,nsmtime. The legal forecast reader and
+four actual-target replay consumers reproduce with real restored files and with
+aliases absent. Identity/state passes and the false RGB/derived aggregate remain.
+Current game builds/link inputs andinherited providers stay physical. No owned
+emulator remains;all original witness costs nowenter the final journal.
 
-Keep current game programs/link inputs and inherited providers physical. The
-independent `dos-elly-legal-v1474-original` capture is live: do not prune its
-images, capsule or changing outputs. This is an interim closed-native cleanup,
-not a final whole-phase free-space claim; charge all original costs after it
-terminates. Carry68705 inherited identities plus every late/finish identity and
-all providers. Use `frozen_reader.py` for archived legal-route replay; restore
-only explicit historical paths with `--restore --path EXACT`, then retire them.
+Extra actual duplicate/raw/build-file deallocation totals346.00390625MiB before
+9.12109375MiB new archives,ownmetadata/replay costs andreserves. Separately,
+3610.37890625MiB of actual regular stock outputs were compressed after termination.
+Scout FIFO raw streams never existed as regular files andearn no raw credit.
+These local cleanup measures are not a system-wide orwhole-phase free-space claim.
+No v1473 orolder cleanup is credited again. Thefinal journal charges all new
+retained sources/probes,witnesses,public snapshots and 32MiB reserve.
+
+Use `frozen_reader.py --reader original|native|rgb|actual|legal` for current
+archive replay. Restore only explicitly needed historical paths with
+`--restore --path EXACT`,then verify and retire them. Carry68705 parent identities,
+every late/finish identity and all 1513 alias providers. Future builds/captures use
+fresh paths. Continue intermediate cleanup while pursuing the next source run.
 
 ## Current native Elly repair recovery (v1473)
 
