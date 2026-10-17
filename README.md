@@ -21,6 +21,12 @@ remaining historical exactness cases are deferred.
 Historical function acceptance is reported by `python3 scripts/status.py` and
 [PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
 
+The v1474 const scythe-aware native forecast reaches Elly defeat12792 and natural
+departure13377 with one life. Stock GNU/UBSan match all complete Stage3 wires and
+22 native picture pairs, with explicit exit1 at the existing departure diagnostic
+guard. The new original capture is live and still unaccepted; poll the current
+handoff before acting. Game source and current cold products are unchanged.
+
 Current v1473 propagates and consumes Elly's scythe hit through MAIN's player
 latch. Cold GNU/UBSan reproduce original hit8046 and GameOver8085 with8082 complete
 nine-pool/state snapshots and8086 raw score/state/resident/RNG-count rows. All79
