@@ -2,63 +2,48 @@
 
 Updated 2026-10-17. Complete maintained DOS and native fidelity goals stay active.
 Use one low-priority CPU, muted/headless runs and serialized Borland/Wine builds.
-Code/docs and `gpt-6.1-sol: ...` commit messages stay English. Clean unused products
-throughout a batch; retain live jobs and required evidence providers.
+Code/docs and `gpt-6.1-sol: ...` commit messages are English. Clean closed products
+regularly; retain current programs, required evidence and exact archive providers.
 
-Current closure: 566 files,
+Native game closure remains 566 files,
 `4787233c1074df806c6dfdef6697030b8c2885ecf2911bfaf2fb7df11c33ba7e`.
-Fresh GNU 87 programs/83 CTests and optimized UBSan 2 programs/session pass.
-Cold inputs: `.analysis/port64/stage3-tiles-v1467-final`. Retain main/session,
-main/audio/core/ymfm inputs and source/commands/results; unused objects/tests
-retire after checks. Future builds use fresh directories.
+The retained v1467 GNU 87 programs/83 CTests and UBSan 2 programs/session pass.
+Both frontends agree on 79 outputs. Original/native Stage3 recorded-input replay
+matches 8001 nine-pool snapshots,8010 stable-state rows,consumed inputs and nine
+full RGB/TRAM/DAC samples. Keep 712 volatile native post-actor keys separate.
+There is no new native build or game-source change in the source8000 batch.
+Current binaries and link inputs stay at `.analysis/port64/stage3-tiles-v1467-final`.
 
-Original/native recorded-input Stage3 now reaches complete 8000. Both actual
-frontends agree on 79 files; all 8001 nine-pool snapshots, 8010 stable-state
-records and consumed inputs match. Nine full 640x400 RGB/TRAM/DAC samples pass
-through 8000. The original has one requested/readback mismatch at loop7835
-(8192/32); native consumes literal target words plus the dialogue7834 cue.
-A literal original player entry independently binds actor7835's8192. Keep
-712 volatile post-actor keys, raw indices and GDC differences separate.
-Requested-key delivery, natural UI/IRQ timing and campaign equivalence remain
-open. Original/source-DOS paired MAIN remains Stage3 completed4000.
+Main-checkout v1470 now independently validates actual reconstructed MAIN through
+8000 Stage3 updates after real Stage1/2 completion at9837/10394. All 8001 snapshots
+of nine whole pools,22 states and three private bytes match original. All 8000
+actual Stage3 inputs and28231 common raw-loop field/resident80/RNG observations
+match. Nine configured raw-video-region samples pass. Source player MAIN0708:7463
+and original0AAF:5FCF both read8192 after dialogue7834;their own near returns are
+06AA/00F4. The earlier loop's32 remains a distinct observation. Final score8000
+RAM and pending RNG tail bind counts1062/16467 without inventing an original
+terminal loop. Source actual1119 plan edges and44 UI events retain full guards.
 
-Stage3 gate/Elly STD dispatch retains pending waves after dialogue. A decoded
-palette-bearing BFNT callback refreshes player palette14. Enemy opcode8F now
-applies its raw VRAM-offset tile event; background drawing retains the prefix
-before actor writes and later scroll-tail copies. The old palette-only
-frame8000 failure (105 pixels), three-DAC-channel failure and rejected input/
-timing controls remain recorded. No target pixel/color/clock/RNG/state is assigned.
+Strict source/original aggregate remains false for49 post-actor input differences
+and nine raw GDC samples. Source live fonts/full RGB were not captured. Only MAIN
+is replaced; original OP/MAINE/ZUN/assets stay installed. Full four-source
+campaigns,natural IRQ/UI timing,continuous effects,NP2/Windows and artifact
+exactness remain open. Source capture is terminal; no emulator job remains.
 
-The DOS main checkout owns the compressed original8000 golden, reader/source
-snapshots and retention journal below `.analysis/reconstruction/probes/stage3-wait-v1467`.
-55 closed capture aliases restore exact metadata and independent readers
-reproduce; nine completed native payload sets compress and deduplicate.
-Do not bulk-expand them. The next journal must merge all protected parent,
-late and finish identities.
+The DOS main checkout owns `source8000-v1470` evidence and frozen consumers.
+Nine closed source aliases restore exact SHA/size/mode/nsmtime;four real-file
+and four virtual readers reproduce byte-identically. Full raw/prefix/suffix
+share one exact gzip/slice provider. Use current DOS-root recover.py for explicit
+historical aliases and frozen_source_reader.py for archived replay. Keep full
+compressed wire,RAM/UI witnesses and every inherited provider. Prior cleanup
+of92 historical link inputs/64 main-session binaries remains valid;restore
+those explicitly before old consumers. Latest GNU/UBSan inputs stay physical.
 
-Main-checkout v1468 controls now measure a0.009889ms lateShot-to-latch gap,
-shorter than DOSBox-X UART's0.572917ms delivery. An experimental confirmation-
-release batch passes400. Public sparse V2 separates physical requests from
-strictly asserted latch words; a wrong expectation still rejects. This changes
-no native game source or accepted fidelity frontier.
-
-Main-checkout v1469 now extends the paired transport/reader to V2. Actual
-original/source300 probes pass every raw latch,eight device edges and full
-CPU/tick/RAM guards;four rebased controls reject and root582-test CI passes.
-Source-only8000 is running from `source-latch-v1469/route-command.json`,reusing
-the original golden. Keep paired source-DOS coverage at4000 until its enclosing
-capture and independent checks finish; do not restart the live prefix.
-
-Ten closed Micro aliases,92 superseded native link inputs and64 old native
-main/session programs retire after exact SHA/size/mode/nsmtime restoration.
-Latest `stage3-tiles-v1467-final` GNU/UBSan programs and inputs stay physical.
-The current DOS-root `source-latch-v1469/recover.py` verifies the inherited
-identity chain through exact compressed providers. Restore explicit historical
-aliases before their old linker/program consumers; routine chain verification
-uses this current reader. Keep every provider and the original8000 golden.
-
-Finish source-DOS8000 against the existing original8000 golden. Do not repeat
-the long original capture. Continuous effects, full campaigns, NP2/Windows
-and artifact exactness remain open. Push using `HEAD:port/modern-64`.
+Reuse retained8000 evidence for regressions. Next validate an own-MAP sparse
+source/font observer with a cheap Micro,then pursue actual Elly defeat/Stage4
+against original/source/native observations. A future target extension needs
+its own original run; stored DOS RAM is not an attested emulator save-state.
+Do not rebuild unchanged producers or rerun the completed8000 scenario.
+Push using `HEAD:port/modern-64`;both complete goals stay active.
 See the [main comparison note](https://github.com/N0zoM1z0/th04/blob/main/docs/reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md)
 and [main handoff](https://github.com/N0zoM1z0/th04/blob/main/docs/RE_HANDOFF.md).
