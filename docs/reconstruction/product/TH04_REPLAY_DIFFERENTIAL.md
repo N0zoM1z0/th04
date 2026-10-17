@@ -5,6 +5,32 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Current repaired-route capture (v1467)
+
+Native566/e1233854 (`81e59db`) now completes the frozen ordinary8000-frame
+Stage3 forecast with dialogue7834 and Elly activation7835,one life remaining.
+Both actual cold GNU/optimized UBSan agree on all79 outputs. This is a forecast;
+no new original/source Boss acceptance is claimed while the V4 capture is live.
+Capture: `.analysis/runtime/candidates/dos-stage3-wait-v1467-corrected-v4`.
+Keep its plan/capsule/public Python inputs unchanged until it closes.
+
+A cheap original400-frame pressure control reproduces the debugger resource bug:
+old Frame/Score plus UIclock exceeds four hardware watches at100. Reusing
+Frame/Score and Loop/Player keeps four active at100/101 and completes400;
+all711787raw load/loop/RNG bytes equal the normalMicro and four full snapshots
+validate. V2/V3 long setups were proactively stopped before suspected overlaps;
+they remain incomplete,not timed out or gameplay failures. The V4 private
+collector uses the proven paired watches and includes a literal player-entry
+CPU/fullRAM tap after the actual Stage3 dialogue. Promote the frame/score fix
+only after the active run closes. Receipts: `stage3-wait-v1467` below `.analysis/reconstruction/probes/`.
+
+Cleanup has removed416 disposable build files after all relevant checks/link
+consumers finished. Three completed forecast payloads compress and restore
+exactly;duplicate backings share storage. Closed capture aliases restore exact
+metadata and independent readers reproduce before retirement. Keep actual
+main/session/link inputs,compressed witnesses andimmutable source/reader copies;
+use fresh build directories. Final combined net accounting is still pending.
+
 ## Observed Stage3 dialogue wait (v1467)
 
 The real original deadline capture resolves the earlier wait hypothesis:
