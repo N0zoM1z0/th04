@@ -1,7 +1,8 @@
 """Read sparse full fonts/video/RAM at original MAIN score-return boundaries.
 
-The ordinary keyboard adapter supplies real device events. This monitor reads
-the frame counter only between checkpoints; it does not stream per-frame RAM.
+The ordinary keyboard adapter supplies real device events. By default this
+monitor reads only the frame counter between checkpoints. An explicit plan can
+also stream complete DGROUP at the frame write of one declared input stage.
 The separately pinned C++ observer retains actual loop samples and RNG calls.
 """
 import gzip
@@ -30,6 +31,10 @@ class Monitor:
         self.dialog_requested = self.continue_requested = self.quit_requested = False
         self.ui_point = None
         self.input_plan = None
+        self.actor_stream = None
+        if 'actor_dgroup' in self.plan:
+            from th04_sparse_actor_gdb import ActorStream
+            self.actor_stream = ActorStream(self)
         self.process = self.address('th04_demo_observer::process')
         self.load = self.address('th04_demo_observer::load_segment')
         self.video = VideoRam(gdb.selected_inferior().read_memory,
@@ -51,6 +56,7 @@ class Monitor:
     def finish(self):
         assert not self.error and not self.wanted and self.terminal is not None
         if self.input_plan is not None:self.input_plan.finish()
+        if self.actor_stream is not None:self.actor_stream.finish()
         row = dict(complete=True, observations=self.observed,
                    terminal=self.terminal, natural_game_exit=False,
                    scope='Read-only completed score-return font/video/RAM samples. Ordinary keyboard input; no guest state assignments. Instantaneous display projection, not physical scanout or campaign equivalence.')
@@ -100,6 +106,7 @@ class Frame(gdb.Breakpoint):
             if self.stage is None:return False
             assert stage in (0,1,2) and frame==self.previous+1, (stage,frame,self.stage,self.previous)
             self.stage=stage;self.previous=frame;m.current.sequence.frames=frame
+            if m.actor_stream is not None:m.actor_stream.observe(stage,frame)
             m.score.enabled=(stage,frame) in m.wanted
             if frame%1000==0:gdb.write('SPARSE_FRAME %d %d\n'%(stage,frame))
             for cue in m.plan['ui_cues']:

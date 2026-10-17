@@ -95,6 +95,12 @@ def main():
             point=profile['entries'][name];at=6144+point['segment']*16+point['offset'];assert main_path.read_bytes()[at:at+16].hex()==point['opcode']
         point=profile['stage3_gameover_guard'];at=6144+point['segment']*16+point['offset'];assert main_path.read_bytes()[at:at+16].hex()==point['opcode']
     cues=plan['ui_cues'];assert all(c['kind'] in ('dialogue','continue') for c in cues)
+    if 'actor_dgroup' in plan:
+        actor=plan['actor_dgroup']
+        assert input_source is not None and actor==dict(stage=input_stage,extent=input_extent), 'actor stream must cover the declared input stage/extent'
+        at=6144+0xaaf*16+0x1b3;opcode=main_path.read_bytes()[at:at+16].hex()
+        assert opcode.startswith('a38a53'), 'original frame-store owner'
+        profile['actor_boundary']=dict(segment=0xaaf,offset=0x1b3,opcode=opcode)
     out.mkdir(parents=True);capsule=out/'source';capsule.mkdir()
     # Freeze the imported observer closure, without mutating historical inputs.
     for directory in [ROOT/'scripts/probes',ROOT/'scripts/lib']:
@@ -106,6 +112,8 @@ def main():
     if input_source is not None:
         shutil.copy2(ROOT/'scripts/probes/th04_sparse_input_gdb.py',capsule/'th04_sparse_input_gdb.py')
         shutil.copy2(input_source,capsule/'stage-inputs.txt')
+    if 'actor_dgroup' in plan:
+        shutil.copy2(ROOT/'scripts/probes/th04_sparse_actor_gdb.py',capsule/'th04_sparse_actor_gdb.py')
     keyboard=ROOT/'scripts/probes/th04_ordinary_keyboard.gdb';inputs[str(keyboard)]=sha(keyboard)
     text=keyboard.read_text()
     text=text.replace("sys.path.insert(0, os.environ['TH04_CLOCK_SOURCE_DIR'])", "sys.path.insert(0, "+repr(str(ROOT/'scripts'))+")\nsys.path.insert(0, "+repr(str(ROOT/'scripts/probes'))+")\nsys.path.insert(0, os.environ['TH04_CLOCK_SOURCE_DIR'])")
@@ -166,7 +174,7 @@ def main():
         initial_hdi_sha256=sha(initial),final_hdi_sha256=sha(image),
         emulator_sha256=sha(binary),main_sha256=sha(main_path),points=points,
         resource_budget='One low-priority CPU,1536MiB address-space bound,headless/muted',
-        scope='Original candidate-local-attested DOSBox-X sparse live font/video/RAM evidence. No per-frame large snapshots, guest assignments, native equivalence or exact promotion.')
+        scope='Original candidate-local-attested DOSBox-X sparse live font/video/RAM evidence;optional declared-stage full DGROUP stream. No per-frame video/full conventional memory,guest assignments,native equivalence or exact promotion.')
     (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
     print('SPARSE FONTS',complete,'elapsed',receipt['elapsed'],flush=True)
     return 0 if complete else 1

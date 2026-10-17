@@ -3724,6 +3724,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/th04_sparse_actor_gdb.py",
+    "category": "source-review",
+    "role": "support",
+    "purpose": "Optional complete DGROUP stream at the original ordinary frame-write seam.",
+    "purpose_source": "source-docstring"
+  },
+  {
     "path": "scripts/probes/th04_sparse_font_gdb.py",
     "category": "formats",
     "role": "support",

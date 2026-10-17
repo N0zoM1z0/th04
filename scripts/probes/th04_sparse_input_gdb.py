@@ -39,6 +39,7 @@ class Fetch(gdb.Breakpoint):
                     registers=regs.hex(),segments=segs.hex(),opcode=m.ram.read_range(self.linear,16)[0].hex()))
                 if stage==d.stage:
                     assert frame==0 and not d.active, 'input starts at own completed stage initialization'
+                    if m.actor_stream is not None:m.actor_stream.initialize(stage)
                     self.enabled=False;d.active=True;d.loop.enabled=True;d.guard.enabled=True
                     d.save(False)
                 return False

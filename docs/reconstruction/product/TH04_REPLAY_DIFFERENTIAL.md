@@ -5,6 +5,27 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Optional bounded after-actor DGROUP stream
+
+`capture_th04_dos_sparse_fonts.py` accepts an optional plan member
+`"actor_dgroup": {"stage": 2, "extent": 12000}`. It must match the separately
+hash-pinned physical input plan and final score checkpoint. Initialization at
+original MAIN 0AAF:007E records a full DGROUP; each actual 0AAF:01B3 frame store
+then records its complete 64 KiB using the existing TH04OG1 XOR/header wire.
+Every record checks own load/CS/IP/DS/opcode/AX/frame and unchanged CPU context.
+Fonts, video and full conventional memory remain sparse; no guest state is
+assigned. The original Stage3/Boss run is pending independent reduction.
+
+The real 400-frame Stage1 Micro completes in 36.43 seconds. An independent
+existing-format reader compares 3600 complete pool snapshots and all 35 stable
+fields at every frame with the retained original prefix. All agree. Eleven
+raw post-actor input fields differ, so that aggregate stays false; the separate
+physical-input/MZ reader validates all 400 consumed inputs and raw loop fields.
+V1's initial input rejection remains retained. Four fully rebased hypothetical
+controls reject an inactive item byte, record order, init IP and truncated body.
+Receipts: `.analysis/reconstruction/probes/stage3-boss-v1466/actor-*.json` and
+`actor-controls/receipt.json`. These Micro results do not establish Boss parity.
+
 ## Validated native Stage3 Boss forecast (v1466)
 
 Unmodified current cold GNU and optimized UBSan consume the same recorded normal
