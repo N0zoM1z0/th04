@@ -2684,3 +2684,49 @@ must chain `scout-retention/retention.json` and count its retired files once.
 Preserve both failed capsules, all parent late identities and old/current caches.
 Both full goals remain active; native Stage2 pictures, timing, campaigns, NP2,
 Windows, pristine provenance and historical exactness remain open.
+
+### Complete paired Stage2 clear and Stage3 entry
+
+Original and reconstructed DOS complete **10394 Stage2 updates**, actually
+defeat Kurumi at 9809, return after the final score with quit=2 and complete
+Stage3 initialization plus its first actor/score update. All comparable fields,
+11636 ordered RNG calls (1062 LCG/10574 ring),
+nine full pools, 22 states and 38 configured video regions agree across
+31196 boundaries and 20233 independent raw loops. Each own-MZ capture
+has 254 complete conventional-memory witnesses. The DOS aggregate remains
+false: 544 post-reset key and 31196 raw-GDC records differ. Twelve
+additional UI records have equal fields, full pools/states, actual player
+inputs and configured video; their 12 raw-GDC differences remain explicit.
+
+Current 566/4c3c50cb cold GNU and optimized UBSan match
+20795 selected scalar records and 10397 full nine-pool snapshots, consumed
+input, homing, Boss/Midboss and continuous RNG. All seven output wires are
+identical. The 356 volatile native key samples remain separately measured.
+Continue 5363/8132 and dialogue 6982/9905 use 189/400/189/76 real logical
+FrontEnd polls. Post-dialogue observes player -> run -> return; pre-dialogue
+observes run -> return -> player. There is no terminal Stage2 loop after quit=2.
+The 11000-row budget leaves 606 syntax-checked, unconsumed inputs.
+
+Six defeat/explosion memories plus final actor/score and eight complete
+return/free/init/first-update memories agree across both files. All 32 selected
+full memories independently verify CPU, own MZ code, DGROUP, resident and stack.
+Both DOS initial/final CFG/SCR files and both native final files match; all ten
+16-bit score checksums validate. Nine actual-tail mutations, three native
+clear/Stage3 mutations and thirteen malformed clear plans reject. Legacy
+3500/8000 wires and 59 RGB/TRAM pairs with 177 observations still pass, with
+cold GNU 87 programs/83 CTests and two optimized UBSan programs.
+
+The custom pool retains 52 nonzero bytes through Stage2 return/free and Stage3
+init entry, then all 832 bytes are zero after init and the first actor. The
+current native exporter agrees; no gameplay/exporter fix is needed. Own MZ
+0AAF:7456 calls 0AAF:185E for B204/208 dwords. The helper clears AX and executes
+REP STOSD; its upper-EAX behavior is not generalized beyond the observed case.
+
+Both failed earlier collector capsules and their actual partial evidence stay
+recoverable. Current successful capsules are `capture-post/` and runtime
+`dos-kurumi-clear-v1461-post-original`/`-candidate` under the root-owned probe.
+Next close final archive/recovery, both CIs and clean pushed heads. Then extend
+the actual continuous Stage3 route with a new bounded event/budget and complete
+state/pool/input/RNG checks. Native Stage2 pictures, natural UI/IRQ/GDC timing,
+campaigns, NP2, Windows, pristine provenance and historical exactness remain open.
+Both full goals remain active. No accepted exact unit or DOS source changed.

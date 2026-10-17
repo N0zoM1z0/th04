@@ -34,19 +34,19 @@ complete pictures, physical timing and Windows remain open; see the
 
 ## Build and run
 
-The primary original/reconstructed DOS comparison covers 8000 Stage2 updates,
-including Continue 5363, dialogue 6982 and 1018 Kurumi battle updates. Nine full
-pools, 22 states, 10161 ordered RNG calls and 38 configured video regions agree over
-24007 snapshots. Aggregate retains 422 post-reset key/24007 raw-GDC differences;
-six additional UI records retain 6 raw-GDC differences. Older vectors stay separate.
+The primary original/reconstructed DOS comparison completes 10394 Stage2
+updates, Kurumi defeat/clear, Stage3 initialization and its first update. Nine
+full pools, 22 states, 11636 ordered RNG calls and 38 configured video regions
+agree over 31196 boundaries. The DOS aggregate retains
+544 post-reset key/31196 raw-GDC differences and
+12 additional UI raw-GDC differences. Older vectors remain separate.
 
-Current 566/bcd114bb cold GNU and optimized UBSan match 16003 selected records and 8001
-full nine-pool snapshots, actual consumed inputs, homing and Boss/Midboss/RNG.
-The custom-pool observer now exports six real Kurumi rays, including inactive
-bytes; the old 602-record failure remains retained. Gameplay logic was unchanged.
-Legacy 3500 and 59 RGB/TRAM elapsed fixtures pass. Boss is still phase 2/3811 HP at 8000;
-defeat/clear, native Stage2 pictures, natural clocks, campaigns, NP2, Windows and pristine
-provenance remain open. Both goals stay active; see the [current handoff](docs/RE_HANDOFF.md).
+Current 566/4c3c50cb cold GNU and optimized UBSan match 20795 selected scalar
+records and 10397 full nine-pool snapshots, actual consumed inputs, homing and
+Boss/Midboss/RNG. Physical CFG/SCR files and the legacy 3500/8000 plus 59 RGB/TRAM
+fixtures pass. Native Stage2 pictures, natural clocks, complete campaigns, NP2,
+Windows, pristine provenance and historical exactness remain open. Both full
+goals stay active; see the [current handoff](docs/RE_HANDOFF.md).
 
 With local inputs and the toolchain installed:
 
