@@ -47,6 +47,13 @@ Four full RAM witnesses prove this counterexample and previous-input field0.
 Use actual loops, specific UI player-entry taps and full state/pool checks;
 this does not observe literal player entry for all4000 Stage3 updates.
 
+The readonly getter leaves GNU main/audio/core/ymfm inputs raw-identical to4c.
+UBSan core retains125 changed bytes, all main_state.hpp source-location lines
+incremented by1; every code, relocation, symbol and other ELF section remains
+identical. A fresh extraction/replay verifies this and retires temporary objects
+with zero cleanup credit. Raw archive equality remains false. Compiler-local
+UBSan labels may be omitted, so the decoder follows filename relocations.
+
 Current cold87/83 tests and UBSan2 pass; both preserve legacy3500/8000/seven
 clear wires and all177 display observations. Six malformed plans and four
 new private/input mutations reject. Default complete readers reproduce and
