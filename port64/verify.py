@@ -62,6 +62,8 @@ PORT_FILES = (
     "port64/main_input_checks.cpp",
     "port64/pc98_input.hpp",
     "port64/pc98_input_checks.cpp",
+    "port64/pc98_keyboard.hpp",
+    "port64/pc98_keyboard_checks.cpp",
     "port64/pc98_vsync.hpp",
     "port64/pc98_vsync_checks.cpp",
     "port64/pc98_palette.hpp",

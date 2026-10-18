@@ -504,6 +504,10 @@ add_executable(th04-port64-input-contracts pc98_input_checks.cpp)
 target_compile_features(th04-port64-input-contracts PRIVATE cxx_std_17)
 add_test(NAME input-sampler-contracts COMMAND th04-port64-input-contracts)
 
+add_executable(th04-port64-keyboard-contracts pc98_keyboard_checks.cpp)
+target_compile_features(th04-port64-keyboard-contracts PRIVATE cxx_std_17)
+add_test(NAME keyboard-peripheral-contracts COMMAND th04-port64-keyboard-contracts)
+
 add_executable(th04-port64-main-input-contracts main_input_checks.cpp)
 target_link_libraries(th04-port64-main-input-contracts PRIVATE th04-portable-core)
 add_test(NAME main-sampled-input-contracts COMMAND th04-port64-main-input-contracts)
