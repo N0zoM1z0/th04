@@ -2,28 +2,39 @@
 
 Updated 2026-10-18. Complete maintained DOS four-product and faithful native x64
 goals remain active. Read RE_HANDOFF, ARCHITECTURE, RE_WORKFLOW, ORACLES and the main
-branch differential note. Phase entry main 567c6e9/native 7594d53; native code `6832631` adds
-read-only sampler observation. Read actual heads/latest finish publication.
+branch differential note. Phase entry main `7d43687`/native e795559; native code `6832631` still owns
+read-only sampler observation. Main `84269d9` adds the V86 reducer; 082e1c8 fixes
+collector progress detection. Read actual heads/latest finish publication.
 Use English code/docs, gpt-6.1-sol: commits; push main/native HEAD:port/modern-64.
 Use one low-priority CPU, muted/headless runs, no host keys and serialized Borland.
 Clean periodically and after each batch; verify exact recovery before retirement.
 
-## Current BIOS/UART frontier (v1483)
+## Current V86 admission frontier (v1484)
 
-Main-branch Oracle code b2747d7 adds the replayable authored-guest UART probe.
-The real frontend accepts 2923 original BIOS polls plus two declared adoption
-resets. All 2925 original CPU checks, 13378 pools/states, four literal players
-and 22 complete RGB samples pass. Native player 7837 now reads Shot32. Outside
-the two recorded windows, stock host stimuli remain and 1803 tail words keep
-the strict aggregate false. This hybrid does not establish physical input,
-common-reset or full-campaign parity.
+Read the v1484 section in RE_HANDOFF and the main differential note first.
+Full original B reaches Stage4; all 13378 pool/state snapshots, 13377 heads,
+four literal players, 23 full RGB samples and the complete raw wire agree with
+the preceding original. Keep 30 tail words / 23 raw GDC differences explicit.
+Forty windows bind 91 external calls, 130 TIMER_AddTick repeats and 346 RX/IRQ/BIOS
+writes. Twelve held-Shot zero tails lie inside same-run repeat break/make gaps.
+All 247 tail returns equal after-reset actor fields; 3362 stable CPU replays pass,
+39 pairs precede the first reset and one has changing BIOS during sampling.
 
-UART transfer of 55/96 ms and CLI-delayed BIOS admission are observed only under
-the pinned internal-DOS real-mode fixture. Original V86 timing needs measurement.
-Use bios-packets-v1483/recover.py: 9846 aliases, 136 new exact restores, three
-actual/archive consumers, 85502 preceding identities and at least 85 MiB local
-cleanup net. Keep current v1443 DOS/v1481 native products and unique witnesses;
-read RE_HANDOFF and the latest finish receipt. Both complete goals remain active.
+Main a190a5a/84269d9 contain reusable keyboard Oracles; 082e1c8 fixes the collector's
+head-only idle bug. Preserve failed A's incomplete 7833-snapshot extent and real
+SIGINT. Full B remains a separate fresh capture. All nine admission faults reject.
+Use v86-admission-v1484/recover.py: 9866 aliases, 85752 parent identities, 20 new
+metadata restores and 3/6 failed/complete actual/archive readers. Phase-local
+cleanup floor 176 MiB includes earlier interim retirements once; the latest six add 18 MiB.
+Current v1443 DOS/v1481 native products and unique witnesses stay physical.
+
+Next implement/test the keyboard peripheral boundary, then establish a justified
+clock at actual sample/IRQ seams before integrating it. Repeats span 33 PIC ticks,
+but raw fractional q has bookkeeping discontinuities; 52 regressions remain.
+Typical V86 RX-to-BIOS 58 cycles differs from internal-DOS 16 cycles. Preserve
+FIFO, actual CPU mode, repeat counters, unstable pair 75 and all prior negative cases.
+Do not fit old 40 words, hold lengths, phase or a fixed transport/admission delay.
+Product source and cohorts are unchanged; both full goals remain active.
 
 ## Recorded sampler and original request ownership (v1481)
 
@@ -107,13 +118,8 @@ Actual retired allocation:2093.73828125 MiB. New archives cost
 reserve are separately charged in retention/retention.json. No prior cleanup,
 nonexistent/FIFO raw files or temporary restoration-write credit.
 
-Next identify actual BIOS admission/PC-98 polling around the first remaining
-Shot tail difference at actor 6, and the post-dialogue7835..7836 reset/head interval.
-Use the existing original controller, PIC, poll and player witnesses first. Keep
-original 0AAF:0153/0158 tail reset, 01B3 frame-store seam and actual player 5FCF distinct.
-Native7837 retains Enter where original 7836 head has Shot; do not infer a new
-literal original player word from that head snapshot alone. Preserve all 52
-edges, four tails and both negative cases; never fit a hold, delay or clock phase.
-Continuous timing/display, common-reset sampled routes, Windows/NP2 and complete
-four-source/native campaigns remain open. Finish focused checks, tracking, both
-CIs and git diff --check, then commit/push both branches. No exactness change.
+Current work is the keyboard peripheral/clock boundary described above. Keep the
+original 0AAF:0153/0158 reset, 01B3 actor seam and literal 5FCF player entry distinct.
+The v1483 BIOS-movie 7837 agreement and physical-device extra Enter remain separate
+scenarios. Preserve all 52 physical edges and four tails. Finish focused checks,
+tracking, both CIs and git diff --check; commit/push both branches. No exactness change.

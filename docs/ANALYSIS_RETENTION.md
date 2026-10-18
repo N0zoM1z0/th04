@@ -1,5 +1,29 @@
 # Native private-state retention
 
+## V86 keyboard capture recovery (v1484)
+
+Use DOS-root `.analysis/reconstruction/probes/v86-admission-v1484/recover.py`.
+Its 9866 exact aliases include 9846 inherited and 20 newly retired regular files.
+All 20 restore SHA, size, mode and nanosecond mtime. Three actual/archive readers
+preserve failed A's exact incomplete extent; six preserve complete B's route,
+state/RGB, CPU, admission and nine negative-control reports. Keep the 85752 parent
+identities, every current/late/finish identity, all providers and source-history.
+
+Three disjoint interim manifests account for 181.32421875 MiB actual retirement,
+2.19921875 MiB new lossless archives, charged helpers and a 2 MiB reserve. The
+conservative phase-local net is at least 176 MiB. This includes the previously
+reported four-file 72 MiB retirement once. The latest six-file increment separately
+releases at least 18 MiB; do not add either increment to the phase total again.
+No inherited-phase, FIFO, symlink-target or temporary-restoration credit is used.
+Whole retained phase allocations remain a separate cost in retention/retention.json.
+
+Current v1443 DOS/v1481 native products/link inputs, completed unique actor gzip,
+sparse fonts/video/RAM, failed truncated actor wire and source capsules stay
+physical. The historical collector checksum resolves through source-history and
+its explicit context manager, which restores current bytes/mode/nsmtime. Do not
+run a capture or CI while staging that historical source. Named restore is for
+readers, not permission to incrementally build or run CTest in old cold directories.
+
 ## BIOS packet and UART probe recovery (v1483)
 
 DOS-root bios-packets-v1483/recover.py carries 9846 exact aliases: 9710 inherited
