@@ -163,4 +163,56 @@ void run_sampled_frontend_checks(const PiImage& background,const CdgSheet& numer
     require_view(joystick_baseline==joystick_observed,"joystick observer changed complete pools/frame/RNG");
     std::ofstream joystick_result(directory/"joystick-result.txt");
     joystick_result<<"joystick_frontend=pass frames=4 polls=9 enable_reads=9 pin_reads=7 observer_equal=1\n";
+
+    const auto host_exercise=[&](bool observed) {
+        struct Controller final:host_joystick::Device {
+            host_joystick::Sample sample{31,0xff};unsigned reads=0;
+            host_joystick::Sample read() override {++reads;return sample;}
+        };
+        auto device=std::make_unique<Controller>();auto* raw=device.get();
+        host_joystick::Joystick controller(std::move(device));
+        FrontEnd scene(background,numerals,labels,cursors,selection_background,portraits,&assets);
+        scene.enable_registration();controller.update(true);
+        for(unsigned confirmation=0;confirmation<3;++confirmation) {
+            raw->sample.pins=0xdf;controller.update(true);
+            require_view(!joystick_menu(scene,controller),"controller menu unexpectedly exited");
+            raw->sample.pins=0xff;controller.update(true);
+        }
+        require_view(scene.live_main(),"host controller did not enter MAIN through menus");
+        raw->reads=0;
+        const std::array<std::uint8_t,9> pins{{0xf7,0xff,0xff,0xfd,0xff,0xdf,0xff,0,0}};
+        const std::vector<unsigned> expected{8,8,0,2,0,32,0,0,0};
+        unsigned polls=0,current=0,observations=0;std::ostringstream samples;
+        pc98_input::ByteSource keyboard{[&](pc98_input::Operation) {
+            require_view(polls<pins.size(),"unexpected host controller poll");current=polls++;
+            raw->sample={current<7?31:-1,pins[current]};
+        },[](unsigned){return std::uint8_t(0);},[]{return false;}};
+        const auto source=controller.source(keyboard,[]{return true;});
+        const pc98_input::Observer witness=[&](const pc98_input::Observation& sample) {
+            require_view(observations++==current && sample.after.actions==expected.at(current),"host controller actual latch");
+            require_view(sample.physical.joystick_enabled==(current<8) &&
+                sample.physical.joystick_pins==(current<7?pins[current]:0xff),"host unplug transaction boundary");
+            samples<<(sample.operation==pc98_input::Operation::reset?'R':'S')<<' '
+                <<std::string(20,'0')<<' '<<sample.physical.shift<<' '<<sample.physical.joystick_enabled<<' '
+                <<unsigned(sample.physical.joystick_pins)<<' '<<sample.after.actions<<' '<<sample.after.shift<<'\n';
+        };
+        const auto step=[&]{scene.advance_sampled(controller.host_actions(),false,source,false,observed?witness:pc98_input::Observer{});};
+        step();require_view(scene.main_state().player_input()==8,"host controller Right did not reach player");
+        auto position=scene.main_state().player().position().current;
+        require_view(position.x==192*16+64 && position.y==320*16,"host controller Right movement");
+        step();require_view(scene.main_state().player_input()==2 &&
+            scene.main_state().player().position().current.y==position.y+64,"host controller Down movement");
+        step();require_view(scene.main_state().player_input()==32,"host controller Shot did not reach MAIN");
+        step();require_view(!scene.main_state().player_input() && !scene.sampled_input().actions,"unplugged host controller retained action");
+        require_view(polls==9 && raw->reads==8 && (!observed || observations==9),"host controller complete read extent");
+        std::ostringstream state;th04::portable::demo_wire::pools(state,0,scene.main_state(),stage::Program(assets.standard));
+        state<<scene.process_random_state()<<' '<<scene.process_random_draws()<<' '<<scene.main_state().frames();
+        for(const auto byte:scene.main_state().random_ring_bytes())state.put(char(byte));
+        if(observed){std::ofstream output(directory/"host-joystick-polls.txt");output<<samples.str();}
+        return state.str();
+    };
+    const auto host_baseline=host_exercise(false),host_observed=host_exercise(true);
+    require_view(host_baseline==host_observed,"host controller observer changed pools/frame/RNG");
+    std::ofstream host_result(directory/"host-joystick-result.txt");
+    host_result<<"host_joystick_frontend=pass menu_confirms=3 frames=4 polls=9 pin_reads=8 observer_equal=1\n";
 }

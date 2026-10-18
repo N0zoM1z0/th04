@@ -20,6 +20,7 @@
 #include "gameover_render.hpp"
 #include "audio_device.hpp"
 #include "host_window.hpp"
+#include "host_joystick.hpp"
 #include "route_advice.hpp"
 #include "demo_pool_wire.hpp"
 
@@ -59,6 +60,7 @@ namespace player = th04::portable::player;
 namespace sound = th04::portable::sound;
 namespace audio = th04::portable::audio;
 namespace host_window = th04::portable::host_window;
+namespace host_joystick = th04::portable::host_joystick;
 namespace stage = th04::portable::stage;
 namespace shot = th04::portable::shot;
 namespace bullet = th04::portable::bullet;
@@ -2702,6 +2704,20 @@ private:
     Frame frame_;
 };
 
+// Both windows use these edges for menus. MAIN samples raw levels separately
+// after Shift through its byte source.
+bool joystick_menu(FrontEnd& front,const host_joystick::Joystick& joystick) {
+    const std::array<std::pair<unsigned,menu::Input>,6> actions{{
+        {1,menu::Input::up},{2,menu::Input::down},{4,menu::Input::left},
+        {8,menu::Input::right},{0x20,menu::Input::confirm},{0x10,menu::Input::cancel}}};
+    for(const auto& action:actions) {
+        if(!(joystick.edges()&action.first))continue;
+        if(action.second==menu::Input::cancel && front.live_main())continue;
+        if(front.input(action.second))return true;
+    }
+    return false;
+}
+
 #include "natural_route_probe.inl"
 #include "ordinary_front_trace.inl"
 #include "sampled_frontend_checks.inl"
@@ -2731,6 +2747,7 @@ struct Win32Title {
     FrontEnd front_end;
     host_window::Schedule schedule{host_window::now_ns()};
     host_window::Keyboard keyboard{host_window::now_ns(),host_window::Keyboard::available_cpu};
+    host_joystick::Joystick joystick{host_joystick::platform_device()};
 
     Win32Title(
         const PiImage& background_, const CdgSheet& numerals_,
@@ -2807,12 +2824,17 @@ LRESULT CALLBACK title_window_proc(
             title->schedule.wake();bool dirty=title->front_end.observe_text_time(now);
             while(title->schedule.due(now)) {
                 const bool active=GetForegroundWindow()==window;
-                const auto in=host_window::input(title->keyboard.keys(),active);
+                title->joystick.update(active);
+                if(joystick_menu(title->front_end,title->joystick)){DestroyWindow(window);return 0;}
+                dirty|=title->joystick.edges()!=0;
+                auto in=host_window::input(title->keyboard.keys(),active);
+                in.held|=title->joystick.host_actions();
                 std::int64_t sample_begin=0;bool sample_focused=false;
-                const auto source=title->keyboard.elapsed_source([&] {
+                auto source=title->keyboard.elapsed_source([&] {
                     sample_focused=GetForegroundWindow()==window;
                     return host_window::now_ns();
                 },[&](pc98_input::Operation) {if(title->trace)sample_begin=host_window::now_ns();});
+                source=title->joystick.source(std::move(source),[&]{sample_focused=GetForegroundWindow()==window;return sample_focused;});
                 const pc98_input::Observer observer=[&](const pc98_input::Observation& sample) {
                     title->trace.input_poll(title->schedule.total()+1,sample_begin,host_window::now_ns(),
                         sample,sample_focused,title->front_end.window_snapshot());
@@ -2999,6 +3021,7 @@ void show_window(
     front_end.enable_audio_output();front_end.enable_configuration();front_end.enable_registration();front_end.enable_host_timing();
     host_window::Schedule schedule(host_window::now_ns());
     host_window::Keyboard keyboard(host_window::now_ns(),host_window::Keyboard::available_cpu);
+    host_joystick::Joystick joystick(host_joystick::platform_device());
     bool running = true;
     bool dirty = true;
     Frame frame;
@@ -3054,12 +3077,16 @@ void show_window(
         const auto now=host_window::now_ns();schedule.wake();dirty|=front_end.observe_text_time(now);
         while(schedule.due(now)) {
             const bool focused=(SDL_GetWindowFlags(window)&SDL_WINDOW_INPUT_FOCUS)!=0;
-            const auto in=host_window::input(keyboard.keys(),focused);
+            joystick.update(focused);
+            if(joystick_menu(front_end,joystick)){running=false;break;}
+            dirty|=joystick.edges()!=0;
+            auto in=host_window::input(keyboard.keys(),focused);in.held|=joystick.host_actions();
             std::int64_t sample_begin=0;bool sample_focused=false;
-            const auto source=keyboard.elapsed_source([&] {
+            auto source=keyboard.elapsed_source([&] {
                 sample_focused=(SDL_GetWindowFlags(window)&SDL_WINDOW_INPUT_FOCUS)!=0;
                 return host_window::now_ns();
             },[&](pc98_input::Operation) {if(trace)sample_begin=host_window::now_ns();});
+            source=joystick.source(std::move(source),[&]{sample_focused=(SDL_GetWindowFlags(window)&SDL_WINDOW_INPUT_FOCUS)!=0;return sample_focused;});
             const pc98_input::Observer observer=[&](const pc98_input::Observation& sample) {
                 trace.input_poll(schedule.total()+1,sample_begin,host_window::now_ns(),sample,
                     sample_focused,front_end.window_snapshot());

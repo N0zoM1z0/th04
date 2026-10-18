@@ -145,7 +145,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_L
   target_link_libraries(th04-portable-core PUBLIC stdc++fs)
 endif()
 
-add_executable(th04-port64 main.cpp view.cpp audio_device.cpp)
+add_executable(th04-port64 main.cpp view.cpp audio_device.cpp host_joystick.cpp)
 target_compile_features(th04-port64 PRIVATE cxx_std_17)
 target_link_libraries(th04-port64 PRIVATE th04-portable-core)
 
@@ -164,6 +164,10 @@ enable_testing()
 add_executable(th04-port64-host-window-contracts host_window_contracts.cpp)
 target_link_libraries(th04-port64-host-window-contracts PRIVATE th04-portable-core)
 add_test(NAME host-window-contracts COMMAND th04-port64-host-window-contracts)
+
+add_executable(th04-port64-host-joystick-contracts host_joystick_contracts.cpp host_joystick.cpp)
+target_compile_features(th04-port64-host-joystick-contracts PRIVATE cxx_std_17)
+add_test(NAME host-joystick-contracts COMMAND th04-port64-host-joystick-contracts)
 
 add_executable(th04-port64-audio-output-contracts audio_output_contracts.cpp)
 target_link_libraries(th04-port64-audio-output-contracts PRIVATE th04-portable-core)
@@ -322,17 +326,20 @@ foreach(target th04-port64-popup-contracts th04-port64-player-lifecycle-contract
   endif()
 endforeach()
 if(MINGW)
+  target_link_options(th04-port64-host-joystick-contracts PRIVATE -static -static-libgcc -static-libstdc++)
   # Every executable consumes the core, including targets added below.
   target_link_options(th04-portable-core INTERFACE -static -static-libgcc -static-libstdc++)
 endif()
 if(WIN32)
   target_link_libraries(th04-port64 PRIVATE user32 gdi32 winmm)
   target_link_libraries(th04-port64-audio-device-contracts PRIVATE winmm)
+  target_link_libraries(th04-port64-host-joystick-contracts PRIVATE winmm)
 else()
   find_package(PkgConfig REQUIRED)
   pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2)
   target_link_libraries(th04-port64 PRIVATE PkgConfig::SDL2)
   target_link_libraries(th04-port64-audio-device-contracts PRIVATE PkgConfig::SDL2)
+  target_link_libraries(th04-port64-host-joystick-contracts PRIVATE PkgConfig::SDL2)
 endif()
 
 enable_testing()
