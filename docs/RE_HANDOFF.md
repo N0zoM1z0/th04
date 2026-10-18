@@ -1,249 +1,110 @@
 # Native TH04 current handoff
 
-Updated 2026-10-18. Complete maintained DOS four-product and faithful native x64
-goals remain active. Use `taskset -c 1 nice -n 19`, muted headless runs,
-serialized Borland/Wine and no host keys/focus. Keep English code/docs and
-`gpt-6.1-sol: ...` commits; push native `HEAD:port/modern-64` and the DOS main branch.
+Updated 2026-10-18. Build the complete maintained DOS four-product game and
+faithful native x64 game; both goals remain active. Original Japanese DOS versus
+reconstructed DOS is the primary behavioral comparison. Keep English code/docs,
+gpt-6.1-sol: commits and frequent pushes to main and native HEAD:port/modern-64.
 
-## Isolated keyboard peripheral (v1485)
+## Current clock and admission frontier (v1486)
 
-Native b774aa9 adds separate Typematic, Receiver and ordinary BIOS matrix owners
-in port64/pc98_keyboard.hpp. They preserve repeat break/make, pause500/rate33,
-31 queued bytes, serialized 55/96 ms characters, unread-data overrun and restart
-on CPU read. Modifiers and caller tick/admission policy remain separate. The
-header is consumed only by its standalone contract, not the game frontend.
-Main 8812f9f adds reusable authored repeat/stalled launchers and a native verifier.
+Main code 86873ce attests complete keyboard timer transactions. The pinned host
+ELF writes PIC_Ticks before crediting CPU_CycleLeft and subtracting one from
+queued indices. Actual instruction boundaries are TIMER_AddTick+17h/+42h/+81h.
+A tick hardware watch can therefore observe a temporarily uncredited budget.
 
-Fresh internal-DOS repeat evidence contains 548 operations and every one of 534
-actual timer calls. Two external requests generate six bytes; observed internal
-repeat requests are never model inputs. A separate CLI/65535-LOOP/STI fixture
-observes unread data, a stopped receiver and a queued byte; reading restarts it.
-Its 16 operations include five RX callbacks and four CPU reads. Both scenarios
-agree with cold GNU and UBSan components. Ten software BIOS stores independently
-match hardware watchpoints. Six successfully compiled wrong models reject.
-Recorded RX/CPU admission times remain boundary inputs, not predicted IRQ timing.
+Fresh authored COMs deliver two physical requests at tick-write or timer-return.
+They preserve different orders: 535 ticks/549 operations versus 536/550. Both
+pass through existing cold GNU/UBSan peripherals; twelve independent software/
+hardware BIOS write pairs agree. Complete 2677/2682-record clock traces derive
+zero merged regressions while retaining 535/536 raw regressions. Six actual-proof
+mutations reject, and eight focused unit tests pass. Direct raw tick-edge time
+fails the real native monotone-time guard. Four prior default reports remain
+byte-identical after adding optional --audit-clock.
 
-Current maintained native closure: 573 files,
-`af655e9e1ef5ac7702fbf07a8bca4b8946f8655b3fb71b59a5c24ba74d1f1b87`.
-Fresh keyboard-device-v1485-component contains three standalone programs: GNU
-and UBSan execute; Windows compiles only. All 569 existing non-control inputs
-are unchanged; control changes only add this target and two manifest entries.
-The old full-game v1481 cohort retains its original 571-file closure and results.
-Historical control staging preserves the old reader report byte-for-byte and
-restores current bytes/mode/nsmtime. Never build or run CI during that staging.
+The unchanged original V86 stream binds 65 complete external transfers. Thirteen
+stage-plan queued/service deadlines agree; all 52 clock-controller transfers have
+exactly one millisecond temporary excess, covering every recorded regression.
+CPU carry is -1 in 51 cases and -17 once. The original controller source watches
+the tick write. Its old capture lacks the complete host instruction-phase trace;
+keep the original raw samples and the bounded boundary inference distinct.
+Do not apply a guessed correction to unobserved phases or round away CPU carry.
 
-Use DOS-root keyboard-device-v1485/recover.py: 9880 aliases, 86273 inherited
-identities, 14 new exact metadata restores and positive/negative actual/archive
-readers. Conservative phase-local net release is at least 1 MiB. A separate
-2756-file generated-only cache prune removes 12.78125 MiB, with no cleanup-net
-credit. Current programs/link inputs, source capsules and unique witnesses remain
-physical. The component cache is retired for incremental builds; use fresh paths.
+Next record timer phases and actual scalar sampler/IRQ reads in original V86,
+including unstable sampler pair 75 at loop 249. Then justify native elapsed time
+and admission semantics before wiring the peripheral into the frontend. The
+component still receives recorded RX/CPU-read boundary times; guest IRQ latency
+and native game-clock ownership remain open. Original V86 RX-to-BIOS is usually
+58 cycles (304/346); the authored internal-DOS 16-cycle observation is separate.
+Preserve latch/UI behavior, actual repeat ordering and each raw negative case. No fitted hold, expected word or
+fixed transport-to-BIOS admission delay is justified.
 
-Next establish a justified monotone clock and IRQ/sample admission before wiring
-the component into the frontend. Preserve original V86 pair75, 52 raw-time
-regressions and the existing latch/UI. No fitted phase, hold, expected word or
-fixed 0.573 ms admission delay. The v1484 strict result remains false (30 tail
-words, 23 raw GDC samples); the older 40-tail case is distinct. Original V86,
-NP2/hardware, common-reset timing and full campaigns are not accepted here.
-Maintained DOS products and artifact/unit exactness remain unchanged; both full
-goals remain active. See the main differential note for evidence and commands.
+Use the main-branch docs/reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md for
+the replay surface, evidence classes and earlier complete/failed comparisons.
 
-## Original V86 keyboard admission (v1484)
+## Maintained products and comparison limits
 
-The fresh original capture completes Stage3 and reaches actual Stage4 init/score1
-in 1241.224s, exit0, without timeout. Independent readers attest all 537 source
-identities, 14 capsules, 160 outputs and the relocated pinned MAIN. Against the
-preceding complete original, all 13378 whole-pool/state snapshots, 13377 head
-words, 2884 physical actions, four literal players and 23 full own-font RGB/TRAM/
-DAC/tone samples agree. The full raw wire is byte-identical: 33609 loop records
-and 20805 RNG events. Thirty tail words and all 23 raw GDC samples still differ;
-raw equality does not establish equal keyboard/PIC epochs or strict timing.
+Native source remains 573 files, closure
+af655e9e1ef5ac7702fbf07a8bca4b8946f8655b3fb71b59a5c24ba74d1f1b87.
+The isolated keyboard-device-v1485-component cohort retains three programs:
+GNU/UBSan execute; Windows is compile-only. Native b774aa9 owns the peripheral;
+no native/DOS product source, compiler flags, link input or cohort changes here.
 
-Forty windows contain 91 external calls, 130 actual TIMER_AddTick repeats and
-346 FIFO/RX/IRQ/BIOS writes. All 6804 sampler records match the separate CPU
-observer. Of 3402 pairs, 3362 stable pairs replay original instructions, 39 precede
-a genuine reset and one changes BIOS during execution (pair 75, loop249). All
-247 observed tail returns equal their same-run actor input at MAIN 0AAF:01B3.
-Twelve zero tails occur while physical Shot32 remains held, between a repeat's
-A9 break and 29 make, without an external release. The 61 Shot repeat gaps include
-51 exactly 55/96 ms; preserve the remaining measured IRQ-dependent widths.
+The retained full-game sampled-device-v1481-final cohort still binds its original
+571-file closure 10d8adb1fbdac1495f2b8a5180fa21e1808003bba8ebe2a6cd396ae4567b4f01:
+GNU 90 programs/86 CTests, UBSan five and Windows two compile checks. Never label
+that full-game cohort as rebuilt under 573. Programs, link inputs and private
+GNU observers remain physical. Neither old cohort may be incrementally built;
+never invoke CTest there, including --show-only.
 
-Pinned GCC8.4 plus actual ELF operands attest the host keyboard/PIC layouts.
-An authored real-mode fixture cross-checks six software stores against six
-independent BIOS hardware writes. Its two real internal repeats have pause500/
-rate33; original uninterrupted repeats also span 33 PIC ticks. Raw fractional
-bookkeeping intervals can differ, and 52 adjacent raw-time regressions remain.
-Original V86 RX-to-BIOS is usually 29/18000 ms (304/346), with recorded variation;
-the internal-DOS fixture's 16-cycle latency is a separate observation.
+The v1484 original completes Stage3 and reaches actual Stage4 init/score1.
+Against the preceding original, all 13378 pool/state snapshots, 13377 heads,
+four literal players, 23 full RGB/TRAM/DAC/tone samples and the complete raw
+loop/RNG wire agree. Strict timing remains false: 30 tail words and 23 raw GDC
+samples differ. Of 3402 sampler pairs, 3362 stable CPU replays pass, 39 precede
+a genuine reset and pair 75 changes BIOS during execution. All 247 observed
+tail returns bind the same-run after-reset actor field. Preserve failed capture
+A's 7833-snapshot truncated extent and genuine SIGINT separately from full B.
 
-Main commits a190a5a/84269d9 supply reusable repeat/layout/admission Oracles.
-Commit 082e1c8 fixes the head-only idle detector: head, sampler or admission growth
-keeps it alive, while the total deadline remains. Keep failed capture A unchanged:
-7835 heads, only 7833 complete snapshots, truncated gzip and SIGINT diagnostics.
-Its head-only timeout killed a progressing dialogue; full B is a fresh boot.
-Nine rebased admission faults and three watchdog regressions reject/pass as intended.
+The corrected v1481 physical-device case completes 13377 Stage3 updates, all
+13378 pool/state snapshots, four literal players and 22 full RGB samples; its
+40 post-tail input differences remain a distinct failure. All 29616 poll
+transitions replay unchanged original sampler instructions. The raw-BIOS movie
+and its 7837 Enter agreement are separate from physical delivery. Stock GNU/
+UBSan regressions retain 130 previous output hashes, 407 blink pixels and 1805
+keys. Source-DOS's 19 keys/23 GDC failures are another surface; do not subtract
+counts across scenarios or borrow acceptance. Continuous display, common-reset
+campaigns, full four-source/native campaigns, Windows runtime and NP2/hardware
+remain open.
 
-Use DOS-root v86-admission-v1484/recover.py: 9866 aliases, 20 new exact metadata
-restores, 85752 inherited identities and all providers. Failed A has three and
-complete B six actual/archive consumers. Phase cleanup releases at least 176 MiB;
-the final six files add at least 18 MiB. The earlier four-file 72 MiB cleanup is
-included once, not added again. Unique sparse/actor/source evidence, source-history
-and current v1443 DOS/v1481 native products remain physical.
+Original MAIN:156258 bytes/1136 relocations,
+077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b.
+Source MAIN:200279 bytes/1183 relocations,
+778641ab845bcd67c6888bacc049e2cfa20fddda844681d3d2fd164f8386abc9.
+DOS four-product cohort remains .analysis/build/dos-four-products-v1443.
+Provenance remains candidate-local-attested; artifact/unit exactness is unchanged.
+Keep MAIN 0AAF:0153/0158 tail reset, 0AAF:01B3 actor seam and literal 0AAF:5FCF player entry
+distinct. Historical Elly, BIOS-movie, UI and failed-prefix details stay in the
+main differential note and evidence/knowledge ledgers.
 
-Next build a separately tested keyboard peripheral/admission owner before changing
-native delivery. Start with the measured key-repeat/FIFO/BIOS sequence and preserve
-the existing latch/UI. Establish its clock at actual sampler/IRQ boundaries;
-raw PIC bookkeeping is not a universal clock. Never fit a repeat phase, hold,
-expected word or fixed 0.573 ms delay to the old 40 differences. The unstable pair
-needs instruction-level read/IRQ evidence. NP2/hardware, common-reset timing,
-continuous display and complete four-source/native campaigns remain open. No
-product source/cohort or artifact/unit exactness changes in this batch.
+## Recovery, resources and finish
 
-## Recorded sampler and original request ownership (v1481)
+Use DOS-root .analysis/reconstruction/probes/keyboard-clock-v1486/recover.py:
+9888 exact aliases, 86710 inherited identities, eight new SHA/size/mode/nsmtime
+restores and actual/archive readers preserving eight prototype/public model
+reports plus the raw-clock rejection. Conservative phase-local cleanup net is
+14 MiB after archives, all retained nonarchive phase files and a 3 MiB reserve.
+Keep every inherited provider, current/late/finish identity, current product/link
+input, source capsule and unique witness. See ANALYSIS_RETENTION.md. Historical
+source staging is reader-only; restore current bytes/mode/nsmtime afterward and
+never run CI or a build while staged.
 
-The maintained Win32/SDL bridges now emit input.tsv alongside the unchanged
-window.tsv format. Each poll records the raw ten-byte BIOS sample, Shift,
-joystick pins, reset/sense operation, actual latch before/after values, host
-interval, focus and process/stage/frame identity. Observation is optional and
-does not supply input. Fresh GNU/UBSan frontend controls retain identical nine
-pools and recorded frame/input/RNG fields with observation disabled/enabled.
-Both sets of 31 witnessed polls match unchanged original sampler instructions.
-Windows is compile-only; this is not new live-window or hardware timing proof.
+Heavy jobs run serially in a user systemd service with CPUQuota=35%, MemoryHigh=256M,
+MemoryMax=768M, MemorySwapMax=0, TasksMax=64, Nice=19, LimitCORE=0 and taskset -c 1.
+Read back actual cgroup limits. Use GHIDRA_HEADLESS_MAXMEM=384M and
+JAVA_TOOL_OPTIONS=-XX:ActiveProcessorCount=1. Keep runs muted/headless and avoid
+host keys/focus. Clean terminal intermediates after checking exact recovery.
 
-The original controller queues next-loop physical changes at MAIN 0AAF:00B7,
-after head Sense 00AE returns at 00B3 and its normal callback. All 2884 recorded
-requests match its pinned capsule/physical plan and preserve guest CPU, tick
-and 640KiB RAM. A first hybrid incorrectly admitted changes at the next head:
-position diverged at 4043, pools at 4045 and Game Over stopped it at 4926. Its 9854
-sampler polls remain CPU-consistent, but no dialogue window or literal-player
-witness was reached. Keep this real failed prefix and missing trace footer.
-
-The corrected private GNU driver admits those same requests after the current
-head. It links unchanged new cold core/main/audio/ymfm objects and calls the
-real typed frontend. All 13377 Stage3 updates complete; all 13378 nine-pool/stable
-snapshots, 13377 raw score/resident/RNG rows and four actual original player-entry
-witnesses agree. All 22 complete live-font 640x400 RGB, 8000 active TRAM bytes,
-48 DAC channels and raw tone samples agree, including 12889. All 52 timed physical
-edges and four tails survive UI exit. All 29616 poll transitions and fresh
-BIOS conversions agree with separate unchanged original CPU sampler instances.
-No expected latch, state, clock, hold or pixels are supplied.
-
-The strict result remains false: 40 post-tail key_det words differ. Original
-actor capture 0AAF:01B3 and native actor observation are both after tail reset;
-all 13377 native input fields equal their actual last reset witness. They are
-not pre-player words. Four literal player witnesses pass, but an additional
-nonblocking original 7836 head 32/native 7837 player 8192 pair differs. The blocking
-7834 head 32/player 8192 difference is real dialogue input and separately supported
-by its literal player witness. Original BIOS admission and UI timing remain
-candidates; no fixed hold or phase assignment is justified.
-
-The two unmodified GNU/UBSan host-adapter regressions still retain all 130 prior
-complete output hashes through 13377 updates. Their 407 blink pixels/1805 keys,
-the older v1477 physical case's two player failures/1803 keys, and the new 40-word
-case are distinct scenarios. Do not subtract their counts or borrow acceptance.
-The corrected case follows stock Stage1/2 stimuli and is a private recorded
-Stage3 experiment, not a common-reset full sampled campaign, Windows/NP2 runtime
-or new Stage4 observation. Complete DOS/native goals remain active.
-
-## Actual original/source Elly defeat and Stage4 (v1475)
-
-The maintained normal source MAIN completes the actual Elly route and reaches
-Stage4 initialization/score1 in 929.884s, without timeout, exit0. Original
-OP/MAINE/ZUN and all assets remain installed; all 17 other starting game files
-match the original image. This is a MAIN-only DOS comparison, not a full
-four-source campaign. No owned emulator remains.
-
-All 13378 complete init/actor snapshots of nine whole pools, 22 pointer-free
-states and three independently bound Midboss3 bytes agree with the original.
-All 13377 physical/actual loop words, 33609 common raw-loop configured-field,
-resident80 and ordered RNG observations agree. No extra raw loops occur.
-Four independently attested literal-player pairs agree: 7834/7835=8192,
-12888=32 and 12889=8192. Source player 0708:7463/near return06AA is owned by its
-own MZ/MAP, separate from original 0AAF:5FCF/00F4.
-
-Both actual score13377 CMP operands read quit2 (original DS:5392, source
-DS:CB4C), followed by actual own-init Stage4/frame 0 and score1. At both Stage4
-points, nine pools, 22 states, configured stable fields and resident80 agree.
-Midboss3 private-byte ownership is claimed only for Stage3. This directly
-observed departure does not rely on a native forecast or the planned budget.
-
-All 23 full 640x400 RGB, complete 528384-byte live-font, active8000-byte TRAM,
-48-channel DAC, text-palette and own-MAP raw-tone samples agree, including
-post-dialogue12889 and Stage4 score1. Each side supplies its own fonts and raw
-GDC; no phase fitting, glyph masks or expected-state writes. All 23 raw GDC
-records differ and 19 volatile postactor keys remain separate. The strict DOS
-aggregate stays false. This observer differs from the older dense8000 vector
-with 49 keys; do not subtract or merge their counts.
-
-## Native comparison and current products
-
-Current maintained native source has 573 files; the isolated keyboard cohort
-and its closure are documented in v1485 above. The retained full-game cohort
-still binds its original 571-file closure
-`10d8adb1fbdac1495f2b8a5180fa21e1808003bba8ebe2a6cd396ae4567b4f01`.
-Full-game cold products/link inputs:sampled-device-v1481-final, GNU 90 programs/
-86 CTests, UBSan 5 and Windows 2 compile checks. Both private GNU device programs,
-link objects, source capsules and unique witnesses remain physical. Old
-frontend-input-v1480-final is superseded:keep its inherited providers/receipts/
-logs and resolve other files through recovery. Never incrementally build there.
-Maintained DOS source and dos-four-products-v1443 remain unchanged.
-The v1473 repair propagates/consumes/resets Elly's existing hit flag; retain
-original hit8046/GameOver8085 and its partial actor-stream failure as evidence.
-
-The v1474 original completes in 996.426s. Both unchanged stock native roles replay
-all actual 13377 loop words with 130 identical files. Nine-pool/state and four
-literal-player gates pass. Stock exit1 is its final natural-departure diagnostic
-guard; native Stage4 uses a separate normal-advance GNU observer. Native RGB
-passes 22/23;12889 has 407 blinking-text pixels despite matching TRAM/DAC/tone.
-Keep 1805 native postactor keys separate from the 19 source-DOS keys. Original
-GDC phase 2 is visible and native reports hidden; clock divergence is unresolved.
-
-Original MAIN 156258/1136 relocations remains
-`077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b`.
-Normal source MAIN 200279/1183 relocations remains
-`778641ab845bcd67c6888bacc049e2cfa20fddda844681d3d2fd164f8386abc9`.
-Four-product cohort: `.analysis/build/dos-four-products-v1443`.
-Phase entry heads: main `c64f58b`, native `0bdcac7`; code `6832631`.
-Read actual heads and the latest finish receipt. Target provenance stays `candidate-local-attested`.
-No artifact/unit exactness changes.
-
-## Prior source Elly recovery (v1475)
-
-The source-elly-v1475 parent carries the seven terminal source aliases and
-identity/state/RGB/transition readers. Its Micro300 inactive-byte and full-route
-RNG-return controls remain preserved. Use the latest recovery below for all
-inherited aliases; do not rerun completed DOS captures or treat RAM as a resume.
-
-## Prior accepted sampler recovery (v1481)
-
-DOS-root sampled-device-v1481/recover.py carries 9576 exact aliases:
-5969 inherited plus 3607 new closed raw/duplicate/cache files. Every new alias
-restores SHA, size, mode, nsmtime. Four real/archive readers retain both 130-output
-host maps, 86 old contracts, two exact GNU/UBSan relinks, the 15209-case consumer
-Oracle and both device verdicts. The incomplete4926/9854-poll negative and the
-full 13377-update/29616-poll case retain their literal failed/positive gates.
-Ten real regular host wires restore individually to limit disk peak.
-
-Keep all 80393 parent identities, every current/late/finish identity andprovider.
-Current cold programs/link inputs, both private programs/objects, unique traces,
-unique game outputs and actual gzip wires stay physical. Eighty-six actual
-closed large device files identical to old native producer files also retire;
-their readers resolve exact archives. No original target pixels are supplied
-to the native renderer. Device FIFO wires never existed as regular files and
-earn no raw cleanup credit. Use fresh build paths andnamed recovery only.
-Never invoke CTest, including --show-only, in protected old builds; read the saved
-registry instead. Current old registry was parsed read-only from its file.
-
-Actual retired allocation:2093.73828125 MiB. New archives cost
-16.30859375 MiB; all cleanup artifacts cost
-19.3125 MiB. After2 MiB reserve, local release is
-2072.42578125 MiB. Whole retained phase/build costs plus 32 MiB
-reserve are separately charged in retention/retention.json. No prior cleanup,
-nonexistent/FIFO raw files or temporary restoration-write credit.
-
-Current next work is the keyboard peripheral/clock boundary described above. Keep original
-0AAF:0153/0158 tail reset, 01B3 frame-store seam and literal player 5FCF distinct.
-Native 7837 now agrees under the raw-BIOS movie; the physical-device scenario's
-extra Enter remains a separate uncorrected delivery-model result. Complete
-four-source/native campaigns, continuous display, Windows/NP2 and provenance remain
-open. Finish focused checks, tracking, both CIs and git diff --check; push both branches.
+Phase entry heads were main 40a2f60/native 59884d9; read actual heads and the latest
+finish receipt. Finish focused comparison, tracking, python3 scripts/ci.py in
+both branches and git diff --check; commit/push both branches. ci.py ignores
+arguments, so --help runs the entire CI. Complete product goals remain active.
