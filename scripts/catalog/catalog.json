@@ -2499,6 +2499,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/reduce_th04_original_epoch.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Audit original UART/PIC/CPU dispatch on a complete canonical timer clock without fitting BIOS latency or a boot epoch.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/reduce_th04_original_pic.py",
     "category": "runtime",
     "role": "command",
@@ -3840,6 +3847,13 @@
     "category": "runtime",
     "role": "support",
     "purpose": "Decode full ordinary video blocks with strict frame/load/stage and gzip checks.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_original_epoch_gdb.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Join complete timer transactions, keyboard ticks and delayed PIC-check callbacks in a bounded original V86 window.",
     "purpose_source": "maintained-description"
   },
   {

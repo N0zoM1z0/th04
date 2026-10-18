@@ -34,6 +34,8 @@ OVERRIDES = {
     'pc98_keyboard_device_gdb.py': ('runtime', 'Observe actual timer gates, UART overrun/restart and independent BIOS writes in authored keyboard scenarios.'),
     'verify_pc98_keyboard_device.py': ('runtime', 'Compare a source-bound native keyboard component with every recorded request, timer tick, receive callback and CPU data read.'),
     'pc98_keyboard_stalled.asm': ('runtime', 'Authored COM that holds interrupts disabled until unread UART data stalls a queued second byte, then observes normal admission and release.'),
+    'th04_original_epoch_gdb.py': ('runtime', 'Join complete timer transactions, keyboard ticks and delayed PIC-check callbacks in a bounded original V86 window.'),
+    'reduce_th04_original_epoch.py': ('runtime', 'Audit original UART/PIC/CPU dispatch on a complete canonical timer clock without fitting BIOS latency or a boot epoch.'),
     'th04_original_pic_gdb.py': ('runtime', 'Observe original MAIN PIC controllers, CPU dispatch guards and separate BIOS/EOI boundaries without guest accessors or clock fitting.'),
     'reduce_th04_original_pic.py': ('runtime', 'Audit original V86 PIC dispatch and BIOS/EOI snapshots while keeping cascade arbitration and elapsed timing claims bounded.'),
     'reduce_th04_keyboard_admission.py': ('runtime', 'Bind original V86 request/repeat FIFO bytes to UART, IRQ, BIOS and independently observed sampler records; retain PIC bookkeeping discontinuities.'),
