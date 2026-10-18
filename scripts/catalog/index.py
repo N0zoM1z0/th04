@@ -23,6 +23,10 @@ CATEGORIES = {
 }
 EXTENSIONS = {'.py', '.sh', '.ps1', '.cmd', '.bat', '.java', '.asm', '.gdb'}
 OVERRIDES = {
+    'run_pc98_keyboard_device.py': ('runtime', 'Run authored repeat or stalled-receiver scenarios and observe every keyboard timer call on the pinned emulator.'),
+    'pc98_keyboard_device_gdb.py': ('runtime', 'Observe actual timer gates, UART overrun/restart and independent BIOS writes in authored keyboard scenarios.'),
+    'verify_pc98_keyboard_device.py': ('runtime', 'Compare a source-bound native keyboard component with every recorded request, timer tick, receive callback and CPU data read.'),
+    'pc98_keyboard_stalled.asm': ('runtime', 'Authored COM that holds interrupts disabled until unread UART data stalls a queued second byte, then observes normal admission and release.'),
     'reduce_th04_keyboard_admission.py': ('runtime', 'Bind original V86 request/repeat FIFO bytes to UART, IRQ, BIOS and independently observed sampler records; retain PIC bookkeeping discontinuities.'),
     'th04_keyboard_admission_gdb.py': ('runtime', 'Observe wrapped input requests, UART/PIC delivery, internal repeats and BIOS stores through read-only host breakpoints.'),
     'pc98_keyboard_repeat_gdb.py': ('runtime', 'Cross-check software BIOS store observations against independent hardware writes during a held-key fixture.'),

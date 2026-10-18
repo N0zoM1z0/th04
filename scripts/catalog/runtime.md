@@ -35,6 +35,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/compare_th04_stage3_route.py](../probes/compare_th04_stage3_route.py) | command | Compare continuous Stage3 DOS and native state, pools and private Midboss bytes. |
 | [probes/compare_th04_stage_clear.py](../probes/compare_th04_stage_clear.py) | command | Compare complete DOS/native Stage2 clear and Stage3 entry pools/state/input/RNG while retaining key/GDC failures. |
 | [probes/fixtures/pc98_keyboard_repeat.asm](../probes/fixtures/pc98_keyboard_repeat.asm) | fixture | Authored COM that reads two BIOS break/make cycles while one physical Shot press remains held. |
+| [probes/fixtures/pc98_keyboard_stalled.asm](../probes/fixtures/pc98_keyboard_stalled.asm) | fixture | Authored COM that holds interrupts disabled until unread UART data stalls a queued second byte, then observes normal admission and release. |
 | [probes/fixtures/pc98_keyboard_uart.asm](../probes/fixtures/pc98_keyboard_uart.asm) | fixture | Authored COM fixture that reads BIOS keys and controls IF to distinguish UART readiness from BIOS admission. |
 | [probes/inspect_th04_cpu_fault_trace.py](../probes/inspect_th04_cpu_fault_trace.py) | command | Decode private MAIN exception frames without claiming normal gameplay. |
 | [probes/inspect_th04_demo_snapshots.py](../probes/inspect_th04_demo_snapshots.py) | command | Read back DGROUP snapshots against complete ordinary demos and diagnose actor differences. |
@@ -42,6 +43,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/inspect_th04_handoff_trace.py](../probes/inspect_th04_handoff_trace.py) | command | Inspect private MAIN cleanup and MAINE initialization checkpoints. |
 | [probes/inspect_th04_main_graphics_trace.py](../probes/inspect_th04_main_graphics_trace.py) | command | Check MPN and four-plane VRAM checkpoints from a private MAIN run. |
 | [probes/inspect_th04_play_trace.py](../probes/inspect_th04_play_trace.py) | command | Reduce private MAIN state records; this is bounded gameplay evidence. |
+| [probes/pc98_keyboard_device_gdb.py](../probes/pc98_keyboard_device_gdb.py) | support | Observe actual timer gates, UART overrun/restart and independent BIOS writes in authored keyboard scenarios. |
 | [probes/pc98_keyboard_repeat_gdb.py](../probes/pc98_keyboard_repeat_gdb.py) | support | Cross-check software BIOS store observations against independent hardware writes during a held-key fixture. |
 | [probes/pc98_keyboard_uart_gdb.py](../probes/pc98_keyboard_uart_gdb.py) | support | Observe serialized keyboard reception, IRQ requests and BIOS stores while preserving guest state across real input API calls. |
 | [probes/prepare_th04_good_ending.py](../probes/prepare_th04_good_ending.py) | command | Prepare a private seeded Good Ending, with source-built MAINE/OP/ZUN. |
@@ -67,6 +69,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/reduce_pc98_keyboard_uart.py](../probes/reduce_pc98_keyboard_uart.py) | command | Verify UART queue timing and CLI/STI admission controls without generalizing the real-mode fixture to TH04 V86 timing. |
 | [probes/reduce_th04_keyboard_admission.py](../probes/reduce_th04_keyboard_admission.py) | command | Bind original V86 request/repeat FIFO bytes to UART, IRQ, BIOS and independently observed sampler records; retain PIC bookkeeping discontinuities. |
 | [probes/replay_th04_zun_runtime_inventory.py](../probes/replay_th04_zun_runtime_inventory.py) | command | Drop unused EMU/MATHS from TH04 ZUN resident and inventory pulled CT modules. |
+| [probes/run_pc98_keyboard_device.py](../probes/run_pc98_keyboard_device.py) | command | Run authored repeat or stalled-receiver scenarios and observe every keyboard timer call on the pinned emulator. |
 | [probes/run_pc98_keyboard_repeat.py](../probes/run_pc98_keyboard_repeat.py) | command | Run an authored fixture that holds Shot through two actual keyboard repeats before requesting release. |
 | [probes/run_pc98_keyboard_uart.py](../probes/run_pc98_keyboard_uart.py) | command | Run an authored internal-DOS UART/IRQ/BIOS fixture on one pinned, muted PC-98 emulator. |
 | [probes/run_th04_maine_diagnostic_hdi.py](../probes/run_th04_maine_diagnostic_hdi.py) | command | Replay a private OP or MAINE HDI probe under pinned DOSBox-X. |
@@ -102,6 +105,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_stage_waits_gdb.py](../probes/th04_stage_waits_gdb.py) | support | Capture Stage2 blocking call/return/player checkpoints with five persistent read-only watchpoints. |
 | [probes/th04_title_draw_checkpoints_gdb.py](../probes/th04_title_draw_checkpoints_gdb.py) | support | Record original BB code-entry registers, caller and scroll state on declared updates. |
 | [probes/th04_title_draw_stream_gdb.py](../probes/th04_title_draw_stream_gdb.py) | support | Stream actual original BB entry arguments across all armed ordinary update intervals. |
+| [probes/verify_pc98_keyboard_device.py](../probes/verify_pc98_keyboard_device.py) | support | Compare a source-bound native keyboard component with every recorded request, timer tick, receive callback and CPU data read. |
 | [runtime/fixtures/good_ending.asm](../runtime/fixtures/good_ending.asm) | fixture | Private resident seed for real MAINE Ending tests; bypasses OP/gameplay initialization. |
 | [runtime/verify_dos_gaiji.py](../runtime/verify_dos_gaiji.py) | command | Compare original and linked DOS Gaiji writes, port order and far-call return state across WORD address boundaries. |
 | [runtime/verify_dos_hud_popup.py](../runtime/verify_dos_hud_popup.py) | command | Execute original MAIN popup, CRT and text instructions at two load segments with complete TRAM and ABI observations. |

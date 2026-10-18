@@ -707,6 +707,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/fixtures/pc98_keyboard_stalled.asm",
+    "category": "runtime",
+    "role": "fixture",
+    "purpose": "Authored COM that holds interrupts disabled until unread UART data stalls a queued second byte, then observes normal admission and release.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/fixtures/pc98_keyboard_uart.asm",
     "category": "runtime",
     "role": "fixture",
@@ -803,6 +810,13 @@
     "role": "command",
     "purpose": "Partition OP/MAINE DIET packed residual among three MZ input surfaces.",
     "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/pc98_keyboard_device_gdb.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Observe actual timer gates, UART overrun/restart and independent BIOS writes in authored keyboard scenarios.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/probes/pc98_keyboard_repeat_gdb.py",
@@ -3577,6 +3591,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/run_pc98_keyboard_device.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Run authored repeat or stalled-receiver scenarios and observe every keyboard timer call on the pinned emulator.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/run_pc98_keyboard_repeat.py",
     "category": "runtime",
     "role": "command",
@@ -3882,6 +3903,13 @@
     "category": "runtime",
     "role": "support",
     "purpose": "Stream actual original BB entry arguments across all armed ordinary update intervals.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/verify_pc98_keyboard_device.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Compare a source-bound native keyboard component with every recorded request, timer tick, receive callback and CPU data read.",
     "purpose_source": "maintained-description"
   },
   {
