@@ -167,6 +167,38 @@ void delayed_pic_dispatch() {
     require(late.dispatch_irq(240)==1 && late.dispatcher().next_event()==474,
         "late callback must rearm from actual acceptance time");
 }
+void late_receive_dispatch() {
+    Device device(234);
+    device.key({1,0x29},true,0);device.key({2,0x1c},true,0);
+    const auto observed=2*character_time;
+    require(device.receive(observed)==Receiver::Completion::ready,
+        "late first receive failed");
+    require(device.receiver().next_event()==observed &&
+        device.dispatcher().next_event()==character_time+234,
+        "late callback shifted a UART or PIC deadline to observation time");
+    device.dispatch_event(observed);
+    require(device.receive(observed)==Receiver::Completion::overrun,
+        "unread byte must block the next overdue receive");
+    require(!device.dispatch_irq(observed,{false}) && device.dispatcher().check(),
+        "unavailable CPU consumed a late matured check");
+    require(device.dispatch_irq(observed)==1 && device.read_bios(observed)==0x29,
+        "CPU did not read the retained first byte");
+    require(device.receiver().next_event()==observed+character_time,
+        "stalled read restart must use actual CPU read time");
+    device.end_irq(observed);device.dispatch_event(observed+234);
+    require(!device.dispatch_irq(observed+234),"empty rearmed check created an interrupt");
+    const auto next=observed+character_time;
+    device.receive(next);device.dispatch_event(next+240);
+    require(device.dispatch_irq(next+240)==1 && device.read_bios(next+240)==0x1c,
+        "retained second byte failed after stalled restart");
+    device.end_irq(next+240);
+    Device masked(234);masked.set_irq_mask(0,0xff);masked.key({1,0x29},true,0);
+    masked.receive(observed);
+    require(!masked.dispatcher().next_event(),"masked late receive scheduled a check");
+    masked.set_irq_mask(observed,0xfd);
+    require(masked.dispatcher().next_event()==observed+234,
+        "CPU unmask must use its own observation time, not an old UART deadline");
+}
 void device_trace() {
     Device device;Time now=0;unsigned operation=0;char kind;
     while(std::cin>>kind>>now) {
@@ -251,7 +283,7 @@ int main(int argc,char** argv) {
         if(argc==2 && std::string(argv[1])=="--irq-trace") {trace(true);return 0;}
         if(argc==2 && std::string(argv[1])=="--device-irq-trace") {device_trace();return 0;}
         if(argc!=1)throw std::runtime_error("expected no arguments, --trace, --irq-trace or --device-irq-trace");
-        repeat_and_latch();key_ownership();blocked_receiver();queue_and_deadline();masked_interrupt();primary_pic();delayed_pic_dispatch();
+        repeat_and_latch();key_ownership();blocked_receiver();queue_and_deadline();masked_interrupt();primary_pic();delayed_pic_dispatch();late_receive_dispatch();
         std::cout<<"PC-98 keyboard repeat/transport/BIOS contracts pass\n";return 0;
     } catch(const std::exception& error) {std::cerr<<error.what()<<'\n';return 1;}
 }

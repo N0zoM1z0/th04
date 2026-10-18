@@ -240,8 +240,11 @@ public:
         check_time(now);keyboard_.tick([&](std::uint8_t byte){receiver_.enqueue(byte,now);},enabled);
     }
     Receiver::Completion receive(Time now) {
-        check_time(now);const auto result=receiver_.complete(now);
-        if(result==Receiver::Completion::ready)request_irq(now,1);
+        // The UART callback raises IRQ1 from its queued service index. Keep
+        // that deadline separate from the CPU's possibly later observation.
+        check_time(now);const auto scheduled=receiver_.next_event();
+        const auto result=receiver_.complete(now);
+        if(result==Receiver::Completion::ready)request_irq_at(*scheduled,1);
         return result;
     }
     void accept(Time now,bool interrupts_enabled) {
@@ -252,12 +255,7 @@ public:
         if((before.mask^mask)&before.requests&~before.service)
             if(pic_.eligible(true))dispatch_.signal(now);
     }
-    void request_irq(Time now,unsigned line) {
-        check_time(now);const bool pending=pic_.pending(line);pic_.request(line);
-        const auto state=pic_.state();const auto bit=std::uint8_t(1u<<line);
-        if(!pending && !(state.mask&bit) && !(state.service&bit) && line<pic_.active())
-            dispatch_.signal(now);
-    }
+    void request_irq(Time now,unsigned line) {check_time(now);request_irq_at(now,line);}
     void dispatch_event(Time now) {check_time(now);dispatch_.event(now);}
     std::optional<unsigned> dispatch_irq(Time now,CpuAvailability cpu={}) {
         check_time(now);const auto selected=dispatch_.select(pic_,cpu);
@@ -291,6 +289,12 @@ public:
     const std::array<std::uint8_t,10>& matrix() const {return matrix_;}
     bool shift() const {return shift_;}
 private:
+    void request_irq_at(Time anchor,unsigned line) {
+        const bool pending=pic_.pending(line);pic_.request(line);
+        const auto state=pic_.state();const auto bit=std::uint8_t(1u<<line);
+        if(!pending && !(state.mask&bit) && !(state.service&bit) && line<pic_.active())
+            dispatch_.signal(anchor);
+    }
     void check_time(Time now) {
         if(now<last_time_)throw std::logic_error("keyboard device clock moved backward");
         last_time_=now;
