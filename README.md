@@ -25,12 +25,19 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
+The v1488 original input probe adds 208 measured post-load AH values, 231 complete
+timer transactions and 14 actual CPU IRQ acceptances. Existing GNU/UBSan input
+consumers agree; two compiled latch defects reject. A second minimal eight-read
+run also passes, but neither run reproduces old75's local BIOS phase. Native game
+source remains unchanged; the real frontend elapsed/peripheral/dispatch join is
+next. See the [current handoff](docs/RE_HANDOFF.md) for exact scopes and negatives.
+
 The v1475 actual source MAIN defeats Elly at 12792 and reaches Stage4 init/score1
 with original OP/MAINE/ZUN/assets. All 13378 pool/state snapshots,13377 actual
 words and 33609 raw/resident/RNG rows match the original. All 23 full live-font
 RGB/TRAM/palette samples pass. Source strict aggregate retains 19 postactor keys
 and 23 raw GDC differences. Native 12889 still differs by 407 blinking pixels;
-1805 native keys remain separate. No emulator is live. See the current handoff.
+1805 native keys remain separate. See the current handoff.
 
 The v1481 sampler witness andpinned original request boundary support a real
 private Stage3 replay:13378 pool/state snapshots, four literal player inputs and

@@ -49,6 +49,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/pc98_keyboard_device_gdb.py](../probes/pc98_keyboard_device_gdb.py) | support | Observe actual timer gates, UART overrun/restart and independent BIOS writes in authored keyboard scenarios. |
 | [probes/pc98_keyboard_repeat_gdb.py](../probes/pc98_keyboard_repeat_gdb.py) | support | Cross-check software BIOS store observations against independent hardware writes during a held-key fixture. |
 | [probes/pc98_keyboard_uart_gdb.py](../probes/pc98_keyboard_uart_gdb.py) | support | Observe serialized keyboard reception, IRQ requests and BIOS stores while preserving guest state across real input API calls. |
+| [probes/pc98_sampler_cpu.py](../probes/pc98_sampler_cpu.py) | support | Replay independently sampled BIOS bytes through pinned original MAIN instructions without seeding an expected input latch. |
 | [probes/prepare_th04_good_ending.py](../probes/prepare_th04_good_ending.py) | command | Prepare a private seeded Good Ending, with source-built MAINE/OP/ZUN. |
 | [probes/prepare_th04_main_diagnostic_hdi.py](../probes/prepare_th04_main_diagnostic_hdi.py) | command | Prepare a native MAIN candidate in a disposable PC-98 HDI. |
 | [probes/prepare_th04_maine_diagnostic_hdi.py](../probes/prepare_th04_maine_diagnostic_hdi.py) | command | Prepare a native OP or MAINE candidate in a disposable PC-98 HDI. |
@@ -102,6 +103,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_ordinary_video.py](../probes/th04_ordinary_video.py) | support | Decode full ordinary video blocks with strict frame/load/stage and gzip checks. |
 | [probes/th04_primary_cpu_fault.gdb](../probes/th04_primary_cpu_fault.gdb) | fixture | Run the primary-emulator fault observer with configured symbols/event inputs. |
 | [probes/th04_product_surface.py](../probes/th04_product_surface.py) | support | Attest a same-run four-product source cohort and derive OP counter hooks from its own MAP and bytes. |
+| [probes/th04_sampler_scalars_gdb.py](../probes/th04_sampler_scalars_gdb.py) | support | Record original post-load AH values with a lazy rotating hardware watchpoint chain in the existing sampler slot. |
 | [probes/th04_score_video_checkpoints_gdb.py](../probes/th04_score_video_checkpoints_gdb.py) | support | Observe original complete video, font and DGROUP at the actual score-return instruction boundary. |
 | [probes/th04_sparse_profile.py](../probes/th04_sparse_profile.py) | support | Validate sparse observer fields, frame store, score return, initialization and GameOver seams against the executing MAIN and its own MAP. |
 | [probes/th04_stage_inputs_gdb.py](../probes/th04_stage_inputs_gdb.py) | support | Queue real keyboard edges one loop ahead, verify actual input samples and preserve an unexpected Game Over witness. |

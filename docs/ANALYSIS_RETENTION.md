@@ -1,5 +1,31 @@
 # Private build and analysis retention
 
+## Direct scalar and original-clock recovery (v1488)
+
+Use DOS-root .analysis/reconstruction/probes/original-scalar-v1488/recover.py.
+Its9897 aliases include9888 inherited andnine new terminal regular wires/images;
+chain87297 inherited identities plus every current/late/finish/provider binding.
+Nine exact SHA/size/mode/nsmtime restores andactual/archive consumers preserve
+nine report/wire identities andboth compiled latch-defect rejections. Two more
+actual XOR image restores compare every byte with the earlier full-image gzip.
+
+Gross85.140625MiB retirement uses only0.7109375MiB final providers by reusing the
+physical hash-pinned initial HDI with inherited xor-gzip recipes. Two unsealed
+redundant whole-image gzip intermediates are removed only after new readers pass;
+they are not inherited or needed providers. Do not count their reduction twice.
+All other retained phase files/directories and3MiB publication reserve leave a
+70MiB conservative local cleanup floor relative to the owned raw peak,not a
+reduction below phase-entry storage. No cache,temporary restore,symlink-target,
+FIFO or inherited credit. All actual game products/links,source capsules,
+compressed actor/full-memory witnesses andinherited providers remain physical.
+
+The first live original is preserved through a documented host-only wait-budget
+extension; future launches should request a sufficient budget directly. Both
+captures are terminalcomplete. Peak205.41796875/209.90234375MiB; all heavy work
+remains serial35%CPU,256M-high/768M-max,zero swap,64tasks,Nice19,CPU1,corelimit0.
+Use monotonic supervision. Old75's phase isnot reproduced; preserve both fresh
+runs andall old timing/context differences rather than retiming or relabeling.
+
 ## Sampler/IRQ component retention (v1487)
 
 Use DOS-root .analysis/reconstruction/probes/sampler-irq-v1487/recover.py.

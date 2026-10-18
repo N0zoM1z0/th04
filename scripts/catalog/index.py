@@ -23,6 +23,8 @@ CATEGORIES = {
 }
 EXTENSIONS = {'.py', '.sh', '.ps1', '.cmd', '.bat', '.java', '.asm', '.gdb'}
 OVERRIDES = {
+    'pc98_sampler_cpu.py': ('runtime', 'Replay independently sampled BIOS bytes through pinned original MAIN instructions without seeding an expected input latch.'),
+    'th04_sampler_scalars_gdb.py': ('runtime', 'Record original post-load AH values with a lazy rotating hardware watchpoint chain in the existing sampler slot.'),
     'verify_pc98_keyboard_irq.py': ('runtime', 'Compare separate UART requests, actual CPU interrupt acceptance and BIOS reads with source-bound native pending-IRQ ownership.'),
     'run_pc98_keyboard_clock.py': ('runtime', 'Compare actual keyboard delivery at the PIC tick write and after the complete timer transaction on the pinned emulator.'),
     'pc98_keyboard_clock_gdb.py': ('runtime', 'Record every keyboard tick and separate receive/read events while delivering physical keys at an observed timer seam.'),

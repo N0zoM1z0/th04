@@ -854,6 +854,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/pc98_sampler_cpu.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Replay independently sampled BIOS bytes through pinned original MAIN instructions without seeding an expected input latch.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/prepare_th04_good_ending.py",
     "category": "runtime",
     "role": "command",
@@ -3840,6 +3847,13 @@
     "category": "runtime",
     "role": "support",
     "purpose": "Attest a same-run four-product source cohort and derive OP counter hooks from its own MAP and bytes.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_sampler_scalars_gdb.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Record original post-load AH values with a lazy rotating hardware watchpoint chain in the existing sampler slot.",
     "purpose_source": "maintained-description"
   },
   {

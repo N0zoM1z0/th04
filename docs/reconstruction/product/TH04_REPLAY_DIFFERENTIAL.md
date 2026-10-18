@@ -5,9 +5,100 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Direct original sampler reads and variable CPU admission (v1488)
+
+The new captures use the original pinned MZ and the exact first 260 rows of the
+existing physical Stage3 plan. Both traverse the normal preceding stages and
+complete the declared prefix. They are original-only observations, not new
+source-DOS or complete native campaign acceptance. Stage field 2 is zero-based
+Stage3; the v1487 Stage2 wording is corrected here.
+
+| Capture | Post-load AH values | Samplers | Timer transactions | Clock records | Actual CPU IRQ9 accepts |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Frames240..252, full scalar/clock | 208 | 26 | 231 | 1157 | 14 |
+| Exact old windows, lazy selected pair75 | 8 | 1 selected | Not added | Not added | Not added |
+
+Read points follow each actual MOV AH,ES:[BIOS byte] in MAIN130E:06C4..07C4.
+At the next opcode fetch, the observer reads the CPU operand and intermediate
+key_det. Its opcode/group/segment/ordinal/raw-register bindings are checked.
+This uses one rotating sampler hardware slot; maximum simultaneous hardware
+watchpoints is three in both runs. The first timer observer uses software
+instruction boundaries plus the existing controller write callback, without
+another hardware slot. All source, target, ELF and raw stream identities remain
+strict. The independent CPU Oracle uses real target instructions and explicit
+BIOS/ready-OPNA inputs; it does not model V86 scheduling or seed expected latches.
+
+After the first unseeded call, all 25 actual full-window calls reproduce every
+intermediate/final latch and shift. Existing GNU/UBSan MAIN State/player input
+consumers agree. Three private control programs compile the maintained header:
+good matches all 25; Sense-overwrite and Reset-keeps-latch each reject one.
+No game source, game build, compiler flag, link input or artifact exactness changes.
+The old full-game programs retain their original 571-file closure; current
+573/824998852f83267a4e528a0cc6b0c605cd59e70238589ecf15e18abd07c1abd2 is unchanged.
+
+Complete original timer transactions validate all 850 admission observations,
+seven queued-index minus-one changes, and zero canonical regressions while
+preserving all 231 raw regressions. No external API sample in this window has
+pending CPU credit, so this is not a new trace of the old 52 controller seams.
+Fourteen actual CPU_Interrupt(vector9,type0) entries observe IF=1 before dispatch.
+Thirteen RX-to-BIOS intervals are 58 cycles. A masked break A9 at MAIN0000:3A96
+waits 44 cycles for acceptance at MAIN0AAF:0005 and another 43 to BIOS, totaling
+87. The nearby raw target view shows timer-port writes; its ISR name/boundary is
+not promoted from that slice. Old82-cycle joystick make and authored16-cycle
+cases remain separate. A fixed native RX-to-BIOS delay is disproved by these
+measured different sites and modes.
+
+### Negative reproduction result and next code step
+
+The first new window has no entry/return BIOS-changing sampler. All 24 records
+shared with the old original differ in raw time/GDC; some BIOS bytes differ,
+while the compared GPR/segment/latch fields agree. The minimal rerun retains all
+old windows and creates scalar watchpoints only at pair75. Its AH vector is
+0,0,0,2,0,0,0,0; entry and return already contain Shot2. A genuine preceding reset
+computes32; actual Sense and the two explicitly counterfactual resets all yield32.
+Its four native consumer calls pass in both variants. It also does not reproduce
+the old rising make inside the masked joystick wrapper. These observer profiles
+and boot epochs are distinct; neither observation establishes the old raw phase
+or uniquely identifies which difference caused it. Old75 still has inferred
+scalar values. Keep all original timestamps and context, without subtracting a
+fitted offset or assigning a hold/expected latch.
+
+The next code step is the real frontend elapsed/peripheral/dispatch join. Keep
+physical requests, firmware ticks, serialized arrivals, CPU eligibility, actual
+acceptance and BIOS reads separate, and preserve the existing latch/UI ownership.
+Use the direct read domain rather than assuming every byte came from one final
+matrix. Do not spend another whole route solely trying to reproduce old75.
+Cold-replay every affected product and measure the remaining differences. The
+source-DOS19-key/23-GDC, original30-tail/23-GDC and older native40-tail cases
+remain separate. Whole games, common-reset campaigns, Windows runtime and
+NP2/hardware remain open; both full goals stay active.
+
+### Replay, resources and exact recovery
+
+DOS-root .analysis/reconstruction/probes/original-scalar-v1488 contains capture.py,
+capture_thin.py, analyze-public.py, analyze_thin.py and derive_irq.py. Use fresh
+outputs and a sufficient --timeout1800 budget. The first capture used one live
+GDB throughout an explicitly amended host-only supervisor wait600to1800; the
+guest, controller and pinned source were not restarted or changed. Both captures
+finish complete/exit0. Journal peak is205.41796875MiB for the first and the
+bounded runner records209.90234375MiB for the second. Use monotonic supervision;
+realtime timestamps stepped. Heavy jobs remain serial in the35%CPU,256M-high,
+768M-max,zero-swap,64-task,Nice19,CPU1 service. No host keys/focus or physical audio.
+
+Nine new exact aliases give9897 total and chain87297 inherited identities.
+Nine regular-file metadata restores and two additional XOR image restores verify
+SHA,size,mode andnsmtime. Actual/archive CPU andnative consumers preserve nine
+report/wire identities and both compiled semantic rejections. The old full-image
+gzip intermediates were unsealed redundant representations, removed only after
+new inherited-base XOR readers passed. Every inherited provider and current
+program/link input remains physical. Gross85.140625MiB becomes0.7109375MiB final
+providers; all other retained files/directories and3MiB publication reserve leave
+70MiB conservative cleanup relative to the owned raw peak, not phase-entry disk
+usage. Do not add obsolete-gzip, temporary restore, cache or inherited credit.
+
 ## Sampler and pending IRQ ownership (v1487)
 
-The original pair75 at Stage2/frame249 is a rising BIOS Shot make while the
+The original pair75 at Stage3 (recorded stage index2)/frame249 is a rising BIOS Shot make while the
 Sense latch already holds32. Actual RX occurs at MAIN0000:3663 with IF=0,
 278 cycles after sampler entry, inside the joystick PUSHF/CLI/.../POPF wrapper.
 BIOS writes at360 cycles and return is391: RX-to-BIOS is82, not a fixed58.
