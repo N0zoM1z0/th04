@@ -1,5 +1,30 @@
 # Native private-state retention
 
+## Delayed PIC dispatch recovery (v1493)
+
+Use DOS-root .analysis/reconstruction/probes/dispatch-epoch-v1493/recover.py.
+It chains 90353 incoming identities, including all three v1492 late files,
+and 10219 exact aliases. All 19 new restores preserve SHA, size, mode and
+nsmtime; two restored input programs execute and the maintained epoch reader
+passes with all restored inputs. Exact archive readers also validate the retired
+clock/admission streams without restoring them. Keep all current 12 game
+programs/15 objects/link inputs, source capsules, compiled semantic controls,
+negative observations and every inherited provider. The entry vector reuses the
+canonical v1491 capsule; only the changed current source gets a new capsule.
+Closed new regular allocations save 84185088 bytes after provider cost.
+The separately canceled unused outputs remove 9023488 disposable bytes;
+that is not scientific alias credit or a phase-entry storage decrease.
+Never build or invoke CTest in retired cohorts; use a fresh replay directory.
+See ANALYSIS_RETENTION.md for source vectors, profiles and exact consumers.
+
+The final affected replay uses 35% CPU, CPU1/Nice19, hard768MiB/no swap,
+64 tasks/core0; ordinary soft256MiB, only the recorded View exceptions.
+Final compiler peak604786688 bytes, canceled prefix608997376, zero OOM kills.
+The source-only reference initially kept a no-op callback; its failed wires,
+source and corrected actual ELF/source attestation remain. The canceled build
+was stopped for a proven late-callback correction, not pressure or timeout.
+No current product or inherited provider is removed. Both full goals remain active.
+
 ## Original V86 PIC recovery (v1492)
 
 Use DOS-root .analysis/reconstruction/probes/original-pic-v1492/recover.py.
