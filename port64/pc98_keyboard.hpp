@@ -103,6 +103,35 @@ private:
     }
 };
 
+// CPU availability and the PIC's delayed check are separate gates. These
+// flags describe one dispatch opportunity, not an instruction-level CPU.
+struct CpuAvailability {
+    bool interrupts_enabled=true,trap=false,nmi_active=false,nmi_pending=false;
+};
+class PicDispatch {
+public:
+    explicit PicDispatch(Time delay=0):delay_(delay){}
+    void signal(Time now) {
+        if(pending_)return;
+        if(now>std::numeric_limits<Time>::max()-delay_)
+            throw std::overflow_error("PIC check deadline overflow");
+        pending_=now+delay_;
+    }
+    void event(Time now) {
+        if(!pending_ || now<*pending_)throw std::logic_error("unexpected PIC check callback");
+        pending_.reset();check_=true;
+    }
+    std::optional<unsigned> select(const FixedPriorityPic& pic,CpuAvailability cpu) {
+        if(!cpu.interrupts_enabled || !check_ || cpu.trap || cpu.nmi_active || cpu.nmi_pending)return {};
+        check_=false;return pic.eligible(true);
+    }
+    void accepted(Time now) {check_=false;signal(now);}
+    bool check() const {return check_;}
+    std::optional<Time> next_event() const {return pending_;}
+private:
+    Time delay_;std::optional<Time> pending_;bool check_=false;
+};
+
 // A receive-ready request survives a masked CPU. IF is only a necessary
 // condition: the caller still owns PIC masks, priority, in-service state and
 // the actual CPU dispatch event. Accepting an IRQ does not read UART data or
@@ -203,6 +232,7 @@ inline bool update_matrix(std::array<std::uint8_t,10>& matrix,std::uint8_t code)
 // BIOS data does not end the PIC's in-service state.
 class Device {
 public:
+    explicit Device(Time check_delay=0):dispatch_(check_delay){}
     void key(Key value,bool pressed,Time now) {
         check_time(now);keyboard_.key(value,pressed,[&](std::uint8_t byte){receiver_.enqueue(byte,now);});
     }
@@ -211,21 +241,38 @@ public:
     }
     Receiver::Completion receive(Time now) {
         check_time(now);const auto result=receiver_.complete(now);
-        if(result==Receiver::Completion::ready)pic_.request(1);
+        if(result==Receiver::Completion::ready)request_irq(now,1);
         return result;
     }
     void accept(Time now,bool interrupts_enabled) {
         accept_irq(now,1,interrupts_enabled);
     }
-    void set_irq_mask(Time now,std::uint8_t mask) {check_time(now);pic_.set_mask(mask);}
-    void request_irq(Time now,unsigned line) {check_time(now);pic_.request(line);}
+    void set_irq_mask(Time now,std::uint8_t mask) {
+        check_time(now);const auto before=pic_.state();pic_.set_mask(mask);
+        if((before.mask^mask)&before.requests&~before.service)
+            if(pic_.eligible(true))dispatch_.signal(now);
+    }
+    void request_irq(Time now,unsigned line) {
+        check_time(now);const bool pending=pic_.pending(line);pic_.request(line);
+        const auto state=pic_.state();const auto bit=std::uint8_t(1u<<line);
+        if(!pending && !(state.mask&bit) && !(state.service&bit) && line<pic_.active())
+            dispatch_.signal(now);
+    }
+    void dispatch_event(Time now) {check_time(now);dispatch_.event(now);}
+    std::optional<unsigned> dispatch_irq(Time now,CpuAvailability cpu={}) {
+        check_time(now);const auto selected=dispatch_.select(pic_,cpu);
+        if(selected)accept_irq(now,*selected,cpu.interrupts_enabled);
+        return selected;
+    }
     void accept_irq(Time now,unsigned line,bool interrupts_enabled) {
         check_time(now);
         if(line==1 && admitted_)throw std::logic_error("keyboard ISR already owns an unread byte");
         pic_.accept(line,interrupts_enabled);if(line==1)admitted_=true;
+        dispatch_.accepted(now);
     }
     void end_irq(Time now,std::optional<unsigned> line={}) {
-        check_time(now);pic_.eoi(line);
+        check_time(now);const bool command=line || pic_.active()<8;pic_.eoi(line);
+        if(command && pic_.eligible(true))dispatch_.signal(now);
     }
     std::uint8_t read_bios(Time now) {
         check_time(now);
@@ -239,6 +286,7 @@ public:
     const Receiver& receiver() const {return receiver_;}
     FixedPriorityPic::Line irq() const {return pic_.line(1);}
     const FixedPriorityPic& pic() const {return pic_;}
+    const PicDispatch& dispatcher() const {return dispatch_;}
     bool admitted() const {return admitted_;}
     const std::array<std::uint8_t,10>& matrix() const {return matrix_;}
     bool shift() const {return shift_;}
@@ -250,6 +298,7 @@ private:
     Typematic keyboard_;Receiver receiver_;
     // Portable keyboard-only mask, not the original boot PIC configuration.
     FixedPriorityPic pic_{FixedPriorityPic::State{0,0xfd,0}};
+    PicDispatch dispatch_;
     std::array<std::uint8_t,10> matrix_{};
     Time last_time_=0;bool admitted_=false,shift_=false;
 };

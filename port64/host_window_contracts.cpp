@@ -19,10 +19,15 @@ int main(){try{
     Keys shot;shot.shot=true;
     Keyboard keyboard(0,Keyboard::available_cpu);keyboard.observe({shot,true,0});
     keyboard.advance(572916);require(!keyboard.device().matrix()[5],"host make bypassed serial receive");
-    keyboard.advance(572917);require(keyboard.device().matrix()[5]==2,"host make failed BIOS service");
+    keyboard.advance(572917);
+    require(keyboard.device().receiver().ready() && keyboard.device().irq().pending() &&
+        !keyboard.device().dispatcher().check() && !keyboard.device().matrix()[5],
+        "UART completion must wait for the separate PIC check");
+    keyboard.advance(573322);require(!keyboard.device().matrix()[5],"early PIC check");
+    keyboard.advance(573323);require(keyboard.device().matrix()[5]==2,"host make failed BIOS service");
     keyboard.advance(500572916);require(keyboard.device().matrix()[5]==2,"early typematic break");
-    keyboard.advance(500572917);require(!keyboard.device().matrix()[5],"held host key must retain serialized break interval");
-    keyboard.advance(501145834);require(keyboard.device().matrix()[5]==2,"serialized repeat make");
+    keyboard.advance(500573323);require(!keyboard.device().matrix()[5],"held host key must retain serialized break interval");
+    keyboard.advance(501146240);require(keyboard.device().matrix()[5]==2,"serialized repeat make");
     Keyboard split(0,Keyboard::available_cpu);split.observe({shot,true,0});
     for(std::int64_t t=7;t<533000000;t+=125137)split.advance(t);
     split.advance(533000000);keyboard.advance(533000000);
@@ -40,7 +45,7 @@ int main(){try{
     bool backward=false;try{blocked.advance(1999999);}catch(const std::logic_error&){backward=true;}
     require(backward,"backward elapsed clock accepted");
     Keyboard modifier(0,Keyboard::available_cpu);Keys shift;shift.shift=true;
-    modifier.observe({shift,true,0});modifier.advance(572917);
+    modifier.observe({shift,true,0});modifier.advance(573323);
     require(modifier.device().shift(),"Shift must pass through serial BIOS service");
     modifier.observe({shift,false,600000});modifier.advance(1200000);
     require(!modifier.device().shift(),"Shift focus release");
@@ -60,8 +65,8 @@ int main(){try{
     require(input(ordered.keys(),true).held==1,"keypad advice action lost after arrow release");
     Keyboard pulse(0,Keyboard::available_cpu);
     pulse.key(K::shot,true,0);pulse.key(K::shot,false,0);
-    pulse.advance(572917);require(pulse.device().matrix()[5]==2,"between-poll make was lost");
-    pulse.advance(1145834);require(!pulse.device().matrix()[5],"between-poll break was lost");
+    pulse.advance(573323);require(pulse.device().matrix()[5]==2,"between-poll make was lost");
+    pulse.advance(1146240);require(!pulse.device().matrix()[5],"between-poll break was lost");
     Keyboard returns(0,Keyboard::available_cpu);
     returns.key(K::keypad_enter,true,0);returns.key(K::enter,true,0);
     returns.key(K::keypad_enter,false,0);returns.advance(2000000);
@@ -97,6 +102,9 @@ int main(){try{
     require(priority.device().irq().pending() && !priority.device().irq().eligible(true) &&
         !priority.device().matrix()[5],"IF alone must not bypass a higher in-service interrupt");
     finish_timer=true;priority.advance(2000000);
+    require(priority.device().irq().pending() && !priority.device().matrix()[5],
+        "higher EOI must schedule a check before CPU acceptance");
+    priority.advance(2000407);
     require(priority.device().matrix()[5]==2 && !priority.device().pic().state().service,
         "higher EOI must admit keyboard,read BIOS,then finish its own IRQ");
     std::cout<<"Host admission, slowdown/resync, bounded catchup and focused input contracts PASS\n";return 0;

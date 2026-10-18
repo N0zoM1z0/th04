@@ -41,9 +41,11 @@ pc98_input::Sample bios_input(const Keys&,bool focused);
 
 struct KeySample {Keys keys;bool focused;std::int64_t time_ns;};
 // Host elapsed time drives a persistent keyboard across process generations.
-// The default windows explicitly choose available_cpu: service at each event
-// boundary, with no emulated instruction/PIC delay. That portable policy is
-// not an attestation of the original CPU's admission or boot clock phase.
+// The pinned original observer measures a configured 406 ns PIC check delay.
+// Round that event deadline upward to the first representable peripheral
+// quantum. CPU service after the check remains the explicit available_cpu
+// policy; no original instruction cost or boot epoch is implied.
+constexpr pc98_keyboard::Time pic_check_delay=(406*72+124)/125;
 class Keyboard {
 public:
     using Dispatch=std::function<void(pc98_keyboard::Device&,pc98_keyboard::Time)>;
@@ -60,7 +62,7 @@ public:
         std::function<void(pc98_input::Operation)> begin={});
     const pc98_keyboard::Device& device() const {return device_;}
 private:
-    pc98_keyboard::Device device_;Dispatch dispatch_;
+    pc98_keyboard::Device device_{pic_check_delay};Dispatch dispatch_;
     std::int64_t last_ns_;pc98_keyboard::Time time_=0,next_tick_=pc98_keyboard::quanta_per_ms;
     unsigned remainder_=0;
     std::array<bool,unsigned(HostKey::count)> held_{};

@@ -135,6 +135,38 @@ void primary_pic() {
     device.end_irq(2*character_time);
     require(!device.matrix()[5] && !device.pic().state().service,"separate break service completes");
 }
+void delayed_pic_dispatch() {
+    Device device(234);device.key({1,0x29},true,0);device.receive(character_time);
+    require(device.irq().eligible(true) && !device.dispatcher().check() &&
+        device.dispatcher().next_event()==character_time+234,
+        "a latched eligible request must wait for the PIC check event");
+    require(!device.dispatch_irq(character_time),"IF alone bypassed delayed PIC check");
+    device.dispatch_event(character_time+234);
+    for(const auto cpu:std::array<CpuAvailability,4>{{{false},{true,true},
+            {true,false,true},{true,false,false,true}}}) {
+        require(!device.dispatch_irq(character_time+234,cpu) && device.dispatcher().check(),
+            "unavailable CPU consumed the PIC check or accepted an IRQ");
+    }
+    require(device.dispatch_irq(character_time+234)==1 && device.admitted(),
+        "available CPU failed delayed dispatch");
+    require(!device.dispatcher().check() && device.dispatcher().next_event()==character_time+468,
+        "accepted interrupt must rearm the delayed PIC check");
+    device.read_bios(character_time+234);device.end_irq(character_time+234);
+    device.dispatch_event(character_time+468);
+    require(!device.dispatch_irq(character_time+468) && !device.dispatcher().check(),
+        "empty delayed check must end without manufacturing a request");
+    Device masked(234);masked.set_irq_mask(0,0xff);masked.request_irq(0,1);
+    require(!masked.dispatcher().next_event(),"masked request activated CPU check");
+    masked.set_irq_mask(1,0xfd);masked.set_irq_mask(2,0xff);
+    require(masked.dispatcher().next_event()==235 && masked.irq().pending(),
+        "mask changes erased the pending request or its scheduled check");
+    masked.dispatch_event(235);require(!masked.dispatch_irq(235),"masked IRQ accepted at its check");
+    masked.set_irq_mask(236,0xfd);masked.dispatch_event(470);
+    require(masked.dispatch_irq(470)==1,"unmask did not reactivate delayed dispatch");
+    Device late(234);late.request_irq(0,1);late.dispatch_event(240);
+    require(late.dispatch_irq(240)==1 && late.dispatcher().next_event()==474,
+        "late callback must rearm from actual acceptance time");
+}
 void device_trace() {
     Device device;Time now=0;unsigned operation=0;char kind;
     while(std::cin>>kind>>now) {
@@ -219,7 +251,7 @@ int main(int argc,char** argv) {
         if(argc==2 && std::string(argv[1])=="--irq-trace") {trace(true);return 0;}
         if(argc==2 && std::string(argv[1])=="--device-irq-trace") {device_trace();return 0;}
         if(argc!=1)throw std::runtime_error("expected no arguments, --trace, --irq-trace or --device-irq-trace");
-        repeat_and_latch();key_ownership();blocked_receiver();queue_and_deadline();masked_interrupt();primary_pic();
+        repeat_and_latch();key_ownership();blocked_receiver();queue_and_deadline();masked_interrupt();primary_pic();delayed_pic_dispatch();
         std::cout<<"PC-98 keyboard repeat/transport/BIOS contracts pass\n";return 0;
     } catch(const std::exception& error) {std::cerr<<error.what()<<'\n';return 1;}
 }

@@ -1,4 +1,5 @@
 #include "host_window.hpp"
+#include <algorithm>
 #include <chrono>
 #include <filesystem>
 #include <memory>
@@ -41,8 +42,9 @@ Keyboard::Keyboard(std::int64_t epoch,Dispatch dispatch):dispatch_(std::move(dis
     if(epoch<0 || !dispatch_)throw std::invalid_argument("invalid host keyboard clock/dispatch");
 }
 void Keyboard::available_cpu(pc98_keyboard::Device& device,pc98_keyboard::Time time) {
-    if(device.irq().eligible(true) && !device.admitted()) {
-        device.accept(time,true);device.read_bios(time);device.end_irq(time);
+    if(const auto line=device.dispatch_irq(time)) {
+        if(*line!=1)throw std::logic_error("default host keyboard has no handler for this IRQ");
+        device.read_bios(time);device.end_irq(time);
     }
 }
 void Keyboard::advance(std::int64_t now) {
@@ -57,16 +59,22 @@ void Keyboard::advance(std::int64_t now) {
     const auto target=time_+delta;
     for(;;) {
         const auto event=device_.receiver().next_event();
-        if(!device_.keyboard().wait_ticks() && next_tick_<=target && (!event || next_tick_<*event)) {
-            const auto end=event && *event<=target ? *event-1 : target;
+        const auto check=device_.dispatcher().next_event();
+        const auto next=event && check ? std::optional<Time>{std::min(*event,*check)} : (event ? event : check);
+        if(!device_.keyboard().wait_ticks() && next_tick_<=target && (!next || next_tick_<*next)) {
+            const auto end=next && *next<=target ? *next-1 : target;
             const auto ticks=(end-next_tick_)/quanta_per_ms+1;
             next_tick_+=ticks*quanta_per_ms; // No countdown or scan byte can change.
             continue;
         }
-        if(event && *event<=target && *event<=next_tick_) {
+        // Peripheral callbacks precede a simultaneous CPU check. Physical
+        // host edges are applied only after advance() finishes this interval.
+        if(event && *event<=target && *event<=next_tick_ && (!check || *event<=*check)) {
             device_.receive(*event);dispatch_(device_,*event);
-        } else if(next_tick_<=target) {
+        } else if(next_tick_<=target && (!check || next_tick_<=*check)) {
             device_.tick(next_tick_);dispatch_(device_,next_tick_);next_tick_+=quanta_per_ms;
+        } else if(check && *check<=target) {
+            device_.dispatch_event(*check);dispatch_(device_,*check);
         } else break;
     }
     dispatch_(device_,target);time_=target;last_ns_=now;remainder_=unsigned(fraction%125);
