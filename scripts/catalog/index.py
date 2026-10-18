@@ -23,6 +23,10 @@ CATEGORIES = {
 }
 EXTENSIONS = {'.py', '.sh', '.ps1', '.cmd', '.bat', '.java', '.asm', '.gdb'}
 OVERRIDES = {
+    'run_pc98_keyboard_clock.py': ('runtime', 'Compare actual keyboard delivery at the PIC tick write and after the complete timer transaction on the pinned emulator.'),
+    'pc98_keyboard_clock_gdb.py': ('runtime', 'Record every keyboard tick and separate receive/read events while delivering physical keys at an observed timer seam.'),
+    'pc98_keyboard_clock_support.py': ('runtime', 'Observe timer entry, the actual tick hardware write, CPU budget credit, queue normalization and return without clock assignments.'),
+    'pc98_keyboard_clock.py': ('runtime', 'Attest actual ELF operands and complete timer transactions before deriving pending-credit keyboard time; retain raw clocks and exact archive readers.'),
     'run_pc98_keyboard_device.py': ('runtime', 'Run authored repeat or stalled-receiver scenarios and observe every keyboard timer call on the pinned emulator.'),
     'pc98_keyboard_device_gdb.py': ('runtime', 'Observe actual timer gates, UART overrun/restart and independent BIOS writes in authored keyboard scenarios.'),
     'verify_pc98_keyboard_device.py': ('runtime', 'Compare a source-bound native keyboard component with every recorded request, timer tick, receive callback and CPU data read.'),

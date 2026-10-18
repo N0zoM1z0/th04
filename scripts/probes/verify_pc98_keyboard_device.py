@@ -10,6 +10,7 @@ p.add_argument('--tick-layout',type=Path,required=True)
 p.add_argument('--model-header',type=Path,required=True)
 p.add_argument('--build-receipt',type=Path,required=True)
 p.add_argument('--output',type=Path,required=True)
+p.add_argument('--audit-clock',action='store_true',help='derive time from complete pinned timer transactions')
 a=p.parse_args();c=a.capture
 for path in (a.output,a.output.with_suffix('.input'),a.output.with_suffix('.stdout'),a.output.with_suffix('.stderr')):
  if path.exists():p.error('output or companion exists; use fresh paths')
@@ -25,7 +26,11 @@ for item in build['source_files']:
  path=Path(build['native_root'])/item['path'];assert sha(path)==item['sha256'],item['path']
 assert next(v['sha256'] for v in build['source_files'] if v['path']=='port64/pc98_keyboard.hpp')==sha(a.model_header)
 layout=json.loads(a.tick_layout.read_text());assert layout['passed'];offsets=layout['layout'];pending={};operations=[];ticks=[]
-def time(e):return Fraction(e['time']['numerator'],e['time']['denominator'])
+clock_report=None;canonical=None
+if a.audit_clock:
+ from pc98_keyboard_clock import audit_capture
+ clock_report,canonical=audit_capture(c)
+def time(e):return canonical[e['ordinal']] if canonical is not None else Fraction(e['time']['numerator'],e['time']['denominator'])
 def wire_time(e):
  q=time(e)*576000;assert q.denominator==1;return q.numerator
 for e in events:
@@ -59,4 +64,5 @@ assert not errors,errors[:4]
 assert all(y==x+1 for x,y in zip(ticks,ticks[1:])),'missing actual ticker call'
 counts=collections.Counter(v['kind'] for v in events);emitted=list(map(int,lines[-1].split()[11:]));assert len(emitted)==int(lines[-1].split()[10])
 report=dict(passed=True,build_receipt_sha256=sha(a.build_receipt),tick_layout_sha256=sha(a.tick_layout),capture_receipt_sha256=sha(c/'receipt.json'),admission_stream_sha256=hashlib.sha256(raw).hexdigest(),model_source_sha256=sha(a.model_header),program_sha256=sha(a.program),operations=len(operations),actual_timer_ticks=len(ticks),first_last_timer_tick=[ticks[0],ticks[-1]],external_calls=counts['request-entry'],internal_repeat_calls_observed_not_fed=counts['internal-repeat-entry'],rx_callbacks=counts['rx-entry'],irq_bios_reads=counts['bios-irq-entry'],emitted_bytes=emitted,errors=errors,scope='Native Typematic/Receiver/matrix owners start from constructor defaults. Actual external requests and every observed timer tick drive repeats;internal-repeat calls andexpected latches never drive them. Actual receive callbacks andCPU BIOS reads are separate external events. Allpost-event FIFO/data/ready/busy/matrix andrecorded repeat state agree. Captured admission times calibrate the boundary;thisdoesnotestablish a native game clock,guestIRQlatency,original V86/fullcampaign,hardware orNP2 parity.')
+if clock_report is not None:report['clock_audit']=clock_report
 a.output.write_text(json.dumps(report,indent=2)+'\n');print('NATIVE DEVICE ORACLE PASS',len(operations),'operations;',len(ticks),'actual ticks;',emitted,flush=True)

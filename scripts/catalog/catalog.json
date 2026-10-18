@@ -812,6 +812,27 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/pc98_keyboard_clock.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Attest actual ELF operands and complete timer transactions before deriving pending-credit keyboard time; retain raw clocks and exact archive readers.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/pc98_keyboard_clock_gdb.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Record every keyboard tick and separate receive/read events while delivering physical keys at an observed timer seam.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/pc98_keyboard_clock_support.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Observe timer entry, the actual tick hardware write, CPU budget credit, queue normalization and return without clock assignments.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/pc98_keyboard_device_gdb.py",
     "category": "runtime",
     "role": "support",
@@ -3589,6 +3610,13 @@
     "role": "command",
     "purpose": "Calibrate DIET restore/repack on private copies of pinned packed targets.",
     "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/run_pc98_keyboard_clock.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Compare actual keyboard delivery at the PIC tick write and after the complete timer transaction on the pinned emulator.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/probes/run_pc98_keyboard_device.py",

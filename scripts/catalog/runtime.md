@@ -43,6 +43,9 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/inspect_th04_handoff_trace.py](../probes/inspect_th04_handoff_trace.py) | command | Inspect private MAIN cleanup and MAINE initialization checkpoints. |
 | [probes/inspect_th04_main_graphics_trace.py](../probes/inspect_th04_main_graphics_trace.py) | command | Check MPN and four-plane VRAM checkpoints from a private MAIN run. |
 | [probes/inspect_th04_play_trace.py](../probes/inspect_th04_play_trace.py) | command | Reduce private MAIN state records; this is bounded gameplay evidence. |
+| [probes/pc98_keyboard_clock.py](../probes/pc98_keyboard_clock.py) | support | Attest actual ELF operands and complete timer transactions before deriving pending-credit keyboard time; retain raw clocks and exact archive readers. |
+| [probes/pc98_keyboard_clock_gdb.py](../probes/pc98_keyboard_clock_gdb.py) | support | Record every keyboard tick and separate receive/read events while delivering physical keys at an observed timer seam. |
+| [probes/pc98_keyboard_clock_support.py](../probes/pc98_keyboard_clock_support.py) | support | Observe timer entry, the actual tick hardware write, CPU budget credit, queue normalization and return without clock assignments. |
 | [probes/pc98_keyboard_device_gdb.py](../probes/pc98_keyboard_device_gdb.py) | support | Observe actual timer gates, UART overrun/restart and independent BIOS writes in authored keyboard scenarios. |
 | [probes/pc98_keyboard_repeat_gdb.py](../probes/pc98_keyboard_repeat_gdb.py) | support | Cross-check software BIOS store observations against independent hardware writes during a held-key fixture. |
 | [probes/pc98_keyboard_uart_gdb.py](../probes/pc98_keyboard_uart_gdb.py) | support | Observe serialized keyboard reception, IRQ requests and BIOS stores while preserving guest state across real input API calls. |
@@ -69,6 +72,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/reduce_pc98_keyboard_uart.py](../probes/reduce_pc98_keyboard_uart.py) | command | Verify UART queue timing and CLI/STI admission controls without generalizing the real-mode fixture to TH04 V86 timing. |
 | [probes/reduce_th04_keyboard_admission.py](../probes/reduce_th04_keyboard_admission.py) | command | Bind original V86 request/repeat FIFO bytes to UART, IRQ, BIOS and independently observed sampler records; retain PIC bookkeeping discontinuities. |
 | [probes/replay_th04_zun_runtime_inventory.py](../probes/replay_th04_zun_runtime_inventory.py) | command | Drop unused EMU/MATHS from TH04 ZUN resident and inventory pulled CT modules. |
+| [probes/run_pc98_keyboard_clock.py](../probes/run_pc98_keyboard_clock.py) | command | Compare actual keyboard delivery at the PIC tick write and after the complete timer transaction on the pinned emulator. |
 | [probes/run_pc98_keyboard_device.py](../probes/run_pc98_keyboard_device.py) | command | Run authored repeat or stalled-receiver scenarios and observe every keyboard timer call on the pinned emulator. |
 | [probes/run_pc98_keyboard_repeat.py](../probes/run_pc98_keyboard_repeat.py) | command | Run an authored fixture that holds Shot through two actual keyboard repeats before requesting release. |
 | [probes/run_pc98_keyboard_uart.py](../probes/run_pc98_keyboard_uart.py) | command | Run an authored internal-DOS UART/IRQ/BIOS fixture on one pinned, muted PC-98 emulator. |
