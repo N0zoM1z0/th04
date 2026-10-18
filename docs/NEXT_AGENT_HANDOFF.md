@@ -21,11 +21,11 @@ Preserve physical requests, firmware ticks, UART arrival, PIC dispatch, CPU
 acceptance, BIOS byte reads, Shift and the game latch as separate owners.
 Next resolve CPU/OPNA service and common boot epoch without fitted input words,
 fixed IRQ delays or another whole-route hunt solely for old75's inferred phase.
-Use correction.json's receipt/program_paths for current products; keep all
-providers and source capsules, including the first failed correction directory.
+Use correction.json's receipt/program_paths for current products. Keep scoped
+current providers/capsules, including the first failed correction directory.
 Use fresh build directories. Never run retired CMake/CTest, including --show-only.
-Finish focused checks, tracking, both CIs, diff checks, cleanup and full recovery;
-commit/push both branches. Do not declare the complete game achieved from these
+Finish affected checks, tracking, both CIs, diff checks and scoped cleanup
+verification; commit/push both branches. Do not declare the complete game achieved from these
 bounded frontend or compile-only Windows checks.
 ```
 
@@ -79,31 +79,18 @@ retain their original source vectors and scenarios. See the differential note.
 
 ## Recovery and resources
 
-Latest storage recovery: use DOS-root
-`.analysis/cleanup/storage-20261019/recover.py`; see `ANALYSIS_RETENTION.md`.
-It preserves 94244 incoming identities and adds 1585 lossless aliases. Restore
-named historical raw inputs through it before running older direct readers.
-The whole-directory cleanup releases about 2.94 GiB; current products, source,
-toolchain and inherited providers remain physical. The v1497 figures below
-are the previous phase record.
+The user authorized retirement of unnecessary history on 2026-10-19.
+Use DOS-root `.analysis/cleanup/retire-history-20261019/recover.py` and its
+`keep.json`/`aliases.json` for the scoped current handoff. The cumulative
+v1497/storage recovery contract is retired; older full-history commands can
+refer to intentionally deleted payloads. Historical receipts remain unchanged.
+See `ANALYSIS_RETENTION.md` for retained baselines and the deletion receipt.
 
-Use DOS-root .analysis/reconstruction/probes/host-joystick-v1497/recover.py.
-Incoming closure: 92478 identities, including three v1496 late files; inherited
-10281 exact aliases are unchanged. Current products are enumerated by absolute
-program_paths in correction.json's receipt. Keep all source capsules, current
-objects/programs, response/link metadata, semantic controls and inherited providers.
-The v1497-final directory owns the canonical corrected source capsule; its failed
-wrapper does not make that capsule disposable.
-
-After consumers finish, 114 duplicate payloads share immutable hard links.
-Provider bytes/mode/mtime are unchanged; adopted current-path mtimes are recorded.
-Closed duplicate allocation savings: 44670976 bytes after
-929792 bytes of manifest charges. Separately, 2004 disposable
-Make/cache files release 12034048 bytes, with no extra scientific
-retirement credit. No phase-entry storage decrease is claimed. All current
-products and replay dependencies remain; never incrementally build or run CTest
-in these retained cohorts. Use a fresh directory. Full recovery and pushed heads
-are recorded in recovery.log and finish.json.
+Current 105 programs, 12 object identities, source capsules and reused link
+inputs stay available. Build only affected targets in fresh directories; do
+not automatically rebuild all programs or replay every historical phase.
+Shared ABI/layout changes and exact promotions still require their proper gates.
+No product compilation or relink is performed for this cleanup.
 
 Heavy jobs remain serial at CPUQuota=35%, CPU1/Nice19, hard 768MiB/no swap,
 64 tasks/LimitCORE0. Ordinary checks use soft 256MiB. View retains GNU/Windows

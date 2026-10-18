@@ -59,31 +59,19 @@ planning another capture. Do not reopen deferred MAIN exactness cases.
 
 ## Recovery and cleanup
 
-Latest storage recovery: use DOS-root
-`.analysis/cleanup/storage-20261019/recover.py`; see `ANALYSIS_RETENTION.md`.
-It preserves 94244 incoming identities and adds 1585 lossless aliases. Restore
-named historical raw inputs through it before running older direct readers.
-The whole-directory cleanup releases about 2.94 GiB; current products, source,
-toolchain and inherited providers remain physical. The v1497 figures below
-are the previous phase record.
+The user authorized retirement of unnecessary history on 2026-10-19.
+Use DOS-root `.analysis/cleanup/retire-history-20261019/recover.py` and its
+`keep.json`/`aliases.json` for the scoped current handoff. The cumulative
+v1497/storage recovery contract is retired; older full-history commands can
+refer to intentionally deleted payloads. Historical receipts remain unchanged.
+See `ANALYSIS_RETENTION.md` for retained baselines and the deletion receipt.
 
-Use DOS-root .analysis/reconstruction/probes/host-joystick-v1497/recover.py.
-Incoming closure: 92478 identities, including three v1496 late files; inherited
-10281 exact aliases are unchanged. Current products are enumerated by absolute
-program_paths in correction.json's receipt. Keep all source capsules, current
-objects/programs, response/link metadata, semantic controls and inherited providers.
-The v1497-final directory owns the canonical corrected source capsule; its failed
-wrapper does not make that capsule disposable.
-
-After consumers finish, 114 duplicate payloads share immutable hard links.
-Provider bytes/mode/mtime are unchanged; adopted current-path mtimes are recorded.
-Closed duplicate allocation savings: 44670976 bytes after
-929792 bytes of manifest charges. Separately, 2004 disposable
-Make/cache files release 12034048 bytes, with no extra scientific
-retirement credit. No phase-entry storage decrease is claimed. All current
-products and replay dependencies remain; never incrementally build or run CTest
-in these retained cohorts. Use a fresh directory. Full recovery and pushed heads
-are recorded in recovery.log and finish.json.
+Current 105 programs, 12 object identities, source capsules and reused link
+inputs stay available. Build only affected targets in fresh directories; do
+not automatically rebuild all programs or replay every historical phase.
+Shared ABI/layout changes and exact promotions still require their proper gates.
+The retirement removes 65202 files and reduces storage from 15.31 to 7.93 GiB
+(7.38 GiB net). No product compilation or relink is performed.
 
 ## Resource limits and checks
 
@@ -94,8 +82,9 @@ O2/GGC5 soft 320MiB if rebuilt. Initial cohort peak: 683098112 bytes,
 zero OOM kills. Keep Ghidra384MiB/one Java processor and all checks muted/headless.
 Do not launch Windows GUI/input/audio tests or operate physical host devices.
 
-Both final CIs pass: root 593 tests/native 354, peak 268697600 bytes, no OOM.
-Full recovery is recorded in recovery.log and the final finish receipt.
+The v1497 handoff CIs passed (root 593/native 354). Current retirement
+checks are recorded in retire-history-20261019/verification.json.
+The historical full recovery predates retirement; use the scoped cleanup checks.
 
 Entry heads were root 10e464b/native e0c6569; use actual Git heads and the latest
 finish receipt for final publication. Root and native are distinct worktrees.

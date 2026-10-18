@@ -6,6 +6,16 @@ must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
 
+## Retention scope after 2026-10-19
+
+The user authorized retirement of unnecessary historical experiments. See
+[ANALYSIS_RETENTION.md](../../ANALYSIS_RETENTION.md) for the scoped current
+checkpoint and selected baselines. Older sections below describe observations
+at their recorded source/scenario identities; their full historical payloads
+are not all retained or replayable. Current programs, input/IRQ controls and
+selected independent original comparisons remain. Do not rebuild every former
+cohort or reinterpret retired observations as a current passing replay.
+
 ## Host joystick input and handoff (v1497)
 
 Native code ea41be4 connects SDL and WinMM joystick producers to both window

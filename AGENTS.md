@@ -138,3 +138,21 @@ global layouts change, invalidate and cold-replay every affected accepted unit.
   existing subject note when the same claim advances; create a new note only
   for a distinct ownership decision, reusable negative result, or replay
   surface.
+
+## Bounded retention and build scope
+
+- The user authorized permanent retirement of unnecessary historical experiments
+  on 2026-10-19. Keep the current handoff dependencies and selected independent
+  baselines/counterexamples. Historical instructions to keep every inherited
+  provider or replay every earlier phase are superseded by this scoped policy.
+- Keep canonical targets/assets, user saves, active toolchains/databases, current
+  maintained source and necessary build/replay inputs. Record retired payloads
+  explicitly; historical receipts remain historical observations, not a promise
+  that every old experiment is still replayable. See docs/ANALYSIS_RETENTION.md.
+- Build only affected translation units/programs and run relevant comparisons.
+  Do not automatically rebuild/relink all native test programs, replay every old
+  phase, or create another whole-history archive. Broaden checks for actual
+  shared ABI/layout dependencies; exact promotion still requires its full gates.
+- After an experiment, remove superseded binaries, regenerable caches and
+  redundant exploration captures. Retain concise commands, identities, results
+  and the minimal independent evidence needed for the retained claim.
