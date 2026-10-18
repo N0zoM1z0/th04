@@ -23,6 +23,12 @@ CATEGORIES = {
 }
 EXTENSIONS = {'.py', '.sh', '.ps1', '.cmd', '.bat', '.java', '.asm', '.gdb'}
 OVERRIDES = {
+    'th04_keyboard_admission_gdb.py': ('runtime', 'Observe wrapped input requests, UART/PIC delivery, internal repeats and BIOS stores through read-only host breakpoints.'),
+    'pc98_keyboard_repeat_gdb.py': ('runtime', 'Cross-check software BIOS store observations against independent hardware writes during a held-key fixture.'),
+    'run_pc98_keyboard_repeat.py': ('runtime', 'Run an authored fixture that holds Shot through two actual keyboard repeats before requesting release.'),
+    'reduce_pc98_keyboard_repeat.py': ('runtime', 'Verify internal repeat calls, keyboard counters and six independent BIOS write-time comparisons.'),
+    'probe_pc98_keyboard_layout.py': ('runtime', 'Attest keyboard/PIC host offsets with the pinned compiler, actual ELF sizes and instruction operands.'),
+    'pc98_keyboard_repeat.asm': ('runtime', 'Authored COM that reads two BIOS break/make cycles while one physical Shot press remains held.'),
     'run_pc98_keyboard_uart.py': ('runtime', 'Run an authored internal-DOS UART/IRQ/BIOS fixture on one pinned, muted PC-98 emulator.'),
     'pc98_keyboard_uart_gdb.py': ('runtime', 'Observe serialized keyboard reception, IRQ requests and BIOS stores while preserving guest state across real input API calls.'),
     'reduce_pc98_keyboard_uart.py': ('runtime', 'Verify UART queue timing and CLI/STI admission controls without generalizing the real-mode fixture to TH04 V86 timing.'),

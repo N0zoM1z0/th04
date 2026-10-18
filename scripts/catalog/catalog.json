@@ -700,6 +700,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/fixtures/pc98_keyboard_repeat.asm",
+    "category": "runtime",
+    "role": "fixture",
+    "purpose": "Authored COM that reads two BIOS break/make cycles while one physical Shot press remains held.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/fixtures/pc98_keyboard_uart.asm",
     "category": "runtime",
     "role": "fixture",
@@ -798,6 +805,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/pc98_keyboard_repeat_gdb.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Cross-check software BIOS store observations against independent hardware writes during a held-key fixture.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/pc98_keyboard_uart_gdb.py",
     "category": "runtime",
     "role": "support",
@@ -866,6 +880,13 @@
     "role": "command",
     "purpose": "Test whether DIET 1.45f preserves arbitrary MZ relocation-table order.",
     "purpose_source": "source-docstring"
+  },
+  {
+    "path": "scripts/probes/probe_pc98_keyboard_layout.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Attest keyboard/PIC host offsets with the pinned compiler, actual ELF sizes and instruction operands.",
+    "purpose_source": "maintained-description"
   },
   {
     "path": "scripts/probes/probe_tc4_carpet_asm_fingerprint.py",
@@ -2415,6 +2436,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/reduce_pc98_keyboard_repeat.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Verify internal repeat calls, keyboard counters and six independent BIOS write-time comparisons.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/reduce_pc98_keyboard_uart.py",
     "category": "runtime",
     "role": "command",
@@ -3542,6 +3570,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/run_pc98_keyboard_repeat.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Run an authored fixture that holds Shot through two actual keyboard repeats before requesting release.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/run_pc98_keyboard_uart.py",
     "category": "runtime",
     "role": "command",
@@ -3665,6 +3700,13 @@
     "category": "runtime",
     "role": "support",
     "purpose": "Observe declared same-boundary live PC-98 font, video and DGROUP without changing CPU context.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_keyboard_admission_gdb.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Observe wrapped input requests, UART/PIC delivery, internal repeats and BIOS stores through read-only host breakpoints.",
     "purpose_source": "maintained-description"
   },
   {

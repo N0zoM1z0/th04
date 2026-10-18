@@ -34,6 +34,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/compare_th04_ordinary_video.py](../probes/compare_th04_ordinary_video.py) | command | Compare complete ordinary VRAM/palettes/display state with independent scalar controls. |
 | [probes/compare_th04_stage3_route.py](../probes/compare_th04_stage3_route.py) | command | Compare continuous Stage3 DOS and native state, pools and private Midboss bytes. |
 | [probes/compare_th04_stage_clear.py](../probes/compare_th04_stage_clear.py) | command | Compare complete DOS/native Stage2 clear and Stage3 entry pools/state/input/RNG while retaining key/GDC failures. |
+| [probes/fixtures/pc98_keyboard_repeat.asm](../probes/fixtures/pc98_keyboard_repeat.asm) | fixture | Authored COM that reads two BIOS break/make cycles while one physical Shot press remains held. |
 | [probes/fixtures/pc98_keyboard_uart.asm](../probes/fixtures/pc98_keyboard_uart.asm) | fixture | Authored COM fixture that reads BIOS keys and controls IF to distinguish UART readiness from BIOS admission. |
 | [probes/inspect_th04_cpu_fault_trace.py](../probes/inspect_th04_cpu_fault_trace.py) | command | Decode private MAIN exception frames without claiming normal gameplay. |
 | [probes/inspect_th04_demo_snapshots.py](../probes/inspect_th04_demo_snapshots.py) | command | Read back DGROUP snapshots against complete ordinary demos and diagnose actor differences. |
@@ -41,6 +42,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/inspect_th04_handoff_trace.py](../probes/inspect_th04_handoff_trace.py) | command | Inspect private MAIN cleanup and MAINE initialization checkpoints. |
 | [probes/inspect_th04_main_graphics_trace.py](../probes/inspect_th04_main_graphics_trace.py) | command | Check MPN and four-plane VRAM checkpoints from a private MAIN run. |
 | [probes/inspect_th04_play_trace.py](../probes/inspect_th04_play_trace.py) | command | Reduce private MAIN state records; this is bounded gameplay evidence. |
+| [probes/pc98_keyboard_repeat_gdb.py](../probes/pc98_keyboard_repeat_gdb.py) | support | Cross-check software BIOS store observations against independent hardware writes during a held-key fixture. |
 | [probes/pc98_keyboard_uart_gdb.py](../probes/pc98_keyboard_uart_gdb.py) | support | Observe serialized keyboard reception, IRQ requests and BIOS stores while preserving guest state across real input API calls. |
 | [probes/prepare_th04_good_ending.py](../probes/prepare_th04_good_ending.py) | command | Prepare a private seeded Good Ending, with source-built MAINE/OP/ZUN. |
 | [probes/prepare_th04_main_diagnostic_hdi.py](../probes/prepare_th04_main_diagnostic_hdi.py) | command | Prepare a native MAIN candidate in a disposable PC-98 HDI. |
@@ -49,6 +51,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/prepare_th04_op_diagnostic_hdi.py](../probes/prepare_th04_op_diagnostic_hdi.py) | command | Place a statically audited native OP.EXE in a disposable TH04 HDI. |
 | [probes/prepare_th04_op_phase_hdi.py](../probes/prepare_th04_op_phase_hdi.py) | command | Add reversible GAME.BAT phase markers to an attested private OP HDI. |
 | [probes/prepare_th04_primary_cpu_debugger.py](../probes/prepare_th04_primary_cpu_debugger.py) | command | Attest a CPU exception debugger for the unchanged primary DOSBox-X. |
+| [probes/probe_pc98_keyboard_layout.py](../probes/probe_pc98_keyboard_layout.py) | command | Attest keyboard/PIC host offsets with the pinned compiler, actual ELF sizes and instruction operands. |
 | [probes/probe_th04_demo_video_layout.py](../probes/probe_th04_demo_video_layout.py) | command | Attest retained emulator host video layout with a small pinned-compiler/archive/ELF probe. |
 | [probes/probe_th04_hdi_active_dev_remnants.py](../probes/probe_th04_hdi_active_dev_remnants.py) | command | Audit active files/archives in pinned HDI for TH04 development remnants. |
 | [probes/probe_th04_hdi_allocated_slack.py](../probes/probe_th04_hdi_allocated_slack.py) | command | Scan allocated FAT12 file/directory slack for final TH04 blocker remnants. |
@@ -60,8 +63,10 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/probe_th04_native_pf_hook_runtime.py](../probes/probe_th04_native_pf_hook_runtime.py) | command | Run the TH04-local PAR INT 21h service on pinned real members. |
 | [probes/probe_th04_native_pi_decode_runtime.py](../probes/probe_th04_native_pi_decode_runtime.py) | command | Compare TH04-local packed PI decoding with a pinned historical DOS oracle. |
 | [probes/probe_th04_native_super_runtime.py](../probes/probe_th04_native_super_runtime.py) | command | Run a TH04-only BFNT sprite lifecycle and fake-VRAM DOS differential. |
+| [probes/reduce_pc98_keyboard_repeat.py](../probes/reduce_pc98_keyboard_repeat.py) | command | Verify internal repeat calls, keyboard counters and six independent BIOS write-time comparisons. |
 | [probes/reduce_pc98_keyboard_uart.py](../probes/reduce_pc98_keyboard_uart.py) | command | Verify UART queue timing and CLI/STI admission controls without generalizing the real-mode fixture to TH04 V86 timing. |
 | [probes/replay_th04_zun_runtime_inventory.py](../probes/replay_th04_zun_runtime_inventory.py) | command | Drop unused EMU/MATHS from TH04 ZUN resident and inventory pulled CT modules. |
+| [probes/run_pc98_keyboard_repeat.py](../probes/run_pc98_keyboard_repeat.py) | command | Run an authored fixture that holds Shot through two actual keyboard repeats before requesting release. |
 | [probes/run_pc98_keyboard_uart.py](../probes/run_pc98_keyboard_uart.py) | command | Run an authored internal-DOS UART/IRQ/BIOS fixture on one pinned, muted PC-98 emulator. |
 | [probes/run_th04_maine_diagnostic_hdi.py](../probes/run_th04_maine_diagnostic_hdi.py) | command | Replay a private OP or MAINE HDI probe under pinned DOSBox-X. |
 | [probes/run_th04_op_diagnostic_hdi.py](../probes/run_th04_op_diagnostic_hdi.py) | command | Run a private TH04 OP HDI probe under the pinned DOSBox-X emulator. |
@@ -78,6 +83,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_dos_process.py](../probes/th04_dos_process.py) | support | Resolve conventional DOS process ownership from complete MCB, PSP and environment evidence. |
 | [probes/th04_dos_route.py](../probes/th04_dos_route.py) | support | Validate actual overlay images/generations, real Quit keys, shared resident use and full score checksums. |
 | [probes/th04_font_checkpoints_gdb.py](../probes/th04_font_checkpoints_gdb.py) | support | Observe declared same-boundary live PC-98 font, video and DGROUP without changing CPU context. |
+| [probes/th04_keyboard_admission_gdb.py](../probes/th04_keyboard_admission_gdb.py) | support | Observe wrapped input requests, UART/PIC delivery, internal repeats and BIOS stores through read-only host breakpoints. |
 | [probes/th04_ordinary_continue.py](../probes/th04_ordinary_continue.py) | support | Attest Continue counter ownership and verify release-first input, natural last-life restoration and resumed gameplay. |
 | [probes/th04_ordinary_dgroup.py](../probes/th04_ordinary_dgroup.py) | support | Decode every ordinary DGROUP record with strict framing, stage and gzip integrity. |
 | [probes/th04_ordinary_dgroup_gdb.py](../probes/th04_ordinary_dgroup_gdb.py) | support | Observe full ordinary DGROUP after actor updates through read-only mapped host RAM. |
