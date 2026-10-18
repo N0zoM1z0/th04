@@ -1,5 +1,52 @@
 # TH04 native 64-bit bring-up
 
+## Physical keys and ordered host delivery (v1490)
+
+Native code 5626571 feeds Win32/SDL keydown/keyup delivery into the persistent
+keyboard before UI aliases. Arrows and keypad cardinal keys occupy distinct
+BIOS bits. Return/keypad Return and left/right Shift keep distinct physical
+identities despite sharing scans. OS repeats do not restart firmware repeat;
+releasing its owner does not transfer repeat to another held key. Short pulses
+survive between game polls. Focus loss serializes releases; focus gain alone
+does not synthesize makes. Snapshot fixtures retain an explicit stable order.
+
+The time is host delivery time, not platform event timestamps or original
+physical time. Timer/RX events at or before delivery precede the new edge.
+The available-CPU policy remains explicit. Original IF/PIC masks, priority,
+EOI, latency, boot epoch and event-timestamp conversion remain open.
+
+All 21 key scans/matrices agree with the pinned DOSBox-X mapping. Unchanged
+MAIN130E:06BC..07C4 reproduces 21 explicit stable BIOS fixture words, with
+neutral joystick and given INT18 modifier status. An exit-0 alias-fold mutant
+fails four keypad cases. Portable controls cover event order, short pulses,
+same-scan releases, OS repeat suppression and focus ownership. Current GNU
+and UBSan retain 31 real observation-on/off frontend polls and their original
+sampler comparison. The new live elapsed-source API passes four frames/nine
+polls/81 byte-and-Shift reads. The retained actual COM IRQ fixture preserves
+27 operations/four accepts. No fresh original host-timing capture is claimed.
+
+Current source is 573 files, closure
+efee7a9f86af08612690a06723671a147d7431125d8c6c07b40ab967e96e7b22.
+The ordered-host-keys-v1490 replay cold-compiles all four host_window.hpp
+consumers per role and links three programs each for GNU, UBSan and Windows.
+It reuses 112 unrelated core objects per role and unchanged link inputs by SHA.
+This is bounded affected replay, not a fresh all-source cohort or 87-CTest
+rerun. GNU/UBSan focused controls pass; Windows is compile/link only.
+GNU/Windows View uses O3/GGC5; UBSan View uses O0/GGC1 with UB/bounds retained.
+Old full cohorts keep their own source closures and acceptance scopes.
+
+Heavy jobs stay serial 35%CPU, CPU1, Nice19, hard 768MiB/no swap/64 tasks/core 0.
+Checks use 256MiB soft; View alone uses recorded 640/768MiB compile profiles.
+Build peak is 579.215 MiB; this batch has zero OOM kills.
+The two real v1489 compiler OOM failures remain preserved. Caps are unchanged.
+No physical host keys/focus/audio or GUI workarounds were used.
+
+Next measure original request/timer/accept/read ownership and first differences.
+Do not fit a phase/fixed IRQ delay or hunt old75 with another full route.
+Common-reset DOS/native campaigns, Windows runtime and NP2/hardware remain
+open. Existing strict negatives and both full goals remain active; historical
+DOS products/source and exactness states are unchanged.
+
 ## Persistent keyboard and scalar MAIN input (v1489)
 
 Native code a4e97bd connects the actual Win32 and SDL MAIN paths to a persistent
