@@ -79,6 +79,14 @@ retain their original source vectors and scenarios. See the differential note.
 
 ## Recovery and resources
 
+Latest storage recovery: use DOS-root
+`.analysis/cleanup/storage-20261019/recover.py`; see `ANALYSIS_RETENTION.md`.
+It preserves 94244 incoming identities and adds 1585 lossless aliases. Restore
+named historical raw inputs through it before running older direct readers.
+The whole-directory cleanup releases about 2.94 GiB; current products, source,
+toolchain and inherited providers remain physical. The v1497 figures below
+are the previous phase record.
+
 Use DOS-root .analysis/reconstruction/probes/host-joystick-v1497/recover.py.
 Incoming closure: 92478 identities, including three v1496 late files; inherited
 10281 exact aliases are unchanged. Current products are enumerated by absolute
