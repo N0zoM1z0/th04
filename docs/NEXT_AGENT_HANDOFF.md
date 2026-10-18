@@ -1,8 +1,8 @@
 # Resume TH04 reconstruction
 
 Updated 2026-10-18. Complete DOS/native goals remain active. Read actual heads
-and DOS-root irq-service-v1495/finish.json. Root probes distinguish protected
-monitor and V86 BIOS returns; native code stays 19c1d37. CPU/boot ownership stays open.
+and DOS-root joystick-byte-source-v1496/finish.json. Native code 72ab70a
+completes optional live joystick sampling. CPU/bus/boot ownership remains open.
 
 ## Resume instruction
 
@@ -28,30 +28,31 @@ Finish focused comparison, tracking, both scripts/ci.py runs and git diff --chec
 Commit/push main and native HEAD:port/modern-64. Leave both full goals active.
 ```
 
-## Original IRQ1 monitor and ROM return (v1495)
+## Live byte joystick sampling (v1496)
 
-Root probe code 6fb50c5 records the original normal boot through eight Stage1
-updates: six complete IRQ1 paths and 96 supplemental observations. The full
-MAIN load module is attested before use; provenance remains candidate-local-attested.
-131 complete timer transactions audit 657 clock records and 1091 admission
-records, plus the separate ISR stream, with zero canonical clock regressions.
-The MAIN entry remains a raw snapshot outside that timer audit.
+Native code 72ab70a completes optional joystick enable/pin callbacks in the
+live byte path: eight BIOS bytes, Shift store, enable, then active-low pins only
+when enabled. Low six actions OR into the existing Reset/Sense latch.
+Original MAIN 130E:07AB..07C4 queries Shift before calling 0000:366A..3675;
+only that helper brackets OPNA with CLI/POPF and preserves incoming IF0/1.
+Bus/CPU timing remains the producer's responsibility.
 
-CPU acceptance first enters a protected-mode monitor. Its IRET reaches the
-V86 BIOS entry F000:E96A; it does not finish the keyboard IRQ. The BIOS callback
-returns at F000:E96E with ISR1 still set. The generated ROM tail issues
-OUT 00h,20h at F000:E971, then IRET at F000:E974 restores the entire captured
-interrupted CPU context. Three port reads (43h,41h,43h) consume each byte and
-update the BIOS bitmap without changing guest CPU state inside the callback.
+Root command 33cfaa4, scripts/probes/verify_pc98_input_bytes.py, checks 7168
+controlled cases/14336 target calls plus 16 IF controls/64 extra calls. The old
+byte API differs in 1000 action rows; current values/read traces agree. Four
+compiled exit0 semantic defects reject. Real MAIN and shared FrontEnd checks
+cover all 14336 actions and four joystick-driven frames/nine polls. Independent
+original ISA reproduces the nine measured latches; observer state equality,
+existing 31 polls/81 elapsed reads/21 physical keys pass. See the main-branch
+TH04_REPLAY_DIFFERENTIAL note for controls and limits.
 
-Independent ROM-tail CPU checks pass and five semantic defects reject; source,
-interval and replay details are in the main-branch TH04_REPLAY_DIFFERENTIAL note.
-Native code stays 19c1d37 with the unchanged 573-file fe7dca75 source closure.
-Its current programs/objects/link inputs retain their entry identities; this
-batch does not rebuild products. Next establish the CPU service owner, common
-boot epoch and other IRQ producers before full campaign comparison. Default
-native immediate CPU/BIOS/EOI remains an explicit portable policy. Complete
-DOS/native fidelity and historical strict negatives remain open.
+Source has 573 files, closure 856cd0831427893d73c1660ccd41db022a593cb2cb2657db7df2f72020bcf2ed.
+Cold affected objects: GNU55/UBSan29/Windows26; all 102 programs are fresh relinks
+with 474 unchanged inputs by SHA. GNU 87 fresh-directory CTests and six UBSan
+controls pass; Windows 4 is compile/link only. This is not all-source cold replay.
+Next connect host/OPNA pin production and its masked CPU service, common boot
+epoch and other IRQ producers. Full campaigns/continuous display, Windows
+runtime and NP2/hardware remain open. Both complete-game goals stay active.
 
 ## Earlier PIC evidence
 
@@ -95,8 +96,12 @@ The current cohort retains programs and link inputs after CMake bookkeeping
 pruning; never incrementally build or invoke CTest there. Use a fresh directory.
 See ANALYSIS_RETENTION.md for the exact journals and recovery consumers.
 
-Heavy work stays serial: CPUQuota35%, MemoryHigh256M, MemoryMax768M,
-MemorySwapMax0, CPU1/Nice19, TasksMax64 and LimitCORE0. Only View uses the
-recorded compile-only soft/profile exceptions in RE_HANDOFF; do not repeat the
-known O2/O1 sanitizer failures. Keep runs muted/headless, Windows compile/link
-only, and use no physical host keys/focus/audio or device workarounds.
+Heavy work stays serial: CPUQuota=35%, CPU1/Nice19, hard 768MiB, no swap,
+64 tasks and no cores. Normal checks use MemoryHigh=256MiB. View uses GNU/Windows
+O3 GGC5/4096 soft 640MiB, or UBSan O0 GGC1/1024 soft 768MiB. UBSan main.cpp now
+uses O2/GGC5 soft 320MiB after a recorded 256MiB pressure stall; its fresh 320MiB
+object replay is byte-identical and has no high/OOM events. The original journal
+entry's nominal 256 field is qualified by main-soft-amendment.json. Cohort peak
+616353792 bytes/no OOM. Do not repeat historical failed View O2/O1 profiles.
+Keep emulators muted/headless and Windows compile/link only; no physical host
+keys/focus/audio or device workarounds.

@@ -5,6 +5,68 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Live byte joystick sampling (v1496)
+
+Native code 72ab70a completes the live ByteSource path with optional paired
+joystick enable/pin callbacks. It reads eight BIOS bytes, stores Shift, then
+checks enable and reads active-low pins once only when enabled. Low six actions
+OR into the existing latch; Reset still clears before begin and Sense retains
+prior actions. Keyboard-only sources keep their existing callback sequence.
+
+The original MAIN sampler (scratch load segment 0000) at 130E:06BC/06C4..07C4
+queries Shift at 07AB..07B1 before the enable test at 07B4 and the far call at
+07BB. Helper 0000:366A..3675 brackets its OPNA transaction with PUSHF/CLI/POPF.
+It preserves either incoming IF state. The helper does not justify masking all
+keyboard/Shift reads. The native producer still owns bus and CPU timing.
+
+Root command 33cfaa4, scripts/probes/verify_pc98_input_bytes.py, executes
+14336 unchanged target calls/7168 controlled cases: every single BIOS-byte value,
+all 256 pin values, enable on/off, Shift0/1 and Reset/Sense. Current values and
+intermediate read/latch traces agree. Sixteen additional IF controls use 64
+target calls and preserve IF0/1. BIOS Shift and ready OPNA inputs are declared
+functional controls, not physical-device or original V86 timing evidence.
+
+| Consumer | State mismatches | Complete row mismatches |
+| --- | ---: | ---: |
+| Earlier keyboard-only byte API | 1000 | 14336 |
+| Current live bytes | 0 | 0 |
+| Shift after joystick | 0 | 14336 |
+| Unmasked pin upper bits | 768 | 768 |
+| Read pins while disabled | 0 | 13312 |
+| Overwrite rather than OR | 512 | 512 |
+
+Every incorrect consumer compiles and exits 0. Read order and disabled bus reads
+are checked independently of the final action word. All 14336 action words reach
+the real GNU/UBSan MAIN consumer through bytes and agree with its whole-sample
+route. Real shared FrontEnd checks drive Right/Down movement and Shot through
+four frames/nine polls, with nine enable reads/seven pin reads. Original ISA
+independently reproduces all nine measured latches. Complete pools/frame/RNG
+agree with the observer disabled/enabled. Existing 31-poll, four-frame/81-read
+elapsed and 21-key physical regressions remain separate passing controls.
+
+Current source is 573 files, closure
+856cd0831427893d73c1660ccd41db022a593cb2cb2657db7df2f72020bcf2ed.
+Compiler dependency output selects 55 GNU/29 UBSan/26 Windows objects for cold
+compilation. All 102 retained programs are fresh relinks: GNU 91, UBSan 7 and
+Windows 4. Fresh-directory GNU 87 CTests and six UBSan controls pass. 474 unchanged
+link/metadata/tool inputs retain SHA identities; this is affected-object replay,
+not a full all-source cold cohort. No build or CTest is invoked in a retired directory.
+
+Work stays serial at CPU35%, CPU1/Nice19, hard 768MiB/no swap. View retains the
+recorded O3/GGC5 soft 640MiB or UBSan O0/GGC1 soft 768MiB profile. UBSan main.cpp
+first stalls at soft 256MiB with 89% memory pressure; only that live command is
+raised to soft 320MiB. Compiler flags remain O2/GGC5. A fresh soft 320MiB replay
+emits identical object bytes, peaks at 274583552 bytes and has zero high/OOM
+events. main-soft-amendment.json qualifies that command's nominal 256 journal
+field. Other controls use soft 256MiB. Cohort peak 616353792 bytes; zero OOM kills.
+
+The new callbacks expose the correct optional transaction in the actual game
+sampler. Host joystick production, masked bus/CPU service timing, common boot
+epoch and other IRQ producers remain open. No new whole campaign, old 130-output
+stock replay, Windows runtime, continuous display or NP2/hardware acceptance is
+claimed. Historical exactness and all prior strict negatives are unchanged;
+both complete DOS/native goals stay active.
+
 ## Original IRQ1 monitor and ROM return (v1495)
 
 Root probe code 6fb50c5 records the original normal boot through eight Stage1

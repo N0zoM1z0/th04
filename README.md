@@ -25,9 +25,9 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
-Original IRQ1 observations now separate the protected-mode monitor from V86
-BIOS and ROM EOI/IRET. Independent ROM-tail CPU checks pass. Native CPU
-scheduling, boot epoch and complete-game fidelity remain open. See the
+Live byte sampling now includes optional joystick reads in original order.
+Original-instruction, real frontend and affected-product checks pass. CPU/bus
+timing, boot epoch and complete-game fidelity remain open. See the
 [current handoff](docs/RE_HANDOFF.md).
 
 The v1475 actual source MAIN defeats Elly at 12792 and reaches Stage4 init/score1

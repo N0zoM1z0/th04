@@ -5,30 +5,31 @@ faithful native x64 game; both goals remain active. Original Japanese DOS versus
 reconstructed DOS is the primary behavioral comparison. Keep English code/docs,
 gpt-6.1-sol: commits and frequent pushes to main and native HEAD:port/modern-64.
 
-## Original IRQ1 monitor and ROM return (v1495)
+## Live byte joystick sampling (v1496)
 
-Root probe code 6fb50c5 records the original normal boot through eight Stage1
-updates: six complete IRQ1 paths and 96 supplemental observations. The full
-MAIN load module is attested before use; provenance remains candidate-local-attested.
-131 complete timer transactions audit 657 clock records and 1091 admission
-records, plus the separate ISR stream, with zero canonical clock regressions.
-The MAIN entry remains a raw snapshot outside that timer audit.
+Native code 72ab70a completes optional joystick enable/pin callbacks in the
+live byte path: eight BIOS bytes, Shift store, enable, then active-low pins only
+when enabled. Low six actions OR into the existing Reset/Sense latch.
+Original MAIN 130E:07AB..07C4 queries Shift before calling 0000:366A..3675;
+only that helper brackets OPNA with CLI/POPF and preserves incoming IF0/1.
+Bus/CPU timing remains the producer's responsibility.
 
-CPU acceptance first enters a protected-mode monitor. Its IRET reaches the
-V86 BIOS entry F000:E96A; it does not finish the keyboard IRQ. The BIOS callback
-returns at F000:E96E with ISR1 still set. The generated ROM tail issues
-OUT 00h,20h at F000:E971, then IRET at F000:E974 restores the entire captured
-interrupted CPU context. Three port reads (43h,41h,43h) consume each byte and
-update the BIOS bitmap without changing guest CPU state inside the callback.
+Root command 33cfaa4, scripts/probes/verify_pc98_input_bytes.py, checks 7168
+controlled cases/14336 target calls plus 16 IF controls/64 extra calls. The old
+byte API differs in 1000 action rows; current values/read traces agree. Four
+compiled exit0 semantic defects reject. Real MAIN and shared FrontEnd checks
+cover all 14336 actions and four joystick-driven frames/nine polls. Independent
+original ISA reproduces the nine measured latches; observer state equality,
+existing 31 polls/81 elapsed reads/21 physical keys pass. See the main-branch
+TH04_REPLAY_DIFFERENTIAL note for controls and limits.
 
-Independent ROM-tail CPU checks pass and five semantic defects reject; source,
-interval and replay details are in the main-branch TH04_REPLAY_DIFFERENTIAL note.
-Native code stays 19c1d37 with the unchanged 573-file fe7dca75 source closure.
-Its current programs/objects/link inputs retain their entry identities; this
-batch does not rebuild products. Next establish the CPU service owner, common
-boot epoch and other IRQ producers before full campaign comparison. Default
-native immediate CPU/BIOS/EOI remains an explicit portable policy. Complete
-DOS/native fidelity and historical strict negatives remain open.
+Source has 573 files, closure 856cd0831427893d73c1660ccd41db022a593cb2cb2657db7df2f72020bcf2ed.
+Cold affected objects: GNU55/UBSan29/Windows26; all 102 programs are fresh relinks
+with 474 unchanged inputs by SHA. GNU 87 fresh-directory CTests and six UBSan
+controls pass; Windows 4 is compile/link only. This is not all-source cold replay.
+Next connect host/OPNA pin production and its masked CPU service, common boot
+epoch and other IRQ producers. Full campaigns/continuous display, Windows
+runtime and NP2/hardware remain open. Both complete-game goals stay active.
 
 ## Earlier PIC evidence
 
@@ -95,34 +96,36 @@ main differential note and evidence/knowledge ledgers.
 
 ## Recovery, resources and finish
 
-Use DOS-root .analysis/reconstruction/probes/irq-service-v1495/recover.py
-for exact hashes/restores and replay_retained_v2.py for the frozen ISR reader.
-It chains 91002 incoming identities, including three v1494 late files, and
-10261 exact aliases after 36 new retirements. Each actual restore preserves
-SHA, size, mode and nsmtime and is removed before restoring the next. Current
-and frozen maintained readers replay through explicit exact-byte providers.
-Closed capture images/fonts/logs/wires save 149401600 bytes after new gzip and
-alias-manifest allocation cost; this is not a phase-entry storage decrease.
-Keep all failed observer sources/receipts, semantic controls, current products,
-source capsule and inherited providers. No new native build or source gzip is
-created. Never build or invoke CTest in retired cohorts.
+Use DOS-root .analysis/reconstruction/probes/joystick-byte-source-v1496/recover.py.
+It chains 91350 incoming identities, including three v1495 late files, and 10281
+exact aliases after 20 new wire retirements. All 20 actual restores preserve
+SHA/size/mode/nsmtime one at a time. Current 102 programs/110 cold objects/link
+inputs stay physical. After compilation and checks, 177 byte-identical immutable
+payloads share storage through hard links; new-path/provider mtimes are recorded.
+Provider bytes/mode/mtime stay unchanged. Never incrementally build either
+cohort; use a fresh replay directory.
 
-Heavy work stays serial at CPUQuota=35%, CPU1, Nice=19, 64 tasks,
-MemoryMax=768M, no swap and no cores. Normal checks use MemoryHigh=256M.
-Only View uses the recorded compiler profiles: GNU/Windows O3 with GGC
-min-expand=5/min-heapsize=4096 and soft 640M; UBSan View O0 with GGC
-min-expand=1/min-heapsize=1024 and soft 768M. Other UBSan core objects retain
-O2. Restore soft 256M before controls. The retained v1494 affected build peaked
-at 610803712 bytes with zero OOM kills; v1495 runs no compiler. Historical
-O2/O1 sanitizer failures and resource amendments remain retained; do not repeat those failed profiles.
-Keep emulators muted/headless and Windows compile/link only. Do not use host
-keys/focus, physical audio, or GUI/device workarounds.
+Closed allocation savings are 43511808 bytes after provider/manifest charges.
+An additional 10670080 bytes of temporary maintained-replay copies are removed
+with zero extra scientific credit. This is not a phase-entry storage decrease.
+Keep current source capsule, all semantic controls, resource amendments and
+every inherited provider. The entry vector reuses the canonical v1494 capsule.
 
-The v1495 focused comparison, current/frozen archive readers, root CI
-(593 tests), native CI (354 tests) and both diff checks pass. Full provider
-recovery is required before final push.
+Heavy work stays serial: CPUQuota=35%, CPU1/Nice19, hard 768MiB, no swap,
+64 tasks and no cores. Normal checks use MemoryHigh=256MiB. View uses GNU/Windows
+O3 GGC5/4096 soft 640MiB, or UBSan O0 GGC1/1024 soft 768MiB. UBSan main.cpp now
+uses O2/GGC5 soft 320MiB after a recorded 256MiB pressure stall; its fresh 320MiB
+object replay is byte-identical and has no high/OOM events. The original journal
+entry's nominal 256 field is qualified by main-soft-amendment.json. Cohort peak
+616353792 bytes/no OOM. Do not repeat historical failed View O2/O1 profiles.
+Keep emulators muted/headless and Windows compile/link only; no physical host
+keys/focus/audio or device workarounds.
 
-v1495 entry heads were main b490824/native 16faf41; read actual heads and the latest
+The v1496 focused product/semantic/provider checks and both CIs pass
+(root 593 tests/native 354). CI peak is 268804096 bytes with zero OOM kills.
+Full provider recovery is recorded in recovery.log and the final finish receipt.
+
+v1496 entry heads were main bf0b520/native 4d1a9fd; read actual heads and the latest
 finish receipt. Finish focused comparison, tracking, python3 scripts/ci.py in
 both branches and git diff --check; commit/push both branches. ci.py ignores
 arguments, so --help runs the entire CI. Complete product goals remain active.

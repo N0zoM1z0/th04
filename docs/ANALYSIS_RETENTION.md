@@ -1,5 +1,22 @@
 # Private build and analysis retention
 
+## Live byte joystick recovery (v1496)
+
+Use DOS-root .analysis/reconstruction/probes/joystick-byte-source-v1496/recover.py.
+It chains 91350 incoming identities, including three v1495 late files, and 10281
+exact aliases after 20 new wire retirements. All 20 actual restores preserve
+SHA/size/mode/nsmtime one at a time. Current 102 programs/110 cold objects/link
+inputs stay physical. After compilation and checks, 177 byte-identical immutable
+payloads share storage through hard links; new-path/provider mtimes are recorded.
+Provider bytes/mode/mtime stay unchanged. Never incrementally build either
+cohort; use a fresh replay directory.
+
+Closed allocation savings are 43511808 bytes after provider/manifest charges.
+An additional 10670080 bytes of temporary maintained-replay copies are removed
+with zero extra scientific credit. This is not a phase-entry storage decrease.
+Keep current source capsule, all semantic controls, resource amendments and
+every inherited provider. The entry vector reuses the canonical v1494 capsule.
+
 ## Original IRQ1 service recovery (v1495)
 
 Use DOS-root .analysis/reconstruction/probes/irq-service-v1495/recover.py
