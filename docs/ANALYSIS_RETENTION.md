@@ -1,5 +1,19 @@
 # Private build and analysis retention
 
+## Original IRQ1 service recovery (v1495)
+
+Use DOS-root .analysis/reconstruction/probes/irq-service-v1495/recover.py
+for exact hashes/restores and replay_retained_v2.py for the frozen ISR reader.
+It chains 91002 incoming identities, including three v1494 late files, and
+10261 exact aliases after 36 new retirements. Each actual restore preserves
+SHA, size, mode and nsmtime and is removed before restoring the next. Current
+and frozen maintained readers replay through explicit exact-byte providers.
+Closed capture images/fonts/logs/wires save 149401600 bytes after new gzip and
+alias-manifest allocation cost; this is not a phase-entry storage decrease.
+Keep all failed observer sources/receipts, semantic controls, current products,
+source capsule and inherited providers. No new native build or source gzip is
+created. Never build or invoke CTest in retired cohorts.
+
 ## RX service-clock recovery (v1494)
 
 Use DOS-root .analysis/reconstruction/probes/receive-clock-v1494/recover.py.

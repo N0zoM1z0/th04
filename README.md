@@ -25,10 +25,10 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
-The v1494 native keyboard keeps RX event deadlines separate from CPU
-observation time when scheduling interrupt checks. Exact source/ELF and
-current-header comparisons pass. Full CPU/boot and complete-game fidelity
-remain open. See the [current handoff](docs/RE_HANDOFF.md).
+Original IRQ1 observations now separate the protected-mode monitor from V86
+BIOS and ROM EOI/IRET. Independent ROM-tail CPU checks pass. Native CPU
+scheduling, boot epoch and complete-game fidelity remain open. See the
+[current handoff](docs/RE_HANDOFF.md).
 
 The v1475 actual source MAIN defeats Elly at 12792 and reaches Stage4 init/score1
 with original OP/MAINE/ZUN/assets. All 13378 pool/state snapshots,13377 actual

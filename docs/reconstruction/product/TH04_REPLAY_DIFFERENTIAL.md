@@ -5,6 +5,48 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Original IRQ1 monitor and ROM return (v1495)
+
+Root probe code 6fb50c5 records the original normal boot through eight Stage1
+updates: six complete IRQ1 paths and 96 supplemental observations. The full
+MAIN load module is attested before use; provenance remains candidate-local-attested.
+131 complete timer transactions audit 657 clock records and 1091 admission
+records, plus the separate ISR stream, with zero canonical clock regressions.
+The MAIN entry remains a raw snapshot outside that timer audit.
+The preceding eight-update capture has five IRQ1 paths/130 timer transactions;
+this run has six/131. The shared initial HDI and physical request plan do not
+establish a common elapsed epoch, and this batch assigns no cause.
+
+CPU acceptance first enters a protected-mode monitor. Its IRET reaches the
+V86 BIOS entry F000:E96A; it does not finish the keyboard IRQ. The BIOS callback
+returns at F000:E96E with ISR1 still set. The generated ROM tail issues
+OUT 00h,20h at F000:E971, then IRET at F000:E974 restores the entire captured
+interrupted CPU context. Three port reads (43h,41h,43h) consume each byte and
+update the BIOS bitmap without changing guest CPU state inside the callback.
+
+Independent Unicorn 2.1.4 execution of the captured seven-byte tail checks five
+standard x86 instructions, port width/value, registers, stack and restored flags
+for all six paths. Five semantic ROM/frame defects reject. The CPU projection
+excludes protected-monitor execution and V86 protection; this ROM is generated
+by the pinned DOSBox-X, with hardware/firmware validation still open.
+
+Audited emulator counter intervals vary: accept-to-BIOS is 43/44 cycles,
+the callback is zero, the EOI write is 23, and the ROM tail is 28/29. Complete
+accept-to-return is 71/72. These are observations of this engine/configuration,
+not an architectural cycle model or a fixed native IRQ delay. Five whole source
+files equal the pinned vendor archive. Three failed observer prefixes and the
+JSON integer-key/wire comparison correction remain retained separately.
+
+Native product code stays 19c1d37: 573 source files, closure
+fe7dca75f53a7a665681672eb0b25710ff7cbac06a82390ec8ad33d325b903a9.
+All 12 current programs, 15 objects, 360 link inputs and the canonical source
+capsule retain their entry identities. No product is rebuilt in this batch.
+Current and frozen maintained ISR readers agree after exact archive retirement.
+The default native CPU/BIOS/EOI policy still needs a CPU service owner and common
+boot epoch. Other IRQ producers, complete DOS/native campaigns, continuous
+display, Windows runtime and NP2/hardware remain open. Historical exactness
+is unchanged; both complete-game goals stay active.
+
 ## UART receive event clock (v1494)
 
 Native code 19c1d37 anchors an RX callback's IRQ1 check to its queued service
