@@ -81,11 +81,43 @@ void queue_and_deadline() {
     std::array<std::uint8_t,10> matrix{};
     require(!update_matrix(matrix,0x70),"modifier bytes require their separate owner");
 }
-void trace() {
+void masked_interrupt() {
+    Receiver receiver;InterruptRequest irq;
+    std::array<std::uint8_t,10> matrix{};
+    receiver.enqueue(0x29,0);receiver.enqueue(0xa9,0);
+    require(receiver.complete(character_time)==Receiver::Completion::ready,"masked receive");
+    irq.request();irq.request();
+    require(irq.pending() && !irq.eligible(false),"masked request is retained");
+    bool rejected=false;
+    try {irq.accept(false);} catch(const std::logic_error&) {rejected=true;}
+    require(rejected && irq.pending(),"masked acceptance must fail without losing request");
+    require(receiver.complete(2*character_time)==Receiver::Completion::overrun,"masked overrun");
+    require(irq.pending() && receiver.ready() && !matrix[5],"overrun preserves request without BIOS write");
+    require(irq.eligible(true) && irq.pending(),"restoring IF only makes request eligible");
+    irq.accept(true);
+    require(!irq.pending() && receiver.ready() && !matrix[5],"CPU acceptance is separate from data read");
+    rejected=false;
+    try {irq.accept(true);} catch(const std::logic_error&) {rejected=true;}
+    require(rejected,"duplicate acceptance must fail");
+    update_matrix(matrix,receiver.read_data(3*character_time));
+    require(matrix[5]==2 && receiver.next_event()==4*character_time,"actual data read restarts stalled receiver");
+    require(receiver.complete(4*character_time)==Receiver::Completion::ready,"queued break arrives");
+    irq.request();irq.accept(true);
+    require(matrix[5]==2,"accepting break interrupt leaves BIOS make until data read");
+    update_matrix(matrix,receiver.read_data(4*character_time));
+    require(!matrix[5] && !irq.pending(),"CPU read finally applies break");
+}
+void trace(bool irq_mode=false) {
     Typematic keyboard;Receiver receiver;std::array<std::uint8_t,10> matrix{};
+    InterruptRequest irq;bool admitted=false;
     Time now=0;std::vector<unsigned> emitted;unsigned operation=0;char kind;
     const auto send=[&](std::uint8_t code){emitted.push_back(code);receiver.enqueue(code,now);};
     while(std::cin>>kind>>now) {
+        unsigned enabled_if=0;
+        if(irq_mode) {
+            std::cin>>enabled_if;
+            if(!std::cin || enabled_if>1)throw std::runtime_error("invalid CPU IF stimulus");
+        }
         if(kind=='K') {
             unsigned id=0,scan=0,down=0;std::cin>>id>>scan>>down;
             if(!std::cin)throw std::runtime_error("malformed key stimulus");
@@ -96,8 +128,19 @@ void trace() {
             if(!std::cin || enabled>1)throw std::runtime_error("invalid tick stimulus");
             keyboard.tick(send,enabled!=0);
         }
-        else if(kind=='R')receiver.complete(now);
-        else if(kind=='B')require(update_matrix(matrix,receiver.read_data(now)),"unsupported trace modifier");
+        else if(kind=='R') {
+            const auto result=receiver.complete(now);
+            if(irq_mode && result==Receiver::Completion::ready)irq.request();
+        }
+        else if(kind=='A' && irq_mode) {
+            require(!admitted,"keyboard ISR already owns an unread byte");
+            irq.accept(enabled_if!=0);admitted=true;
+        }
+        else if(kind=='B') {
+            if(irq_mode)require(admitted && receiver.ready(),"BIOS read without CPU acceptance");
+            require(update_matrix(matrix,receiver.read_data(now)),"unsupported trace modifier");
+            admitted=false;
+        }
         else throw std::runtime_error("unknown keyboard stimulus");
         if(!std::cin)throw std::runtime_error("malformed keyboard stimulus");
         std::cout<<operation++<<' '<<keyboard.wait_ticks()<<' '
@@ -106,7 +149,9 @@ void trace() {
             <<receiver.busy()<<' '<<receiver.ready()<<' '<<unsigned(receiver.data())<<' '
             <<receiver.queued()<<' ';
         for(auto byte:matrix)std::cout<<std::hex<<std::setfill('0')<<std::setw(2)<<unsigned(byte);
-        std::cout<<std::dec<<' '<<emitted.size();
+        std::cout<<std::dec<<' ';
+        if(irq_mode)std::cout<<irq.pending()<<' '<<irq.eligible(enabled_if!=0)<<' '<<admitted<<' ';
+        std::cout<<emitted.size();
         for(auto byte:emitted)std::cout<<' '<<byte;
         std::cout<<'\n';
     }
@@ -115,8 +160,9 @@ void trace() {
 int main(int argc,char** argv) {
     try {
         if(argc==2 && std::string(argv[1])=="--trace") {trace();return 0;}
-        if(argc!=1)throw std::runtime_error("expected no arguments or --trace");
-        repeat_and_latch();key_ownership();blocked_receiver();queue_and_deadline();
+        if(argc==2 && std::string(argv[1])=="--irq-trace") {trace(true);return 0;}
+        if(argc!=1)throw std::runtime_error("expected no arguments, --trace or --irq-trace");
+        repeat_and_latch();key_ownership();blocked_receiver();queue_and_deadline();masked_interrupt();
         std::cout<<"PC-98 keyboard repeat/transport/BIOS contracts pass\n";return 0;
     } catch(const std::exception& error) {std::cerr<<error.what()<<'\n';return 1;}
 }

@@ -1,9 +1,9 @@
 # Resume TH04 reconstruction
 
 Updated 2026-10-18. The complete maintained DOS four-product and faithful native
-x64 goals remain active. Phase entry main 40a2f60/native 59884d9; main code 86873ce
-adds the timer Oracle, while native b774aa9 still owns the isolated peripheral.
-Read actual heads and DOS-root keyboard-clock-v1486/finish.json before acting.
+x64 goals remain active. Phase entry main9c43c13/nativef142852. The current batch adds pending-IRQ
+ownership and bounds original sampler pair75; read actual heads.
+Read actual heads and DOS-root sampler-irq-v1487/finish.json before acting.
 
 ## Resume instruction
 
@@ -17,9 +17,10 @@ Use one serial heavy job, taskset -c 1, Nice=19, CPUQuota=35%, MemoryHigh=256M,
 MemoryMax=768M, MemorySwapMax=0, TasksMax=64 and LimitCORE=0 in a user service.
 Read back the actual cgroup. Keep emulator runs muted/headless; no host keys.
 Use fresh build directories and retain current link inputs, providers and evidence.
-Start with original IRQ/scalar sampler-read ownership after the v1486 clock
-result. Record complete timer phases rather than assigning a fitted clock.
-Keep unstable pair 75 and the 30-tail/23-GDC versus older 40-tail failures explicit.
+Reuse the v1487 masked sampler result and pending-IRQ component. Record complete
+original timer phases and actual scalar reads rather than assigning a fitted
+clock. Pair75 latch is bounded; its scalar reads remain inferred. Keep the
+30-tail/23-GDC versus older40-tail failures explicit.
 Then justify native elapsed/admission semantics and integrate the existing
 peripheral into the real frontend. Continue full source/native campaigns after
 affected cold replay; a component pass is not full-game acceptance.
@@ -29,40 +30,41 @@ only after exact recovery and real/archive consumers preserve all failed cases.
 Leave both full goals active until their complete required end state is proved.
 ```
 
-## Current evidence to reuse
+## Sampler and pending IRQ frontier (v1487)
 
-The pinned timer stores PIC_Ticks at +17h before CPU budget credit at +42h and
-queue normalization before +81h. Two fresh authored scenarios observe complete
-transactions and preserve different input/tick orders: tick-edge 535/549 versus
-tick-return 536/550. GNU/UBSan, twelve independent BIOS write pairs, six proof
-faults and eight unit controls pass. Four previous default reports are identical.
-Raw tick-edge time fails the genuine native monotone guard; transaction-derived
-time passes. This is pinned-emulator clock evidence; game elapsed time and IRQ
-latency remain separate owners.
+Original MAIN pair75 at Stage2/frame249 receives a rising Shot make after all
+8 scalar loads, inside the joystick PUSHF/CLI/POPF wrapper. RX is at relative
+0000:3663 with IF=0,278 cycles after entry; BIOS writes at360 and return is391.
+Sampler reset/sense/return are130E:06BC/06C4/07C4; actual load10FC,CS240A,DS3230.
+Independent unchanged-target execution from a genuine prior reset reproduces
+the RX low16 registers,segments and normalized flags. All3 later IF-enabled
+boundaries preserve Sense32; Reset controls yield0 despite final BIOS Shot2.
+Original scalar reads remain inferred,not directly traced. Broad MEM_READ hooks
+break the far return even on pinned Unicorn2.1.4; BIOS-only10-byte hooks pass.
 
-The original unchanged 9748-record stream binds65 complete external transfer
-starts. Thirteen stage-plan deadlines agree; all 52 clock-controller starts have
-one millisecond temporary queued-deadline excess and cover all raw regressions.
-Carry is51 times-1 andonce-17. The old original capture lacks a full host-PC phase
-trace, so do not rewrite its timestamps or subtract1 from arbitrary observations.
-Record actual IRQ and sampler reads for pair 75/loop 249 before choosing admission.
+Native InterruptRequest separates pending request,IF eligibility,actual CPU
+acceptance and later BIOS read. A fresh authored stalled COM records actual
+CPU_Interrupt(vector9,type0) before IF clears. GNU/UBSan match27 operations,
+10 actual ticks,5 RX callbacks and4 accepts/reads;4 independent BIOS writes
+agree. Four compiled defects and3 invalid acceptance controls reject. All16
+old trace comparisons remain byte-identical. See the main-branch existing
+TH04_REPLAY_DIFFERENTIAL note for exact evidence classes,commands and limits.
 
-Native source remains573/af655e9e1ef5ac7702fbf07a8bca4b8946f8655b3fb71b59a5c24ba74d1f1b87.
-The existing v1485 component has three programs; old v1481 full-game products
-retain their571-file closure and GNU90/86CTest, UBSan5, Windows2 scope. Product
-sources/cohorts did not change in v1486. Never run a build or CTest in retired
-caches, or relabel old full-game products under the573-file manifest.
+Only2 standalone inputs change. PIC masks,priority,EOI,dispatch latency and
+native elapsed time remain external. Next record complete original timer and
+scalar-read events,justify elapsed/dispatch ownership,then integrate into the
+real frontend and cold-replay affected game products. Preserve all raw failures;
+no fitted hold,latch or fixed RX-to-BIOS delay. Both full goals remain active.
 
-Use DOS-root keyboard-clock-v1486/recover.py:9888 aliases, 86710 inherited
-identities, eight exact metadata restores, all 8 actual/archive model reports and
-the raw-clock rejection. Phase-local net cleanup floor 14 MiB includes all retained
-nonarchive phase files and 3 MiB reserve. Preserve every current/late/finish and
-provider binding. Frozen archive_verifier.py accepts fresh --output paths;
-clock_reader.py reads explicitly named exact archives. Retained source capsules
-and Git history supply historical versions if mutable source changes; stage only
-for readers and restore current bytes/mode/nsmtime. No CI/build while staged.
+Current native source573 closure:
+824998852f83267a4e528a0cc6b0c605cd59e70238589ecf15e18abd07c1abd2.
+The new sampler-irq-v1487-component has3 programs;GNU/UBSan execute,Windows
+compiles only. Old v1485 component and v1481 full-game571 cohorts retain their
+historical closures. Never build or run CTest in retired caches.
 
-scripts/ci.py ignores arguments: --help starts a complete CI. Inspect source
-before probing options. Headless Ghidra heap384M and one active Java processor
-keep checks bounded. See RE_HANDOFF for product identities and preserved
-original/source/native comparison surfaces; ANALYSIS_RETENTION for older cleanup.
+Use DOS-root sampler-irq-v1487/recover.py:87034 inherited identities,9888 aliases,
+no new alias or net cleanup credit. Unused generated metadata from the fresh
+cache is pruned under a strict whitelist,with current programs/link inputs kept.
+Preserve all providers,late/finish bindings,source snapshots and failed witnesses.
+Historical source staging is reader-only; restore bytes/mode/nsmtime before
+builds or CI. scripts/ci.py ignores arguments,so --help runs all CI.

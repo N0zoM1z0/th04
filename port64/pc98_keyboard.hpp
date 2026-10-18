@@ -49,6 +49,26 @@ using Time=std::uint64_t;
 constexpr Time quanta_per_ms=576000;
 constexpr Time character_time=330000;
 
+// A receive-ready request survives a masked CPU. IF is only a necessary
+// condition: the caller still owns PIC masks, priority, in-service state and
+// the actual CPU dispatch event. Accepting an IRQ does not read UART data or
+// update BIOS memory, and enabling interrupts does not accept it automatically.
+class InterruptRequest {
+public:
+    void request() {pending_=true;}
+    bool pending() const {return pending_;}
+    bool eligible(bool interrupts_enabled) const {
+        return pending_ && interrupts_enabled;
+    }
+    void accept(bool interrupts_enabled) {
+        if(!eligible(interrupts_enabled))
+            throw std::logic_error("CPU accepted an ineligible keyboard interrupt");
+        pending_=false;
+    }
+private:
+    bool pending_=false;
+};
+
 class Receiver {
 public:
     enum class Completion {ready,overrun};
