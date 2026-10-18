@@ -2,14 +2,45 @@
 
 Updated 2026-10-18. Complete maintained DOS four-product and faithful native x64
 goals remain active. Read RE_HANDOFF, ARCHITECTURE, RE_WORKFLOW, ORACLES and the main
-branch differential note. Phase entry main `7d43687`/native e795559; native code `6832631` still owns
-read-only sampler observation. Main `84269d9` adds the V86 reducer; 082e1c8 fixes
-collector progress detection. Read actual heads/latest finish publication.
+branch differential note. Phase entry main b653698/native 5669e37; current
+code main 8812f9f/native b774aa9. Read actual heads/latest finish publication.
 Use English code/docs, gpt-6.1-sol: commits; push main/native HEAD:port/modern-64.
 Use one low-priority CPU, muted/headless runs, no host keys and serialized Borland.
 Clean periodically and after each batch; verify exact recovery before retirement.
 
-## Current V86 admission frontier (v1484)
+## Current peripheral and clock frontier (v1485)
+
+Read the v1485 RE_HANDOFF and main differential note first. Native b774aa9 adds
+an isolated keyboard peripheral; main 8812f9f supplies repeat/stalled runtime
+Oracles. Two authored scenarios agree with GNU/UBSan; ten software/hardware
+BIOS writes agree and six compiled wrong models reject. Windows is compile-only.
+Actual timer calls drive repeats; actual RX and CPU reads are separate boundary
+inputs. The component is not yet wired into the game.
+
+Current closure is 573/af655e9e1ef5ac7702fbf07a8bca4b8946f8655b3fb71b59a5c24ba74d1f1b87.
+Its cold cohort is keyboard-device-v1485-component (three standalone programs).
+All 569 existing non-control inputs are identical; the old full-game cohort
+retains its original 571-file identity. Never relabel it as rebuilt under 573.
+Use keyboard-device-v1485/recover.py: 9880 aliases, 86273 inherited identities,
+14 exact restores and actual/archive positive/negative replay. Cleanup net floor
+is 1 MiB; separate generated metadata removal is 12.78125 MiB with zero net credit.
+Keep current products/link inputs, source capsules, providers and unique witnesses.
+
+Next establish a monotone keyboard clock and real IRQ/sample admission before
+frontend integration. Do not supply internal repeats, expected latches, fitted
+holds/phases or a fixed admission delay. Preserve the original V86 unstable pair75
+and PIC bookkeeping discontinuities. The 30-tail/23-GDC strict failure and older
+40-tail case remain distinct; no common-reset/full-campaign/hardware promotion.
+Both complete product goals remain active.
+
+Heavy checks must run serially in a user systemd service with CPUQuota=35%,
+MemoryMax=768M, MemorySwapMax=0, TasksMax=64, Nice=19 and taskset -c 1; read back
+the actual cgroup limits. Use GHIDRA_HEADLESS_MAXMEM=384M and one active Java CPU.
+scripts/ci.py currently ignores arguments: --help runs the complete CI. Inspect
+the source before parameter probing. Do not run builds/CI while historical
+control files are staged, or CTest in any protected old cohort.
+
+## Prior V86 admission frontier (v1484)
 
 Read the v1484 section in RE_HANDOFF and the main differential note first.
 Full original B reaches Stage4; all 13378 pool/state snapshots, 13377 heads,
@@ -82,9 +113,11 @@ The corrected case follows stock Stage1/2 stimuli and is a private recorded
 Stage3 experiment, not a common-reset full sampled campaign, Windows/NP2 runtime
 or new Stage4 observation. Complete DOS/native goals remain active.
 
-Maintained native source remains 571 files, closure
+Current maintained native source has 573 files; the isolated keyboard cohort
+and its closure are documented in v1485 above. The retained full-game cohort
+still binds its original 571-file closure
 `10d8adb1fbdac1495f2b8a5180fa21e1808003bba8ebe2a6cd396ae4567b4f01`.
-Current cold products/link inputs:sampled-device-v1481-final, GNU 90 programs/
+Full-game cold products/link inputs:sampled-device-v1481-final, GNU 90 programs/
 86 CTests, UBSan 5 and Windows 2 compile checks. Both private GNU device programs,
 link objects, source capsules and unique witnesses remain physical. Old
 frontend-input-v1480-final is superseded:keep its inherited providers/receipts/
