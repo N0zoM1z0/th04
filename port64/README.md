@@ -1,5 +1,20 @@
 # TH04 native 64-bit bring-up
 
+
+## Host joystick controls (v1497)
+
+Both SDL and WinMM windows now use the first available raw joystick. The first
+two axes and first direction hat move/navigate; the first button fires/confirms,
+the second bombs/cancels. Raw SDL bindings vary by device. The analog threshold
+is half range. Connect or regain focus with controls neutral before pressing;
+held controls do not create an initial menu confirmation. Keyboard input remains
+available when no joystick is attached or initialization fails.
+
+The producer reads live active-low pins after Shift through MAIN's byte source;
+menu edges and game Reset/Sense latches remain distinct. Injected API/headless
+frontend checks pass; actual devices and Windows runtime remain unverified.
+See docs/RE_HANDOFF.md for current source/product identities, resource profiles,
+retention, strict comparison failures and unfinished full-game objectives.
 ## Live byte joystick sampling (v1496)
 
 Native code 72ab70a completes the live ByteSource path with optional paired

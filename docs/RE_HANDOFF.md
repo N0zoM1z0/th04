@@ -1,131 +1,103 @@
-# Native TH04 current handoff
+# TH04 current handoff
 
-Updated 2026-10-18. Build the complete maintained DOS four-product game and
-faithful native x64 game; both goals remain active. Original Japanese DOS versus
-reconstructed DOS is the primary behavioral comparison. Keep English code/docs,
-gpt-6.1-sol: commits and frequent pushes to main and native HEAD:port/modern-64.
+Session handed off at the user's request on 2026-10-18. The complete maintained
+DOS four-product game and faithful native x64 objectives are unfinished. Resume
+on a new user instruction. Keep English code/docs and gpt-6.1-sol: commits.
 
-## Live byte joystick sampling (v1496)
+## Host joystick input and handoff (v1497)
 
-Native code 72ab70a completes optional joystick enable/pin callbacks in the
-live byte path: eight BIOS bytes, Shift store, enable, then active-low pins only
-when enabled. Low six actions OR into the existing Reset/Sense latch.
-Original MAIN 130E:07AB..07C4 queries Shift before calling 0000:366A..3675;
-only that helper brackets OPNA with CLI/POPF and preserves incoming IF0/1.
-Bus/CPU timing remains the producer's responsibility.
+Native code ea41be4 connects SDL and WinMM joystick producers to both window
+backends, menu edges, held UI actions and MAIN's live byte sampler. Native host
+policy uses the first two axes/first hat, button 0 Shot/confirm and button 1
+Bomb/cancel, with a half-range analog threshold. A connection or focus regain
+must first be neutral. Missing devices and failed initialization leave keyboard
+input available. Raw SDL axis/button bindings vary by device; this is an explicit
+host policy, not an original PC-98 device or timing observation.
 
-Root command 33cfaa4, scripts/probes/verify_pc98_input_bytes.py, checks 7168
-controlled cases/14336 target calls plus 16 IF controls/64 extra calls. The old
-byte API differs in 1000 action rows; current values/read traces agree. Four
-compiled exit0 semantic defects reject. Real MAIN and shared FrontEnd checks
-cover all 14336 actions and four joystick-driven frames/nine polls. Independent
-original ISA reproduces the nine measured latches; observer state equality,
-existing 31 polls/81 elapsed reads/21 physical keys pass. See the main-branch
-TH04_REPLAY_DIFFERENTIAL note for controls and limits.
+Complete injected APIs execute all 131072 X/Y axis values and 64 hat/button
+combinations in GNU and UBSan without opening devices. Original unchanged MAIN
+instructions reproduce 64 production pin mappings per role and nine actual
+frontend latches per role. Two compiled exit-0 mapping defects each reject 32
+cases. Both real headless frontends enter MAIN through three controller menu
+confirmations, move Right/Down, sample Shot and handle unplug across four frames
+and nine polls. Observer off/on pools/frame/RNG agree. The prior 31-poll keyboard
+and 81-read elapsed controls also pass. These are shared frontend tests, not
+actual SDL/Win32 windows or controller acceptance.
 
-Source has 573 files, closure 856cd0831427893d73c1660ccd41db022a593cb2cb2657db7df2f72020bcf2ed.
-Cold affected objects: GNU55/UBSan29/Windows26; all 102 programs are fresh relinks
-with 474 unchanged inputs by SHA. GNU 87 fresh-directory CTests and six UBSan
-controls pass; Windows 4 is compile/link only. This is not all-source cold replay.
-Next connect host/OPNA pin production and its masked CPU service, common boot
-epoch and other IRQ producers. Full campaigns/continuous display, Windows
-runtime and NP2/hardware remain open. Both complete-game goals stay active.
+Current source: 577 files,
+51b9f3887346d5b444bbfd07d296b83175be420acda95c9598f250cae6647734.
+The initial cohort cold-builds four affected objects per role and freshly
+relinks 92 GNU/8 UBSan/5 Windows programs. GNU 88 CTests and seven UBSan controls
+pass. A WinMM continuous-POV/query-header correction then cold-builds nine backend
+objects: three GNU objects retain exact bytes; source-location metadata changes
+UBSan objects, so both UBSan and Windows app/joystick programs are relinked.
+Three unchanged View objects retain their initial compiler identities. Current
+105 program paths and all 12 object identities are in correction.json's receipt;
+use program_paths, since the current products span two directories. This is
+not an all-source cold cohort. Windows remains compile/link only.
 
-## Earlier PIC evidence
+Source/objects/commands and the rejected equality assumption remain private and
+recoverable. The canonical corrected source capsule is under the first
+host-joystick-v1497-final directory despite that driver's later failure; do not
+delete it. See the focused differential note for API references and scope.
 
-The v1492 first16 window and v1491 authored real-mode probe remain in the
-focused comparison note and prior public snapshots. Their pre-dispatch-policy
-statements describe code 91c0e94, not the new cfe5ac7 default check event.
+## Verification limits and remaining work
 
-## Maintained products and comparison limits
+Original CPU/OPNA service timing, common boot epoch, other IRQ producers,
+actual controllers, continuous display, full source/native campaigns, Windows
+runtime and NP2/hardware remain open. Historical exactness is unchanged.
+Original-versus-original retains 30 tail/23 raw-GDC differences; source-DOS's
+19-key/23-GDC and native physical 40-tail/7837-boundary failures remain separate.
+Old75 is inferred, not a directly captured scalar sample; do not hunt another
+whole route solely for that phase. Earlier complete state/picture agreements
+retain their original source vectors and scenarios. See the differential note.
 
-The previous full cold source vector is 573 files, closure
-60714a70f0bcda09f2689ad548242081ca80847bc9016da8ba115369e6da4298.
-The fresh frontend-peripheral-v1489-gc cohort contains 91 GNU programs
-with 87 passing CTests, 7 UBSan programs and 4 Windows compile-only programs.
-UBSan uses fresh O2 core objects and an explicit O0 override for view.cpp after
-the O2 and O1/GGC5 frontend attempts hit the unchanged 768M hard cap.
-The successful View profile is O0 with GGC min-expand=1/min-heapsize=1024. The override object
-hash is checked after CMake links; its exact command qualifies the attempted
-O2 compile_commands entry. All source/header digests stay unchanged.
-Both stock host-adapter runs preserve all 130 previous complete outputs through
-13377 Stage3 updates. This is a regression of the old host-input scenario;
-it does not accept the connected default peripheral's full campaign.
-112 of 113 GNU core objects match the retained old cohort byte for byte;
-all affected header consumers were cold-built regardless. DOS products and
-historical artifact/unit exactness are unchanged.
+Next connect CPU/OPNA service ownership and common-reset timing without fitted
+input words or fixed IRQ delays. Preserve independent physical, UART, PIC,
+BIOS-byte, Shift and game-latch owners. Reuse the retained comparisons before
+planning another capture. Do not reopen deferred MAIN exactness cases.
 
-The retained full-game sampled-device-v1481-final cohort still binds its original
-571-file closure 10d8adb1fbdac1495f2b8a5180fa21e1808003bba8ebe2a6cd396ae4567b4f01:
-GNU 90 programs/86 CTests, UBSan five and Windows two compile checks. Never label
-that full-game cohort as rebuilt under 573. Programs, link inputs and private
-GNU observers remain physical. Neither old cohort may be incrementally built;
-never invoke CTest there, including --show-only.
+## Recovery and cleanup
 
-The v1484 original completes Stage3 and reaches actual Stage4 init/score1.
-Against the preceding original, all 13378 pool/state snapshots, 13377 heads,
-four literal players, 23 full RGB/TRAM/DAC/tone samples and the complete raw
-loop/RNG wire agree. Strict timing remains false: 30 tail words and 23 raw GDC
-samples differ. Of 3402 sampler pairs, 3362 stable CPU replays pass, 39 precede
-a genuine reset and pair75 changes BIOS during execution. Its latch result is now separately
-confluent across the three later IF-enabled boundaries; scalar reads were not
-directly captured, so keep3362 stable replays and this1 bounded proof distinct. All 247 observed
-tail returns bind the same-run after-reset actor field. Preserve failed capture
-A's 7833-snapshot truncated extent and genuine SIGINT separately from full B.
+Use DOS-root .analysis/reconstruction/probes/host-joystick-v1497/recover.py.
+Incoming closure: 92478 identities, including three v1496 late files; inherited
+10281 exact aliases are unchanged. Current products are enumerated by absolute
+program_paths in correction.json's receipt. Keep all source capsules, current
+objects/programs, response/link metadata, semantic controls and inherited providers.
+The v1497-final directory owns the canonical corrected source capsule; its failed
+wrapper does not make that capsule disposable.
 
-The corrected v1481 physical-device case completes 13377 Stage3 updates, all
-13378 pool/state snapshots, four literal players and 22 full RGB samples; its
-40 post-tail input differences remain a distinct failure. All 29616 poll
-transitions replay unchanged original sampler instructions. The raw-BIOS movie
-and its 7837 Enter agreement are separate from physical delivery. Stock GNU/
-UBSan regressions retain 130 previous output hashes, 407 blink pixels and 1805
-keys. Source-DOS's 19 keys/23 GDC failures are another surface; do not subtract
-counts across scenarios or borrow acceptance. Continuous display, common-reset
-campaigns, full four-source/native campaigns, Windows runtime and NP2/hardware
-remain open.
+After consumers finish, 114 duplicate payloads share immutable hard links.
+Provider bytes/mode/mtime are unchanged; adopted current-path mtimes are recorded.
+Closed duplicate allocation savings: 44670976 bytes after
+929792 bytes of manifest charges. Separately, 2004 disposable
+Make/cache files release 12034048 bytes, with no extra scientific
+retirement credit. No phase-entry storage decrease is claimed. All current
+products and replay dependencies remain; never incrementally build or run CTest
+in these retained cohorts. Use a fresh directory. Full recovery and pushed heads
+are recorded in recovery.log and finish.json.
 
-Original MAIN:156258 bytes/1136 relocations,
+## Resource limits and checks
+
+Heavy jobs remain serial at CPUQuota=35%, CPU1/Nice19, hard 768MiB/no swap,
+64 tasks/LimitCORE0. Ordinary checks use soft 256MiB. View retains GNU/Windows
+O3/GGC5/4096 soft 640MiB or UBSan O0/GGC1/1024 soft 768MiB; UBSan main.cpp uses
+O2/GGC5 soft 320MiB if rebuilt. Initial cohort peak: 683098112 bytes,
+zero OOM kills. Keep Ghidra384MiB/one Java processor and all checks muted/headless.
+Do not launch Windows GUI/input/audio tests or operate physical host devices.
+
+Both final CIs pass: root 593 tests/native 354, peak 268697600 bytes, no OOM.
+Full recovery is recorded in recovery.log and the final finish receipt.
+
+Entry heads were root 10e464b/native e0c6569; use actual Git heads and the latest
+finish receipt for final publication. Root and native are distinct worktrees.
+Push root main and native HEAD:port/modern-64 separately. Finish tracking,
+scripts/ci.py in both branches and git diff --check. ci.py ignores --help and
+runs the entire CI. No current cohort may be incrementally rebuilt.
+
+Original MAIN: 156258 bytes/1136 relocations,
 077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b.
-Source MAIN:200279 bytes/1183 relocations,
+Source MAIN: 200279 bytes/1183 relocations,
 778641ab845bcd67c6888bacc049e2cfa20fddda844681d3d2fd164f8386abc9.
-DOS four-product cohort remains .analysis/build/dos-four-products-v1443.
-Provenance remains candidate-local-attested; artifact/unit exactness is unchanged.
-Keep MAIN 0AAF:0153/0158 tail reset, 0AAF:01B3 actor seam and literal 0AAF:5FCF player entry
-distinct. Historical Elly, BIOS-movie, UI and failed-prefix details stay in the
-main differential note and evidence/knowledge ledgers.
-
-## Recovery, resources and finish
-
-Use DOS-root .analysis/reconstruction/probes/joystick-byte-source-v1496/recover.py.
-It chains 91350 incoming identities, including three v1495 late files, and 10281
-exact aliases after 20 new wire retirements. All 20 actual restores preserve
-SHA/size/mode/nsmtime one at a time. Current 102 programs/110 cold objects/link
-inputs stay physical. After compilation and checks, 177 byte-identical immutable
-payloads share storage through hard links; new-path/provider mtimes are recorded.
-Provider bytes/mode/mtime stay unchanged. Never incrementally build either
-cohort; use a fresh replay directory.
-
-Closed allocation savings are 43511808 bytes after provider/manifest charges.
-An additional 10670080 bytes of temporary maintained-replay copies are removed
-with zero extra scientific credit. This is not a phase-entry storage decrease.
-Keep current source capsule, all semantic controls, resource amendments and
-every inherited provider. The entry vector reuses the canonical v1494 capsule.
-
-Heavy work stays serial: CPUQuota=35%, CPU1/Nice19, hard 768MiB, no swap,
-64 tasks and no cores. Normal checks use MemoryHigh=256MiB. View uses GNU/Windows
-O3 GGC5/4096 soft 640MiB, or UBSan O0 GGC1/1024 soft 768MiB. UBSan main.cpp now
-uses O2/GGC5 soft 320MiB after a recorded 256MiB pressure stall; its fresh 320MiB
-object replay is byte-identical and has no high/OOM events. The original journal
-entry's nominal 256 field is qualified by main-soft-amendment.json. Cohort peak
-616353792 bytes/no OOM. Do not repeat historical failed View O2/O1 profiles.
-Keep emulators muted/headless and Windows compile/link only; no physical host
-keys/focus/audio or device workarounds.
-
-The v1496 focused product/semantic/provider checks and both CIs pass
-(root 593 tests/native 354). CI peak is 268804096 bytes with zero OOM kills.
-Full provider recovery is recorded in recovery.log and the final finish receipt.
-
-v1496 entry heads were main bf0b520/native 4d1a9fd; read actual heads and the latest
-finish receipt. Finish focused comparison, tracking, python3 scripts/ci.py in
-both branches and git diff --check; commit/push both branches. ci.py ignores
-arguments, so --help runs the entire CI. Complete product goals remain active.
+DOS products remain .analysis/build/dos-four-products-v1443. Pinned provenance
+remains candidate-local-attested; target/unit exactness is unchanged.
