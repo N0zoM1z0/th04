@@ -1,5 +1,45 @@
 # TH04 native 64-bit bring-up
 
+## UART receive event clock (v1494)
+
+Native code 19c1d37 anchors an RX callback's IRQ1 check to its queued service
+deadline. A late CPU observation no longer shifts the check forward. CPU
+acceptance, unmask, EOI and a stalled UART's read/restart retain their own
+observation times. The default host runs peripheral callbacks at their exact
+deadlines; original CPU instruction cost and a common boot epoch stay open.
+
+The current product header agrees with exact pinned UART/PIC/queue source over
+220 scenarios/12320 state rows, covering late callbacks, unread overrun, a full
+ring, blocked CPU and unmasking. The pre-change consumer differs in 3758 rows;
+a wrong chained-transfer anchor differs in 5313. Both controls compile and exit 0.
+17 source bodies are byte-attested. The actual emulator ELF confirms the
+service-index branch; five operand/branch defects reject. Queue storage, explicit
+time input, CPU interrupt entry and unused TX paths are bounded Oracle adapters.
+Source and binary evidence belong to one emulator family, not hardware validation.
+
+Two retained authored microfixtures provide 12 RX callbacks with lateness below
+one native quantum. They do not distinguish the late-RX hypotheses. No fresh
+original-game capture or observed original runtime fault is claimed; this is a
+source/compiler correction. Raw time and service-index fractions remain separate.
+
+All five header consumers are cold compiled per GNU/UBSan/Windows role:
+15 objects/12 programs, 112 unrelated core objects reused per role by SHA.
+Current source remains 573 files, closure
+fe7dca75f53a7a665681672eb0b25710ff7cbac06a82390ec8ad33d325b903a9.
+Real frontend checks retain 31 polls with original sampler ISA composition,
+four elapsed frames/nine polls/81 reads, 21 physical key fixtures and the old 27
+explicit-accept operations. Windows is compile/link only. This is not a new
+all-source cold cohort, 87 CTest rerun or full campaign acceptance.
+
+Compiler peak is 610803712 bytes with zero OOM kills. Work stays
+serial at 35% CPU, CPU1/Nice19, hard 768MiB/no swap, ordinary soft 256MiB; only View
+uses the recorded O3/GGC5 or UBSan O0/GGC1 compiler profiles and soft exceptions.
+Evidence is DOS-root .analysis/reconstruction/probes/receive-clock-v1494.
+Next establish CPU availability/BIOS/EOI instruction cost, other IRQ producers
+and the common boot epoch. Historical strict negatives, full common-reset
+campaigns, continuous display, Windows runtime and NP2/hardware remain open.
+No historical exactness promotion occurs; both complete DOS/native goals stay active.
+
 ## Delayed PIC checks and original timer audit (v1493)
 
 Native code cfe5ac7 adds a separate delayed PIC check to the live keyboard

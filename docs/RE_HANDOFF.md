@@ -5,41 +5,37 @@ faithful native x64 game; both goals remain active. Original Japanese DOS versus
 reconstructed DOS is the primary behavioral comparison. Keep English code/docs,
 gpt-6.1-sol: commits and frequent pushes to main and native HEAD:port/modern-64.
 
-## Delayed PIC checks and original timer audit (v1493)
+## UART receive event clock (v1494)
 
-Native code cfe5ac7 adds a separate delayed PIC check to the live keyboard
-path. A ready UART byte latches the request; IF alone cannot bypass the pending
-check. IF, normal-trap decoder and NMI availability remain separate CPU gates.
-Mask/EOI transitions can schedule a check, accepted IRQs rearm it, and a blocked
-CPU preserves an already raised check. Callbacks may arrive after their deadline.
-The window uses the independently observed 406 ns configuration, rounded upward
-to 234 peripheral quanta. CPU acceptance, BIOS read and EOI after that check
-remain an explicit immediate portable policy, not original ISR instruction cost.
+Native code 19c1d37 anchors an RX callback's IRQ1 check to its queued service
+deadline. A late CPU observation no longer shifts the check forward. CPU
+acceptance, unmask, EOI and a stalled UART's read/restart retain their own
+observation times. The default host runs peripheral callbacks at their exact
+deadlines; original CPU instruction cost and a common boot epoch stay open.
 
-The normal original boot completes eight Stage1 updates. Complete relocated
-MAIN attestation precedes observations; provenance is candidate-local-attested.
-130 complete timer transactions audit 1069 packet records, removing 130 raw
-bookkeeping regressions with zero canonical regressions. MAIN entry remains a
-separate raw snapshot. Five actual UART completions show Check0/Pending1, then
-the delayed callback sets Check1/Pending0 before V86 CPU acceptance. The five
-canonical observation intervals are 15 emulator counter cycles each; they are
-not a physical UART-to-BIOS delay. Ten recorded queued event deadlines remain
-distinct from CPU observation time and round to the same 234-quanta policy.
-The current gate reproduces 85 observed normal-primary states; the earlier
-strict-deadline candidate rejects actual late callbacks. Active cascade routing
-outside these bounded intervals remains excluded.
+The current product header agrees with exact pinned UART/PIC/queue source over
+220 scenarios/12320 state rows, covering late callbacks, unread overrun, a full
+ring, blocked CPU and unmasking. The pre-change consumer differs in 3758 rows;
+a wrong chained-transfer anchor differs in 5313. Both controls compile and exit 0.
+17 source bodies are byte-attested. The actual emulator ELF confirms the
+service-index branch; five operand/branch defects reject. Queue storage, explicit
+time input, CPU interrupt entry and unused TX paths are bounded Oracle adapters.
+Source and binary evidence belong to one emulator family, not hardware validation.
 
-Source replay, fresh affected-product builds, frontend/original-ISA checks and
-claim limits are detailed in the main-branch TH04_REPLAY_DIFFERENTIAL note.
-Current source has 573 files, closure
-e7aa088c4202b23c339f9129a4cc267f2e85ea27ea2dc4fc538e626242f62783.
-This is 15 fresh affected objects/12 programs with 112 unrelated core objects
-reused per role, not an all-source cold cohort or full campaign acceptance.
+Two retained authored microfixtures provide 12 RX callbacks with lateness below
+one native quantum. They do not distinguish the late-RX hypotheses. No fresh
+original-game capture or observed original runtime fault is claimed; this is a
+source/compiler correction. Raw time and service-index fractions remain separate.
 
-Next bind CPU availability, BIOS/EOI cost, other IRQ producers and boot epoch.
-Keep peripheral event deadlines distinct from CPU observation time, including
-late transport callbacks. Default host callbacks run at their exact deadlines.
-All historical strict negatives remain unclosed; both full goals stay active.
+Current source has 573 files, closure fe7dca75f53a7a665681672eb0b25710ff7cbac06a82390ec8ad33d325b903a9.
+All five affected consumers are cold compiled per role (15 objects/12 programs),
+with 112 unrelated core objects reused per role by SHA. Frontend/original-ISA,
+physical keys and claim limits are in the main-branch TH04_REPLAY_DIFFERENTIAL
+note. This is not an all-source cold cohort or full campaign acceptance.
+
+Next establish CPU availability, BIOS/EOI instruction cost, other IRQ producers
+and the common boot epoch. All historical strict negatives remain unclosed;
+both complete DOS/native goals stay active.
 
 ## Earlier PIC evidence
 
@@ -106,37 +102,33 @@ main differential note and evidence/knowledge ledgers.
 
 ## Recovery, resources and finish
 
-Use DOS-root .analysis/reconstruction/probes/dispatch-epoch-v1493/recover.py.
-It chains 90353 incoming identities, including all three v1492 late files,
-and 10219 exact aliases. All 19 new restores preserve SHA, size, mode and
-nsmtime; two restored input programs execute and the maintained epoch reader
-passes with all restored inputs. Exact archive readers also validate the retired
-clock/admission streams without restoring them. Keep all current 12 game
-programs/15 objects/link inputs, source capsules, compiled semantic controls,
-negative observations and every inherited provider. The entry vector reuses the
-canonical v1491 capsule; only the changed current source gets a new capsule.
-Closed new regular allocations save 84185088 bytes after provider cost.
-The separately canceled unused outputs remove 9023488 disposable bytes;
-that is not scientific alias credit or a phase-entry storage decrease.
-Never build or invoke CTest in retired cohorts; use a fresh replay directory.
-See ANALYSIS_RETENTION.md for source vectors, profiles and exact consumers.
+Use DOS-root .analysis/reconstruction/probes/receive-clock-v1494/recover.py.
+It chains 90768 incoming identities (including the three v1493 late files)
+and 10225 exact aliases after six new retirements. All six actual restores
+preserve SHA, size, mode and nsmtime; the restored input program executes.
+The retained current/reference/wrong consumers replay exact archived wires.
+Keep current 12 programs/15 objects/link inputs, source capsule, all semantic and
+operand controls, negative results and every inherited provider. The entry vector
+reuses the canonical v1493 capsule; no new entry gzip or HDI capture is created.
+Closed new regular allocations save 3919872 bytes after provider cost;
+this is not a net phase-entry storage decrease. Never build or invoke CTest in
+retired cohorts; use a fresh replay directory. See ANALYSIS_RETENTION.md.
 
-Heavy work stays serial, CPUQuota=35%, MemoryMax=768M, no swap, Nice=19, CPU1,
-64 tasks and no cores. Normal checks use MemoryHigh=256M. The first attempt
-stalls above 90% memory-pressure time; GGC min-expand=5/min-heapsize=4096 reduces
-compiler heap use. The giant FrontEnd TU uses compile-only soft exceptions,
-up to the existing 768M hard cap. The O2 and O1/GGC5 attempts hit that cap;
-retain its failure and journal. GNU CTest returns to 256M under the original
-supervisor. The resumed driver compiles only View at O0, verifies all preserved
-fresh O2 core hashes and the override object after linking, and restores 256M
-before every UBSan control. Windows is a fresh compile-only directory. The
-attempted compile_commands entry is qualified by resume-o0/view-override.json;
-never call this an uninterrupted uniform-O2 build. Both initial resource
-amendments and the failed supervisor remain explicit. Runtime checks use 256M.
-Keep emulators muted/headless; Windows remains compile-only. Do not use host
+Heavy work stays serial at CPUQuota=35%, CPU1, Nice=19, 64 tasks,
+MemoryMax=768M, no swap and no cores. Normal checks use MemoryHigh=256M.
+Only View uses the recorded compiler profiles: GNU/Windows O3 with GGC
+min-expand=5/min-heapsize=4096 and soft 640M; UBSan View O0 with GGC
+min-expand=1/min-heapsize=1024 and soft 768M. Other UBSan core objects retain
+O2. Restore soft 256M before controls. Current affected-build compiler peak is
+610803712 bytes, with zero OOM kills. Historical O2/O1 sanitizer failures and
+resource amendments remain retained; do not repeat those failed profiles.
+Keep emulators muted/headless and Windows compile/link only. Do not use host
 keys/focus, physical audio, or GUI/device workarounds.
 
-Phase entry heads were main62d507c/native5a960e1; read actual heads and the latest
+The v1494 focused comparison, root CI (593 tests), native CI (354 tests)
+and both diff checks pass. Full provider recovery is required before push.
+
+v1494 entry heads were main b68a6d9/native 138f0f9; read actual heads and the latest
 finish receipt. Finish focused comparison, tracking, python3 scripts/ci.py in
 both branches and git diff --check; commit/push both branches. ci.py ignores
 arguments, so --help runs the entire CI. Complete product goals remain active.
