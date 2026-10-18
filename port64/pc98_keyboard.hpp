@@ -141,4 +141,49 @@ inline bool update_matrix(std::array<std::uint8_t,10>& matrix,std::uint8_t code)
     else byte=std::uint8_t(byte|bit);
     return true;
 }
+
+// A persistent peripheral and BIOS owner. External timer callbacks, receive
+// callbacks, CPU acceptance and data reads remain distinct operations. Neither
+// IF restoration nor elapsed time implicitly performs an interrupt service.
+class Device {
+public:
+    void key(Key value,bool pressed,Time now) {
+        check_time(now);keyboard_.key(value,pressed,[&](std::uint8_t byte){receiver_.enqueue(byte,now);});
+    }
+    void tick(Time now,bool enabled=true) {
+        check_time(now);keyboard_.tick([&](std::uint8_t byte){receiver_.enqueue(byte,now);},enabled);
+    }
+    Receiver::Completion receive(Time now) {
+        check_time(now);const auto result=receiver_.complete(now);
+        if(result==Receiver::Completion::ready)irq_.request();
+        return result;
+    }
+    void accept(Time now,bool interrupts_enabled) {
+        check_time(now);
+        if(admitted_)throw std::logic_error("keyboard ISR already owns an unread byte");
+        irq_.accept(interrupts_enabled);admitted_=true;
+    }
+    std::uint8_t read_bios(Time now) {
+        check_time(now);
+        if(!admitted_ || !receiver_.ready())throw std::logic_error("BIOS read without CPU acceptance");
+        const auto byte=receiver_.read_data(now);admitted_=false;
+        if((byte&0x7f)==0x70)shift_=(byte&0x80)==0;
+        else if(!update_matrix(matrix_,byte))throw std::logic_error("unsupported BIOS modifier scan");
+        return byte;
+    }
+    const Typematic& keyboard() const {return keyboard_;}
+    const Receiver& receiver() const {return receiver_;}
+    const InterruptRequest& irq() const {return irq_;}
+    bool admitted() const {return admitted_;}
+    const std::array<std::uint8_t,10>& matrix() const {return matrix_;}
+    bool shift() const {return shift_;}
+private:
+    void check_time(Time now) {
+        if(now<last_time_)throw std::logic_error("keyboard device clock moved backward");
+        last_time_=now;
+    }
+    Typematic keyboard_;Receiver receiver_;InterruptRequest irq_;
+    std::array<std::uint8_t,10> matrix_{};
+    Time last_time_=0;bool admitted_=false,shift_=false;
+};
 } // namespace th04::portable::pc98_keyboard

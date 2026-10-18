@@ -41,12 +41,32 @@ struct Snapshot {
 };
 enum class Operation {reset,sense};
 using SampleSource=std::function<Sample(Operation)>;
+// A live sampler consumes these bytes independently, in original instruction
+// order. begin runs after a reset has cleared the game latch. Whole-sample
+// movies retain their separate SampleSource entry and observation contract.
+struct ByteSource {
+    std::function<void(Operation)> begin;
+    std::function<std::uint8_t(unsigned)> key;
+    std::function<bool()> shift;
+    explicit operator bool() const {return bool(key) && bool(shift);}
+};
 using Poll=std::function<Snapshot(Operation)>;
 // Observation values never supply samples or modify the game latch.
 struct Observation {Operation operation;Sample physical;Snapshot before,after;};
 using Observer=std::function<void(const Observation&)>;
 class Latch {
 public:
+    Sample poll(Operation operation,const ByteSource& source) {
+        if(operation==Operation::reset)actions_=0;
+        if(source.begin)source.begin(operation);
+        Sample sample;
+        for(const auto group:std::array<unsigned,8>{{7,9,8,5,2,0,3,6}}) {
+            const auto value=source.key(group);sample.keys[group]=value;
+            BiosKeys single{};single[group]=value;actions_|=keyboard_actions(single);
+        }
+        sample.shift=source.shift();shift_=sample.shift;
+        return sample;
+    }
     void reset_sense(const Sample& sample) { actions_=0;sense(sample); }
     void sense(const Sample& sample) {
         actions_|=keyboard_actions(sample.keys);

@@ -64,4 +64,45 @@ void run_sampled_frontend_checks(const PiImage& background,const CdgSheet& numer
     const auto baseline=exercise(false),observed=exercise(true);
     require_view(baseline==observed,"read-only input observer changed complete pools,frame, input or RNG");
     std::ofstream result(directory/"result.txt");result<<"sampled_frontend=pass polls="<<observed.second<<" frames=3 observer_equal=1\n";
+
+    // Exercise the actual window byte-source entry with a persistent keyboard,
+    // explicit elapsed input and portable CPU availability. No expected action
+    // word is supplied to the device or the game. The repeat make arrives after
+    // the tail's Shot read, so using a final matrix would change this result.
+    FrontEnd elapsed(background,numerals,labels,cursors,selection_background,portraits,&assets);
+    host_window::Keyboard keyboard(0,host_window::Keyboard::available_cpu);
+    host_window::Keys held;held.shot=true;keyboard.observe({held,true,0});
+    elapsed.enable_registration();elapsed.input(menu::Input::confirm);
+    elapsed.input(menu::Input::confirm);elapsed.input(menu::Input::confirm);
+    require_view(elapsed.live_main(),"elapsed keyboard frontend did not enter MAIN");
+    unsigned polls=0,reads=0,total_reads=0;std::int64_t time=0;bool stagger=false,focused=true;
+    const auto source=keyboard.source([&] {
+        const auto now=time+(stagger ? std::int64_t(reads)*100000 : 0);++reads;++total_reads;
+        return host_window::KeySample{held,focused,now};
+    },[&](pc98_input::Operation) {
+        time=polls<2 ? 600000 : polls==2 ? 500600000 : polls<5 ? 501500000 : 503000000;
+        stagger=polls==2;++polls;reads=0;
+    });
+    std::vector<std::uint16_t> words;
+    const pc98_input::Observer witness=[&](const pc98_input::Observation& sample) {
+        require_view(reads==9,"live frontend must consume eight bytes then Shift");
+        if(words.size()==2)require_view(!sample.physical.keys[5] && keyboard.device().matrix()[5]==2,
+            "tail must retain its actual Shot read across a later make");
+        words.push_back(sample.after.actions);
+    };
+    const auto step=[&] {elapsed.advance_sampled(0,false,source,false,witness);};
+    step();require_view(elapsed.main_state().player_input()==32 && !elapsed.main_state().consumed_input(),
+        "elapsed keyboard player/tail distinction");
+    step();require_view(elapsed.main_state().player_input()==32 && elapsed.main_state().consumed_input()==32,
+        "elapsed keyboard later make");
+    focused=false;keyboard.observe({held,false,502000000});
+    step();require_view(elapsed.main_state().player_input()==32 && !elapsed.main_state().consumed_input(),
+        "focus release must preserve Sense until the game resets");
+    step();require_view(!elapsed.main_state().player_input() && !elapsed.sampled_input().actions,
+        "focus release must reach the next actual player update");
+    require_view(words==std::vector<std::uint16_t>({32,32,0,32,32,32,0,0,0}) && total_reads==81,
+        "complete elapsed frontend poll witness");
+    std::ofstream elapsed_result(directory/"elapsed-result.txt");
+    elapsed_result<<"elapsed_frontend=pass frames=4 polls="<<polls<<" scalar_and_shift_reads="<<total_reads
+        <<" final_matrix_shortcut_rejected=1 focus_release=1\n";
 }

@@ -1649,12 +1649,20 @@ public:
         return sprites_->stage_end==140 && first.sheet && second.sheet && first.sheet->width()==32 && first.sheet->height()==48 && first.sheet->count()==4 && second.sheet->width()==64 && second.sheet->height()==80 && second.sheet->count()==8;
     }
     void advance_sampled(std::uint16_t held,bool shift,const pc98_input::SampleSource& source,bool repaint=true,const pc98_input::Observer& observer={}) {
-        require_view(bool(source) && !input_source_,"invalid frontend input source");
+        require_view(bool(source) && !sampled_main(),"invalid frontend input source");
         struct Restore {
             const pc98_input::SampleSource*& source;const pc98_input::Observer*& observer;
             ~Restore(){source=nullptr;observer=nullptr;}
         } restore{input_source_,input_observer_};
         input_source_=&source;input_observer_=&observer;advance(held,shift,repaint);
+    }
+    void advance_sampled(std::uint16_t held,bool shift,const pc98_input::ByteSource& source,bool repaint=true,const pc98_input::Observer& observer={}) {
+        require_view(bool(source) && !sampled_main(),"invalid frontend byte source");
+        struct Restore {
+            const pc98_input::ByteSource*& source;const pc98_input::Observer*& observer;
+            ~Restore(){source=nullptr;observer=nullptr;}
+        } restore{byte_source_,input_observer_};
+        byte_source_=&source;input_observer_=&observer;advance(held,shift,repaint);
     }
     pc98_input::Snapshot sampled_input() const {return input_latch_.snapshot();}
     void advance(std::uint16_t held_input, bool shift,bool repaint=true) {
@@ -1662,9 +1670,9 @@ public:
         // Headless callers admit refreshes; windows supply elapsed time.
         // OP initialization completes before the first waited refresh.
         ensure_op_sound();
-        if(!input_source_){input_initialized_=false;input_loop_active_=false;}
+        if(!sampled_main()){input_initialized_=false;input_loop_active_=false;}
         begin_main_input();
-        try_begin_pause(input_source_ ? pause::input_to_host(input_latch_.actions()) : held_input);
+        try_begin_pause(sampled_main() ? pause::input_to_host(input_latch_.actions()) : held_input);
         if(!text_time_origin_)text_refreshes_+=slowdown();
         if(startup_) {
             advance_tail(std::uint64_t(frame_period.count()),held_input);
@@ -1790,14 +1798,14 @@ public:
         std::uint64_t gameover_remaining=0;
         if(main_ && main_->game_over() && main_->game_over()->timed()) {
             const auto service=[this](std::uint64_t step){sound_timeline_->advance_elapsed(step);};
-            gameover_remaining=input_source_ ? main_->advance_gameover_sampled(refresh_ns,main_poll(),service)
+            gameover_remaining=sampled_main() ? main_->advance_gameover_sampled(refresh_ns,main_poll(),service)
                 : main_->advance_gameover_elapsed(refresh_ns,held_input,service);
             if(!main_->game_over()->finished()) {if(repaint)frame_=render();return;}
         }
         std::uint64_t pause_remaining=0;
         if(pause_) {
             const auto service=[this](std::uint64_t step){sound_timeline_->advance_elapsed(step);};
-            pause_remaining=input_source_ ? pause_->advance_elapsed_sampled(refresh_ns,main_poll(),service)
+            pause_remaining=sampled_main() ? pause_->advance_elapsed_sampled(refresh_ns,main_poll(),service)
                 : pause_->advance_elapsed(refresh_ns,[&]{return pause::input_from_host(held_input);},service);
             if(pause_->result()==pause::Result::pending){if(repaint)frame_=render();return;}
             pause_quit_pending_|=pause_->result()==pause::Result::quit;
@@ -1870,7 +1878,7 @@ public:
                 if(!gameover_started_in_gate)begin_dialog(true,&dialog_front);
             }
             if(dialog_scene_) {
-                if(input_source_)dialog_scene_->advance_sampled(main_poll());else dialog_scene_->advance(held_input);
+                if(sampled_main())dialog_scene_->advance_sampled(main_poll());else dialog_scene_->advance(held_input);
                 if(dialog_scene_->finished()) {
                     if(post_started_) {
                         // Original MAIN0AAF:2C19 saved the boxed front before
@@ -2144,28 +2152,33 @@ public:
     }
 
 private:
+    bool sampled_main() const {return input_source_ || byte_source_;}
     pc98_input::Snapshot poll_main(pc98_input::Operation operation) {
-        require_view(bool(input_source_),"MAIN input source missing");
-        const auto before=input_latch_.snapshot();const auto sample=(*input_source_)(operation);
-        if(operation==pc98_input::Operation::reset)input_latch_.reset_sense(sample);else input_latch_.sense(sample);
+        require_view(sampled_main(),"MAIN input source missing");
+        const auto before=input_latch_.snapshot();pc98_input::Sample sample;
+        if(byte_source_)sample=input_latch_.poll(operation,*byte_source_);
+        else {
+            sample=(*input_source_)(operation);
+            if(operation==pc98_input::Operation::reset)input_latch_.reset_sense(sample);else input_latch_.sense(sample);
+        }
         const auto after=input_latch_.snapshot();
         if(input_observer_ && *input_observer_)(*input_observer_)({operation,sample,before,after});
         return after;
     }
     pc98_input::Poll main_poll() {return [this](pc98_input::Operation op){return poll_main(op);};}
     void begin_main_input() {
-        if(!input_source_ || !live_main() || input_loop_active_ || startup_ || ending_ || score_route_ || extra_route_ || demo_fade_ ||
+        if(!sampled_main() || !live_main() || input_loop_active_ || startup_ || ending_ || score_route_ || extra_route_ || demo_fade_ ||
            main_->next_stage_requested() || main_->good_ending_requested() || main_->bad_ending_requested() ||
            main_->score_registration_requested() || main_->extra_ending_requested())return;
         if(!input_initialized_){poll_main(pc98_input::Operation::reset);input_initialized_=true;}
         poll_main(pc98_input::Operation::sense);input_loop_active_=true;
     }
     void update_main(std::uint16_t held,bool shift,th04::portable::motion::Subpixel delta) {
-        if(input_source_)main_->update(input_latch_.snapshot(),false,delta,&sprites_->background);
+        if(sampled_main())main_->update(input_latch_.snapshot(),false,delta,&sprites_->background);
         else main_->update(held,shift,false,delta,&sprites_->background);
     }
     void try_begin_pause(std::uint16_t held) {
-        if(input_source_ && !input_loop_active_)return;
+        if(sampled_main() && !input_loop_active_)return;
         if(pause_ || !live_main() || demo_active() || dialog_scene_ || main_->game_over() ||
            main_->good_ending_requested() || main_->bad_ending_requested() || main_->extra_ending_requested() ||
            main_->score_registration_requested() || main_->next_stage_requested())return;
@@ -2173,7 +2186,7 @@ private:
         pause_requested_=false;
         pause_graphics_=render_live_main();
         pause_text_=main_text_plane(*main_,application_.resident().demo_number);
-        pause_.emplace(startup_clock_,input_source_ ? input_latch_.actions() : std::uint16_t(pause::input_from_host(held)|0x1000u),[this](const pause::Event& event) {
+        pause_.emplace(startup_clock_,sampled_main() ? input_latch_.actions() : std::uint16_t(pause::input_from_host(held)|0x1000u),[this](const pause::Event& event) {
             main_->apply_pause_text(event);
             if(event.kind==pause::Kind::gaiji)pause_text_.put_string(26,event.row,event.text,std::uint16_t(event.attribute));
             else if(event.kind==pause::Kind::ank)for(unsigned i=0;i<event.text.size();++i)
@@ -2261,9 +2274,9 @@ private:
         }
         if(score_store_)score_store_=std::make_unique<score_file::HostStore>(score_store_->path().parent_path());
         main_=std::make_unique<gameplay::State>(application_,mode_,player::LifeState{},score_store_.get());
-        main_->set_replay_input_writer([this](pc98_input::Snapshot value) {if(input_source_)input_latch_.replay_input(value);});
+        main_->set_replay_input_writer([this](pc98_input::Snapshot value) {if(sampled_main())input_latch_.replay_input(value);});
         main_->set_input_tail([this]() -> std::optional<pc98_input::Snapshot> {
-            if(!input_source_)return std::nullopt;
+            if(!sampled_main())return std::nullopt;
             const auto value=poll_main(pc98_input::Operation::reset);input_loop_active_=false;return value;
         });
         // MAIN has its own counter BSS; process replacement keeps raster phase.
@@ -2599,6 +2612,7 @@ private:
     Frame pause_graphics_;registration::TextPlane pause_text_;
     Bytes dialog_resume_indices_;unsigned dialog_resume_frame_=0;
     const pc98_input::SampleSource* input_source_=nullptr;
+    const pc98_input::ByteSource* byte_source_=nullptr;
     const pc98_input::Observer* input_observer_=nullptr;
     pc98_input::Latch input_latch_;
     bool input_initialized_=false,input_loop_active_=false;
@@ -2716,6 +2730,7 @@ struct Win32Title {
     host_window::Trace trace;
     FrontEnd front_end;
     host_window::Schedule schedule{host_window::now_ns()};
+    host_window::Keyboard keyboard{host_window::now_ns(),host_window::Keyboard::available_cpu};
 
     Win32Title(
         const PiImage& background_, const CdgSheet& numerals_,
@@ -2758,11 +2773,11 @@ LRESULT CALLBACK title_window_proc(
                 const bool active=GetForegroundWindow()==window;
                 const auto in=host_window::input(platform_keys(),active);
                 std::int64_t sample_begin=0;bool sample_focused=false;
-                const pc98_input::SampleSource source=[&](pc98_input::Operation) {
-                    if(title->trace)sample_begin=host_window::now_ns();
+                title->keyboard.observe({platform_keys(),active,host_window::now_ns()});
+                const auto source=title->keyboard.source([&] {
                     const auto keys=platform_keys();sample_focused=GetForegroundWindow()==window;
-                    return host_window::bios_input(keys,sample_focused);
-                };
+                    return host_window::KeySample{keys,sample_focused,host_window::now_ns()};
+                },[&](pc98_input::Operation) {if(title->trace)sample_begin=host_window::now_ns();});
                 const pc98_input::Observer observer=[&](const pc98_input::Observation& sample) {
                     title->trace.input_poll(title->schedule.total()+1,sample_begin,host_window::now_ns(),
                         sample,sample_focused,title->front_end.window_snapshot());
@@ -2921,6 +2936,7 @@ void show_window(
     );
     front_end.enable_audio_output();front_end.enable_configuration();front_end.enable_registration();front_end.enable_host_timing();
     host_window::Schedule schedule(host_window::now_ns());
+    host_window::Keyboard keyboard(host_window::now_ns(),host_window::Keyboard::available_cpu);
     bool running = true;
     bool dirty = true;
     Frame frame;
@@ -2981,11 +2997,11 @@ void show_window(
             const bool focused=(SDL_GetWindowFlags(window)&SDL_WINDOW_INPUT_FOCUS)!=0;
             const auto in=host_window::input(platform_keys(),focused);
             std::int64_t sample_begin=0;bool sample_focused=false;
-            const pc98_input::SampleSource source=[&](pc98_input::Operation) {
-                if(trace)sample_begin=host_window::now_ns();
+            keyboard.observe({platform_keys(),focused,host_window::now_ns()});
+            const auto source=keyboard.source([&] {
                 const auto keys=platform_keys();sample_focused=(SDL_GetWindowFlags(window)&SDL_WINDOW_INPUT_FOCUS)!=0;
-                return host_window::bios_input(keys,sample_focused);
-            };
+                return host_window::KeySample{keys,sample_focused,host_window::now_ns()};
+            },[&](pc98_input::Operation) {if(trace)sample_begin=host_window::now_ns();});
             const pc98_input::Observer observer=[&](const pc98_input::Observation& sample) {
                 trace.input_poll(schedule.total()+1,sample_begin,host_window::now_ns(),sample,
                     sample_focused,front_end.window_snapshot());

@@ -43,6 +43,22 @@ int main() {
         Sample all;all.keys.fill(0xff);all.shift=true;
         input.reset_sense(all);
         require(input.actions()==0x7f3f && input.shift(),"complete keyboard action domain");
+        unsigned reads=0;
+        const std::array<unsigned,8> groups{{7,9,8,5,2,0,3,6}};
+        const std::array<std::uint8_t,8> bytes{{4,4,0x40,2,1,1,0x10,0x10}};
+        const std::array<std::uint16_t,8> prior{{0,1,0x401,0x405,0x425,0x4425,0x5425,0x7425}};
+        ByteSource source{[&](Operation op) {
+            require(op==Operation::reset && !input.actions(),"reset must precede the first physical read");
+        },[&](unsigned group) {
+            require(reads<8 && group==groups[reads],"original scalar read order");
+            require(input.actions()==prior[reads] && input.shift(),"each read must see the preceding OR and prior Shift");
+            return bytes[reads++];
+        },[&] {require(reads==8 && input.actions()==0x7425,"Shift follows all scalar ORs");return false;}};
+        const auto sampled=input.poll(Operation::reset,source);
+        require(input.actions()==0x7425 && !input.shift() && sampled.keys[5]==2,"independent byte sample reaches latch");
+        ByteSource empty{{},[](unsigned){return std::uint8_t(0);},[]{return false;}};
+        input.poll(Operation::sense,empty);require(input.actions()==0x7425,"byte Sense preserves the latch after physical release");
+        input.poll(Operation::reset,empty);require(!input.actions(),"byte Reset clears before fresh reads");
         std::cout<<"PC-98 input sampler contracts pass\n";
         return 0;
     } catch(const std::exception& error) {

@@ -1,6 +1,7 @@
 #include "host_window.hpp"
 #include <chrono>
 #include <filesystem>
+#include <memory>
 #include <stdexcept>
 
 namespace th04::portable::host_window {
@@ -32,6 +33,61 @@ pc98_input::Sample bios_input(const Keys& keys,bool focused) {
     sample.keys[8]=std::uint8_t((keys.up_left ? 4 : 0)|(keys.up_right ? 0x10 : 0));
     sample.keys[9]=std::uint8_t((keys.down_left ? 4 : 0)|(keys.down_right ? 0x10 : 0));
     sample.shift=keys.shift;return sample;
+}
+Keyboard::Keyboard(std::int64_t epoch,Dispatch dispatch):dispatch_(std::move(dispatch)),last_ns_(epoch) {
+    if(epoch<0 || !dispatch_)throw std::invalid_argument("invalid host keyboard clock/dispatch");
+}
+void Keyboard::available_cpu(pc98_keyboard::Device& device,pc98_keyboard::Time time) {
+    if(device.irq().eligible(true) && !device.admitted()) {
+        device.accept(time,true);device.read_bios(time);
+    }
+}
+void Keyboard::advance(std::int64_t now) {
+    using namespace pc98_keyboard;
+    if(now<last_ns_)throw std::logic_error("host keyboard clock moved backward");
+    const auto elapsed=std::uint64_t(now-last_ns_);
+    // 576000 quanta/ms = 72/125 quanta/ns. Retain fractional quanta across
+    // calls so splitting one elapsed interval does not change timer phase.
+    const auto fraction=(elapsed%125)*72+remainder_;
+    const auto delta=(elapsed/125)*72+fraction/125;
+    if(delta>std::numeric_limits<Time>::max()-time_)throw std::overflow_error("host keyboard clock overflow");
+    const auto target=time_+delta;
+    for(;;) {
+        const auto event=device_.receiver().next_event();
+        if(!device_.keyboard().wait_ticks() && next_tick_<=target && (!event || next_tick_<*event)) {
+            const auto end=event && *event<=target ? *event-1 : target;
+            const auto ticks=(end-next_tick_)/quanta_per_ms+1;
+            next_tick_+=ticks*quanta_per_ms; // No countdown or scan byte can change.
+            continue;
+        }
+        if(event && *event<=target && *event<=next_tick_) {
+            device_.receive(*event);dispatch_(device_,*event);
+        } else if(next_tick_<=target) {
+            device_.tick(next_tick_);dispatch_(device_,next_tick_);next_tick_+=quanta_per_ms;
+        } else break;
+    }
+    dispatch_(device_,target);time_=target;last_ns_=now;remainder_=unsigned(fraction%125);
+}
+void Keyboard::observe(const KeySample& sample) {
+    advance(sample.time_ns);
+    const auto& k=sample.keys;
+    const std::array<bool,15> values{{k.up,k.down,k.left,k.right,k.shot,k.enter,k.bomb,k.escape,k.quit,
+        k.shift,k.up_left,k.up_right,k.down_left,k.down_right,k.space}};
+    constexpr std::array<std::uint8_t,15> scans{{0x3a,0x3d,0x3b,0x3c,0x29,0x1c,0x2a,0,0x10,
+        0x70,0x42,0x44,0x4a,0x4c,0x34}};
+    // Existing host aliases remain aggregated. Simultaneous polled edges use
+    // this stable order; no unobserved physical key ordering is invented.
+    for(unsigned i=0;i<held_.size();++i) {
+        const bool down=sample.focused && values[i];
+        if(held_[i]!=down) {device_.key({std::uint16_t(i+1),scans[i]},down,time_);held_[i]=down;}
+    }
+}
+pc98_input::ByteSource Keyboard::source(KeySource input,std::function<void(pc98_input::Operation)> begin) {
+    if(!input)throw std::invalid_argument("missing host keyboard source");
+    const auto shared=std::make_shared<KeySource>(std::move(input));
+    return {std::move(begin),[this,shared](unsigned group) {
+        observe((*shared)());return device_.matrix().at(group);
+    },[this,shared] {observe((*shared)());return device_.shift();}};
 }
 Trace::Trace(const std::string& directory,bool muted){
     if(directory.empty())return;

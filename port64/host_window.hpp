@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "pc98_input.hpp"
+#include "pc98_keyboard.hpp"
 #include <fstream>
 #include <string>
 
@@ -31,6 +32,28 @@ struct Keys {bool up=false,down=false,left=false,right=false,shot=false,
 struct Input {std::uint16_t held=0;bool shift=false;};
 Input input(const Keys&,bool focused);
 pc98_input::Sample bios_input(const Keys&,bool focused);
+
+struct KeySample {Keys keys;bool focused;std::int64_t time_ns;};
+// Host elapsed time drives a persistent keyboard across process generations.
+// The default windows explicitly choose available_cpu: service at each event
+// boundary, with no emulated instruction/PIC delay. That portable policy is
+// not an attestation of the original CPU's admission or boot clock phase.
+class Keyboard {
+public:
+    using Dispatch=std::function<void(pc98_keyboard::Device&,pc98_keyboard::Time)>;
+    using KeySource=std::function<KeySample()>;
+    Keyboard(std::int64_t epoch,Dispatch dispatch);
+    static void available_cpu(pc98_keyboard::Device&,pc98_keyboard::Time);
+    void observe(const KeySample&);
+    void advance(std::int64_t now);
+    pc98_input::ByteSource source(KeySource,std::function<void(pc98_input::Operation)> begin={});
+    const pc98_keyboard::Device& device() const {return device_;}
+private:
+    pc98_keyboard::Device device_;Dispatch dispatch_;
+    std::int64_t last_ns_;pc98_keyboard::Time time_=0,next_tick_=pc98_keyboard::quanta_per_ms;
+    unsigned remainder_=0;
+    std::array<bool,15> held_{};
+};
 
 struct Snapshot {
     const char* scene="unknown";

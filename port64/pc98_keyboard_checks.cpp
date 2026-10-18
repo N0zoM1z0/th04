@@ -107,6 +107,32 @@ void masked_interrupt() {
     update_matrix(matrix,receiver.read_data(4*character_time));
     require(!matrix[5] && !irq.pending(),"CPU read finally applies break");
 }
+void device_trace() {
+    Device device;Time now=0;unsigned operation=0;char kind;
+    while(std::cin>>kind>>now) {
+        unsigned enabled_if=0;std::cin>>enabled_if;
+        if(!std::cin || enabled_if>1)throw std::runtime_error("invalid CPU IF stimulus");
+        if(kind=='K') {
+            unsigned id=0,scan=0,down=0;std::cin>>id>>scan>>down;
+            if(!std::cin || id>65535 || scan>127 || down>1)throw std::runtime_error("invalid key stimulus");
+            device.key({std::uint16_t(id),std::uint8_t(scan)},down!=0,now);
+        } else if(kind=='T') {
+            unsigned enabled=0;std::cin>>enabled;
+            if(!std::cin || enabled>1)throw std::runtime_error("invalid tick stimulus");
+            device.tick(now,enabled!=0);
+        } else if(kind=='R')device.receive(now);
+        else if(kind=='A')device.accept(now,enabled_if!=0);
+        else if(kind=='B')device.read_bios(now);
+        else throw std::runtime_error("unknown keyboard stimulus");
+        const auto& keyboard=device.keyboard();const auto& receiver=device.receiver();
+        std::cout<<operation++<<' '<<keyboard.wait_ticks()<<' '
+            <<(keyboard.repeating_key() ? keyboard.repeating_key()->physical : 0)<<' '
+            <<unsigned(receiver.input_index())<<' '<<unsigned(receiver.output_index())<<' '
+            <<receiver.busy()<<' '<<receiver.ready()<<' '<<unsigned(receiver.data())<<' '<<receiver.queued()<<' ';
+        for(auto byte:device.matrix())std::cout<<std::hex<<std::setfill('0')<<std::setw(2)<<unsigned(byte);
+        std::cout<<std::dec<<' '<<device.irq().pending()<<' '<<device.irq().eligible(enabled_if!=0)<<' '<<device.admitted()<<'\n';
+    }
+}
 void trace(bool irq_mode=false) {
     Typematic keyboard;Receiver receiver;std::array<std::uint8_t,10> matrix{};
     InterruptRequest irq;bool admitted=false;
@@ -161,7 +187,8 @@ int main(int argc,char** argv) {
     try {
         if(argc==2 && std::string(argv[1])=="--trace") {trace();return 0;}
         if(argc==2 && std::string(argv[1])=="--irq-trace") {trace(true);return 0;}
-        if(argc!=1)throw std::runtime_error("expected no arguments, --trace or --irq-trace");
+        if(argc==2 && std::string(argv[1])=="--device-irq-trace") {device_trace();return 0;}
+        if(argc!=1)throw std::runtime_error("expected no arguments, --trace, --irq-trace or --device-irq-trace");
         repeat_and_latch();key_ownership();blocked_receiver();queue_and_deadline();masked_interrupt();
         std::cout<<"PC-98 keyboard repeat/transport/BIOS contracts pass\n";return 0;
     } catch(const std::exception& error) {std::cerr<<error.what()<<'\n';return 1;}
