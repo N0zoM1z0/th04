@@ -1,5 +1,56 @@
 # TH04 native 64-bit bring-up
 
+## Persistent keyboard and scalar MAIN input (v1489)
+
+Native code a4e97bd connects the actual Win32 and SDL MAIN paths to a persistent
+keyboard, UART, pending IRQ and BIOS owner. The device survives application
+process generations. Physical host changes, 1 ms firmware ticks, serialized
+arrivals, CPU acceptance and BIOS reads remain separate operations. Elapsed
+nanoseconds convert to integer peripheral quanta with a retained remainder;
+splitting an elapsed interval preserves the configured continuously available
+CPU policy. Focus loss serializes releases and stops repeat ownership.
+
+MAIN consumes groups 7, 9, 8, 5, 2, 0, 3, 6 independently, then reads Shift.
+Reset clears before the first callback; each group ORs into the game latch
+before the next read. Observation.before still records the pre-operation latch.
+The physical observation is a vector of consumed bytes, not necessarily one
+instantaneous matrix. Existing whole-sample movies and the latch/UI flow remain.
+
+The real headless FrontEnd passes four frames, nine polls and 81 byte/Shift
+reads, including a make arriving after the tail's Shot read and a focus release.
+The retained 31-poll observation-on/off scenario also passes independent original
+sampler execution in both current GNU and UBSan programs. Twenty-five actual
+original action words, using 200 directly observed byte values after a genuine
+reset, agree through the new byte sampler. Shift is a given zero input here,
+not a new independent INT18 status observation; joystick pins are neutral.
+Two compiled exit-0 defects reject: late Shot consumption fails the portable
+interleaving, while Sense overwrite fails actual original action words.
+The persistent Device also preserves all 27 operations/four CPU accepts of the
+independently checked actual DOS COM IRQ fixture.
+
+The window explicitly selects an always available CPU service policy at event
+boundaries. It does not model the original CPU/PIC masks, priority, EOI, dispatch
+latency or boot phase. Host aliases still aggregate as before; simultaneous
+polled edges use a declared stable order. This is a functional integration,
+not acceptance of default physical timing or a fitted serial-to-BIOS delay.
+Original 58/87-cycle, old 82-cycle and authored 16-cycle cases stay separate.
+Next compare the connected path against original request/timer/accept/read
+boundaries and measure the first differences; recover the remaining CPU/time
+and physical-key ownership. Do not hunt old75 with another whole-route capture.
+Both complete DOS/native goals and every strict negative remain active.
+
+## Building under resource limits
+
+Use a fresh directory after retiring a cache. For GCC/MinGW, the verified
+compile profile adds CMake's
+`-DCMAKE_CXX_FLAGS="--param=ggc-min-expand=5 --param=ggc-min-heapsize=4096"`.
+Build with `--parallel 1` inside the bounded user service. Keep CPU quota35%,
+MemoryMax768M, no swap, Nice19 and CPU1. Use MemoryHigh256M for checks. Large compiler phases may use the existing768M hard
+cap as their soft threshold. The O2 UBSan View failed at that cap; its recorded
+O0/GGC1/1024 TU override preserves fresh O2 core objects. Restore256M before runtime. GGC settings and the live resource timeline are replay
+inputs. This does not change the native game clock or establish original timing.
+Never build or invoke CTest in an already retired historical cohort.
+
 ## Recorded sampler and original request ownership (v1481)
 
 The maintained Win32/SDL bridges now emit input.tsv alongside the unchanged

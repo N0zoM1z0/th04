@@ -1,5 +1,40 @@
 # Native private-state retention
 
+## Connected keyboard recovery (v1489)
+
+Use DOS-root .analysis/reconstruction/probes/frontend-peripheral-v1489/recover.py.
+It chains 87553 inherited bindings, all current/late/finish identities and
+10189 exact aliases. Actual metadata restores and explicit archive readers
+must preserve the current outputs and their semantic rejection controls.
+Retain every inherited provider, source capsule, current program and link input.
+The canceled first CMake prefix is disposable: its commands, source capsule,
+terminal pressure/journal evidence and metadata inventory remain; its unused
+probes/partial objects are removed without scientific cleanup credit.
+Cumulative raw/regular output retirement is 1819.8671875 MiB, with no new
+archive cost. Before final publication, all retained batch/cohort files and
+directories cost 130.64453125 MiB; a 4 MiB publication reserve leaves a 1685 MiB
+conservative cumulative retention balance. This is not an instantaneous raw
+peak or a decrease below phase-entry storage. Duplicate gzip intermediates,
+disposable caches and temporary restores/replays receive no extra credit.
+The current cohort retains programs and link inputs after CMake bookkeeping
+pruning; never incrementally build or invoke CTest there. Use a fresh directory.
+See ANALYSIS_RETENTION.md for the exact journals and recovery consumers.
+
+Heavy work stays serial, CPUQuota=35%, MemoryMax=768M, no swap, Nice=19, CPU1,
+64 tasks and no cores. Normal checks use MemoryHigh=256M. The first attempt
+stalls above 90% memory-pressure time; GGC min-expand=5/min-heapsize=4096 reduces
+compiler heap use. The giant FrontEnd TU uses compile-only soft exceptions,
+up to the existing 768M hard cap. The O2 and O1/GGC5 attempts hit that cap;
+retain its failure and journal. GNU CTest returns to 256M under the original
+supervisor. The resumed driver compiles only View at O0, verifies all preserved
+fresh O2 core hashes and the override object after linking, and restores 256M
+before every UBSan control. Windows is a fresh compile-only directory. The
+attempted compile_commands entry is qualified by resume-o0/view-override.json;
+never call this an uninterrupted uniform-O2 build. Both initial resource
+amendments and the failed supervisor remain explicit. Runtime checks use 256M.
+Keep emulators muted/headless; Windows remains compile-only. Do not use host
+keys/focus, physical audio, or GUI/device workarounds.
+
 ## Direct scalar and original-clock recovery (v1488)
 
 Use DOS-root .analysis/reconstruction/probes/original-scalar-v1488/recover.py.
@@ -810,7 +845,7 @@ original default CPU/loading clocks, physical audio/scanout or full processes.
 
 All jobs are terminal. Current509/f2b03ebb has fresh GNU71/69CTest and optimized
 UBSan3 cold-build receipts; actual four-Demo127 files and privateXvfb deadline/
-input checks pass. Main441/liveGhidra andnative345/target CI pass. Original
+input checks pass. Main441/liveGhidra and native345/target CI pass. Original
 boot/GDC event ownership, common-clock positive/zero-only negative and cadence
 controls stay separately pinned. Default native process CPU-I/O timing remains open.
 
@@ -847,7 +882,7 @@ remain retained. Current event-clock fixture is separate from default process ti
 
 All jobs are terminal. Current509/03351541 has fresh GNU71/69CTest and optimized
 UBSan3 cold-build receipts; actual four-Demo127 files and privateXvfb deadline/
-input checks pass. Main441/liveGhidra andnative345/target CI pass. Original
+input checks pass. Main441/liveGhidra and native345/target CI pass. Original
 GDC/time ownership and independent old-rate rejection stay separately pinned.
 
 Lossless retirement archives 2,577 complete files and deletes
