@@ -5,6 +5,81 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Keyboard timer transaction and original deadline binding (v1486)
+
+The pinned emulator ELF makes PIC_Ticks visible before the rest of one timer
+transaction. At TIMER_AddTick ELF VA 00537940, the tick write ends at +17h; CPU
+budget credit ends at +42h; queue subtraction finishes before +81h. Actual RIP-
+relative operands and x87 instructions are checked against the pinned engine.
+The old controller watches PIC_Ticks, so external requests can enter that gap.
+
+Two fresh public authored-COM runs record timer entry, the actual hardware tick
+write, CPU credit, queue normalization and return. The complete observed guest
+CPU context agrees across all five transaction stages.
+The reader derives pending credit from observed instruction order and continuity;
+reported phase flags alone cannot establish it. Raw timestamps remain intact.
+An overrun remains part of time; rounding or clamping is rejected.
+
+| Delivery seam | Timer transactions | Clock records | Native operations | Actual keyboard ticks | Pending-credit API samples |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Tick hardware write | 535 | 2677 | 549 | 535 | 4 |
+| Complete timer return | 536 | 2682 | 550 | 536 | 0 |
+
+Each run emits hex bytes 29,A9,29,A9,29,A9 from two actual physical requests. All actual
+keyboard ticks drive the model; observed internal repeat calls never do. The
+different first-tick order is retained. Both existing cold GNU/UBSan peripherals
+agree. Twelve software BIOS stores match independent hardware writes. The merged
+traces retain 535/536 raw regressions and derive zero regressions after observed
+budget credit. Direct raw tick-edge time fails the actual native monotone guard.
+RX callbacks and CPU BIOS reads remain recorded external boundary inputs; their
+time separation is not a modeled native IRQ latency.
+
+The original unchanged 9748-record V86 stream supplies 65 complete external
+idle-to-RX transfers. Actual queued x87 deadline minus the later serviced deadline
+is zero for 13 stage-plan transfers and exactly 1 ms for all 52 clock-controller
+transfers. Those 52 cover every raw regression. CPU budget sum is -1 for 51 and -17
+for one. This directly binds the anomaly to pending queue normalization and supports
+the source watchpoint explanation. The old capture has no full host instruction-
+phase trace; preserve its raw data and do not claim a retrofitted audited clock.
+
+Six actual-observation mutations reject below source/stream identity checks:
+wrong tick-write PC, false completed credit, coherently rebased one-cycle budget,
+queue subtraction by two, changed guest CPU, and timestamp clamping. Eight focused
+unit regressions cover the same failure surfaces with synthetic observations.
+The optional verifier flag preserves all four v1485 default reports byte-for-byte.
+
+### Replay and current limit
+
+Public tools:run_pc98_keyboard_clock.py, pc98_keyboard_clock_gdb.py,
+pc98_keyboard_clock_support.py and pc98_keyboard_clock.py, under scripts/probes.
+Use --scenario repeat --delivery-phase tick-edge or tick-return with the pinned
+emulator/font and an absent output directory. verify_pc98_keyboard_device.py
+--audit-clock requires the current model header, cold build receipt, tick layout,
+program, capture and fresh output path. Its default mode remains unchanged.
+
+DOS-root keyboard-clock-v1486 contains the bound original deadline report,
+timer-operands report, checked-verdict, legacy-default, and frozen archive readers.
+Streams are exact aliases after cleanup; archive_verifier.py accepts fresh
+--output paths and uses clock_reader.py with explicit recovery bytes. Named restore
+is only for readers that require regular files. Current native 573 closure and
+all v1485 component/v1481 full-game programs/link inputs remain unchanged. No
+new compiler build, Windows execution, frontend or campaign acceptance is claimed.
+
+Eight exact SHA/size/mode/nsmtime restores and actual/archive consumers preserve
+all 8 prototype/public model reports and the raw-clock rejection. Recovery has 9888
+aliases and 86710 inherited identities. Gross 19.3828125 MiB, archive 0.2421875 MiB,
+all retained nonarchive phase files and 3 MiB publication reserve leave 14 MiB local
+net. Keep all providers, source capsules, current/late/finish identities and current
+products. No prior cleanup, FIFO, symlink-target or temporary restoration credit.
+
+Run heavy checks serially with CPUQuota=35%, MemoryHigh=256M, MemoryMax=768M, zero swap,
+TasksMax=64, Nice=19, LimitCORE=0 and taskset -c 1; read back actual cgroup values.
+Next record original timer phases plus scalar sampler/IRQ reads for unstable
+pair 75/loop 249. Then establish native elapsed/admission ownership and integrate
+the existing peripheral. The 30-tail/23-GDC and older 40-tail cases stay separate;
+full maintained DOS/native games, common-reset timing and NP2/hardware remain open.
+No artifact/unit exactness changes. Both complete product goals remain active.
+
 ## Isolated keyboard peripheral (v1485)
 
 Native b774aa9 adds separate Typematic, Receiver and ordinary BIOS matrix owners

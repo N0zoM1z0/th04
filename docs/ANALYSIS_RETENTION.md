@@ -1,5 +1,32 @@
 # Private build and analysis retention
 
+## Timer transaction recovery (v1486)
+
+Use DOS-root `.analysis/reconstruction/probes/keyboard-clock-v1486/recover.py`.
+Its 9888 aliases include 9880 inherited andeight newly retired regular wires.
+All eight restore SHA, size, mode and nanosecond mtime. Actual/archive readers retain
+all eight prototype/public GNU/UBSan reports byte-for-byte, including the actual
+raw-clock time-guard rejection. Keep86710 inherited identities, all current/late/
+finish bindings, every provider, current product/link inputs and source capsules.
+
+Gross retirement19.3828125 MiB minus new archives0.2421875 MiB, all currently
+retained nonarchive phase files and 3 MiB future-publication/metadata reserve leaves
+conservative phase-local net 14 MiB. This charges unique phase evidence as well as
+recovery helpers. No inherited, FIFO, symlink-target or temporary restoration credit.
+No new native/DOS build or cohort is created; existing573-component and571-full-game
+products remain physical. Never build incrementally or run CTest in old caches.
+
+Frozen archive_verifier.py andclock_reader.py read exact archive bytes explicitly;
+real source, ELF andcapture metadata gates remain. Every public capture preserves
+source copies. Use those exact historical versions through explicit staging if
+mutable source paths later change; restore current bytes/mode/nsmtime and never
+run CI/builds while staged. Older public/default verifier source remains in the
+v1485 snapshot, and four default reports were checked byte-identical after extension.
+
+Heavy jobs now start with MemoryHigh=256M as well as768M hard maximum, zero swap,
+CPUQuota=35%, taskset -c 1, Nice=19, TasksMax=64 andLimitCORE0. Run serially and read back
+the actual cgroup. Headless Ghidra uses384M heap and one active Java processor.
+
 ## Keyboard component and resource bounds (v1485)
 
 Use DOS-root `.analysis/reconstruction/probes/keyboard-device-v1485/recover.py`:
