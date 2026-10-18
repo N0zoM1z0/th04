@@ -1,5 +1,25 @@
 # Private build and analysis retention
 
+## Primary PIC/EOI recovery (v1491)
+
+Use DOS-root .analysis/reconstruction/probes/cpu-pic-v1491/recover.py.
+Chain 89927 inherited bindings and 10192 exact aliases, including prior late
+seal/recovery/finish files. One new unchanged input component retires through
+an existing provider; actual SHA,size,mode,nsmtime restore and execution pass.
+The unused layout executable is disposable compiler output; its full source,
+command,stdout,identity and ELF offset evidence remain. No second entry gzip
+was created: the canonical v1490 capsule supplies the 573-file entry vector.
+Keep all current 12 programs/15 objects/link inputs, Oracle programs, current
+source capsule, complete 41-event live capture and every inherited provider.
+
+Removed new closed allocations: 65536 bytes.
+Retained phase allocation before publication: 71757824 bytes,
+plus 4 MiB publication reserve. This batch adds retained products/evidence;
+removals are not a net decrease below phase entry or inherited cleanup credit.
+Use a fresh replay directory; never build or invoke CTest in retired cohorts.
+All heavy work remains serial 35%CPU/768MiB hard/no swap/CPU1/Nice19/64tasks/core0.
+Runtime/recovery uses 256MiB soft; only View compilation uses recorded exceptions.
+
 ## Ordered host-key recovery (v1490)
 
 Use DOS-root .analysis/reconstruction/probes/ordered-host-keys-v1490/recover.py.

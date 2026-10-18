@@ -5,95 +5,70 @@ faithful native x64 game; both goals remain active. Original Japanese DOS versus
 reconstructed DOS is the primary behavioral comparison. Keep English code/docs,
 gpt-6.1-sol: commits and frequent pushes to main and native HEAD:port/modern-64.
 
-## Physical keys and ordered host delivery (v1490)
+## Primary PIC and separate BIOS/EOI ownership (v1491)
 
-Native code 5626571 feeds Win32/SDL keydown/keyup delivery into the persistent
-keyboard before UI aliases. Arrows and keypad cardinal keys occupy distinct
-BIOS bits. Return/keypad Return and left/right Shift keep distinct physical
-identities despite sharing scans. OS repeats do not restart firmware repeat;
-releasing its owner does not transfer repeat to another held key. Short pulses
-survive between game polls. Focus loss serializes releases; focus gain alone
-does not synthesize makes. Snapshot fixtures retain an explicit stable order.
+Native code 91c0e94 replaces the live Device's request-only latch with normal
+fixed-priority primary PIC state. Masking retains requests; IF alone cannot
+admit a keyboard request while a higher-priority line remains in service.
+CPU acceptance, BIOS data read and EOI are separate operations. Reading BIOS
+data leaves the service bit set; another request cannot re-enter that line
+until EOI. The default window explicitly accepts, reads and sends nonspecific
+EOI at the same portable event time. This is not original ISR instruction cost.
 
-The time is host delivery time, not platform event timestamps or original
-physical time. Timer/RX events at or before delivery precede the new edge.
-The available-CPU policy remains explicit. Original IF/PIC masks, priority,
-EOI, latency, boot epoch and event-timestamp conversion remain open.
+The authored real-mode internal-DOS probe observes 41 PIC snapshots, three real
+CPU accepts (one timer/two keyboard), two BIOS callback returns and three guest
+EOI writes. IF is 1 while IRQ0 is masked but still in service and keyboard is
+pending; IRQ0 EOI admits keyboard. Both BIOS returns retain IRQ1 service until a later
+20h write to port 0. All 41 primary snapshots and 18 Device operations agree. Device replay
+uses ordinal time labels, not measured original latency. Independent extracted
+pinned PIC source agrees over 33,554,432 IF/priority selections and 2304 EOI
+cases. Source replay is independent of the native implementation but shares
+the emulator family with the live capture; it is not a second hardware Oracle.
+Three compiled exit-0 defects reject: ignoring higher service, erasing
+masked requests, and ending PIC service during the BIOS read.
 
-All 21 key scans/matrices agree with the pinned DOSBox-X mapping. Unchanged
-MAIN130E:06BC..07C4 reproduces 21 explicit stable BIOS fixture words, with
-neutral joystick and given INT18 modifier status. An exit-0 alias-fold mutant
-fails four keypad cases. Portable controls cover event order, short pulses,
-same-scan releases, OS repeat suppression and focus ownership. Current GNU
-and UBSan retain 31 real observation-on/off frontend polls and their original
-sampler comparison. The new live elapsed-source API passes four frames/nine
-polls/81 byte-and-Shift reads. The retained actual COM IRQ fixture preserves
-27 operations/four accepts. No fresh original host-timing capture is claimed.
+The observed emulator has cascade-ignore mask 80h. It is inactive in this
+fixture because cascade 7 stays masked and is never in service. IRQ13 projects
+to that pending masked primary cascade; slave arbitration is not accepted.
+The exhaustive source comparison explicitly uses normal primary mode without
+that workaround. Actual ROM stub bytes remain unavailable through the bounded
+conventional-RAM reader; EOI is observed at the guest port write, not inferred
+from a claimed ROM dump. This is an authored COM, not original TH04 V86 timing.
+The reused launcher
+retains legacy clock-phase labels; capture-scope-amendment.json explicitly
+corrects them to guest-marker input and no new timer-transaction observations. The raw
+receipt and all executed sources remain unchanged.
+
+Physical identities and host delivery order from v1490 remain. MAIN reads
+7,9,8,5,2,0,3,6 then Shift independently; reset clears first and Sense ORs.
+Current GNU/UBSan retain 31 observation-on/off frontend polls with independent
+original sampler checks, plus four elapsed frames/nine polls/81 reads and all
+21 stable physical-key fixtures. The old 27-operation IRQ projection remains
+byte-identical under its explicit collapsed read/EOI policy; it is not new EOI
+timing proof. The new 18-operation live-derived fixture preserves that boundary.
 
 Current source is 573 files, closure
-efee7a9f86af08612690a06723671a147d7431125d8c6c07b40ab967e96e7b22.
-The ordered-host-keys-v1490 replay cold-compiles all four host_window.hpp
-consumers per role and links three programs each for GNU, UBSan and Windows.
-It reuses 112 unrelated core objects per role and unchanged link inputs by SHA.
-This is bounded affected replay, not a fresh all-source cohort or 87-CTest
-rerun. GNU/UBSan focused controls pass; Windows is compile/link only.
+f9b57540e6c2b86fd91fac87ceb54fd729ab1f9d55a71b8f294eaaed8ec43c4a.
+The cpu-pic-v1491 replay cold-compiles all five affected header consumers per
+role and links four programs each for GNU/UBSan/Windows. It reuses 112 unrelated
+core objects per role by SHA. This is 15 fresh objects/12 current programs,
+not a new all-source cold cohort or 87-CTest rerun. Windows is compile/link only.
 GNU/Windows View uses O3/GGC5; UBSan View uses O0/GGC1 with UB/bounds retained.
-Old full cohorts keep their own source closures and acceptance scopes.
 
-Heavy jobs stay serial 35%CPU, CPU1, Nice19, hard 768MiB/no swap/64 tasks/core 0.
-Checks use 256MiB soft; View alone uses recorded 640/768MiB compile profiles.
-Build peak is 579.215 MiB; this batch has zero OOM kills.
-The two real v1489 compiler OOM failures remain preserved. Caps are unchanged.
-No physical host keys/focus/audio or GUI workarounds were used.
+Heavy work stays serial 35%CPU, CPU1, Nice19, hard 768MiB/no swap/64 tasks/core 0.
+Checks/recovery use 256MiB soft; only View compilation uses 640/768MiB soft.
+Current build peak is 585.574 MiB with zero OOM kills.
+The two actual v1489 compiler OOM failures remain preserved. Caps are unchanged.
 
-Next measure original request/timer/accept/read ownership and first differences.
-Do not fit a phase/fixed IRQ delay or hunt old75 with another full route.
-Common-reset DOS/native campaigns, Windows runtime and NP2/hardware remain
-open. Existing strict negatives and both full goals remain active; historical
-DOS products/source and exactness states are unchanged.
-
-## Persistent keyboard and scalar MAIN input (v1489)
-
-Native code a4e97bd connects the actual Win32 and SDL MAIN paths to a persistent
-keyboard, UART, pending IRQ and BIOS owner. The device survives application
-process generations. Physical host changes, 1 ms firmware ticks, serialized
-arrivals, CPU acceptance and BIOS reads remain separate operations. Elapsed
-nanoseconds convert to integer peripheral quanta with a retained remainder;
-splitting an elapsed interval preserves the configured continuously available
-CPU policy. Focus loss serializes releases and stops repeat ownership.
-
-MAIN consumes groups 7, 9, 8, 5, 2, 0, 3, 6 independently, then reads Shift.
-Reset clears before the first callback; each group ORs into the game latch
-before the next read. Observation.before still records the pre-operation latch.
-The physical observation is a vector of consumed bytes, not necessarily one
-instantaneous matrix. Existing whole-sample movies and the latch/UI flow remain.
-
-The real headless FrontEnd passes four frames, nine polls and 81 byte/Shift
-reads, including a make arriving after the tail's Shot read and a focus release.
-The retained 31-poll observation-on/off scenario also passes independent original
-sampler execution in both current GNU and UBSan programs. Twenty-five actual
-original action words, using 200 directly observed byte values after a genuine
-reset, agree through the new byte sampler. Shift is a given zero input here,
-not a new independent INT18 status observation; joystick pins are neutral.
-Two compiled exit-0 defects reject: late Shot consumption fails the portable
-interleaving, while Sense overwrite fails actual original action words.
-The persistent Device also preserves all 27 operations/four CPU accepts of the
-independently checked actual DOS COM IRQ fixture.
-
-The window explicitly selects an always available CPU service policy at event
-boundaries. It does not model the original CPU/PIC masks, priority, EOI, dispatch
-latency or boot phase. Host aliases still aggregate as before; simultaneous
-polled edges use a declared stable order. This is a functional integration,
-not acceptance of default physical timing or a fitted serial-to-BIOS delay.
-Original 58/87-cycle, old 82-cycle and authored 16-cycle cases stay separate.
-Next compare the connected path against original request/timer/accept/read
-boundaries and measure the first differences; recover the remaining CPU/time
-and physical-key ownership. Do not hunt old75 with another whole-route capture.
-Both complete DOS/native goals and every strict negative remain active.
+Next bind original CPU dispatch, IF/IRQ-check scheduling, NMI/trap, other IRQ
+producers, cascade/special modes, boot masks and elapsed epoch. Do not fit a
+serial-to-BIOS delay or hunt old75 with another full route. Common-reset full
+DOS/native campaigns, Windows runtime and NP2/hardware remain open. Both full
+goals and all strict negatives remain active; historical DOS exactness is unchanged.
 
 ## Maintained products and comparison limits
 
-Native source is 573 files, closure
+The previous full cold source vector is 573 files, closure
 60714a70f0bcda09f2689ad548242081ca80847bc9016da8ba115369e6da4298.
 The fresh frontend-peripheral-v1489-gc cohort contains 91 GNU programs
 with 87 passing CTests, 7 UBSan programs and 4 Windows compile-only programs.
