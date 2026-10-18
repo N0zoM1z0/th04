@@ -1,6 +1,35 @@
 # Private build and analysis retention
 
 
+## Whole-directory storage cleanup (2026-10-19)
+
+The latest recovery entrypoint is DOS-root
+`.analysis/cleanup/storage-20261019/recover.py`. Use it before historical
+per-phase recovery commands. It chains 94244 incoming identities and 10281
+inherited aliases, adding 1585 exact gzip aliases (11866 total). All 1585 files
+passed actual scratch restoration of SHA-256, size, mode and nanosecond mtime.
+Historical consumers that directly open retired raw logs/images must first
+restore their named inputs with this entrypoint:
+
+```sh
+python3 -B .analysis/cleanup/storage-20261019/recover.py --restore --path REPO_RELATIVE_PATH
+```
+
+The private `aliases.json`, `providers/`, `baseline.json` and `retention.json`
+are recovery dependencies. Keep this directory and every inherited provider.
+JSON control manifests stay physical for frozen recursive readers. Current
+native source, 105 programs, 12 object identities, source capsules, canonical
+HDI/font, active emulator and compiler installations remain physical.
+
+This cleanup compresses historical logs and captures, rather than discarding
+scientific observations. Whole-directory allocation falls from 19599364096 to
+16438243328 bytes before final validation logs: about 18.25 to 15.31 GiB,
+a net reduction of 2.94 GiB. The new providers occupy 101478400 bytes; every
+one of 5320 inherited provider paths is excluded. This reduction is separate
+from earlier phase savings. See `result.json`, `recovery.log` and
+`verification.json` in the cleanup directory. Heavy work stays serial at
+35% CPU, CPU1/Nice19, 256 MiB soft/768 MiB hard memory, no swap, 64 tasks/core0.
+
 ## Host joystick handoff retention (v1497)
 
 Use DOS-root .analysis/reconstruction/probes/host-joystick-v1497/recover.py.
