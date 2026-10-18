@@ -25,9 +25,9 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
-Live byte sampling now includes optional joystick reads in original order.
-Original-instruction, real frontend and affected-product checks pass. CPU/bus
-timing, boot epoch and complete-game fidelity remain open. See the
+The session is ready for handoff. Host joystick producers now reach menus and
+live MAIN sampling; scoped frontend/API checks pass. Complete game and original
+timing acceptance remain unfinished. See the
 [current handoff](docs/RE_HANDOFF.md).
 
 The v1475 actual source MAIN defeats Elly at 12792 and reaches Stage4 init/score1

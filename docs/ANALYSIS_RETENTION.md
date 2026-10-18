@@ -1,5 +1,25 @@
 # Private build and analysis retention
 
+
+## Host joystick handoff retention (v1497)
+
+Use DOS-root .analysis/reconstruction/probes/host-joystick-v1497/recover.py.
+Incoming closure: 92478 identities, including three v1496 late files; inherited
+10281 exact aliases are unchanged. Current products are enumerated by absolute
+program_paths in correction.json's receipt. Keep all source capsules, current
+objects/programs, response/link metadata, semantic controls and inherited providers.
+The v1497-final directory owns the canonical corrected source capsule; its failed
+wrapper does not make that capsule disposable.
+
+After consumers finish, 114 duplicate payloads share immutable hard links.
+Provider bytes/mode/mtime are unchanged; adopted current-path mtimes are recorded.
+Closed duplicate allocation savings: 44670976 bytes after
+929792 bytes of manifest charges. Separately, 2004 disposable
+Make/cache files release 12034048 bytes, with no extra scientific
+retirement credit. No phase-entry storage decrease is claimed. All current
+products and replay dependencies remain; never incrementally build or run CTest
+in these retained cohorts. Use a fresh directory. Full recovery and pushed heads
+are recorded in recovery.log and finish.json.
 ## Live byte joystick recovery (v1496)
 
 Use DOS-root .analysis/reconstruction/probes/joystick-byte-source-v1496/recover.py.

@@ -5,6 +5,54 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+
+## Host joystick input and handoff (v1497)
+
+Native code ea41be4 connects SDL and WinMM joystick producers to both window
+backends, menu edges, held UI actions and MAIN's live byte sampler. Native host
+policy uses the first two axes/first hat, button 0 Shot/confirm and button 1
+Bomb/cancel, with a half-range analog threshold. A connection or focus regain
+must first be neutral. Missing devices and failed initialization leave keyboard
+input available. Raw SDL axis/button bindings vary by device; this is an explicit
+host policy, not an original PC-98 device or timing observation.
+
+Complete injected APIs execute all 131072 X/Y axis values and 64 hat/button
+combinations in GNU and UBSan without opening devices. Original unchanged MAIN
+instructions reproduce 64 production pin mappings per role and nine actual
+frontend latches per role. Two compiled exit-0 mapping defects each reject 32
+cases. Both real headless frontends enter MAIN through three controller menu
+confirmations, move Right/Down, sample Shot and handle unplug across four frames
+and nine polls. Observer off/on pools/frame/RNG agree. The prior 31-poll keyboard
+and 81-read elapsed controls also pass. These are shared frontend tests, not
+actual SDL/Win32 windows or controller acceptance.
+
+Current source: 577 files,
+51b9f3887346d5b444bbfd07d296b83175be420acda95c9598f250cae6647734.
+The initial cohort cold-builds four affected objects per role and freshly
+relinks 92 GNU/8 UBSan/5 Windows programs. GNU 88 CTests and seven UBSan controls
+pass. A WinMM continuous-POV/query-header correction then cold-builds nine backend
+objects: three GNU objects retain exact bytes; source-location metadata changes
+UBSan objects, so both UBSan and Windows app/joystick programs are relinked.
+Three unchanged View objects retain their initial compiler identities. Current
+105 program paths and all 12 object identities are in correction.json's receipt;
+use program_paths, since the current products span two directories. This is
+not an all-source cold cohort. Windows remains compile/link only.
+
+Source/objects/commands and the rejected equality assumption remain private and
+recoverable. The canonical corrected source capsule is under the first
+host-joystick-v1497-final directory despite that driver's later failure; do not
+delete it. See the focused differential note for API references and scope.
+
+The continuous WinMM POV flag follows Microsoft's JOYINFOEX API contract;
+SDL does not promise a fixed physical binding for raw axis indices. These are
+external host API facts, not independent TH04 target observations:
+[Microsoft JOYINFOEX](https://learn.microsoft.com/en-us/windows/win32/api/joystickapi/ns-joystickapi-joyinfoex),
+[SDL raw axis contract](https://wiki.libsdl.org/SDL2/SDL_JoystickGetAxis).
+The failed first GNU/UBSan equality assumption, missing response-file prefix and
+Windows .obj bookkeeping correction remain in private reports. Completed compile
+steps were reused only after terminal status and exact output/source bindings;
+no View compilation was restarted for these wrapper corrections.
+
 ## Live byte joystick sampling (v1496)
 
 Native code 72ab70a completes the live ByteSource path with optional paired

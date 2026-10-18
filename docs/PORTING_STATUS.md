@@ -5,6 +5,20 @@ tests, activate foreground windows or inject host keys. Keep every launch
 muted; use headless checks or private Linux Xvfb instead. Actual Windows
 window/input acceptance stays open under this constraint.
 
+## Current handoff (2026-10-18)
+
+The user requested a handoff; the prior active goal is cleared. Current native
+code ea41be4 connects SDL/WinMM joystick producers to menus and live MAIN
+sampling. Source577/51b9f388 has scoped API, original-instruction and headless
+frontend evidence; Windows remains compile/link only. Complete maintained DOS
+and faithful native objectives remain unfinished, with strict timing and full
+campaign acceptance open. Use [RE_HANDOFF.md](RE_HANDOFF.md) and
+[NEXT_AGENT_HANDOFF.md](NEXT_AGENT_HANDOFF.md) for current products, two-worktree
+heads, cleanup/recovery and resource limits. No historical milestone below
+supersedes that current index.
+
+## Historical verification milestones
+
 Current v1467 records a complete original 8000-update Stage3 route. Native
 566/4787233c replays its literal inputs: both cold GNU/optimized UBSan programs
 agree on all 79 files, 8001 nine-pool snapshots, 8010 stable-state records and
