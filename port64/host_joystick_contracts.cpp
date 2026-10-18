@@ -53,11 +53,12 @@ void composition() {
 struct State {unsigned calls=0;bool disconnected=false;JOYINFOEX value{};JOYCAPSA caps{};} s;
 UINT WINAPI count(){return 2;}
 MMRESULT WINAPI caps(UINT_PTR id,LPJOYCAPSA out,UINT size) {
-    require(size==sizeof(*out),"WinMM caps size");if(id!=1)return MMSYSERR_NODRIVER;*out=s.caps;return 0;
+    require(size==sizeof(*out),"WinMM caps size");if(id>1)return MMSYSERR_NODRIVER;*out=s.caps;return 0;
 }
 MMRESULT WINAPI position(UINT id,LPJOYINFOEX out) {
-    require(id==1 && out->dwSize==sizeof(*out) && out->dwFlags==
-        (JOY_RETURNX|JOY_RETURNY|JOY_RETURNBUTTONS|JOY_RETURNPOV),"WinMM query contract");
+    require(id<=1 && out->dwSize==sizeof(*out) && out->dwFlags==
+        (JOY_RETURNX|JOY_RETURNY|JOY_RETURNBUTTONS|JOY_RETURNPOVCTS),"WinMM query contract");
+    if(id==0){out->dwFlags=0;out->dwSize=0;return JOYERR_UNPLUGGED;}
     ++s.calls;if(s.disconnected)return JOYERR_UNPLUGGED;
     const auto size=out->dwSize,flags=out->dwFlags;*out=s.value;out->dwSize=size;out->dwFlags=flags;return 0;
 }

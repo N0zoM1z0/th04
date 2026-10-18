@@ -11,11 +11,13 @@ public:
     }
     Sample read() override {
         JOYINFOEX position{};position.dwSize=sizeof(position);
-        position.dwFlags=JOY_RETURNX|JOY_RETURNY|JOY_RETURNBUTTONS|JOY_RETURNPOV;
+        position.dwFlags=JOY_RETURNX|JOY_RETURNY|JOY_RETURNBUTTONS|JOY_RETURNPOVCTS;
         if(id_<0) {
             const auto count=api_.count();
             for(UINT id=0;id<count;++id) {
                 JOYCAPSA caps{};
+                position={};position.dwSize=sizeof(position);
+                position.dwFlags=JOY_RETURNX|JOY_RETURNY|JOY_RETURNBUTTONS|JOY_RETURNPOVCTS;
                 if(api_.caps(id,&caps,sizeof(caps))==JOYERR_NOERROR &&
                    api_.position(id,&position)==JOYERR_NOERROR) {
                     id_=id;caps_=caps;break;
