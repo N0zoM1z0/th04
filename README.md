@@ -25,11 +25,10 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
-The v1489 native bridge connects persistent keyboard/serial/IRQ owners to
-actual Win32/SDL MAIN byte polling. Current cold builds and bounded frontend,
-original-byte and IRQ comparisons pass; the default CPU/clock policy remains
-unproved against original physical timing. Old strict negative cases remain
-open. See the [current handoff](docs/RE_HANDOFF.md) for exact scopes and recovery.
+The v1490 native bridge preserves physical key identity and host delivery order
+through the persistent keyboard/serial/IRQ owner and MAIN scalar byte reads.
+Bounded original-ISA and frontend checks pass. Original CPU/clock timing and
+whole-game fidelity remain open. See the [current handoff](docs/RE_HANDOFF.md).
 
 The v1475 actual source MAIN defeats Elly at 12792 and reaches Stage4 init/score1
 with original OP/MAINE/ZUN/assets. All 13378 pool/state snapshots,13377 actual

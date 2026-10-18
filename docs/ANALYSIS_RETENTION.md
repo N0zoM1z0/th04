@@ -1,5 +1,24 @@
 # Private build and analysis retention
 
+## Ordered host-key recovery (v1490)
+
+Use DOS-root .analysis/reconstruction/probes/ordered-host-keys-v1490/recover.py.
+Chain 89782 inherited bindings and 10191 aliases, including prior late/finish
+files. Two new exact duplicate components retire through existing providers.
+Actual restores preserve SHA,size,mode,nsmtime, then execute real checks and 27
+IRQ operations. An unused entry gzip is removed after the existing v1489
+capsule verifies all 573 entry files. Current programs/link inputs, current
+source capsule, all inherited providers and historical failures remain physical.
+
+Removed new closed regular allocations: 1728512 bytes.
+Retained phase allocation before publication: 69775360 bytes,
+plus 4 MiB publication reserve. This batch adds retained products/evidence;
+removals are not a net decrease below phase entry. No inherited cleanup credit
+or repeated temporary-restore credit. The manual replay has no CMake cache;
+use a fresh directory. Never incrementally build or invoke CTest in retired
+cohorts. Runtime/recovery uses 256MiB soft under the unchanged 35%CPU/768MiB
+hard limit; only View compilation uses recorded soft exceptions.
+
 ## Connected keyboard recovery (v1489)
 
 Use DOS-root .analysis/reconstruction/probes/frontend-peripheral-v1489/recover.py.
