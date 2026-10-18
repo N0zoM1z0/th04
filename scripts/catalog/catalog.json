@@ -840,6 +840,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/pc98_keyboard_isr_cpu.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Execute captured IRQ1 ROM-tail instructions with an independent CPU while excluding V86 protection and physical timing claims.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/pc98_keyboard_repeat_gdb.py",
     "category": "runtime",
     "role": "support",
@@ -2506,6 +2513,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/reduce_th04_original_isr.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Audit original IRQ1 monitor/BIOS/EOI/IRET phases, canonical counters and independent ROM-tail state restoration without fitting a delay.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/reduce_th04_original_pic.py",
     "category": "runtime",
     "role": "command",
@@ -3854,6 +3868,13 @@
     "category": "runtime",
     "role": "support",
     "purpose": "Join complete timer transactions, keyboard ticks and delayed PIC-check callbacks in a bounded original V86 window.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_original_isr_gdb.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Observe distinct protected-monitor and V86 BIOS IRQ1 returns, ROM/stack, port reads and guest EOI without changing guest state.",
     "purpose_source": "maintained-description"
   },
   {
