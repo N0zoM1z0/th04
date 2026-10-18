@@ -25,12 +25,11 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
-The v1488 original input probe adds 208 measured post-load AH values, 231 complete
-timer transactions and 14 actual CPU IRQ acceptances. Existing GNU/UBSan input
-consumers agree; two compiled latch defects reject. A second minimal eight-read
-run also passes, but neither run reproduces old75's local BIOS phase. Native game
-source remains unchanged; the real frontend elapsed/peripheral/dispatch join is
-next. See the [current handoff](docs/RE_HANDOFF.md) for exact scopes and negatives.
+The v1489 native bridge connects persistent keyboard/serial/IRQ owners to
+actual Win32/SDL MAIN byte polling. Current cold builds and bounded frontend,
+original-byte and IRQ comparisons pass; the default CPU/clock policy remains
+unproved against original physical timing. Old strict negative cases remain
+open. See the [current handoff](docs/RE_HANDOFF.md) for exact scopes and recovery.
 
 The v1475 actual source MAIN defeats Elly at 12792 and reaches Stage4 init/score1
 with original OP/MAINE/ZUN/assets. All 13378 pool/state snapshots,13377 actual

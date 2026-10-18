@@ -5,6 +5,88 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Persistent keyboard and scalar MAIN input (v1489)
+
+Native code a4e97bd connects the actual Win32 and SDL MAIN paths to a persistent
+keyboard, UART, pending IRQ and BIOS owner. The device survives application
+process generations. Physical host changes, 1 ms firmware ticks, serialized
+arrivals, CPU acceptance and BIOS reads remain separate operations. Elapsed
+nanoseconds convert to integer peripheral quanta with a retained remainder;
+splitting an elapsed interval preserves the configured continuously available
+CPU policy. Focus loss serializes releases and stops repeat ownership.
+
+MAIN consumes groups 7, 9, 8, 5, 2, 0, 3, 6 independently, then reads Shift.
+Reset clears before the first callback; each group ORs into the game latch
+before the next read. Observation.before still records the pre-operation latch.
+The physical observation is a vector of consumed bytes, not necessarily one
+instantaneous matrix. Existing whole-sample movies and the latch/UI flow remain.
+
+The real headless FrontEnd passes four frames, nine polls and 81 byte/Shift
+reads, including a make arriving after the tail's Shot read and a focus release.
+The retained 31-poll observation-on/off scenario also passes independent original
+sampler execution in both current GNU and UBSan programs. Twenty-five actual
+original action words, using 200 directly observed byte values after a genuine
+reset, agree through the new byte sampler. Shift is a given zero input here,
+not a new independent INT18 status observation; joystick pins are neutral.
+Two compiled exit-0 defects reject: late Shot consumption fails the portable
+interleaving, while Sense overwrite fails actual original action words.
+The persistent Device also preserves all 27 operations/four CPU accepts of the
+independently checked actual DOS COM IRQ fixture.
+
+The window explicitly selects an always available CPU service policy at event
+boundaries. It does not model the original CPU/PIC masks, priority, EOI, dispatch
+latency or boot phase. Host aliases still aggregate as before; simultaneous
+polled edges use a declared stable order. This is a functional integration,
+not acceptance of default physical timing or a fitted serial-to-BIOS delay.
+Original 58/87-cycle, old 82-cycle and authored 16-cycle cases stay separate.
+Next compare the connected path against original request/timer/accept/read
+boundaries and measure the first differences; recover the remaining CPU/time
+and physical-key ownership. Do not hunt old75 with another whole-route capture.
+Both complete DOS/native goals and every strict negative remain active.
+
+### Cold products, comparison and resource scope
+
+Native source is 573 files, closure
+60714a70f0bcda09f2689ad548242081ca80847bc9016da8ba115369e6da4298.
+The fresh frontend-peripheral-v1489-gc cohort contains 91 GNU programs
+with 87 passing CTests, 7 UBSan programs and 4 Windows compile-only programs.
+UBSan uses fresh O2 core objects and an explicit O0 override for view.cpp after
+the O2 and O1/GGC5 frontend attempts hit the unchanged 768M hard cap.
+The successful View profile is O0 with GGC min-expand=1/min-heapsize=1024. The override object
+hash is checked after CMake links; its exact command qualifies the attempted
+O2 compile_commands entry. All source/header digests stay unchanged.
+Both stock host-adapter runs preserve all 130 previous complete outputs through
+13377 Stage3 updates. This is a regression of the old host-input scenario;
+it does not accept the connected default peripheral's full campaign.
+112 of 113 GNU core objects match the retained old cohort byte for byte;
+all affected header consumers were cold-built regardless. DOS products and
+historical artifact/unit exactness are unchanged.
+
+Use DOS-root .analysis/reconstruction/probes/frontend-peripheral-v1489/recover.py.
+It chains 87553 inherited bindings, all current/late/finish identities and
+10189 exact aliases. Actual metadata restores and explicit archive readers
+must preserve the current outputs and their semantic rejection controls.
+Retain every inherited provider, source capsule, current program and link input.
+The canceled first CMake prefix is disposable: its commands, source capsule,
+terminal pressure/journal evidence and metadata inventory remain; its unused
+probes/partial objects are removed without scientific cleanup credit.
+See ANALYSIS_RETENTION.md for this phase's complete accounting.
+
+Heavy work stays serial, CPUQuota=35%, MemoryMax=768M, no swap, Nice=19, CPU1,
+64 tasks and no cores. Normal checks use MemoryHigh=256M. The first attempt
+stalls above 90% memory-pressure time; GGC min-expand=5/min-heapsize=4096 reduces
+compiler heap use. The giant FrontEnd TU uses compile-only soft exceptions,
+up to the existing 768M hard cap. The O2 and O1/GGC5 attempts hit that cap;
+retain its failure and journal. GNU CTest returns to 256M under the original
+supervisor. The resumed driver compiles only View at O0, verifies all preserved
+fresh O2 core hashes and the override object after linking, and restores 256M
+before every UBSan control. Windows is a fresh compile-only directory. The
+attempted compile_commands entry is qualified by resume-o0/view-override.json;
+never call this an uninterrupted uniform-O2 build. Both initial resource
+amendments and the failed supervisor remain explicit. Runtime checks use 256M.
+Keep emulators muted/headless; Windows remains compile-only. Do not use host
+keys/focus, physical audio, or GUI/device workarounds.
+
 ## Direct original sampler reads and variable CPU admission (v1488)
 
 The new captures use the original pinned MZ and the exact first 260 rows of the
