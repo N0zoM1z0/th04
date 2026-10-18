@@ -3,11 +3,43 @@
 import argparse
 import copy
 from collections import Counter
+from fractions import Fraction
 import json
 from pathlib import Path
 
 import pc98_keyboard_clock as clock
 import reduce_th04_original_pic as pic
+
+
+def queued_deadlines(rows,pairs,boundaries,moments):
+    """Check queued deadlines after the caller validates complete timer phases."""
+    # PIC_GetCurrentEventTime uses PIC_Ticks + srv_lag inside a callback.
+    # Keep this queued event deadline distinct from the CPU observation clock.
+    def service_time(row):
+        phase=row['time']['clock_audit']
+        assert row['pic']['in_event_service']
+        assert not phase['tick_credit_pending'] and not phase['tick_queue_pending']
+        raw=bytes.fromhex(row['pic']['service_index_raw'])
+        assert int.from_bytes(raw[8:10],'little') & 0x7fff != 0x7fff
+        return Fraction(row['time']['raw']['PIC_Ticks'])+clock.index80(raw.hex())
+    fraction=lambda value:dict(numerator=value.numerator,denominator=value.denominator)
+    queued=[]
+    for pair,boundary in zip(pairs,boundaries,strict=True):
+        first=rows[pair['check']]
+        second=next(row for row in rows[pair['accepted']+1:boundary['eoi']]
+                    if row['kind']=='pic-check-entry')
+        for row,anchor in [(first,service_time(rows[pair['receive']])),
+                           (second,moments[pair['accepted']])]:
+            deadline=service_time(row)
+            delay=(deadline-anchor)*576000
+            rounded=-(-delay.numerator//delay.denominator)
+            assert rounded==234, 'queued delay differs at native time resolution'
+            late=(moments[row['ordinal']]-deadline)*576000
+            assert late>=0, 'check callback precedes its queued event deadline'
+            queued.append(dict(ordinal=row['ordinal'],delay_native_quanta=fraction(delay),
+                               callback_lateness_native_quanta=fraction(late),
+                               native_delay_ceiling=rounded))
+    return queued
 
 
 def audit(capture,read_data=None,hash_file=None):
@@ -59,16 +91,17 @@ def audit(capture,read_data=None,hash_file=None):
       pairs.append(dict(receive=last_receive['ordinal'],check=between[0]['ordinal'],accepted=row['ordinal'],emulated_counter_cycles=int(delta)))
       last_receive=None
     assert last_receive is None and len(pairs)==len(p['bios_boundaries'])
+    queued=queued_deadlines(rows,pairs,p['bios_boundaries'],moments)
     image=read(c/'original-pic-image.json')
     assert image['passed'] and image['unchanged_context'] and image['module_size']==150114
     assert image['target_main_sha256']==pic.MAIN and image['entry_ip']==0
     assert image['entry_cs']==image['load_segment']==rows[0]['load_segment']
     return dict(passed=True,clock=a,timer_elf=elf,pic=p,pic_checks=checks,
-        receive_check_accept=pairs,
+        receive_check_accept=pairs,queued_check_deadlines=queued,
         emulated_counter_cycle_intervals=dict(Counter(x['emulated_counter_cycles'] for x in pairs)),
         configured_pic_irq_delay_ns=406,converted_native_quanta_ceiling=(406*72+124)//125,
         entry_snapshot_audited=False,
-        scope='Original first8-stage-update packet on one pinned emulator. Complete timer phases establish a canonical observation clock; '
+        scope='Original first 8 Stage 1 updates on one pinned emulator. Complete timer phases establish a canonical observation clock; '
               'delayed PIC checks precede CPU acceptance. Configured406ns is not a fitted serial-to-BIOS delay. '
               'Counter intervals do not establish physical latency, ISR cost, native CPU availability or a common boot epoch.')
 

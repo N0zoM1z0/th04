@@ -25,10 +25,10 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
-The v1492 original V86 capture completes 16 Stage1 updates and records nine
-separate keyboard BIOS/EOI boundaries. All 397 supported primary snapshots
-agree with the unchanged native PIC implementation. Actual cascade/boot masks
-and CPU/clock ownership remain open. See the [current handoff](docs/RE_HANDOFF.md).
+The v1493 native keyboard now waits for a separate PIC check before CPU
+acceptance. Complete original timer observations and 85 actual gate states
+support the change; source and affected-product checks pass. Full CPU/boot
+ownership and complete-game fidelity remain open. See the [current handoff](docs/RE_HANDOFF.md).
 
 The v1475 actual source MAIN defeats Elly at 12792 and reaches Stage4 init/score1
 with original OP/MAINE/ZUN/assets. All 13378 pool/state snapshots,13377 actual

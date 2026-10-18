@@ -5,6 +5,64 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Delayed PIC checks and original timer audit (v1493)
+
+Native code cfe5ac7 adds a separate delayed PIC check to the live keyboard
+path. A ready UART byte latches the request; IF alone cannot bypass the pending
+check. IF, normal-trap decoder and NMI availability remain separate CPU gates.
+Mask/EOI transitions can schedule a check, accepted IRQs rearm it, and a blocked
+CPU preserves an already raised check. Callbacks may arrive after their deadline.
+The window uses the independently observed 406 ns configuration, rounded upward
+to 234 peripheral quanta. CPU acceptance, BIOS read and EOI after that check
+remain an explicit immediate portable policy, not original ISR instruction cost.
+
+The normal original boot completes eight Stage1 updates. Complete relocated
+MAIN attestation precedes observations; provenance is candidate-local-attested.
+130 complete timer transactions audit 1069 packet records, removing 130 raw
+bookkeeping regressions with zero canonical regressions. MAIN entry remains a
+separate raw snapshot. Five actual UART completions show Check0/Pending1, then
+the delayed callback sets Check1/Pending0 before V86 CPU acceptance. The five
+canonical observation intervals are 15 emulator counter cycles each; they are
+not a physical UART-to-BIOS delay. Ten recorded queued event deadlines remain
+distinct from CPU observation time and round to the same 234-quanta policy.
+The current gate reproduces 85 observed normal-primary states; the earlier
+strict-deadline candidate rejects actual late callbacks. Active cascade routing
+outside these bounded intervals remains excluded.
+
+Exact pinned PIC source bodies agree over 2800 scenarios/109600 state rows,
+including CPU guards, masking, pending checks and EOIs. Three compiled exit-0
+defects reject. The old selector-only reference's no-op delayed callback was
+corrected using pinned source and actual ELF writes; the failed fixture remains.
+Three clock and three coherent queued-deadline defects also reject. Source and
+live capture share one emulator family, not independent hardware Oracles.
+
+All five affected header consumers are freshly compiled per GNU/UBSan/Windows
+role: 15 objects and 12 linked programs, reusing 112 unrelated core objects per
+role by SHA. Current source is 573 files, closure
+`e7aa088c4202b23c339f9129a4cc267f2e85ea27ea2dc4fc538e626242f62783`.
+GNU/UBSan real frontend checks retain 31 observed/unobserved polls with original
+sampler ISA replay, plus four elapsed frames/nine polls/81 reads and all 21
+physical key fixtures. The old 27-operation explicit-accept projection remains
+unchanged; it does not exercise the new default dispatch timing. Windows is
+compile/link only. This is not a new all-source cold cohort or 87-CTest rerun.
+
+The first candidate build was deliberately stopped for the late-callback fix;
+its input capsule, commands, terminal/resource evidence and logs remain, while
+unused generated outputs were removed. The final build passes with peak
+604786688 bytes and zero OOM kills; the canceled prefix peaked at 608997376.
+CPU stays 35%, hard memory 768MiB/no swap. Ordinary checks use 256MiB soft;
+only View uses the recorded GNU/Windows O3/GGC5 and UBSan O0/GGC1 exceptions.
+
+Evidence is in DOS-root .analysis/reconstruction/probes/dispatch-epoch-v1493.
+Use the maintained reduce_th04_original_epoch.py and exact archive reader.
+Next bind CPU availability, BIOS/EOI cost, other IRQ producers and the boot epoch.
+Keep the queued peripheral event clock separate from CPU observation time when
+adding late transport callbacks. Default host peripheral callbacks currently run
+at their exact deadlines. Full common-reset campaigns, continuous display,
+Windows runtime and NP2/hardware remain open. All prior strict negatives are
+unclosed historical observations; no new campaign or exact promotion occurs.
+Both complete DOS/native goals remain active.
+
 ## Original V86 PIC/BIOS window (v1492)
 
 The pinned original MAIN completes its first 16 Stage1 actor updates in the
