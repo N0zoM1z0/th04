@@ -28,7 +28,13 @@ private:
 };
 struct Keys {bool up=false,down=false,left=false,right=false,shot=false,
     enter=false,bomb=false,escape=false,quit=false,shift=false;
-    bool up_left=false,up_right=false,down_left=false,down_right=false,space=false;};
+    bool up_left=false,up_right=false,down_left=false,down_right=false,space=false;
+    bool keypad_up=false,keypad_down=false,keypad_left=false,keypad_right=false,
+        keypad_enter=false,right_shift=false;};
+// Physical identities stay distinct even when two keys emit the same scan.
+enum class HostKey : unsigned {up,down,left,right,shot,enter,bomb,escape,quit,shift,
+    up_left,up_right,down_left,down_right,space,keypad_up,keypad_down,keypad_left,
+    keypad_right,keypad_enter,right_shift,count};
 struct Input {std::uint16_t held=0;bool shift=false;};
 Input input(const Keys&,bool focused);
 pc98_input::Sample bios_input(const Keys&,bool focused);
@@ -44,15 +50,22 @@ public:
     using KeySource=std::function<KeySample()>;
     Keyboard(std::int64_t epoch,Dispatch dispatch);
     static void available_cpu(pc98_keyboard::Device&,pc98_keyboard::Time);
+    void key(HostKey,bool down,std::int64_t now);
+    void focus(bool focused,std::int64_t now);
+    Keys keys() const;
     void observe(const KeySample&);
     void advance(std::int64_t now);
     pc98_input::ByteSource source(KeySource,std::function<void(pc98_input::Operation)> begin={});
+    pc98_input::ByteSource elapsed_source(std::function<std::int64_t()> clock,
+        std::function<void(pc98_input::Operation)> begin={});
     const pc98_keyboard::Device& device() const {return device_;}
 private:
     pc98_keyboard::Device device_;Dispatch dispatch_;
     std::int64_t last_ns_;pc98_keyboard::Time time_=0,next_tick_=pc98_keyboard::quanta_per_ms;
     unsigned remainder_=0;
-    std::array<bool,15> held_{};
+    std::array<bool,unsigned(HostKey::count)> held_{};
+    bool focused_=true;
+    void set_key(unsigned,bool);
 };
 
 struct Snapshot {

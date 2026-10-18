@@ -18,21 +18,24 @@ std::int64_t Schedule::resync(std::int64_t now,unsigned slowdown){
 }
 Input input(const Keys& k,bool focused){
     if(!focused)return {};
-    return {std::uint16_t((k.up ? 1 : 0)|(k.down ? 2 : 0)|(k.left ? 4 : 0)|(k.right ? 8 : 0)|
+    return {std::uint16_t(((k.up||k.keypad_up) ? 1 : 0)|((k.down||k.keypad_down) ? 2 : 0)|
+        ((k.left||k.keypad_left) ? 4 : 0)|((k.right||k.keypad_right) ? 8 : 0)|
         (k.shot ? 0x20 : 0)|(k.bomb ? 0x800 : 0)|(k.enter ? 0x1000 : 0)|
-        (k.escape ? 0x2000 : 0)|(k.quit ? 0x4000 : 0)),k.shift};
+        (k.keypad_enter ? 0x1000 : 0)|(k.escape ? 0x2000 : 0)|(k.quit ? 0x4000 : 0)),k.shift||k.right_shift};
 }
 pc98_input::Sample bios_input(const Keys& keys,bool focused) {
     pc98_input::Sample sample;if(!focused)return sample;
     sample.keys[0]=keys.escape ? 1 : 0;
     sample.keys[2]=keys.quit ? 1 : 0;
-    sample.keys[3]=keys.enter ? 0x10 : 0;
+    sample.keys[3]=(keys.enter||keys.keypad_enter) ? 0x10 : 0;
     sample.keys[5]=std::uint8_t((keys.shot ? 2 : 0)|(keys.bomb ? 4 : 0));
     sample.keys[6]=keys.space ? 0x10 : 0;
     sample.keys[7]=std::uint8_t((keys.up ? 4 : 0)|(keys.down ? 0x20 : 0)|(keys.left ? 8 : 0)|(keys.right ? 0x10 : 0));
-    sample.keys[8]=std::uint8_t((keys.up_left ? 4 : 0)|(keys.up_right ? 0x10 : 0));
-    sample.keys[9]=std::uint8_t((keys.down_left ? 4 : 0)|(keys.down_right ? 0x10 : 0));
-    sample.shift=keys.shift;return sample;
+    sample.keys[8]=std::uint8_t((keys.up_left ? 4 : 0)|(keys.keypad_up ? 8 : 0)|
+        (keys.up_right ? 0x10 : 0)|(keys.keypad_left ? 0x40 : 0));
+    sample.keys[9]=std::uint8_t((keys.keypad_right ? 1 : 0)|(keys.down_left ? 4 : 0)|
+        (keys.keypad_down ? 8 : 0)|(keys.down_right ? 0x10 : 0));
+    sample.shift=keys.shift||keys.right_shift;return sample;
 }
 Keyboard::Keyboard(std::int64_t epoch,Dispatch dispatch):dispatch_(std::move(dispatch)),last_ns_(epoch) {
     if(epoch<0 || !dispatch_)throw std::invalid_argument("invalid host keyboard clock/dispatch");
@@ -68,19 +71,43 @@ void Keyboard::advance(std::int64_t now) {
     }
     dispatch_(device_,target);time_=target;last_ns_=now;remainder_=unsigned(fraction%125);
 }
+void Keyboard::set_key(unsigned i,bool down) {
+    constexpr std::array<std::uint8_t,unsigned(HostKey::count)> scans{{
+        0x3a,0x3d,0x3b,0x3c,0x29,0x1c,0x2a,0,0x10,0x70,0x42,0x44,0x4a,0x4c,0x34,
+        0x43,0x4b,0x46,0x48,0x1c,0x70}};
+    if(held_.at(i)!=down) {device_.key({std::uint16_t(i+1),scans.at(i)},down,time_);held_[i]=down;}
+}
+void Keyboard::key(HostKey key,bool down,std::int64_t now) {
+    if(unsigned(key)>=held_.size())throw std::out_of_range("invalid host key identity");
+    advance(now);if(focused_)set_key(unsigned(key),down);
+}
+void Keyboard::focus(bool focused,std::int64_t now) {
+    advance(now);focused_=focused;
+    if(!focused)for(unsigned i=0;i<held_.size();++i)set_key(i,false);
+}
+Keys Keyboard::keys() const {
+    return {held_[0],held_[1],held_[2],held_[3],held_[4],held_[5],held_[6],held_[7],held_[8],held_[9],
+        held_[10],held_[11],held_[12],held_[13],held_[14],held_[15],held_[16],held_[17],held_[18],held_[19],held_[20]};
+}
 void Keyboard::observe(const KeySample& sample) {
-    advance(sample.time_ns);
+    focus(sample.focused,sample.time_ns);
     const auto& k=sample.keys;
-    const std::array<bool,15> values{{k.up,k.down,k.left,k.right,k.shot,k.enter,k.bomb,k.escape,k.quit,
-        k.shift,k.up_left,k.up_right,k.down_left,k.down_right,k.space}};
-    constexpr std::array<std::uint8_t,15> scans{{0x3a,0x3d,0x3b,0x3c,0x29,0x1c,0x2a,0,0x10,
-        0x70,0x42,0x44,0x4a,0x4c,0x34}};
-    // Existing host aliases remain aggregated. Simultaneous polled edges use
-    // this stable order; no unobserved physical key ordering is invented.
+    const std::array<bool,unsigned(HostKey::count)> values{{k.up,k.down,k.left,k.right,k.shot,k.enter,k.bomb,k.escape,k.quit,
+        k.shift,k.up_left,k.up_right,k.down_left,k.down_right,k.space,k.keypad_up,k.keypad_down,
+        k.keypad_left,k.keypad_right,k.keypad_enter,k.right_shift}};
+    // Snapshot fixtures have no event order; reconcile them in a stable order.
+    // Live windows instead call key() in host delivery order.
     for(unsigned i=0;i<held_.size();++i) {
-        const bool down=sample.focused && values[i];
-        if(held_[i]!=down) {device_.key({std::uint16_t(i+1),scans[i]},down,time_);held_[i]=down;}
+        set_key(i,sample.focused && values[i]);
     }
+}
+pc98_input::ByteSource Keyboard::elapsed_source(std::function<std::int64_t()> clock,
+    std::function<void(pc98_input::Operation)> begin) {
+    if(!clock)throw std::invalid_argument("missing host keyboard clock source");
+    const auto shared=std::make_shared<std::function<std::int64_t()>>(std::move(clock));
+    return {std::move(begin),[this,shared](unsigned group) {
+        advance((*shared)());return device_.matrix().at(group);
+    },[this,shared] {advance((*shared)());return device_.shift();}};
 }
 pc98_input::ByteSource Keyboard::source(KeySource input,std::function<void(pc98_input::Operation)> begin) {
     if(!input)throw std::invalid_argument("missing host keyboard source");

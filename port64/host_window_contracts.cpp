@@ -44,5 +44,45 @@ int main(){try{
     require(modifier.device().shift(),"Shift must pass through serial BIOS service");
     modifier.observe({shift,false,600000});modifier.advance(1200000);
     require(!modifier.device().shift(),"Shift focus release");
+    using K=HostKey;
+    Keyboard ordered(0,Keyboard::available_cpu);
+    ordered.key(K::keypad_up,true,0);ordered.key(K::up,true,0);
+    ordered.advance(2000000);
+    require(ordered.device().matrix()[7]==4 && ordered.device().matrix()[8]==8,
+        "arrow and keypad must occupy distinct BIOS bits");
+    require(ordered.device().keyboard().repeating_key()->make==0x3a,
+        "host delivery order must choose repeat owner");
+    ordered.key(K::up,true,2000000); // An OS repeat must not restart firmware.
+    require(ordered.device().keyboard().wait_ticks()==498,"OS repeat reset firmware timer");
+    ordered.key(K::up,false,2000000);ordered.advance(3000000);
+    require(!ordered.device().matrix()[7] && ordered.device().matrix()[8]==8 &&
+        !ordered.device().keyboard().wait_ticks(),"releasing repeat owner must not transfer to held alias");
+    require(input(ordered.keys(),true).held==1,"keypad advice action lost after arrow release");
+    Keyboard pulse(0,Keyboard::available_cpu);
+    pulse.key(K::shot,true,0);pulse.key(K::shot,false,0);
+    pulse.advance(572917);require(pulse.device().matrix()[5]==2,"between-poll make was lost");
+    pulse.advance(1145834);require(!pulse.device().matrix()[5],"between-poll break was lost");
+    Keyboard returns(0,Keyboard::available_cpu);
+    returns.key(K::keypad_enter,true,0);returns.key(K::enter,true,0);
+    returns.key(K::keypad_enter,false,0);returns.advance(2000000);
+    require(returns.keys().enter && !returns.keys().keypad_enter &&
+        !returns.device().matrix()[3] && returns.device().keyboard().wait_ticks()==498,
+        "same-scan physical Return keys must preserve independent releases and repeat owner");
+    returns.focus(false,2000000);returns.key(K::enter,true,2000000);returns.advance(3000000);
+    require(!returns.keys().enter && !returns.device().keyboard().wait_ticks(),"unfocused event acquired repeat ownership");
+    returns.focus(true,3000000);returns.advance(4000000);
+    require(!returns.keys().enter,"focus gain invented an unobserved make");
+    Keyboard shifts(0,Keyboard::available_cpu);
+    shifts.key(K::shift,true,0);shifts.key(K::right_shift,true,0);shifts.key(K::shift,false,0);
+    shifts.advance(2000000);
+    require(shifts.keys().right_shift && !shifts.device().shift() &&
+        shifts.device().keyboard().repeating_key()->physical==unsigned(K::right_shift)+1,
+        "same-scan Shift keys must not merge physical ownership or BIOS release");
+    std::int64_t clock=0;Keyboard timed(0,Keyboard::available_cpu);timed.key(K::shot,true,0);
+    const auto elapsed=timed.elapsed_source([&]{clock+=100000;return clock;});
+    th04::portable::pc98_input::Latch latch;
+    require(latch.poll(th04::portable::pc98_input::Operation::reset,elapsed).keys[5]==0,
+        "byte source observed a make before its serial completion");
+    require(timed.device().matrix()[5]==2 && clock==900000,"elapsed byte source lost live clock advancement");
     std::cout<<"Host admission, slowdown/resync, bounded catchup and focused input contracts PASS\n";return 0;
 }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}

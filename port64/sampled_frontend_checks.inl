@@ -71,14 +71,14 @@ void run_sampled_frontend_checks(const PiImage& background,const CdgSheet& numer
     // the tail's Shot read, so using a final matrix would change this result.
     FrontEnd elapsed(background,numerals,labels,cursors,selection_background,portraits,&assets);
     host_window::Keyboard keyboard(0,host_window::Keyboard::available_cpu);
-    host_window::Keys held;held.shot=true;keyboard.observe({held,true,0});
+    keyboard.key(host_window::HostKey::shot,true,0);
     elapsed.enable_registration();elapsed.input(menu::Input::confirm);
     elapsed.input(menu::Input::confirm);elapsed.input(menu::Input::confirm);
     require_view(elapsed.live_main(),"elapsed keyboard frontend did not enter MAIN");
-    unsigned polls=0,reads=0,total_reads=0;std::int64_t time=0;bool stagger=false,focused=true;
-    const auto source=keyboard.source([&] {
+    unsigned polls=0,reads=0,total_reads=0;std::int64_t time=0;bool stagger=false;
+    const auto source=keyboard.elapsed_source([&] {
         const auto now=time+(stagger ? std::int64_t(reads)*100000 : 0);++reads;++total_reads;
-        return host_window::KeySample{held,focused,now};
+        return now;
     },[&](pc98_input::Operation) {
         time=polls<2 ? 600000 : polls==2 ? 500600000 : polls<5 ? 501500000 : 503000000;
         stagger=polls==2;++polls;reads=0;
@@ -95,7 +95,7 @@ void run_sampled_frontend_checks(const PiImage& background,const CdgSheet& numer
         "elapsed keyboard player/tail distinction");
     step();require_view(elapsed.main_state().player_input()==32 && elapsed.main_state().consumed_input()==32,
         "elapsed keyboard later make");
-    focused=false;keyboard.observe({held,false,502000000});
+    keyboard.focus(false,502000000);
     step();require_view(elapsed.main_state().player_input()==32 && !elapsed.main_state().consumed_input(),
         "focus release must preserve Sense until the game resets");
     step();require_view(!elapsed.main_state().player_input() && !elapsed.sampled_input().actions,

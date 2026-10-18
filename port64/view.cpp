@@ -2746,6 +2746,41 @@ struct Win32Title {
     }
 };
 
+// Translate message identity before UI action aliases. The extended bit
+// separates navigation/keypad keys and the two Return keys.
+host_window::HostKey win32_host_key(WPARAM key,LPARAM data) {
+    using K=host_window::HostKey;
+    const bool extended=(data & (LPARAM(1)<<24))!=0;
+    switch(key) {
+    case VK_UP:return extended ? K::up : K::keypad_up;
+    case VK_DOWN:return extended ? K::down : K::keypad_down;
+    case VK_LEFT:return extended ? K::left : K::keypad_left;
+    case VK_RIGHT:return extended ? K::right : K::keypad_right;
+    case VK_NUMPAD8:return K::keypad_up;
+    case VK_NUMPAD2:return K::keypad_down;
+    case VK_NUMPAD4:return K::keypad_left;
+    case VK_NUMPAD6:return K::keypad_right;
+    case VK_NUMPAD7:return K::up_left;
+    case VK_NUMPAD9:return K::up_right;
+    case VK_NUMPAD1:return K::down_left;
+    case VK_NUMPAD3:return K::down_right;
+    case VK_HOME:return extended ? K::count : K::up_left;
+    case VK_PRIOR:return extended ? K::count : K::up_right;
+    case VK_END:return extended ? K::count : K::down_left;
+    case VK_NEXT:return extended ? K::count : K::down_right;
+    case VK_RETURN:return extended ? K::keypad_enter : K::enter;
+    case VK_LSHIFT:return K::shift;
+    case VK_RSHIFT:return K::right_shift;
+    case VK_SHIFT:return ((data>>16)&0xff)==0x36 ? K::right_shift : K::shift;
+    case 'Z':return K::shot;
+    case 'X':return K::bomb;
+    case 'Q':return K::quit;
+    case VK_ESCAPE:return K::escape;
+    case VK_SPACE:return K::space;
+    default:return K::count;
+    }
+}
+
 LRESULT CALLBACK title_window_proc(
     HWND window, UINT message, WPARAM wparam, LPARAM lparam
 ) {
@@ -2757,26 +2792,26 @@ LRESULT CALLBACK title_window_proc(
         title = static_cast<Win32Title*>(create->lpCreateParams);
         SetWindowLongPtrW(window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(title));
     }
+    if(title && (message==WM_KEYDOWN || message==WM_KEYUP ||
+                 message==WM_SYSKEYDOWN || message==WM_SYSKEYUP)) {
+        const auto key=win32_host_key(wparam,lparam);
+        if(key!=host_window::HostKey::count)
+            title->keyboard.key(key,message==WM_KEYDOWN || message==WM_SYSKEYDOWN,host_window::now_ns());
+    }
+    if(title && (message==WM_SETFOCUS || message==WM_KILLFOCUS))
+        title->keyboard.focus(message==WM_SETFOCUS,host_window::now_ns());
     switch (message) {
     case WM_TIMER:
         if (title) {
             const auto now = host_window::now_ns();
             title->schedule.wake();bool dirty=title->front_end.observe_text_time(now);
             while(title->schedule.due(now)) {
-                const auto platform_keys=[] {
-                    const auto pressed=[](int key){return (GetAsyncKeyState(key)&0x8000)!=0;};
-                    return host_window::Keys{pressed(VK_UP)||pressed(VK_NUMPAD8),pressed(VK_DOWN)||pressed(VK_NUMPAD2),
-                        pressed(VK_LEFT)||pressed(VK_NUMPAD4),pressed(VK_RIGHT)||pressed(VK_NUMPAD6),
-                        pressed('Z'),pressed(VK_RETURN),pressed('X'),pressed(VK_ESCAPE),pressed('Q'),pressed(VK_SHIFT),
-                        pressed(VK_NUMPAD7),pressed(VK_NUMPAD9),pressed(VK_NUMPAD1),pressed(VK_NUMPAD3),pressed(VK_SPACE)};
-                };
                 const bool active=GetForegroundWindow()==window;
-                const auto in=host_window::input(platform_keys(),active);
+                const auto in=host_window::input(title->keyboard.keys(),active);
                 std::int64_t sample_begin=0;bool sample_focused=false;
-                title->keyboard.observe({platform_keys(),active,host_window::now_ns()});
-                const auto source=title->keyboard.source([&] {
-                    const auto keys=platform_keys();sample_focused=GetForegroundWindow()==window;
-                    return host_window::KeySample{keys,sample_focused,host_window::now_ns()};
+                const auto source=title->keyboard.elapsed_source([&] {
+                    sample_focused=GetForegroundWindow()==window;
+                    return host_window::now_ns();
                 },[&](pc98_input::Operation) {if(title->trace)sample_begin=host_window::now_ns();});
                 const pc98_input::Observer observer=[&](const pc98_input::Observation& sample) {
                     title->trace.input_poll(title->schedule.total()+1,sample_begin,host_window::now_ns(),
@@ -2930,6 +2965,33 @@ void show_window(
         ~TextureOwner() { SDL_DestroyTexture(value); }
     } texture_owner{texture};
 
+    const auto physical_key=[](SDL_Scancode key) {
+        using K=host_window::HostKey;
+        switch(key) {
+        case SDL_SCANCODE_UP:return K::up;
+        case SDL_SCANCODE_DOWN:return K::down;
+        case SDL_SCANCODE_LEFT:return K::left;
+        case SDL_SCANCODE_RIGHT:return K::right;
+        case SDL_SCANCODE_KP_8:return K::keypad_up;
+        case SDL_SCANCODE_KP_2:return K::keypad_down;
+        case SDL_SCANCODE_KP_4:return K::keypad_left;
+        case SDL_SCANCODE_KP_6:return K::keypad_right;
+        case SDL_SCANCODE_KP_7:return K::up_left;
+        case SDL_SCANCODE_KP_9:return K::up_right;
+        case SDL_SCANCODE_KP_1:return K::down_left;
+        case SDL_SCANCODE_KP_3:return K::down_right;
+        case SDL_SCANCODE_RETURN:return K::enter;
+        case SDL_SCANCODE_KP_ENTER:return K::keypad_enter;
+        case SDL_SCANCODE_LSHIFT:return K::shift;
+        case SDL_SCANCODE_RSHIFT:return K::right_shift;
+        case SDL_SCANCODE_Z:return K::shot;
+        case SDL_SCANCODE_X:return K::bomb;
+        case SDL_SCANCODE_Q:return K::quit;
+        case SDL_SCANCODE_ESCAPE:return K::escape;
+        case SDL_SCANCODE_SPACE:return K::space;
+        default:return K::count;
+        }
+    };
     host_window::Trace trace(main_assets.window_trace,main_assets.muted);
     FrontEnd front_end(
         background, numerals, labels, cursors, selection_background, portraits, &main_assets
@@ -2948,6 +3010,14 @@ void show_window(
                  (!dirty && SDL_WaitEventTimeout(&event, 4));
              available; available = SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) running = false;
+            if(event.type==SDL_WINDOWEVENT && (event.window.event==SDL_WINDOWEVENT_FOCUS_LOST ||
+               event.window.event==SDL_WINDOWEVENT_FOCUS_GAINED))
+                keyboard.focus(event.window.event==SDL_WINDOWEVENT_FOCUS_GAINED,host_window::now_ns());
+            if(event.type==SDL_KEYDOWN || event.type==SDL_KEYUP) {
+                const auto key=physical_key(event.key.keysym.scancode);
+                if(key!=host_window::HostKey::count)
+                    keyboard.key(key,event.type==SDL_KEYDOWN,host_window::now_ns());
+            }
             if (event.type != SDL_KEYDOWN || event.key.repeat) continue;
             switch (event.key.keysym.sym) {
             case SDLK_UP:
@@ -2983,24 +3053,12 @@ void show_window(
         if (!running) break;
         const auto now=host_window::now_ns();schedule.wake();dirty|=front_end.observe_text_time(now);
         while(schedule.due(now)) {
-            const auto platform_keys=[] {
-                SDL_PumpEvents();const auto* keys=SDL_GetKeyboardState(nullptr);
-                return host_window::Keys{bool(keys[SDL_SCANCODE_UP] || keys[SDL_SCANCODE_KP_8]),
-                    bool(keys[SDL_SCANCODE_DOWN] || keys[SDL_SCANCODE_KP_2]),
-                    bool(keys[SDL_SCANCODE_LEFT] || keys[SDL_SCANCODE_KP_4]),
-                    bool(keys[SDL_SCANCODE_RIGHT] || keys[SDL_SCANCODE_KP_6]),bool(keys[SDL_SCANCODE_Z]),
-                    bool(keys[SDL_SCANCODE_RETURN] || keys[SDL_SCANCODE_KP_ENTER]),bool(keys[SDL_SCANCODE_X]),
-                    bool(keys[SDL_SCANCODE_ESCAPE]),bool(keys[SDL_SCANCODE_Q]),
-                    bool(keys[SDL_SCANCODE_LSHIFT] || keys[SDL_SCANCODE_RSHIFT]),bool(keys[SDL_SCANCODE_KP_7]),
-                    bool(keys[SDL_SCANCODE_KP_9]),bool(keys[SDL_SCANCODE_KP_1]),bool(keys[SDL_SCANCODE_KP_3]),bool(keys[SDL_SCANCODE_SPACE])};
-            };
             const bool focused=(SDL_GetWindowFlags(window)&SDL_WINDOW_INPUT_FOCUS)!=0;
-            const auto in=host_window::input(platform_keys(),focused);
+            const auto in=host_window::input(keyboard.keys(),focused);
             std::int64_t sample_begin=0;bool sample_focused=false;
-            keyboard.observe({platform_keys(),focused,host_window::now_ns()});
-            const auto source=keyboard.source([&] {
-                const auto keys=platform_keys();sample_focused=(SDL_GetWindowFlags(window)&SDL_WINDOW_INPUT_FOCUS)!=0;
-                return host_window::KeySample{keys,sample_focused,host_window::now_ns()};
+            const auto source=keyboard.elapsed_source([&] {
+                sample_focused=(SDL_GetWindowFlags(window)&SDL_WINDOW_INPUT_FOCUS)!=0;
+                return host_window::now_ns();
             },[&](pc98_input::Operation) {if(trace)sample_begin=host_window::now_ns();});
             const pc98_input::Observer observer=[&](const pc98_input::Observation& sample) {
                 trace.input_poll(schedule.total()+1,sample_begin,host_window::now_ns(),sample,
