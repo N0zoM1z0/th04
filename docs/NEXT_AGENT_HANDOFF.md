@@ -1,8 +1,8 @@
 # Resume TH04 reconstruction
 
 Updated 2026-10-18. Complete DOS/native goals remain active. Read actual heads
-and DOS-root receive-clock-v1494/finish.json. Native code 19c1d37 separates RX
-service deadlines from CPU observations. Original CPU/boot timing remains open.
+and DOS-root irq-service-v1495/finish.json. Root probes distinguish protected
+monitor and V86 BIOS returns; native code stays 19c1d37. CPU/boot ownership stays open.
 
 ## Resume instruction
 
@@ -28,37 +28,30 @@ Finish focused comparison, tracking, both scripts/ci.py runs and git diff --chec
 Commit/push main and native HEAD:port/modern-64. Leave both full goals active.
 ```
 
-## UART receive event clock (v1494)
+## Original IRQ1 monitor and ROM return (v1495)
 
-Native code 19c1d37 anchors an RX callback's IRQ1 check to its queued service
-deadline. A late CPU observation no longer shifts the check forward. CPU
-acceptance, unmask, EOI and a stalled UART's read/restart retain their own
-observation times. The default host runs peripheral callbacks at their exact
-deadlines; original CPU instruction cost and a common boot epoch stay open.
+Root probe code 6fb50c5 records the original normal boot through eight Stage1
+updates: six complete IRQ1 paths and 96 supplemental observations. The full
+MAIN load module is attested before use; provenance remains candidate-local-attested.
+131 complete timer transactions audit 657 clock records and 1091 admission
+records, plus the separate ISR stream, with zero canonical clock regressions.
+The MAIN entry remains a raw snapshot outside that timer audit.
 
-The current product header agrees with exact pinned UART/PIC/queue source over
-220 scenarios/12320 state rows, covering late callbacks, unread overrun, a full
-ring, blocked CPU and unmasking. The pre-change consumer differs in 3758 rows;
-a wrong chained-transfer anchor differs in 5313. Both controls compile and exit 0.
-17 source bodies are byte-attested. The actual emulator ELF confirms the
-service-index branch; five operand/branch defects reject. Queue storage, explicit
-time input, CPU interrupt entry and unused TX paths are bounded Oracle adapters.
-Source and binary evidence belong to one emulator family, not hardware validation.
+CPU acceptance first enters a protected-mode monitor. Its IRET reaches the
+V86 BIOS entry F000:E96A; it does not finish the keyboard IRQ. The BIOS callback
+returns at F000:E96E with ISR1 still set. The generated ROM tail issues
+OUT 00h,20h at F000:E971, then IRET at F000:E974 restores the entire captured
+interrupted CPU context. Three port reads (43h,41h,43h) consume each byte and
+update the BIOS bitmap without changing guest CPU state inside the callback.
 
-Two retained authored microfixtures provide 12 RX callbacks with lateness below
-one native quantum. They do not distinguish the late-RX hypotheses. No fresh
-original-game capture or observed original runtime fault is claimed; this is a
-source/compiler correction. Raw time and service-index fractions remain separate.
-
-Current source has 573 files, closure fe7dca75f53a7a665681672eb0b25710ff7cbac06a82390ec8ad33d325b903a9.
-All five affected consumers are cold compiled per role (15 objects/12 programs),
-with 112 unrelated core objects reused per role by SHA. Frontend/original-ISA,
-physical keys and claim limits are in the main-branch TH04_REPLAY_DIFFERENTIAL
-note. This is not an all-source cold cohort or full campaign acceptance.
-
-Next establish CPU availability, BIOS/EOI instruction cost, other IRQ producers
-and the common boot epoch. All historical strict negatives remain unclosed;
-both complete DOS/native goals stay active.
+Independent ROM-tail CPU checks pass and five semantic defects reject; source,
+interval and replay details are in the main-branch TH04_REPLAY_DIFFERENTIAL note.
+Native code stays 19c1d37 with the unchanged 573-file fe7dca75 source closure.
+Its current programs/objects/link inputs retain their entry identities; this
+batch does not rebuild products. Next establish the CPU service owner, common
+boot epoch and other IRQ producers before full campaign comparison. Default
+native immediate CPU/BIOS/EOI remains an explicit portable policy. Complete
+DOS/native fidelity and historical strict negatives remain open.
 
 ## Earlier PIC evidence
 
@@ -102,17 +95,8 @@ The current cohort retains programs and link inputs after CMake bookkeeping
 pruning; never incrementally build or invoke CTest there. Use a fresh directory.
 See ANALYSIS_RETENTION.md for the exact journals and recovery consumers.
 
-Heavy work stays serial, CPUQuota=35%, MemoryMax=768M, no swap, Nice=19, CPU1,
-64 tasks and no cores. Normal checks use MemoryHigh=256M. The first attempt
-stalls above 90% memory-pressure time; GGC min-expand=5/min-heapsize=4096 reduces
-compiler heap use. The giant FrontEnd TU uses compile-only soft exceptions,
-up to the existing 768M hard cap. The O2 and O1/GGC5 attempts hit that cap;
-retain its failure and journal. GNU CTest returns to 256M under the original
-supervisor. The resumed driver compiles only View at O0, verifies all preserved
-fresh O2 core hashes and the override object after linking, and restores 256M
-before every UBSan control. Windows is a fresh compile-only directory. The
-attempted compile_commands entry is qualified by resume-o0/view-override.json;
-never call this an uninterrupted uniform-O2 build. Both initial resource
-amendments and the failed supervisor remain explicit. Runtime checks use 256M.
-Keep emulators muted/headless; Windows remains compile-only. Do not use host
-keys/focus, physical audio, or GUI/device workarounds.
+Heavy work stays serial: CPUQuota35%, MemoryHigh256M, MemoryMax768M,
+MemorySwapMax0, CPU1/Nice19, TasksMax64 and LimitCORE0. Only View uses the
+recorded compile-only soft/profile exceptions in RE_HANDOFF; do not repeat the
+known O2/O1 sanitizer failures. Keep runs muted/headless, Windows compile/link
+only, and use no physical host keys/focus/audio or device workarounds.
