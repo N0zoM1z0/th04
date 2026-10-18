@@ -1,8 +1,8 @@
 # Resume TH04 reconstruction
 
 Updated 2026-10-18. Complete DOS/native goals remain active. Read actual heads
-and DOS-root dispatch-epoch-v1493/finish.json. Native code cfe5ac7 adds delayed
-PIC checks and separate CPU availability. Original CPU/boot timing remains open.
+and DOS-root receive-clock-v1494/finish.json. Native code 19c1d37 separates RX
+service deadlines from CPU observations. Original CPU/boot timing remains open.
 
 ## Resume instruction
 
@@ -28,41 +28,37 @@ Finish focused comparison, tracking, both scripts/ci.py runs and git diff --chec
 Commit/push main and native HEAD:port/modern-64. Leave both full goals active.
 ```
 
-## Delayed PIC checks and original timer audit (v1493)
+## UART receive event clock (v1494)
 
-Native code cfe5ac7 adds a separate delayed PIC check to the live keyboard
-path. A ready UART byte latches the request; IF alone cannot bypass the pending
-check. IF, normal-trap decoder and NMI availability remain separate CPU gates.
-Mask/EOI transitions can schedule a check, accepted IRQs rearm it, and a blocked
-CPU preserves an already raised check. Callbacks may arrive after their deadline.
-The window uses the independently observed 406 ns configuration, rounded upward
-to 234 peripheral quanta. CPU acceptance, BIOS read and EOI after that check
-remain an explicit immediate portable policy, not original ISR instruction cost.
+Native code 19c1d37 anchors an RX callback's IRQ1 check to its queued service
+deadline. A late CPU observation no longer shifts the check forward. CPU
+acceptance, unmask, EOI and a stalled UART's read/restart retain their own
+observation times. The default host runs peripheral callbacks at their exact
+deadlines; original CPU instruction cost and a common boot epoch stay open.
 
-The normal original boot completes eight Stage1 updates. Complete relocated
-MAIN attestation precedes observations; provenance is candidate-local-attested.
-130 complete timer transactions audit 1069 packet records, removing 130 raw
-bookkeeping regressions with zero canonical regressions. MAIN entry remains a
-separate raw snapshot. Five actual UART completions show Check0/Pending1, then
-the delayed callback sets Check1/Pending0 before V86 CPU acceptance. The five
-canonical observation intervals are 15 emulator counter cycles each; they are
-not a physical UART-to-BIOS delay. Ten recorded queued event deadlines remain
-distinct from CPU observation time and round to the same 234-quanta policy.
-The current gate reproduces 85 observed normal-primary states; the earlier
-strict-deadline candidate rejects actual late callbacks. Active cascade routing
-outside these bounded intervals remains excluded.
+The current product header agrees with exact pinned UART/PIC/queue source over
+220 scenarios/12320 state rows, covering late callbacks, unread overrun, a full
+ring, blocked CPU and unmasking. The pre-change consumer differs in 3758 rows;
+a wrong chained-transfer anchor differs in 5313. Both controls compile and exit 0.
+17 source bodies are byte-attested. The actual emulator ELF confirms the
+service-index branch; five operand/branch defects reject. Queue storage, explicit
+time input, CPU interrupt entry and unused TX paths are bounded Oracle adapters.
+Source and binary evidence belong to one emulator family, not hardware validation.
 
-Source replay, fresh affected-product builds, frontend/original-ISA checks and
-claim limits are detailed in the main-branch TH04_REPLAY_DIFFERENTIAL note.
-Current source has 573 files, closure
-e7aa088c4202b23c339f9129a4cc267f2e85ea27ea2dc4fc538e626242f62783.
-This is 15 fresh affected objects/12 programs with 112 unrelated core objects
-reused per role, not an all-source cold cohort or full campaign acceptance.
+Two retained authored microfixtures provide 12 RX callbacks with lateness below
+one native quantum. They do not distinguish the late-RX hypotheses. No fresh
+original-game capture or observed original runtime fault is claimed; this is a
+source/compiler correction. Raw time and service-index fractions remain separate.
 
-Next bind CPU availability, BIOS/EOI cost, other IRQ producers and boot epoch.
-Keep peripheral event deadlines distinct from CPU observation time, including
-late transport callbacks. Default host callbacks run at their exact deadlines.
-All historical strict negatives remain unclosed; both full goals stay active.
+Current source has 573 files, closure fe7dca75f53a7a665681672eb0b25710ff7cbac06a82390ec8ad33d325b903a9.
+All five affected consumers are cold compiled per role (15 objects/12 programs),
+with 112 unrelated core objects reused per role by SHA. Frontend/original-ISA,
+physical keys and claim limits are in the main-branch TH04_REPLAY_DIFFERENTIAL
+note. This is not an all-source cold cohort or full campaign acceptance.
+
+Next establish CPU availability, BIOS/EOI instruction cost, other IRQ producers
+and the common boot epoch. All historical strict negatives remain unclosed;
+both complete DOS/native goals stay active.
 
 ## Earlier PIC evidence
 

@@ -1,5 +1,19 @@
 # Private build and analysis retention
 
+## RX service-clock recovery (v1494)
+
+Use DOS-root .analysis/reconstruction/probes/receive-clock-v1494/recover.py.
+It chains 90768 incoming identities (including the three v1493 late files)
+and 10225 exact aliases after six new retirements. All six actual restores
+preserve SHA, size, mode and nsmtime; the restored input program executes.
+The retained current/reference/wrong consumers replay exact archived wires.
+Keep current 12 programs/15 objects/link inputs, source capsule, all semantic and
+operand controls, negative results and every inherited provider. The entry vector
+reuses the canonical v1493 capsule; no new entry gzip or HDI capture is created.
+Closed new regular allocations save 3919872 bytes after provider cost;
+this is not a net phase-entry storage decrease. Never build or invoke CTest in
+retired cohorts; use a fresh replay directory.
+
 ## Delayed PIC dispatch recovery (v1493)
 
 Use DOS-root .analysis/reconstruction/probes/dispatch-epoch-v1493/recover.py.
