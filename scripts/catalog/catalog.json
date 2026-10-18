@@ -3997,6 +3997,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/verify_pc98_input_bytes.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Compare live keyboard/Shift/joystick byte callbacks with unchanged original sampler instructions and compiled semantic defects.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/verify_pc98_keyboard_device.py",
     "category": "runtime",
     "role": "support",

@@ -118,6 +118,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_stage_waits_gdb.py](../probes/th04_stage_waits_gdb.py) | support | Capture Stage2 blocking call/return/player checkpoints with five persistent read-only watchpoints. |
 | [probes/th04_title_draw_checkpoints_gdb.py](../probes/th04_title_draw_checkpoints_gdb.py) | support | Record original BB code-entry registers, caller and scroll state on declared updates. |
 | [probes/th04_title_draw_stream_gdb.py](../probes/th04_title_draw_stream_gdb.py) | support | Stream actual original BB entry arguments across all armed ordinary update intervals. |
+| [probes/verify_pc98_input_bytes.py](../probes/verify_pc98_input_bytes.py) | command | Compare live keyboard/Shift/joystick byte callbacks with unchanged original sampler instructions and compiled semantic defects. |
 | [probes/verify_pc98_keyboard_device.py](../probes/verify_pc98_keyboard_device.py) | support | Compare a source-bound native keyboard component with every recorded request, timer tick, receive callback and CPU data read. |
 | [probes/verify_pc98_keyboard_irq.py](../probes/verify_pc98_keyboard_irq.py) | support | Compare separate UART requests, actual CPU interrupt acceptance and BIOS reads with source-bound native pending-IRQ ownership. |
 | [runtime/fixtures/good_ending.asm](../runtime/fixtures/good_ending.asm) | fixture | Private resident seed for real MAINE Ending tests; bypasses OP/gameplay initialization. |
