@@ -1,5 +1,32 @@
 # Private build and analysis retention
 
+## Keyboard component and resource bounds (v1485)
+
+Use DOS-root `.analysis/reconstruction/probes/keyboard-device-v1485/recover.py`:
+9880 exact aliases (9866 inherited, 14 new), 86273 inherited identities and all
+providers. Fourteen SHA/size/mode/nsmtime restores preserve both authored scenarios
+through GNU/UBSan and all six compiled wrong-model rejections in actual/archive
+views. Gross retirement is 4.75390625 MiB; new archives cost 0.21484375 MiB.
+Charged helpers and a 2 MiB reserve leave at least 1 MiB conservative local net.
+Do not reuse inherited credit or count FIFO/temporary restoration writes.
+
+Separately, 2756 never-used generated CMake metadata files occupy 12.78125 MiB
+and are deleted from the new component cache after a strict metadata whitelist
+check. Their allocation earns zero exact-alias or cleanup-net credit. All three
+current component programs, actual objects/link inputs and the old full-game
+cohort remain physical and hash-identical. This new cache is also retired for
+incremental builds. Never run builds or CTest in protected historical cohorts.
+
+Preserve both exact historical native controls and current source snapshots.
+Historical CMake/verify staging is only a legacy-reader context; it restores
+current bytes/mode/nsmtime. Do not run builds or CI while staged. The old full
+game remains labeled with 571 files; only the isolated component binds 573.
+
+Use a user systemd service for heavy checks: CPUQuota=35%, MemoryMax=768M,
+MemorySwapMax=0, TasksMax=64, Nice=19, plus taskset -c 1. These limits were read
+back from the actual cgroup. Run checks serially; keep Ghidra's headless heap at
+384M and one active processor. No host keys/focus or unrelated-process cleanup.
+
 ## V86 keyboard capture recovery (v1484)
 
 Use DOS-root `.analysis/reconstruction/probes/v86-admission-v1484/recover.py`.

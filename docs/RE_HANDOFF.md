@@ -5,6 +5,49 @@ goals remain active. Use `taskset -c 1 nice -n 19`, muted headless runs,
 serialized Borland/Wine and no host keys/focus. Keep English code/docs and
 `gpt-6.1-sol: ...` commits; push main and native `HEAD:port/modern-64`.
 
+## Isolated keyboard peripheral (v1485)
+
+Native b774aa9 adds separate Typematic, Receiver and ordinary BIOS matrix owners
+in port64/pc98_keyboard.hpp. They preserve repeat break/make, pause500/rate33,
+31 queued bytes, serialized 55/96 ms characters, unread-data overrun and restart
+on CPU read. Modifiers and caller tick/admission policy remain separate. The
+header is consumed only by its standalone contract, not the game frontend.
+Main 8812f9f adds reusable authored repeat/stalled launchers and a native verifier.
+
+Fresh internal-DOS repeat evidence contains 548 operations and every one of 534
+actual timer calls. Two external requests generate six bytes; observed internal
+repeat requests are never model inputs. A separate CLI/65535-LOOP/STI fixture
+observes unread data, a stopped receiver and a queued byte; reading restarts it.
+Its 16 operations include five RX callbacks and four CPU reads. Both scenarios
+agree with cold GNU and UBSan components. Ten software BIOS stores independently
+match hardware watchpoints. Six successfully compiled wrong models reject.
+Recorded RX/CPU admission times remain boundary inputs, not predicted IRQ timing.
+
+Current maintained native closure: 573 files,
+`af655e9e1ef5ac7702fbf07a8bca4b8946f8655b3fb71b59a5c24ba74d1f1b87`.
+Fresh keyboard-device-v1485-component contains three standalone programs: GNU
+and UBSan execute; Windows compiles only. All 569 existing non-control inputs
+are unchanged; control changes only add this target and two manifest entries.
+The old full-game v1481 cohort retains its original 571-file closure and results.
+Historical control staging preserves the old reader report byte-for-byte and
+restores current bytes/mode/nsmtime. Never build or run CI during that staging.
+
+Use DOS-root keyboard-device-v1485/recover.py: 9880 aliases, 86273 inherited
+identities, 14 new exact metadata restores and positive/negative actual/archive
+readers. Conservative phase-local net release is at least 1 MiB. A separate
+2756-file generated-only cache prune removes 12.78125 MiB, with no cleanup-net
+credit. Current programs/link inputs, source capsules and unique witnesses remain
+physical. The component cache is retired for incremental builds; use fresh paths.
+
+Next establish a justified monotone clock and IRQ/sample admission before wiring
+the component into the frontend. Preserve original V86 pair75, 52 raw-time
+regressions and the existing latch/UI. No fitted phase, hold, expected word or
+fixed 0.573 ms admission delay. The v1484 strict result remains false (30 tail
+words, 23 raw GDC samples); the older 40-tail case is distinct. Original V86,
+NP2/hardware, common-reset timing and full campaigns are not accepted here.
+Maintained DOS products and artifact/unit exactness remain unchanged; both full
+goals remain active. See the main differential note for evidence and commands.
+
 ## Original V86 keyboard admission (v1484)
 
 The fresh original capture completes Stage3 and reaches actual Stage4 init/score1
@@ -134,9 +177,11 @@ with 49 keys; do not subtract or merge their counts.
 
 ## Native comparison and current products
 
-Maintained native source remains 571 files, closure
+Current maintained native source has 573 files; the isolated keyboard cohort
+and its closure are documented in v1485 above. The retained full-game cohort
+still binds its original 571-file closure
 `10d8adb1fbdac1495f2b8a5180fa21e1808003bba8ebe2a6cd396ae4567b4f01`.
-Current cold products/link inputs:sampled-device-v1481-final, GNU 90 programs/
+Full-game cold products/link inputs:sampled-device-v1481-final, GNU 90 programs/
 86 CTests, UBSan 5 and Windows 2 compile checks. Both private GNU device programs,
 link objects, source capsules and unique witnesses remain physical. Old
 frontend-input-v1480-final is superseded:keep its inherited providers/receipts/

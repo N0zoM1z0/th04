@@ -5,6 +5,88 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Isolated keyboard peripheral (v1485)
+
+Native b774aa9 adds separate Typematic, Receiver and ordinary BIOS matrix owners
+in port64/pc98_keyboard.hpp. They preserve repeat break/make, pause500/rate33,
+31 queued bytes, serialized 55/96 ms characters, unread-data overrun and restart
+on CPU read. Modifiers and caller tick/admission policy remain separate. The
+header is consumed only by its standalone contract, not the game frontend.
+Main 8812f9f adds reusable authored repeat/stalled launchers and a native verifier.
+
+Fresh internal-DOS repeat evidence contains 548 operations and every one of 534
+actual timer calls. Two external requests generate six bytes; observed internal
+repeat requests are never model inputs. A separate CLI/65535-LOOP/STI fixture
+observes unread data, a stopped receiver and a queued byte; reading restarts it.
+Its 16 operations include five RX callbacks and four CPU reads. Both scenarios
+agree with cold GNU and UBSan components. Ten software BIOS stores independently
+match hardware watchpoints. Six successfully compiled wrong models reject.
+Recorded RX/CPU admission times remain boundary inputs, not predicted IRQ timing.
+
+Current maintained native closure: 573 files,
+`af655e9e1ef5ac7702fbf07a8bca4b8946f8655b3fb71b59a5c24ba74d1f1b87`.
+Fresh keyboard-device-v1485-component contains three standalone programs: GNU
+and UBSan execute; Windows compiles only. All 569 existing non-control inputs
+are unchanged; control changes only add this target and two manifest entries.
+The old full-game v1481 cohort retains its original 571-file closure and results.
+Historical control staging preserves the old reader report byte-for-byte and
+restores current bytes/mode/nsmtime. Never build or run CI during that staging.
+
+Use DOS-root keyboard-device-v1485/recover.py: 9880 aliases, 86273 inherited
+identities, 14 new exact metadata restores and positive/negative actual/archive
+readers. Conservative phase-local net release is at least 1 MiB. A separate
+2756-file generated-only cache prune removes 12.78125 MiB, with no cleanup-net
+credit. Current programs/link inputs, source capsules and unique witnesses remain
+physical. The component cache is retired for incremental builds; use fresh paths.
+
+Next establish a justified monotone clock and IRQ/sample admission before wiring
+the component into the frontend. Preserve original V86 pair75, 52 raw-time
+regressions and the existing latch/UI. No fitted phase, hold, expected word or
+fixed 0.573 ms admission delay. The v1484 strict result remains false (30 tail
+words, 23 raw GDC samples); the older 40-tail case is distinct. Original V86,
+NP2/hardware, common-reset timing and full campaigns are not accepted here.
+Maintained DOS products and artifact/unit exactness remain unchanged; both full
+goals remain active. See the main differential note for evidence and commands.
+
+### Replay surface and evidence limits
+
+The public tools are scripts/probes/run_pc98_keyboard_device.py (repeat or
+stalled), pc98_keyboard_device_gdb.py, fixtures/pc98_keyboard_stalled.asm and
+verify_pc98_keyboard_device.py. Captures use the pinned emulator/font, authored
+COM files and read-only observers; external API requests preserve guest CPU,
+time and 640KiB memory. There are no host key/focus operations or game patches.
+The tick-layout probe binds reset331/active332/scanning333/pending_key24/
+pending_key_state338 with the pinned GCC host layout. Pending keys outside the
+modeled empty-slot path reject. The transport uses integer 576000 quanta/ms;
+service deadlines, rather than late callback time, anchor continued transfer.
+
+The repeat fixture generates 29,A9,29,A9,29,A9 from only two physical requests;
+the stalled fixture generates 29,1C,A9,9C. Constructor defaults supply model
+state. Every actual timer entry/return is observed; gates and actual RX/read
+events are external boundary inputs. BIOS changes only at CPU admission. These
+are internal-DOS runtime observations, not target instruction or hardware proof.
+Six negative models cover missing repeat break, rate34, release-any-key, unread
+overwrite, arrival-to-BIOS and pause499; every mutant compiles before rejection.
+
+Private DOS-root .analysis/reconstruction/probes/keyboard-device-v1485 contains
+source-delta.json, legacy-source-replay.json, tick-layout/layout.json,
+variant-checks.json, model-faults.json, retired/recovery.json and
+unbuilt-cache-cleanup.json. Public config/evidence.csv links their exact hashes;
+config/knowledge.csv records the reusable recipes and remaining clock question.
+verify_pc98_keyboard_device.py requires capture, program, tick-layout, model-header,
+build-receipt and a fresh output path. Restoring an archived JSONL is a named
+reader operation through recover.py; private compare_device_archive.py reads
+the exact archived bytes directly. Keep program/header/receipt identities bound.
+Do not rerun the cold build in its now-retired cache or run CTest in old cohorts.
+
+Use systemd-run --user --wait --collect --pipe with CPUQuota=35%, MemoryMax=768M,
+MemorySwapMax=0, TasksMax=64, Nice=19 and taskset -c 1 for serial checks. The
+actual cgroup returned cpu.max=35000 100000, memory.max=805306368 and swap.max=0.
+Set GHIDRA_HEADLESS_MAXMEM=384M and JAVA_TOOL_OPTIONS=-XX:ActiveProcessorCount=1.
+An argument probe of ci.py unexpectedly ran the full CI because the script
+ignores arguments; it completed successfully. Subsequent required checks use
+the explicit limits and saved logs. No unrelated process is modified.
+
 ## Original V86 keyboard admission (v1484)
 
 The fresh original capture completes Stage3 and reaches actual Stage4 init/score1
