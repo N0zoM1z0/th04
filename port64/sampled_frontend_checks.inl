@@ -105,4 +105,62 @@ void run_sampled_frontend_checks(const PiImage& background,const CdgSheet& numer
     std::ofstream elapsed_result(directory/"elapsed-result.txt");
     elapsed_result<<"elapsed_frontend=pass frames=4 polls="<<polls<<" scalar_and_shift_reads="<<total_reads
         <<" final_matrix_shortcut_rejected=1 focus_release=1\n";
+
+    const auto joystick_exercise=[&](bool observed) {
+        FrontEnd joystick(background,numerals,labels,cursors,selection_background,portraits,&assets);
+        joystick.enable_registration();joystick.input(menu::Input::confirm);
+        joystick.input(menu::Input::confirm);joystick.input(menu::Input::confirm);
+        require_view(joystick.live_main(),"live joystick frontend did not enter MAIN");
+        const std::array<unsigned,8> groups{{7,9,8,5,2,0,3,6}};
+        const std::array<std::uint8_t,9> pins{{0xf7,0xff,0xff,0xfd,0xff,0xdf,0xff,0,0}};
+        const std::vector<std::uint16_t> expected{8,8,0,2,0,32,0,0,0};
+        unsigned polls=0,current=0,phase=0,enables=0,pin_reads=0,observations=0;
+        std::vector<std::uint16_t> words;std::ostringstream samples;
+        pc98_input::ByteSource source{[&](pc98_input::Operation) {
+            require_view(polls<pins.size(),"unexpected live joystick poll");current=polls++;phase=0;
+        },[&](unsigned group) {
+            require_view(phase<8 && group==groups[phase++],"live joystick keyboard byte order");
+            return std::uint8_t(0);
+        },[&] {
+            require_view(phase++==8,"Shift must precede the joystick transaction");return false;
+        },[&] {
+            require_view(phase++==9,"joystick enable query order");++enables;return current<7;
+        },[&] {
+            require_view(phase++==10 && current<7,"disabled joystick performed a bus transaction");
+            ++pin_reads;return pins[current];
+        }};
+        const pc98_input::Observer witness=[&](const pc98_input::Observation& sample) {
+            require_view(observations==current && phase==(current<7?11u:10u),"joystick observer poll boundary");
+            require_view(sample.physical.keys==pc98_input::BiosKeys{} &&
+                sample.physical.joystick_enabled==(current<7) &&
+                sample.physical.joystick_pins==(current<7?pins[current]:0xff),"joystick physical observation");
+            require_view(sample.after.actions==expected.at(current),"joystick actual frontend latch");
+            words.push_back(sample.after.actions);++observations;
+            samples<<(sample.operation==pc98_input::Operation::reset?'R':'S')<<" 00000000000000000000 "
+                <<sample.physical.shift<<' '<<sample.physical.joystick_enabled<<' '
+                <<unsigned(sample.physical.joystick_pins)<<' '<<sample.after.actions<<' '<<sample.after.shift<<'\n';
+        };
+        const auto step=[&]{joystick.advance_sampled(0,false,source,false,observed?witness:pc98_input::Observer{});};
+        step();require_view(joystick.main_state().player_input()==8 && !joystick.main_state().consumed_input(),
+            "live joystick Right must survive release until the tail Reset");
+        const auto position=joystick.main_state().player().position().current;
+        require_view(position.x==192*16+64 && position.y==320*16,"live joystick Right player movement");
+        step();require_view(joystick.main_state().player_input()==2 &&
+            joystick.main_state().player().position().current.y==position.y+64,"live joystick Down player movement");
+        step();require_view(joystick.main_state().player_input()==32,"live joystick Shot reaches MAIN");
+        step();require_view(!joystick.main_state().player_input() && !joystick.sampled_input().actions,
+            "disabled live joystick leaves no pending game action");
+        require_view(polls==9 && enables==9 && pin_reads==7 && (!observed || words==expected),"complete live joystick read witness");
+        std::ostringstream state;th04::portable::demo_wire::pools(state,0,joystick.main_state(),stage::Program(assets.standard));
+        state<<joystick.process_random_state()<<' '<<joystick.process_random_draws()<<' '<<joystick.main_state().frames();
+        for(const auto byte:joystick.main_state().random_ring_bytes())state.put(char(byte));
+        if(observed) {
+            std::ofstream output(directory/"joystick-polls.txt");output<<samples.str();
+        }
+        return state.str();
+    };
+    const auto joystick_baseline=joystick_exercise(false),joystick_observed=joystick_exercise(true);
+    require_view(joystick_baseline==joystick_observed,"joystick observer changed complete pools/frame/RNG");
+    std::ofstream joystick_result(directory/"joystick-result.txt");
+    joystick_result<<"joystick_frontend=pass frames=4 polls=9 enable_reads=9 pin_reads=7 observer_equal=1\n";
 }

@@ -61,14 +61,18 @@ void contracts() {
     input::Sample q;q.keys[2]=1;latch.reset_sense(q);demo.update(latch.snapshot());
     require(demo.demo_exit_requested() && demo.frames()==0,"sampled Q must exit the demo before player update");
 }
-void movement_samples() {
+void movement_samples(bool live_bytes=false) {
     char operation;std::string bios;unsigned shift,enabled,pins;input::Latch latch;
     while(std::cin>>operation>>bios>>shift>>enabled>>pins) {
         if((operation!='R' && operation!='S') || bios.size()!=20 || shift>1 || enabled>1 || pins>255)
             throw std::invalid_argument("invalid sampled movement record");
         input::Sample sample;sample.shift=shift!=0;sample.joystick_enabled=enabled!=0;sample.joystick_pins=std::uint8_t(pins);
         for(unsigned i=0;i<10;++i)sample.keys[i]=std::uint8_t(std::stoul(bios.substr(2*i,2),nullptr,16));
-        if(operation=='R')latch.reset_sense(sample);else latch.sense(sample);
+        if(live_bytes) {
+            input::ByteSource source{{},[&](unsigned group){return sample.keys.at(group);},
+                [&]{return sample.shift;},[&]{return sample.joystick_enabled;},[&]{return sample.joystick_pins;}};
+            latch.poll(operation=='R'?input::Operation::reset:input::Operation::sense,source);
+        } else if(operation=='R')latch.reset_sense(sample);else latch.sense(sample);
         Game game;game.state.update(latch.snapshot());const auto& position=game.state.player().position();
         std::cout<<latch.actions()<<' '<<game.state.consumed_input()<<' '<<game.state.player_input()<<' '
                  <<position.current.x<<' '<<position.current.y<<' '<<position.velocity.x<<' '<<position.velocity.y<<'\n';
@@ -79,6 +83,7 @@ void movement_samples() {
 int main(int argc,char** argv) {
     try {
         if(argc==2 && std::string(argv[1])=="--movement-samples")movement_samples();
+        else if(argc==2 && std::string(argv[1])=="--byte-movement-samples")movement_samples(true);
         else {contracts();std::cout<<"MAIN sampled input contracts pass\n";}
         return 0;
     } catch(const std::exception& error) {std::cerr<<error.what()<<'\n';return 1;}

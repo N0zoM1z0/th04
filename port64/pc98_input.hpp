@@ -48,7 +48,14 @@ struct ByteSource {
     std::function<void(Operation)> begin;
     std::function<std::uint8_t(unsigned)> key;
     std::function<bool()> shift;
-    explicit operator bool() const {return bool(key) && bool(shift);}
+    // MAIN queries Shift before checking whether to call the masked OPNA
+    // wrapper. An enabled joystick reads its pins once; a disabled one does
+    // not perform that transaction. The producer owns bus/CPU timing.
+    std::function<bool()> joystick_enabled{};
+    std::function<std::uint8_t()> joystick_pins{};
+    explicit operator bool() const {
+        return bool(key) && bool(shift) && bool(joystick_enabled)==bool(joystick_pins);
+    }
 };
 using Poll=std::function<Snapshot(Operation)>;
 // Observation values never supply samples or modify the game latch.
@@ -65,6 +72,11 @@ public:
             BiosKeys single{};single[group]=value;actions_|=keyboard_actions(single);
         }
         sample.shift=source.shift();shift_=sample.shift;
+        if(source.joystick_enabled && source.joystick_enabled()) {
+            sample.joystick_enabled=true;
+            sample.joystick_pins=source.joystick_pins();
+            actions_|=std::uint16_t((~sample.joystick_pins)&0x3f);
+        }
         return sample;
     }
     void reset_sense(const Sample& sample) { actions_=0;sense(sample); }

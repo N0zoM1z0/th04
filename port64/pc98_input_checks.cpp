@@ -59,6 +59,41 @@ int main() {
         ByteSource empty{{},[](unsigned){return std::uint8_t(0);},[]{return false;}};
         input.poll(Operation::sense,empty);require(input.actions()==0x7425,"byte Sense preserves the latch after physical release");
         input.poll(Operation::reset,empty);require(!input.actions(),"byte Reset clears before fresh reads");
+        unsigned phase=0;
+        ByteSource live_joystick{{},[&](unsigned group) {
+            require(phase<8 && group==groups[phase++],"joystick poll keyboard order");
+            return std::uint8_t(group==7?4:0);
+        },[&] {
+            require(phase++==8 && input.actions()==1,"Shift query follows keyboard ORs");
+            return true;
+        },[&] {
+            require(phase++==9 && input.shift(),"joystick enable follows the Shift store");
+            return true;
+        },[&] {
+            require(phase++==10 && input.actions()==1 && input.shift(),"pin transaction precedes its action OR");
+            return std::uint8_t(0xfd);
+        }};
+        require(bool(live_joystick),"complete live joystick source");
+        const auto live=input.poll(Operation::reset,live_joystick);
+        require(phase==11 && input.actions()==3 && input.shift() && live.joystick_enabled &&
+            live.joystick_pins==0xfd,"live joystick reaches the game latch and observation");
+        unsigned enables=0,pin_reads=0;
+        ByteSource optional{{},[](unsigned){return std::uint8_t(0);},[]{return false;},
+            [&]{++enables;return false;},[&]{++pin_reads;return std::uint8_t(0);}};
+        const auto disabled=input.poll(Operation::sense,optional);
+        require(input.actions()==3 && !input.shift() && enables==1 && !pin_reads &&
+            !disabled.joystick_enabled && disabled.joystick_pins==0xff,"disabled joystick must not read pins");
+        input.poll(Operation::reset,optional);require(!input.actions(),"disabled joystick reset");
+        optional.joystick_enabled=[] {return true;};
+        optional.joystick_pins=[] {return std::uint8_t(0xc0);};
+        input.poll(Operation::reset,optional);require(input.actions()==0x3f,"pin upper bits must not become actions");
+        optional.joystick_pins=[] {return std::uint8_t(0xff);};
+        input.poll(Operation::sense,optional);require(input.actions()==0x3f,"live joystick release preserves Sense");
+        input.poll(Operation::reset,optional);require(!input.actions(),"live joystick release clears Reset");
+        optional.joystick_pins={};require(!optional,"enable callback requires a pin transaction");
+        optional.joystick_enabled={};require(bool(optional),"legacy keyboard-only source remains valid");
+        optional.joystick_pins=[] {return std::uint8_t(0xff);};
+        require(!optional,"pin transaction requires an enable callback");
         std::cout<<"PC-98 input sampler contracts pass\n";
         return 0;
     } catch(const std::exception& error) {
