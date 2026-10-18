@@ -72,6 +72,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/reduce_pc98_keyboard_repeat.py](../probes/reduce_pc98_keyboard_repeat.py) | command | Verify internal repeat calls, keyboard counters and six independent BIOS write-time comparisons. |
 | [probes/reduce_pc98_keyboard_uart.py](../probes/reduce_pc98_keyboard_uart.py) | command | Verify UART queue timing and CLI/STI admission controls without generalizing the real-mode fixture to TH04 V86 timing. |
 | [probes/reduce_th04_keyboard_admission.py](../probes/reduce_th04_keyboard_admission.py) | command | Bind original V86 request/repeat FIFO bytes to UART, IRQ, BIOS and independently observed sampler records; retain PIC bookkeeping discontinuities. |
+| [probes/reduce_th04_original_pic.py](../probes/reduce_th04_original_pic.py) | command | Audit original V86 PIC dispatch and BIOS/EOI snapshots while keeping cascade arbitration and elapsed timing claims bounded. |
 | [probes/replay_th04_zun_runtime_inventory.py](../probes/replay_th04_zun_runtime_inventory.py) | command | Drop unused EMU/MATHS from TH04 ZUN resident and inventory pulled CT modules. |
 | [probes/run_pc98_keyboard_clock.py](../probes/run_pc98_keyboard_clock.py) | command | Compare actual keyboard delivery at the PIC tick write and after the complete timer transaction on the pinned emulator. |
 | [probes/run_pc98_keyboard_device.py](../probes/run_pc98_keyboard_device.py) | command | Run authored repeat or stalled-receiver scenarios and observe every keyboard timer call on the pinned emulator. |
@@ -101,6 +102,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_ordinary_process_gdb.py](../probes/th04_ordinary_process_gdb.py) | support | Observe actual guest software INT21 requests and subsequent MCB/PSP-owned activity without guest service calls. |
 | [probes/th04_ordinary_second_main.py](../probes/th04_ordinary_second_main.py) | support | Validate second MAIN initialization, actual input, complete DGROUP pools and terminal state. |
 | [probes/th04_ordinary_video.py](../probes/th04_ordinary_video.py) | support | Decode full ordinary video blocks with strict frame/load/stage and gzip checks. |
+| [probes/th04_original_pic_gdb.py](../probes/th04_original_pic_gdb.py) | support | Observe original MAIN PIC controllers, CPU dispatch guards and separate BIOS/EOI boundaries without guest accessors or clock fitting. |
 | [probes/th04_primary_cpu_fault.gdb](../probes/th04_primary_cpu_fault.gdb) | fixture | Run the primary-emulator fault observer with configured symbols/event inputs. |
 | [probes/th04_product_surface.py](../probes/th04_product_surface.py) | support | Attest a same-run four-product source cohort and derive OP counter hooks from its own MAP and bytes. |
 | [probes/th04_sampler_scalars_gdb.py](../probes/th04_sampler_scalars_gdb.py) | support | Record original post-load AH values with a lazy rotating hardware watchpoint chain in the existing sampler slot. |

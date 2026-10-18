@@ -1,5 +1,26 @@
 # Private build and analysis retention
 
+## Original V86 PIC recovery (v1492)
+
+Use DOS-root .analysis/reconstruction/probes/original-pic-v1492/recover.py.
+It chains 90152 incoming identities (including all three v1491 late files)
+and 10200 exact aliases after eight new retirements. All eight actual restores
+preserve SHA, size, mode and nsmtime; the maintained capture CLI passes with
+the restored disks and fonts. Keep the two compressed execution-disk providers,
+all records/source capsules/current programs and every inherited provider.
+Closed new regular allocations save 93208576 bytes after provider cost;
+this is not a phase-entry storage decrease or repeated historical credit.
+The canonical v1491 source capsule supplies the unchanged 573-file vector.
+Use a fresh build directory; never build or invoke CTest in retired cohorts.
+See ANALYSIS_RETENTION.md for the exact recovery journals and consumers.
+
+All heavy jobs remain serial, 35% CPU on CPU1, Nice19, 256MiB soft and
+768MiB hard memory, no swap, 64 tasks and no cores. Successful capture C
+peaks at 204918784 bytes with no OOM events. Native source is unchanged;
+only two small UBSan projection consumers are compiled in this batch.
+B's real 600-second incomplete capture and A's prelaunch failure stay distinct.
+No full-game cohort is rebuilt or relabeled. Every earlier strict failure remains.
+
 ## Primary PIC/EOI recovery (v1491)
 
 Use DOS-root .analysis/reconstruction/probes/cpu-pic-v1491/recover.py.

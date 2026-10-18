@@ -2499,6 +2499,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/reduce_th04_original_pic.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Audit original V86 PIC dispatch and BIOS/EOI snapshots while keeping cascade arbitration and elapsed timing claims bounded.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/replay_diet145f.py",
     "category": "boundaries",
     "role": "command",
@@ -3833,6 +3840,13 @@
     "category": "runtime",
     "role": "support",
     "purpose": "Decode full ordinary video blocks with strict frame/load/stage and gzip checks.",
+    "purpose_source": "maintained-description"
+  },
+  {
+    "path": "scripts/probes/th04_original_pic_gdb.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Observe original MAIN PIC controllers, CPU dispatch guards and separate BIOS/EOI boundaries without guest accessors or clock fitting.",
     "purpose_source": "maintained-description"
   },
   {
