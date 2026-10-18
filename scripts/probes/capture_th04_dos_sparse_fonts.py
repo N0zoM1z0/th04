@@ -38,14 +38,16 @@ def sha(path):
 
 
 class CaptureProgressTimeout(Exception):
-    """The armed input recorder has stopped appending samples."""
+    """The armed observation streams have stopped appending records."""
 
 
 def wait_capture(child, progress, timeout, idle_timeout):
     if not idle_timeout:
         return child.wait(timeout=timeout)
     deadline = time.monotonic() + timeout
-    previous_size = 0
+    progress_paths = (progress, progress.with_name('input-polls.jsonl'),
+                      progress.with_name('keyboard-admission.jsonl'))
+    previous_sizes = (0, 0, 0)
     last_progress = None
     while True:
         remaining = max(0, deadline - time.monotonic())
@@ -53,11 +55,11 @@ def wait_capture(child, progress, timeout, idle_timeout):
             return child.wait(timeout=min(1, remaining))
         except subprocess.TimeoutExpired:
             now = time.monotonic()
-            size = progress.stat().st_size if progress.exists() else 0
-            if size and size != previous_size:
-                previous_size, last_progress = size, now
+            sizes = tuple(path.stat().st_size if path.exists() else 0 for path in progress_paths)
+            if any(size > previous for size, previous in zip(sizes, previous_sizes)):
+                previous_sizes, last_progress = sizes, now
             elif last_progress is not None and now - last_progress >= idle_timeout:
-                raise CaptureProgressTimeout('stage-input-idle')
+                raise CaptureProgressTimeout('input-observation-idle')
             if now >= deadline:
                 raise subprocess.TimeoutExpired(child.args, timeout)
 
@@ -71,7 +73,7 @@ def main():
     parser.add_argument('--output-dir',type=Path,required=True)
     parser.add_argument('--timeout',type=int,default=1800)
     parser.add_argument('--idle-timeout',type=int,default=0,
-        help='Seconds without an appended input-loop sample after the first sample;0 disables')
+        help='Seconds without new head-loop, sampler or admission records after observation starts;0 disables')
     args=parser.parse_args();out=args.output_dir.resolve()
     if args.idle_timeout < 0 or args.timeout <= 0:
         parser.error('timeout must be positive and idle-timeout nonnegative')
@@ -211,7 +213,7 @@ def main():
         try:code=wait_capture(child,out/'stage-input-loops.jsonl',args.timeout,args.idle_timeout)
         except (subprocess.TimeoutExpired,CaptureProgressTimeout) as error:
             # Let the debugger save a stopped guest CPU/RAM witness first.
-            deadline_reason='stage-input-idle' if isinstance(error,CaptureProgressTimeout) else 'total'
+            deadline_reason='input-observation-idle' if isinstance(error,CaptureProgressTimeout) else 'total'
             timeout=True;os.kill(child.pid,signal.SIGINT)
             try:code=child.wait(timeout=10)
             except subprocess.TimeoutExpired:
