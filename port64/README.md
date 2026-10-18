@@ -1,5 +1,66 @@
 # TH04 native 64-bit bring-up
 
+## Primary PIC and separate BIOS/EOI ownership (v1491)
+
+Native code 91c0e94 replaces the live Device's request-only latch with normal
+fixed-priority primary PIC state. Masking retains requests; IF alone cannot
+admit a keyboard request while a higher-priority line remains in service.
+CPU acceptance, BIOS data read and EOI are separate operations. Reading BIOS
+data leaves the service bit set; another request cannot re-enter that line
+until EOI. The default window explicitly accepts, reads and sends nonspecific
+EOI at the same portable event time. This is not original ISR instruction cost.
+
+The authored real-mode internal-DOS probe observes 41 PIC snapshots, three real
+CPU accepts (one timer/two keyboard), two BIOS callback returns and three guest
+EOI writes. IF is 1 while IRQ0 is masked but still in service and keyboard is
+pending; IRQ0 EOI admits keyboard. Both BIOS returns retain IRQ1 service until a later
+20h write to port 0. All 41 primary snapshots and 18 Device operations agree. Device replay
+uses ordinal time labels, not measured original latency. Independent extracted
+pinned PIC source agrees over 33,554,432 IF/priority selections and 2304 EOI
+cases. Source replay is independent of the native implementation but shares
+the emulator family with the live capture; it is not a second hardware Oracle.
+Three compiled exit-0 defects reject: ignoring higher service, erasing
+masked requests, and ending PIC service during the BIOS read.
+
+The observed emulator has cascade-ignore mask 80h. It is inactive in this
+fixture because cascade 7 stays masked and is never in service. IRQ13 projects
+to that pending masked primary cascade; slave arbitration is not accepted.
+The exhaustive source comparison explicitly uses normal primary mode without
+that workaround. Actual ROM stub bytes remain unavailable through the bounded
+conventional-RAM reader; EOI is observed at the guest port write, not inferred
+from a claimed ROM dump. This is an authored COM, not original TH04 V86 timing.
+The reused launcher
+retains legacy clock-phase labels; capture-scope-amendment.json explicitly
+corrects them to guest-marker input and no new timer-transaction observations. The raw
+receipt and all executed sources remain unchanged.
+
+Physical identities and host delivery order from v1490 remain. MAIN reads
+7,9,8,5,2,0,3,6 then Shift independently; reset clears first and Sense ORs.
+Current GNU/UBSan retain 31 observation-on/off frontend polls with independent
+original sampler checks, plus four elapsed frames/nine polls/81 reads and all
+21 stable physical-key fixtures. The old 27-operation IRQ projection remains
+byte-identical under its explicit collapsed read/EOI policy; it is not new EOI
+timing proof. The new 18-operation live-derived fixture preserves that boundary.
+
+Current source is 573 files, closure
+f9b57540e6c2b86fd91fac87ceb54fd729ab1f9d55a71b8f294eaaed8ec43c4a.
+The cpu-pic-v1491 replay cold-compiles all five affected header consumers per
+role and links four programs each for GNU/UBSan/Windows. It reuses 112 unrelated
+core objects per role by SHA. This is 15 fresh objects/12 current programs,
+not a new all-source cold cohort or 87-CTest rerun. Windows is compile/link only.
+GNU/Windows View uses O3/GGC5; UBSan View uses O0/GGC1 with UB/bounds retained.
+
+Heavy work stays serial 35%CPU, CPU1, Nice19, hard 768MiB/no swap/64 tasks/core 0.
+Checks/recovery use 256MiB soft; only View compilation uses 640/768MiB soft.
+Current build peak is 585.574 MiB with zero OOM kills.
+The two actual v1489 compiler OOM failures remain preserved. Caps are unchanged.
+
+Next bind original CPU dispatch, IF/IRQ-check scheduling, NMI/trap, other IRQ
+producers, cascade/special modes, boot masks and elapsed epoch. Do not fit a
+serial-to-BIOS delay or hunt old75 with another full route. Common-reset full
+DOS/native campaigns, Windows runtime and NP2/hardware remain open. Both full
+goals and all strict negatives remain active; historical DOS exactness is unchanged.
+
 ## Physical keys and ordered host delivery (v1490)
 
 Native code 5626571 feeds Win32/SDL keydown/keyup delivery into the persistent
