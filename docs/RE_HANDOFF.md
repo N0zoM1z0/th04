@@ -5,6 +5,55 @@ faithful native x64 game; both goals remain active. Original Japanese DOS versus
 reconstructed DOS is the primary behavioral comparison. Keep English code/docs,
 gpt-6.1-sol: commits and frequent pushes to main and native HEAD:port/modern-64.
 
+## Original V86 PIC/BIOS window (v1492)
+
+The pinned original MAIN completes its first 16 Stage1 actor updates in the
+normal boot route. Before target observations, the complete relocated 150114-byte
+module equals the pinned Japanese target at actual entry MAIN load 10FCh:0000;
+DGROUP is 3230h. Provenance remains candidate-local-attested.
+The read-only capture has 1613 records, 33 paired sampler calls and five physical
+Z edges whose calls preserve guest CPU, all conventional RAM and raw counters.
+Readback words are observations with no expected-word assertion or assignment.
+
+All 361 observed hardware accepts occur in V86: vector8=272, vector9=9,
+vector10=16, vector20=31 and vector21=33. Nine keyboard BIOS callback returns
+at F000h:E96Eh retain primary ISR1; subsequent guest port0/20h writes at
+F000h:E971h clear it. These are observed callback/port contexts, not a ROM dump.
+The maintained reducer checks raw controller layouts, CPU guards, accepts and
+separate BIOS/EOI ordering. A fresh current-header UBSan consumer agrees over
+36 normal-primary dispatch snapshots and 361 primary EOIs (397 rows).
+A compiled exit-0 EOI defect and four coherent data defects reject.
+The 64 slave EOI transitions are audited separately, not native slave arbitration.
+
+Actual MAIN entry has master IMR79h; this stage window has IMR78h and slave
+IMR CCh/DCh. Cascade7 is genuinely in service in this window, with the pinned
+ignore-in-service workaround enabled. Native selection comparisons exclude
+that active cascade domain. NMI/trap guards are recorded but their active paths
+are not exercised. The native keyboard-only FDh mask and immediate default
+CPU/read/EOI remain portable policies; this capture does not replace them with
+original boot masks, other device producers or a CPU scheduler. Raw clocks are
+not an audited elapsed epoch or UART-to-BIOS latency. No fixed delay is fitted.
+
+The successful window arms frequent hooks after completed stage initialization;
+MAIN entry is one complete-module/PIC snapshot. The earlier broad-entry run
+hits its 600-second deadline with zero actor updates and remains a separate
+incomplete result. Preparation A fails before launch and remains preserved.
+Capture C's inherited extension metadata names the earlier observer hash;
+capture-scope-amendment.json binds the actual executed capsule hash and window
+without rewriting the raw receipt or sources. The maintained GDB module is
+byte-identical to that executed observer. Both observations use one emulator,
+not independent hardware Oracles.
+
+Evidence: DOS-root .analysis/reconstruction/probes/original-pic-v1492, especially
+original-pic-audit.json, projection-verdict.json, capture-scope-amendment.json
+and retention/retention.json. Recheck with scripts/probes/reduce_th04_original_pic.py
+or the exact recovery readers after retirement. The native 573-file source
+closure remains f9b57540e6c2b86fd91fac87ceb54fd729ab1f9d55a71b8f294eaaed8ec43c4a;
+no game source changes, full rebuild, campaign acceptance or exact promotion occur.
+Next connect the observed dispatch/producer/mask lifecycle and elapsed epoch;
+do not hunt old75 with another full route. Existing strict negatives and both
+complete DOS/native goals remain active.
+
 ## Primary PIC and separate BIOS/EOI ownership (v1491)
 
 Native code 91c0e94 replaces the live Device's request-only latch with normal
@@ -125,23 +174,17 @@ main differential note and evidence/knowledge ledgers.
 
 ## Recovery, resources and finish
 
-Use DOS-root .analysis/reconstruction/probes/frontend-peripheral-v1489/recover.py.
-It chains 87553 inherited bindings, all current/late/finish identities and
-10189 exact aliases. Actual metadata restores and explicit archive readers
-must preserve the current outputs and their semantic rejection controls.
-Retain every inherited provider, source capsule, current program and link input.
-The canceled first CMake prefix is disposable: its commands, source capsule,
-terminal pressure/journal evidence and metadata inventory remain; its unused
-probes/partial objects are removed without scientific cleanup credit.
-Cumulative raw/regular output retirement is 1819.8671875 MiB, with no new
-archive cost. Before final publication, all retained batch/cohort files and
-directories cost 130.64453125 MiB; a 4 MiB publication reserve leaves a 1685 MiB
-conservative cumulative retention balance. This is not an instantaneous raw
-peak or a decrease below phase-entry storage. Duplicate gzip intermediates,
-disposable caches and temporary restores/replays receive no extra credit.
-The current cohort retains programs and link inputs after CMake bookkeeping
-pruning; never incrementally build or invoke CTest there. Use a fresh directory.
-See ANALYSIS_RETENTION.md for the exact journals and recovery consumers.
+Use DOS-root .analysis/reconstruction/probes/original-pic-v1492/recover.py.
+It chains 90152 incoming identities (including all three v1491 late files)
+and 10200 exact aliases after eight new retirements. All eight actual restores
+preserve SHA, size, mode and nsmtime; the maintained capture CLI passes with
+the restored disks and fonts. Keep the two compressed execution-disk providers,
+all records/source capsules/current programs and every inherited provider.
+Closed new regular allocations save 93208576 bytes after provider cost;
+this is not a phase-entry storage decrease or repeated historical credit.
+The canonical v1491 source capsule supplies the unchanged 573-file vector.
+Use a fresh build directory; never build or invoke CTest in retired cohorts.
+See ANALYSIS_RETENTION.md for the exact recovery journals and consumers.
 
 Heavy work stays serial, CPUQuota=35%, MemoryMax=768M, no swap, Nice=19, CPU1,
 64 tasks and no cores. Normal checks use MemoryHigh=256M. The first attempt
