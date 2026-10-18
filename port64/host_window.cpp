@@ -42,7 +42,7 @@ Keyboard::Keyboard(std::int64_t epoch,Dispatch dispatch):dispatch_(std::move(dis
 }
 void Keyboard::available_cpu(pc98_keyboard::Device& device,pc98_keyboard::Time time) {
     if(device.irq().eligible(true) && !device.admitted()) {
-        device.accept(time,true);device.read_bios(time);
+        device.accept(time,true);device.read_bios(time);device.end_irq(time);
     }
 }
 void Keyboard::advance(std::int64_t now) {

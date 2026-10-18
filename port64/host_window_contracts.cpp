@@ -84,5 +84,20 @@ int main(){try{
     require(latch.poll(th04::portable::pc98_input::Operation::reset,elapsed).keys[5]==0,
         "byte source observed a make before its serial completion");
     require(timed.device().matrix()[5]==2 && clock==900000,"elapsed byte source lost live clock advancement");
+    bool installed=false,finish_timer=false;
+    Keyboard priority(0,[&](auto& device,auto time) {
+        if(!installed) {
+            device.set_irq_mask(time,0xfc);device.request_irq(time,0);
+            device.accept_irq(time,0,true);device.set_irq_mask(time,0xfd);installed=true;
+        }
+        if(finish_timer) {device.end_irq(time);finish_timer=false;}
+        Keyboard::available_cpu(device,time);
+    });
+    priority.key(K::shot,true,0);priority.advance(2000000);
+    require(priority.device().irq().pending() && !priority.device().irq().eligible(true) &&
+        !priority.device().matrix()[5],"IF alone must not bypass a higher in-service interrupt");
+    finish_timer=true;priority.advance(2000000);
+    require(priority.device().matrix()[5]==2 && !priority.device().pic().state().service,
+        "higher EOI must admit keyboard,read BIOS,then finish its own IRQ");
     std::cout<<"Host admission, slowdown/resync, bounded catchup and focused input contracts PASS\n";return 0;
 }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}

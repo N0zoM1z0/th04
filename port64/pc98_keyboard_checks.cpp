@@ -107,6 +107,34 @@ void masked_interrupt() {
     update_matrix(matrix,receiver.read_data(4*character_time));
     require(!matrix[5] && !irq.pending(),"CPU read finally applies break");
 }
+void primary_pic() {
+    FixedPriorityPic pic({0,0,0});pic.request(1);pic.request(0);
+    require(pic.eligible(true)==0 && !pic.eligible(false),"primary priority and CPU IF");
+    bool rejected=false;try{pic.accept(1,true);}catch(const std::logic_error&){rejected=true;}
+    require(rejected && pic.state().requests==3,"out-of-priority acceptance lost request");
+    pic.accept(0,true);pic.set_mask(0xfd);
+    require(pic.pending(1) && !pic.eligible(true),"masking IRQ0 does not end its service");
+    pic.eoi();require(pic.eligible(true)==1,"nonspecific EOI restores lower priority eligibility");
+    pic.accept(1,true);pic.request(1);pic.set_mask(0xff);
+    require(pic.pending(1) && !pic.eligible(true),"masking does not erase a re-request");
+    pic.eoi(1);pic.set_mask(0xfd);require(pic.eligible(true)==1,"specific EOI retains queued request");
+    pic.accept(1,true);pic.set_mask(0xfc);pic.request(0);pic.accept(0,true);
+    require(pic.state().service==3 && pic.active()==0,"higher-priority interrupt nests");
+    pic.eoi(1);require(pic.state().service==1,"specific EOI must not clear another active line");
+    pic.eoi();pic.eoi();require(!pic.state().service,"EOI with no service is inert");
+    Device device;device.set_irq_mask(0,0xfc);device.request_irq(0,0);
+    device.accept_irq(0,0,true);device.set_irq_mask(0,0xfd);device.key({1,0x29},true,0);
+    device.receive(character_time);
+    require(device.irq().pending() && !device.irq().eligible(true),"device must retain PIC-blocked keyboard request");
+    device.end_irq(character_time);device.accept(character_time,true);device.read_bios(character_time);
+    require(device.matrix()[5]==2 && device.pic().state().service==2,
+        "BIOS read must leave keyboard in service until its separate EOI");
+    device.key({1,0x29},false,character_time);device.receive(2*character_time);
+    require(device.irq().pending() && !device.irq().eligible(true),"same line cannot re-enter before EOI");
+    device.end_irq(2*character_time);device.accept(2*character_time,true);device.read_bios(2*character_time);
+    device.end_irq(2*character_time);
+    require(!device.matrix()[5] && !device.pic().state().service,"separate break service completes");
+}
 void device_trace() {
     Device device;Time now=0;unsigned operation=0;char kind;
     while(std::cin>>kind>>now) {
@@ -122,7 +150,9 @@ void device_trace() {
             device.tick(now,enabled!=0);
         } else if(kind=='R')device.receive(now);
         else if(kind=='A')device.accept(now,enabled_if!=0);
-        else if(kind=='B')device.read_bios(now);
+        // This legacy projection collapses the callback read and its EOI.
+        // Separate PIC/BIOS/EOI boundaries are exercised by the PIC controls.
+        else if(kind=='B'){device.read_bios(now);device.end_irq(now);}
         else throw std::runtime_error("unknown keyboard stimulus");
         const auto& keyboard=device.keyboard();const auto& receiver=device.receiver();
         std::cout<<operation++<<' '<<keyboard.wait_ticks()<<' '
@@ -189,7 +219,7 @@ int main(int argc,char** argv) {
         if(argc==2 && std::string(argv[1])=="--irq-trace") {trace(true);return 0;}
         if(argc==2 && std::string(argv[1])=="--device-irq-trace") {device_trace();return 0;}
         if(argc!=1)throw std::runtime_error("expected no arguments, --trace, --irq-trace or --device-irq-trace");
-        repeat_and_latch();key_ownership();blocked_receiver();queue_and_deadline();masked_interrupt();
+        repeat_and_latch();key_ownership();blocked_receiver();queue_and_deadline();masked_interrupt();primary_pic();
         std::cout<<"PC-98 keyboard repeat/transport/BIOS contracts pass\n";return 0;
     } catch(const std::exception& error) {std::cerr<<error.what()<<'\n';return 1;}
 }

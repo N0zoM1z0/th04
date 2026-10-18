@@ -49,10 +49,65 @@ using Time=std::uint64_t;
 constexpr Time quanta_per_ms=576000;
 constexpr Time character_time=330000;
 
+// Normal fixed-priority arbitration for one primary 8259. Requests survive
+// masking; accepting a line leaves it in service until an explicit EOI.
+// Cascade routing, special modes, CPU dispatch time and guest IF belong to
+// their callers. The PC-98 keyboard uses primary line 1 (vector 09h).
+class FixedPriorityPic {
+public:
+    struct State {std::uint8_t requests=0,mask=0xff,service=0;};
+    FixedPriorityPic():state_{}{}
+    explicit FixedPriorityPic(State state):state_(state){}
+    const State& state() const {return state_;}
+    void set_mask(std::uint8_t mask) {state_.mask=mask;}
+    void request(unsigned line) {state_.requests|=bit(line);}
+    bool pending(unsigned line) const {return (state_.requests&bit(line))!=0;}
+    unsigned active() const {return first(state_.service);}
+    std::optional<unsigned> eligible(bool interrupts_enabled) const {
+        if(!interrupts_enabled)return {};
+        const auto candidates=std::uint8_t(state_.requests&~state_.mask&~state_.service);
+        const auto selected=first(candidates);
+        if(selected<active())return selected;
+        return {};
+    }
+    void accept(unsigned line,bool interrupts_enabled) {
+        const auto selected=eligible(interrupts_enabled);
+        if(!selected || *selected!=line)
+            throw std::logic_error("CPU accepted an ineligible primary interrupt");
+        state_.requests=std::uint8_t(state_.requests&~bit(line));state_.service|=bit(line);
+    }
+    void eoi(std::optional<unsigned> line={}) {
+        const auto selected=line ? *line : active();
+        if(line || selected<8)state_.service=std::uint8_t(state_.service&~bit(selected));
+    }
+    class Line {
+    public:
+        Line(const FixedPriorityPic& owner,unsigned line):owner_(owner),line_(line){}
+        bool pending() const {return owner_.pending(line_);}
+        bool eligible(bool interrupts_enabled) const {
+            const auto next=owner_.eligible(interrupts_enabled);return next && *next==line_;
+        }
+    private:
+        const FixedPriorityPic& owner_;unsigned line_;
+    };
+    Line line(unsigned value) const {bit(value);return {*this,value};}
+private:
+    State state_;
+    static std::uint8_t bit(unsigned line) {
+        if(line>=8)throw std::out_of_range("invalid primary interrupt line");
+        return std::uint8_t(1u<<line);
+    }
+    static unsigned first(std::uint8_t bits) {
+        for(unsigned i=0;i<8;++i)if(bits&(1u<<i))return i;
+        return 8;
+    }
+};
+
 // A receive-ready request survives a masked CPU. IF is only a necessary
 // condition: the caller still owns PIC masks, priority, in-service state and
 // the actual CPU dispatch event. Accepting an IRQ does not read UART data or
 // update BIOS memory, and enabling interrupts does not accept it automatically.
+// This isolated latch remains for historical fixtures; Device uses the PIC.
 class InterruptRequest {
 public:
     void request() {pending_=true;}
@@ -142,9 +197,10 @@ inline bool update_matrix(std::array<std::uint8_t,10>& matrix,std::uint8_t code)
     return true;
 }
 
-// A persistent peripheral and BIOS owner. External timer callbacks, receive
-// callbacks, CPU acceptance and data reads remain distinct operations. Neither
-// IF restoration nor elapsed time implicitly performs an interrupt service.
+// A persistent peripheral, primary PIC and BIOS owner. External timer/RX
+// callbacks, CPU acceptance, data reads and EOI remain distinct operations.
+// Neither IF restoration nor elapsed time implicitly performs service; reading
+// BIOS data does not end the PIC's in-service state.
 class Device {
 public:
     void key(Key value,bool pressed,Time now) {
@@ -155,13 +211,21 @@ public:
     }
     Receiver::Completion receive(Time now) {
         check_time(now);const auto result=receiver_.complete(now);
-        if(result==Receiver::Completion::ready)irq_.request();
+        if(result==Receiver::Completion::ready)pic_.request(1);
         return result;
     }
     void accept(Time now,bool interrupts_enabled) {
+        accept_irq(now,1,interrupts_enabled);
+    }
+    void set_irq_mask(Time now,std::uint8_t mask) {check_time(now);pic_.set_mask(mask);}
+    void request_irq(Time now,unsigned line) {check_time(now);pic_.request(line);}
+    void accept_irq(Time now,unsigned line,bool interrupts_enabled) {
         check_time(now);
-        if(admitted_)throw std::logic_error("keyboard ISR already owns an unread byte");
-        irq_.accept(interrupts_enabled);admitted_=true;
+        if(line==1 && admitted_)throw std::logic_error("keyboard ISR already owns an unread byte");
+        pic_.accept(line,interrupts_enabled);if(line==1)admitted_=true;
+    }
+    void end_irq(Time now,std::optional<unsigned> line={}) {
+        check_time(now);pic_.eoi(line);
     }
     std::uint8_t read_bios(Time now) {
         check_time(now);
@@ -173,7 +237,8 @@ public:
     }
     const Typematic& keyboard() const {return keyboard_;}
     const Receiver& receiver() const {return receiver_;}
-    const InterruptRequest& irq() const {return irq_;}
+    FixedPriorityPic::Line irq() const {return pic_.line(1);}
+    const FixedPriorityPic& pic() const {return pic_;}
     bool admitted() const {return admitted_;}
     const std::array<std::uint8_t,10>& matrix() const {return matrix_;}
     bool shift() const {return shift_;}
@@ -182,7 +247,9 @@ private:
         if(now<last_time_)throw std::logic_error("keyboard device clock moved backward");
         last_time_=now;
     }
-    Typematic keyboard_;Receiver receiver_;InterruptRequest irq_;
+    Typematic keyboard_;Receiver receiver_;
+    // Portable keyboard-only mask, not the original boot PIC configuration.
+    FixedPriorityPic pic_{FixedPriorityPic::State{0,0xfd,0}};
     std::array<std::uint8_t,10> matrix_{};
     Time last_time_=0;bool admitted_=false,shift_=false;
 };
