@@ -23,6 +23,7 @@ CATEGORIES = {
 }
 EXTENSIONS = {'.py', '.sh', '.ps1', '.cmd', '.bat', '.java', '.asm', '.gdb'}
 OVERRIDES = {
+    'reduce_th04_keyboard_admission.py': ('runtime', 'Bind original V86 request/repeat FIFO bytes to UART, IRQ, BIOS and independently observed sampler records; retain PIC bookkeeping discontinuities.'),
     'th04_keyboard_admission_gdb.py': ('runtime', 'Observe wrapped input requests, UART/PIC delivery, internal repeats and BIOS stores through read-only host breakpoints.'),
     'pc98_keyboard_repeat_gdb.py': ('runtime', 'Cross-check software BIOS store observations against independent hardware writes during a held-key fixture.'),
     'run_pc98_keyboard_repeat.py': ('runtime', 'Run an authored fixture that holds Shot through two actual keyboard repeats before requesting release.'),

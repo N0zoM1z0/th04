@@ -2450,6 +2450,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/reduce_th04_keyboard_admission.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Bind original V86 request/repeat FIFO bytes to UART, IRQ, BIOS and independently observed sampler records; retain PIC bookkeeping discontinuities.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/probes/replay_diet145f.py",
     "category": "boundaries",
     "role": "command",
