@@ -5,45 +5,56 @@ goals remain active. Use `taskset -c 1 nice -n 19`, muted headless runs,
 serialized Borland/Wine and no host keys/focus. Keep English code/docs and
 `gpt-6.1-sol: ...` commits; push main and native `HEAD:port/modern-64`.
 
-## Original BIOS through the real frontend (v1483)
+## Original V86 keyboard admission (v1484)
 
-Raw original BIOS packets now drive the unchanged real native frontend across
-Stage3 loops 7833..7836 and 12887..12890. All 2923 target sampler-return words and
-2925 unchanged-original-instruction CPU checks agree. Two genuine adoption
-resets repeat the first physical sample and are outside the target call count;
-no expected latch or clock seeds state. All 13378 whole nine-pool/stable snapshots,
-13377 raw score/resident/RNG rows, four literal-player witnesses and 22 complete
-live-font RGB/TRAM/DAC/tone samples pass. Native player 7837 now reads Shot32,
-matching original 7836 head, instead of the prior physical model's Enter8192.
+The fresh original capture completes Stage3 and reaches actual Stage4 init/score1
+in 1241.224s, exit0, without timeout. Independent readers attest all 537 source
+identities, 14 capsules, 160 outputs and the relocated pinned MAIN. Against the
+preceding complete original, all 13378 whole-pool/state snapshots, 13377 head
+words, 2884 physical actions, four literal players and 23 full own-font RGB/TRAM/
+DAC/tone samples agree. The full raw wire is byte-identical: 33609 loop records
+and 20805 RNG events. Thirty tail words and all 23 raw GDC samples still differ;
+raw equality does not establish equal keyboard/PIC epochs or strict timing.
 
-Only these eight actor-loop frames use recorded BIOS; all other frames retain
-the stock host adapter. Their 1803 post-tail differences keep the strict aggregate
-false. This is frontend/latch composition, not physical IRQ delivery, common-reset,
-Stage4, Windows/NP2 or full-campaign acceptance. The v1482 external Schedule
-variant still fails one literal player despite equal state/RGB; do not use a
-nominal frame clock as an input-delivery fix or borrow another case's verdict.
+Forty windows contain 91 external calls, 130 actual TIMER_AddTick repeats and
+346 FIFO/RX/IRQ/BIOS writes. All 6804 sampler records match the separate CPU
+observer. Of 3402 pairs, 3362 stable pairs replay original instructions, 39 precede
+a genuine reset and one changes BIOS during execution (pair 75, loop249). All
+247 observed tail returns equal their same-run actor input at MAIN 0AAF:01B3.
+Twelve zero tails occur while physical Shot32 remains held, between a repeat's
+A9 break and 29 make, without an external release. The 61 Shot repeat gaps include
+51 exactly 55/96 ms; preserve the remaining measured IRQ-dependent widths.
 
-The main-branch run_pc98_keyboard_uart.py launcher, GDB observer, authored COM
-fixture and reducer reproduce eight actual requests/RX/IRQ/BIOS transitions on
-the pinned emulator. Both old and fresh internal-DOS runs give serialized
-55/96 ms bytes; queued bytes wait and guest CLI postpones BIOS admission.
-Six corrupted event/scope controls reject. This is real-mode emulator evidence;
-original TH04 uses V86/paging. No production delay or target timing is established.
+Pinned GCC8.4 plus actual ELF operands attest the host keyboard/PIC layouts.
+An authored real-mode fixture cross-checks six software stores against six
+independent BIOS hardware writes. Its two real internal repeats have pause500/
+rate33; original uninterrupted repeats also span 33 PIC ticks. Raw fractional
+bookkeeping intervals can differ, and 52 adjacent raw-time regressions remain.
+Original V86 RX-to-BIOS is usually 29/18000 ms (304/346), with recorded variation;
+the internal-DOS fixture's 16-cycle latency is a separate observation.
 
-Current DOS and native product source and cold cohorts remain v1443/v1481.
-Use DOS-root bios-packets-v1483/recover.py for 9846 aliases: 9710 inherited plus
-136 new actual closed duplicate outputs/inputs. All new metadata restores and
-three actual/archive readers retain state, RGB, CPU composition and the strict false result.
-All 85502 preceding identities/late/finish/providers survive. Gross retirement is 87.58203125 MiB;
-cleanup costs plus a 2 MiB reserve leave at least 85 MiB local release. Current private
-link inputs and unique BIOS/UART witnesses remain physical. FIFO raw files never
-existed and earn no credit. See ANALYSIS_RETENTION and the main differential note.
+Main commits a190a5a/84269d9 supply reusable repeat/layout/admission Oracles.
+Commit 082e1c8 fixes the head-only idle detector: head, sampler or admission growth
+keeps it alive, while the total deadline remains. Keep failed capture A unchanged:
+7835 heads, only 7833 complete snapshots, truncated gzip and SIGINT diagnostics.
+Its head-only timeout killed a progressing dialogue; full B is a fresh boot.
+Nine rebased admission faults and three watchdog regressions reject/pass as intended.
 
-Next capture actual original V86 keyboard API -> UART -> IRQ -> BIOS admission
-with fractional PIC context around the remaining intervals, preserving the
-independently attested after-head request owner. Reuse these tested observers;
-never fit holds/phases or feed expected latch/state words. Both full goals remain
-active; no artifact/unit exactness changes.
+Use DOS-root v86-admission-v1484/recover.py: 9866 aliases, 20 new exact metadata
+restores, 85752 inherited identities and all providers. Failed A has three and
+complete B six actual/archive consumers. Phase cleanup releases at least 176 MiB;
+the final six files add at least 18 MiB. The earlier four-file 72 MiB cleanup is
+included once, not added again. Unique sparse/actor/source evidence, source-history
+and current v1443 DOS/v1481 native products remain physical.
+
+Next build a separately tested keyboard peripheral/admission owner before changing
+native delivery. Start with the measured key-repeat/FIFO/BIOS sequence and preserve
+the existing latch/UI. Establish its clock at actual sampler/IRQ boundaries;
+raw PIC bookkeeping is not a universal clock. Never fit a repeat phase, hold,
+expected word or fixed 0.573 ms delay to the old 40 differences. The unstable pair
+needs instruction-level read/IRQ evidence. NP2/hardware, common-reset timing,
+continuous display and complete four-source/native campaigns remain open. No
+product source/cohort or artifact/unit exactness changes in this batch.
 
 ## Recorded sampler and original request ownership (v1481)
 
@@ -185,7 +196,7 @@ Actual retired allocation:2093.73828125 MiB. New archives cost
 reserve are separately charged in retention/retention.json. No prior cleanup,
 nonexistent/FIFO raw files or temporary restoration-write credit.
 
-Current next work is the V86 admission capture described above. Keep original
+Current next work is the keyboard peripheral/clock boundary described above. Keep original
 0AAF:0153/0158 tail reset, 01B3 frame-store seam and literal player 5FCF distinct.
 Native 7837 now agrees under the raw-BIOS movie; the physical-device scenario's
 extra Enter remains a separate uncorrected delivery-model result. Complete

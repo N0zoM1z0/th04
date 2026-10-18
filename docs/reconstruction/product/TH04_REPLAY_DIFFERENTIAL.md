@@ -5,6 +5,95 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Original V86 keyboard admission (v1484)
+
+The fresh original capture completes Stage3 and reaches actual Stage4 init/score1
+in 1241.224s, exit0, without timeout. Independent readers attest all 537 source
+identities, 14 capsules, 160 outputs and the relocated pinned MAIN. Against the
+preceding complete original, all 13378 whole-pool/state snapshots, 13377 head
+words, 2884 physical actions, four literal players and 23 full own-font RGB/TRAM/
+DAC/tone samples agree. The full raw wire is byte-identical: 33609 loop records
+and 20805 RNG events. Thirty tail words and all 23 raw GDC samples still differ;
+raw equality does not establish equal keyboard/PIC epochs or strict timing.
+
+Forty windows contain 91 external calls, 130 actual TIMER_AddTick repeats and
+346 FIFO/RX/IRQ/BIOS writes. All 6804 sampler records match the separate CPU
+observer. Of 3402 pairs, 3362 stable pairs replay original instructions, 39 precede
+a genuine reset and one changes BIOS during execution (pair 75, loop249). All
+247 observed tail returns equal their same-run actor input at MAIN 0AAF:01B3.
+Twelve zero tails occur while physical Shot32 remains held, between a repeat's
+A9 break and 29 make, without an external release. The 61 Shot repeat gaps include
+51 exactly 55/96 ms; preserve the remaining measured IRQ-dependent widths.
+
+Pinned GCC8.4 plus actual ELF operands attest the host keyboard/PIC layouts.
+An authored real-mode fixture cross-checks six software stores against six
+independent BIOS hardware writes. Its two real internal repeats have pause500/
+rate33; original uninterrupted repeats also span 33 PIC ticks. Raw fractional
+bookkeeping intervals can differ, and 52 adjacent raw-time regressions remain.
+Original V86 RX-to-BIOS is usually 29/18000 ms (304/346), with recorded variation;
+the internal-DOS fixture's 16-cycle latency is a separate observation.
+
+Main commits a190a5a/84269d9 supply reusable repeat/layout/admission Oracles.
+Commit 082e1c8 fixes the head-only idle detector: head, sampler or admission growth
+keeps it alive, while the total deadline remains. Keep failed capture A unchanged:
+7835 heads, only 7833 complete snapshots, truncated gzip and SIGINT diagnostics.
+Its head-only timeout killed a progressing dialogue; full B is a fresh boot.
+Nine rebased admission faults and three watchdog regressions reject/pass as intended.
+
+Use DOS-root v86-admission-v1484/recover.py: 9866 aliases, 20 new exact metadata
+restores, 85752 inherited identities and all providers. Failed A has three and
+complete B six actual/archive consumers. Phase cleanup releases at least 176 MiB;
+the final six files add at least 18 MiB. The earlier four-file 72 MiB cleanup is
+included once, not added again. Unique sparse/actor/source evidence, source-history
+and current v1443 DOS/v1481 native products remain physical.
+
+Next build a separately tested keyboard peripheral/admission owner before changing
+native delivery. Start with the measured key-repeat/FIFO/BIOS sequence and preserve
+the existing latch/UI. Establish its clock at actual sampler/IRQ boundaries;
+raw PIC bookkeeping is not a universal clock. Never fit a repeat phase, hold,
+expected word or fixed 0.573 ms delay to the old 40 differences. The unstable pair
+needs instruction-level read/IRQ evidence. NP2/hardware, common-reset timing,
+continuous display and complete four-source/native campaigns remain open. No
+product source/cohort or artifact/unit exactness changes in this batch.
+
+The pinned host layout is keyb352 bytes, repeat key/wait/pause/rate at 240/248/256/
+264, PIC entry 48 bytes and x87 index 16 bytes. Actual ELF symbol sizes and operands
+cross-check the compiled source probe. These are emulator host offsets, not game
+DGROUP or real hardware registers. Software mem_writeb observations match six
+independent hardware-watchpoint witnesses in the authored fixture. External API
+calls disable these software hooks across GDB dummy frames; the first failed pilot
+could not use a FinishBreakpoint there and remains a genuine failed probe.
+
+The full original observer uses its own MZ:MAIN 0AAF:00B7 queues next-head physical
+changes after Sense 00AE/00B3; tail Reset 0153/0158 precedes actor 01B3. The four literal
+players bind own 5FCF/near return 00F4,640KiB RAM and actual latch words. Their old
+capsule provides no precise player clock; derive BIOS from RAM and do not invent
+one. One stable-BIOS endpoint replay cannot claim unstable pair 75's internal reads.
+
+The native pc98_input::Latch correctly separates reset/sense from physical sample
+ownership. Current host_window::bios_input directly maps held keys into BIOS bits;
+it has no typematic/UART/IRQ model. Original repeats observed here are pinned-
+emulator behavior, not proof of real PC-98 keyboard firmware. The next owner must
+retain that scope and independent source/target/runtime evidence. An explicit
+peripheral model can first be checked against the authored fixture without changing
+latch/UI semantics; transport completion and guest IRQ/BIOS admission are distinct.
+No model may borrow old expected tail words or fit an initial repeat phase.
+
+Replay after named restores, or use the frozen archive reader:
+
+```sh
+python3 -B .analysis/reconstruction/probes/v86-admission-v1484/reduce_complete_archive.py
+python3 -B scripts/probes/reduce_th04_keyboard_admission.py \
+  --capture .analysis/runtime/candidates/dos-v86-admission-v1484b-original \
+  --layout .analysis/reconstruction/probes/v86-admission-v1484/checked-layout/layout.json \
+  --output .analysis/reconstruction/probes/NEW-admission-verdict.json
+```
+
+The public reducer requires actual capture files; recover the three JSONL streams
+by exact name first. Use verify_complete_recovery.py for the full actual/archive
+consumer vector and verify_failed.py for the incomplete negative. Preserve current
+source-history staging rules. All captures are terminal; do not restart them.
+
 ## Original BIOS through the real frontend (v1483)
 
 Raw original BIOS packets now drive the unchanged real native frontend across
