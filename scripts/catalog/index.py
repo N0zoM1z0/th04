@@ -23,6 +23,7 @@ CATEGORIES = {
 }
 EXTENSIONS = {'.py', '.sh', '.ps1', '.cmd', '.bat', '.java', '.asm', '.gdb'}
 OVERRIDES = {
+    'verify_pc98_keyboard_irq.py': ('runtime', 'Compare separate UART requests, actual CPU interrupt acceptance and BIOS reads with source-bound native pending-IRQ ownership.'),
     'run_pc98_keyboard_clock.py': ('runtime', 'Compare actual keyboard delivery at the PIC tick write and after the complete timer transaction on the pinned emulator.'),
     'pc98_keyboard_clock_gdb.py': ('runtime', 'Record every keyboard tick and separate receive/read events while delivering physical keys at an observed timer seam.'),
     'pc98_keyboard_clock_support.py': ('runtime', 'Observe timer entry, the actual tick hardware write, CPU budget credit, queue normalization and return without clock assignments.'),

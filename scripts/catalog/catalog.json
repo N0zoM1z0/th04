@@ -3941,6 +3941,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/probes/verify_pc98_keyboard_irq.py",
+    "category": "runtime",
+    "role": "support",
+    "purpose": "Compare separate UART requests, actual CPU interrupt acceptance and BIOS reads with source-bound native pending-IRQ ownership.",
+    "purpose_source": "maintained-description"
+  },
+  {
     "path": "scripts/product_input_fingerprint.py",
     "category": "build",
     "role": "support",

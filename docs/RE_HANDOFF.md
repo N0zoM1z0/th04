@@ -5,49 +5,39 @@ faithful native x64 game; both goals remain active. Original Japanese DOS versus
 reconstructed DOS is the primary behavioral comparison. Keep English code/docs,
 gpt-6.1-sol: commits and frequent pushes to main and native HEAD:port/modern-64.
 
-## Current clock and admission frontier (v1486)
+## Sampler and pending IRQ frontier (v1487)
 
-Main code 86873ce attests complete keyboard timer transactions. The pinned host
-ELF writes PIC_Ticks before crediting CPU_CycleLeft and subtracting one from
-queued indices. Actual instruction boundaries are TIMER_AddTick+17h/+42h/+81h.
-A tick hardware watch can therefore observe a temporarily uncredited budget.
+Original MAIN pair75 at Stage2/frame249 receives a rising Shot make after all
+8 scalar loads, inside the joystick PUSHF/CLI/POPF wrapper. RX is at relative
+0000:3663 with IF=0,278 cycles after entry; BIOS writes at360 and return is391.
+Sampler reset/sense/return are130E:06BC/06C4/07C4; actual load10FC,CS240A,DS3230.
+Independent unchanged-target execution from a genuine prior reset reproduces
+the RX low16 registers,segments and normalized flags. All3 later IF-enabled
+boundaries preserve Sense32; Reset controls yield0 despite final BIOS Shot2.
+Original scalar reads remain inferred,not directly traced. Broad MEM_READ hooks
+break the far return even on pinned Unicorn2.1.4; BIOS-only10-byte hooks pass.
 
-Fresh authored COMs deliver two physical requests at tick-write or timer-return.
-They preserve different orders: 535 ticks/549 operations versus 536/550. Both
-pass through existing cold GNU/UBSan peripherals; twelve independent software/
-hardware BIOS write pairs agree. Complete 2677/2682-record clock traces derive
-zero merged regressions while retaining 535/536 raw regressions. Six actual-proof
-mutations reject, and eight focused unit tests pass. Direct raw tick-edge time
-fails the real native monotone-time guard. Four prior default reports remain
-byte-identical after adding optional --audit-clock.
+Native InterruptRequest separates pending request,IF eligibility,actual CPU
+acceptance and later BIOS read. A fresh authored stalled COM records actual
+CPU_Interrupt(vector9,type0) before IF clears. GNU/UBSan match27 operations,
+10 actual ticks,5 RX callbacks and4 accepts/reads;4 independent BIOS writes
+agree. Four compiled defects and3 invalid acceptance controls reject. All16
+old trace comparisons remain byte-identical. See the main-branch existing
+TH04_REPLAY_DIFFERENTIAL note for exact evidence classes,commands and limits.
 
-The unchanged original V86 stream binds 65 complete external transfers. Thirteen
-stage-plan queued/service deadlines agree; all 52 clock-controller transfers have
-exactly one millisecond temporary excess, covering every recorded regression.
-CPU carry is -1 in 51 cases and -17 once. The original controller source watches
-the tick write. Its old capture lacks the complete host instruction-phase trace;
-keep the original raw samples and the bounded boundary inference distinct.
-Do not apply a guessed correction to unobserved phases or round away CPU carry.
-
-Next record timer phases and actual scalar sampler/IRQ reads in original V86,
-including unstable sampler pair 75 at loop 249. Then justify native elapsed time
-and admission semantics before wiring the peripheral into the frontend. The
-component still receives recorded RX/CPU-read boundary times; guest IRQ latency
-and native game-clock ownership remain open. Original V86 RX-to-BIOS is usually
-58 cycles (304/346); the authored internal-DOS 16-cycle observation is separate.
-Preserve latch/UI behavior, actual repeat ordering and each raw negative case. No fitted hold, expected word or
-fixed transport-to-BIOS admission delay is justified.
-
-Use the main-branch docs/reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md for
-the replay surface, evidence classes and earlier complete/failed comparisons.
+Only2 standalone inputs change. PIC masks,priority,EOI,dispatch latency and
+native elapsed time remain external. Next record complete original timer and
+scalar-read events,justify elapsed/dispatch ownership,then integrate into the
+real frontend and cold-replay affected game products. Preserve all raw failures;
+no fitted hold,latch or fixed RX-to-BIOS delay. Both full goals remain active.
 
 ## Maintained products and comparison limits
 
-Native source remains 573 files, closure
-af655e9e1ef5ac7702fbf07a8bca4b8946f8655b3fb71b59a5c24ba74d1f1b87.
-The isolated keyboard-device-v1485-component cohort retains three programs:
-GNU/UBSan execute; Windows is compile-only. Native b774aa9 owns the peripheral;
-no native/DOS product source, compiler flags, link input or cohort changes here.
+Native source is573 files with closure
+824998852f83267a4e528a0cc6b0c605cd59e70238589ecf15e18abd07c1abd2.
+The new standalone sampler-irq-v1487-component retains three programs. The
+previous v1485 component remains573/af655e9e under its historical source. Only
+the two standalone inputs change; no native game/core or DOS source changes.
 
 The retained full-game sampled-device-v1481-final cohort still binds its original
 571-file closure 10d8adb1fbdac1495f2b8a5180fa21e1808003bba8ebe2a6cd396ae4567b4f01:
@@ -61,7 +51,9 @@ Against the preceding original, all 13378 pool/state snapshots, 13377 heads,
 four literal players, 23 full RGB/TRAM/DAC/tone samples and the complete raw
 loop/RNG wire agree. Strict timing remains false: 30 tail words and 23 raw GDC
 samples differ. Of 3402 sampler pairs, 3362 stable CPU replays pass, 39 precede
-a genuine reset and pair 75 changes BIOS during execution. All 247 observed
+a genuine reset and pair75 changes BIOS during execution. Its latch result is now separately
+confluent across the three later IF-enabled boundaries; scalar reads were not
+directly captured, so keep3362 stable replays and this1 bounded proof distinct. All 247 observed
 tail returns bind the same-run after-reset actor field. Preserve failed capture
 A's 7833-snapshot truncated extent and genuine SIGINT separately from full B.
 
@@ -88,7 +80,9 @@ main differential note and evidence/knowledge ledgers.
 
 ## Recovery, resources and finish
 
-Use DOS-root .analysis/reconstruction/probes/keyboard-clock-v1486/recover.py:
+Use DOS-root .analysis/reconstruction/probes/sampler-irq-v1487/recover.py:
+87034 inherited identities,9888 unchanged aliases and no new net storage credit.
+The previous closed clock phase retains its separate accounting:
 9888 exact aliases, 86710 inherited identities, eight new SHA/size/mode/nsmtime
 restores and actual/archive readers preserving eight prototype/public model
 reports plus the raw-clock rejection. Conservative phase-local cleanup net is
@@ -104,7 +98,7 @@ Read back actual cgroup limits. Use GHIDRA_HEADLESS_MAXMEM=384M and
 JAVA_TOOL_OPTIONS=-XX:ActiveProcessorCount=1. Keep runs muted/headless and avoid
 host keys/focus. Clean terminal intermediates after checking exact recovery.
 
-Phase entry heads were main 40a2f60/native 59884d9; read actual heads and the latest
+Phase entry heads were main9c43c13/nativef142852; read actual heads and the latest
 finish receipt. Finish focused comparison, tracking, python3 scripts/ci.py in
 both branches and git diff --check; commit/push both branches. ci.py ignores
 arguments, so --help runs the entire CI. Complete product goals remain active.

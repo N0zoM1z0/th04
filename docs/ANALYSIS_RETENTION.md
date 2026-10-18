@@ -1,5 +1,24 @@
 # Private build and analysis retention
 
+## Sampler/IRQ component retention (v1487)
+
+Use DOS-root .analysis/reconstruction/probes/sampler-irq-v1487/recover.py.
+Chain87034 inherited identities and9888 exact aliases, including every late and
+finish binding. No new alias or net cleanup credit is claimed. Keep the new
+three-program component,actual objects/link inputs,CPU path and broad-hook
+negative,short-wait failed capture,accepted four-loop capture,compiled defect
+witnesses and all original capsules. The old573 and571 cohorts remain physical
+under their historical closures. Old header/check versions are in the v1486
+public snapshot; historical staging is reader-only and restores bytes/mode/
+nsmtime before any build or CI. A strict whitelist removes only unused generated
+metadata for never-built targets in the fresh cache,with zero cleanup credit.
+The cache is then retired; no future incremental build or CTest there.
+
+Heavy jobs remain serial,CPUQuota35%,MemoryHigh256M,MemoryMax768M,no swap,
+TasksMax64,Nice19,core limit0 andtaskset CPU1. Read actual cgroup limits. Keep
+Ghidra384M/one Java processor and mute/headless emulators. See the final resource
+receipt for observed peak and the full closed recovery report.
+
 ## Timer transaction recovery (v1486)
 
 Use DOS-root `.analysis/reconstruction/probes/keyboard-clock-v1486/recover.py`.

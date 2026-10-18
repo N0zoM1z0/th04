@@ -5,6 +5,62 @@ is original Japanese TH04 DOS versus reconstructed TH04 DOS. Native x64 also
 must preserve game state and effects. These are two differential surfaces;
 neither native host agreement nor successful native clears establishes them.
 
+## Sampler and pending IRQ ownership (v1487)
+
+The original pair75 at Stage2/frame249 is a rising BIOS Shot make while the
+Sense latch already holds32. Actual RX occurs at MAIN0000:3663 with IF=0,
+278 cycles after sampler entry, inside the joystick PUSHF/CLI/.../POPF wrapper.
+BIOS writes at360 cycles and return is391: RX-to-BIOS is82, not a fixed58.
+The sampler is MAIN130E:06BC reset,06C4 sense,07C4 return; DGROUP relative2134.
+Actual load10FC gives CS240A and DS3230. All eight keyboard loads precede RX.
+
+Pinned Unicorn2.1.4 executes unchanged original instructions from a genuine
+prior reset and reproduces the masked RX low16 GPRs,ES/CS/SS/DS and normalized
+flags. All three later IF-enabled instruction boundaries preserve Sense32;
+genuine Reset controls yield0 despite final BIOS Shot2. No expected latch is
+seeded. Scalar values in the original capture remain inferred, not directly
+traced. This resolves pair75's bounded latch result without a new full-game
+acceptance or a complete original scalar trace. Unrestricted MEM_READ hooks
+break the far return even with2.1.4; the10-byte BIOS-only hook passes. Preserve
+the negative and never repair the PC or patch original instructions.
+
+Native InterruptRequest preserves a pending request while IF=0. IF only makes
+it eligible; actual CPU dispatch accepts it, and a later BIOS data read updates
+the matrix. PIC masks/priority/EOI and latency remain external. A new authored
+CLI/stalled-receiver COM records actual CPU_Interrupt(vector9,type0) entry before
+IF clears, rather than treating BIOS ISR entry as pre-interrupt IF. GNU/UBSan
+match27 operations,10 actual ticks,5 RX callbacks and4 CPU accepts/BIOS reads.
+Four software BIOS stores agree with independent hardware watchpoints. Four
+compiled IRQ defects and3 invalid acceptance controls reject;16 old trace
+comparisons remain byte-identical. First short-wait capture remains a failed
+fixture timing attempt; the accepted authored fixture waits four LOOP blocks.
+
+Only pc98_keyboard.hpp and its standalone checks change. Native closure is573/
+824998852f83267a4e528a0cc6b0c605cd59e70238589ecf15e18abd07c1abd2.
+Fresh sampler-irq-v1487-component retains3 programs:GNU/UBSan execute;Windows
+compiles only. The old v1485 component and v1481 full-game cohort remain under
+their original closures; no game/core compile input or DOS source changed.
+The real frontend still needs justified elapsed time and IRQ dispatch ownership.
+Next capture complete original timer phases and actual scalar reads, then wire
+those owners into the frontend and cold-replay affected game products. Keep all
+30-tail/23-GDC,older40-tail and other raw negative surfaces separate. No unit or
+artifact exactness changes; both complete product goals remain active.
+
+Replay from DOS-root .analysis/reconstruction/probes/sampler-irq-v1487:
+check_cpu.py executes the bounded target path and tool rejection. irq_runner.py
+uses the pinned engine/font and an absent output directory with --scenario
+stalled --delivery-phase tick-return. scripts/probes/verify_pc98_keyboard_irq.py
+requires the capture,cold program/build receipt,tick layout,model header and a
+fresh output. Actual CPU acceptance is an external boundary input, not predicted
+native IRQ latency. Existing --trace behavior remains unchanged.
+
+Recovery chains87034 inherited identities and9888 aliases; no new alias or net
+storage credit is claimed. Only unused generated metadata in this new cache is
+pruned after whitelist and retained-program/link checks; do not build or run
+CTest there afterward. Preserve original capsules,all failed witnesses,old and
+current programs/link inputs and historical source snapshots. See current finish
+and retention receipts. All heavy jobs use the serial resource limits below.
+
 ## Keyboard timer transaction and original deadline binding (v1486)
 
 The pinned emulator ELF makes PIC_Ticks visible before the rest of one timer

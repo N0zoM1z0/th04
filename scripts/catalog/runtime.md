@@ -110,6 +110,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/th04_title_draw_checkpoints_gdb.py](../probes/th04_title_draw_checkpoints_gdb.py) | support | Record original BB code-entry registers, caller and scroll state on declared updates. |
 | [probes/th04_title_draw_stream_gdb.py](../probes/th04_title_draw_stream_gdb.py) | support | Stream actual original BB entry arguments across all armed ordinary update intervals. |
 | [probes/verify_pc98_keyboard_device.py](../probes/verify_pc98_keyboard_device.py) | support | Compare a source-bound native keyboard component with every recorded request, timer tick, receive callback and CPU data read. |
+| [probes/verify_pc98_keyboard_irq.py](../probes/verify_pc98_keyboard_irq.py) | support | Compare separate UART requests, actual CPU interrupt acceptance and BIOS reads with source-bound native pending-IRQ ownership. |
 | [runtime/fixtures/good_ending.asm](../runtime/fixtures/good_ending.asm) | fixture | Private resident seed for real MAINE Ending tests; bypasses OP/gameplay initialization. |
 | [runtime/verify_dos_gaiji.py](../runtime/verify_dos_gaiji.py) | command | Compare original and linked DOS Gaiji writes, port order and far-call return state across WORD address boundaries. |
 | [runtime/verify_dos_hud_popup.py](../runtime/verify_dos_hud_popup.py) | command | Execute original MAIN popup, CRT and text instructions at two load segments with complete TRAM and ABI observations. |
