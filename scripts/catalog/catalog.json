@@ -2268,6 +2268,13 @@
     "purpose_source": "source-docstring"
   },
   {
+    "path": "scripts/probes/probe_th04_slowdown_reset.py",
+    "category": "source-review",
+    "role": "command",
+    "purpose": "Execute the attested MAIN delay owner with synthetic VSync counts, no PC-98 timing claim.",
+    "purpose_source": "source-docstring"
+  },
+  {
     "path": "scripts/probes/probe_th04_snd_load_th03.py",
     "category": "source-review",
     "role": "command",

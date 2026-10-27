@@ -71,6 +71,7 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [probes/probe_th04_op_sound_state.py](../probes/probe_th04_op_sound_state.py) | command | Attest OP's shared TH04 sound tables and initial SE state. |
 | [probes/probe_th04_op_title_trace.py](../probes/probe_th04_op_title_trace.py) | command | Cold-build an OP title trace overlay and restore every product input. |
 | [probes/probe_th04_opmusic_nopoly_hybrid.py](../probes/probe_th04_opmusic_nopoly_hybrid.py) | command | Replay the cross-game-corroborated TH04 OP nopoly_B_put copy core. |
+| [probes/probe_th04_slowdown_reset.py](../probes/probe_th04_slowdown_reset.py) | command | Execute the attested MAIN delay owner with synthetic VSync counts, no PC-98 timing claim. |
 | [probes/probe_th04_snd_load_th03.py](../probes/probe_th04_snd_load_th03.py) | command | Cross-check TH03's homologous snd_load against the TH04 89 C3 blocker. |
 | [probes/probe_th04_tasm_even_context.py](../probes/probe_th04_tasm_even_context.py) | command | Replay TASM 5.0 EVEN fill control from checked-in symbolic source. |
 | [probes/probe_th04_tlink_switch_surface_v441.py](../probes/probe_th04_tlink_switch_surface_v441.py) | command | Bound the remaining active-TLINK switch surface on current OP/MAINE candidates. |

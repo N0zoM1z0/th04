@@ -1,5 +1,13 @@
 # Reconstruction evidence notes
 
+[Portable audio synthesis fidelity](product/TH04_PORTABLE_AUDIO_FIDELITY.md) records the repeated-attack defect, independent FM/SSG calibration, alias suppression and current Windows acceptance.
+
+[Portable audio profile and Stage 3 quiet passages](product/TH04_PORTABLE_AUDIO_PROFILE.md) records complete sound-profile launch wiring, loop/flow controls and physical-audio limits.
+
+[Portable MAINE UI and seamless invincibility](product/TH04_PORTABLE_UI_AND_INVINCIBILITY.md) routes Ending/name-entry performance, exact component comparisons, saved scores and the fully guarded hit gate.
+
+[Portable rendering and Extra frame delay](product/TH04_PORTABLE_RENDER_PERFORMANCE.md) records the 2026-10-27 row/color optimizations, Windows timer A/B, original delay-reset Oracle and corrected full rendered Extra.
+
 These notes explain bounded target observations, compiler experiments, replay
 receipts, and unresolved producer questions. They support the ledgers; they do
 not define current progress or exactness by themselves.
@@ -16,6 +24,7 @@ source evidence.
 
 - [PC-98 hardware reuse](../PC98_HARDWARE_REUSE.md) — fixes, measured performance, replay tools and claim limits.
 - [DOS build/testing](../DOS_BUILD.md) — Windows fast builds and ordinary/invincible launchers.
+- [Windows x64 background functional smoke and runtime patches](product/TH04_WINDOWS_FUNCTIONAL_SMOKE.md) — current functional scope, replay plans and manual preview.
 - [Semantic/native status and TODO](../PORTING_STATUS.md) — current products, comparison priorities and scoped host validation.
 - [Original/reconstructed DOS and native differential handoff](product/TH04_REPLAY_DIFFERENTIAL.md) — complete Stage2 clear/Stage3 entry, actual player input owners, full pools/RNG/video gates, retained key/GDC and collector failures, and recovery.
 - [Script catalog](../../scripts/README.md) — all tools grouped by task.

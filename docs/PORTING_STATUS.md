@@ -1,21 +1,26 @@
 # Semantic and x64 port status
 
-The user is actively using the Windows host. Do not launch Windows GUI
-tests, activate foreground windows or inject host keys. Keep every launch
-muted; use headless checks or private Linux Xvfb instead. Actual Windows
-window/input acceptance stays open under this constraint.
+Current Windows audio: repeated FM attacks restored, independently calibrated parts and bandlimited output; see [fidelity evidence](reconstruction/product/TH04_PORTABLE_AUDIO_FIDELITY.md). PMD86 BAT profile and coalesced WinMM buffers remain in use.
 
-## Current handoff (2026-10-18)
+Keep the host workspace undisturbed. Authorized Windows tests use inactive
+private desktops, process-local hooks and explicit mute; do not switch the
+active desktop or send global keyboard input.
 
-The user requested a handoff; the prior active goal is cleared. Current native
-code ea41be4 connects SDL/WinMM joystick producers to menus and live MAIN
-sampling. Source577/51b9f388 has scoped API, original-instruction and headless
-frontend evidence; Windows remains compile/link only. Complete maintained DOS
-and faithful native objectives remain unfinished, with strict timing and full
-campaign acceptance open. Use [RE_HANDOFF.md](RE_HANDOFF.md) and
-[NEXT_AGENT_HANDOFF.md](NEXT_AGENT_HANDOFF.md) for current products, two-worktree
-heads, cleanup/recovery and resource limits. No historical milestone below
-supersedes that current index.
+## Current handoff (2026-10-27)
+
+Latest: [Ending/registration and seamless invincibility](reconstruction/product/TH04_PORTABLE_UI_AND_INVINCIBILITY.md) optimizes glyph rows and page conversion, verifies real save flow, and suppresses hits before both death-entry latches. Both BATs enable audio.
+
+Current portable update fixes the retained Extra boss delay, batches rendering and improves Windows pacing; both D-drive BAT launchers enable audio. See [runtime evidence](reconstruction/product/TH04_PORTABLE_RENDER_PERFORMANCE.md). The earlier functional batch below retains its historical build identity.
+
+Windows x64 functional smoke now passes a real hooked window plus complete
+Normal Reimu A, Normal Marisa B and same-session earned Extra Reimu A logical
+routes under a memory-only no-life-loss patch. Ordinary death/Continue, pause,
+configuration and physical score flows have separate checks. Overall game flow
+is the current acceptance target; original DOS pixel/timing parity is supporting
+work, and further UBSan testing is deferred by the user. No game code was
+rebuilt or changed in that earlier batch. Physical input/audio and continuous visual quality remain
+for manual review. See [current handoff](RE_HANDOFF.md) and
+[functional test scope](reconstruction/product/TH04_WINDOWS_FUNCTIONAL_SMOKE.md).
 
 ## Historical verification milestones
 

@@ -1,5 +1,32 @@
 # 東方幻想郷 ～ Lotus Land Story
 
+## Portable 64-bit: download, build and play
+
+The native **Windows x64 preview** is available on [Releases](https://github.com/N0zoM1z0/th04/releases).
+Source builds use the **[port/modern-64 branch](https://github.com/N0zoM1z0/th04/tree/port/modern-64)**;
+`main` retains the DOS reconstruction. Read the [portable setup/build guide](https://github.com/N0zoM1z0/th04/blob/port/modern-64/docs/PORTABLE.md).
+
+1. Extract the release ZIP and supply your own `th04.hdi`, `FREECG98.BMP` and
+   `ym2608_adpcm_rom.bin` beside the executable.
+2. Run `Play.bat` for ordinary play with sound, or `Play-no-life-loss.bat` for
+   seamless invincibility. Saves are kept in separate local directories.
+3. To compile, clone `port/modern-64`; configure CMake from `port64/` and build
+   **only the `th04-port64` target**. Windows uses MinGW-w64/Win32; Linux uses SDL2.
+   The guide includes exact commands, controls, input identities and limitations.
+
+Windows source build (64-bit MinGW-w64 GCC, CMake and Ninja on `PATH`):
+
+```bat
+git clone --branch port/modern-64 https://github.com/N0zoM1z0/th04.git th04-portable
+cd th04-portable
+port64\build-windows.bat
+```
+
+The ZIP contains one final executable, launchers and licenses. Original game
+images/assets, fonts, chip ROMs and user saves are supplied separately.
+Normal/Extra flows, Ending/name/save and Music Room/audio have functional
+checks; complete original DOS pixel/timing or physical sound identity is not claimed.
+
 <p align="center">
   <img
     src="resources/title-screen.png"
@@ -25,10 +52,16 @@ Historical function acceptance is reported by `python3 scripts/status.py` and
 
 ## Current products and navigation
 
-The session is ready for handoff. Host joystick producers now reach menus and
-live MAIN sampling; scoped frontend/API checks pass. Complete game and original
-timing acceptance remain unfinished. See the
-[current handoff](docs/RE_HANDOFF.md).
+Current Windows audio restores repeated FM notes, balances the parts and reduces resampling noise. [Independent synthesis validation](docs/reconstruction/product/TH04_PORTABLE_AUDIO_FIDELITY.md) covers Music Room, loops and complete flows; the D-drive package keeps one final EXE and existing saves.
+
+Latest Windows preview improves Ending/name-entry rendering and provides seamless invincibility in the no-life-loss BAT. Both launchers enable audio. See [UI, save and no-death validation](docs/reconstruction/product/TH04_PORTABLE_UI_AND_INVINCIBILITY.md).
+
+Windows x64 background functional smoke now passes a real hooked window and
+Normal Reimu A, Normal Marisa B and earned Extra Reimu A logical clears under
+a process-only no-life-loss patch. Ordinary death/Continue, pause, save and
+configuration checks remain separate. The current preview enables audio and fixes Extra half-speed leakage, with row
+rendering and frame-pacing optimizations. See [performance evidence](docs/reconstruction/product/TH04_PORTABLE_RENDER_PERFORMANCE.md). It is ready for manual input/audio/visual review. See the [current handoff](docs/RE_HANDOFF.md) and
+[functional scope](docs/reconstruction/product/TH04_WINDOWS_FUNCTIONAL_SMOKE.md).
 
 The v1475 actual source MAIN defeats Elly at 12792 and reaches Stage4 init/score1
 with original OP/MAINE/ZUN/assets. All 13378 pool/state snapshots,13377 actual
