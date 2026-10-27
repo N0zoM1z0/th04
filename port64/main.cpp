@@ -371,7 +371,7 @@ int main(int argc, char** argv) {
                     require(pmd_driver=="pmd" || !opna_rom.empty(),"OPNA profile requires --opna-rom FILE");
                     const auto board=pmd_driver=="pmd" ? th04::portable::pmd::Board::fm26 :
                         pmd_driver=="pmd86" ? th04::portable::pmd::Board::speakboard : th04::portable::pmd::Board::fm86;
-                    main_assets.pmd_profile=th04::portable::sound::PmdProfile{board,pmd_driver=="pmd" ? 4000000u : 8000000u,
+                    main_assets.pmd_profile=th04::portable::sound::PmdProfile{board,pmd_driver=="pmd" ? 3993600u : 7987200u,
                         pmd_driver=="pmd" ? Bytes{} : read_file(opna_rom)};
                 }
                 for(unsigned i=0;i<4;++i)

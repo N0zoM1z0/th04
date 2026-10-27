@@ -41,6 +41,7 @@ public:
     // The original pushes the adjacent amplitude byte in its WORD argument.
     void prepare_render(std::uint16_t frame,std::uint8_t amplitude_adjacent=0);
     const std::vector<Draw>& draws() const {return draws_;}
+    void reset_frame_delay() { state_.boss.slowdown=1; }
     void set_invincibility(std::uint8_t value) {state_.boss.invincibility=value;}
     void set_player_hit(std::uint8_t value) {state_.lasers.player_hit=value;}
     void set_graphics(std::uint16_t tone,std::uint8_t color) {state_.boss.palette_tone=motion::wrap(tone);state_.boss.circle_color=color;}

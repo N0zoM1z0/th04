@@ -51,6 +51,7 @@ public:
     void prepare_render(std::uint16_t frame,const laser::System&);
     const std::vector<Draw>& draws() const { return draws_; }
     void apply_departure(const transition::Departure& departure);
+    void reset_frame_delay() { state_.boss.slowdown=1; }
     void set_invincibility(std::uint8_t value) { state_.boss.invincibility=value; }
     void set_graphics(std::uint16_t tone,std::uint8_t color) { state_.boss.palette_tone=tone;state_.boss.circle_color=color; }
 private:

@@ -2,6 +2,7 @@
 #include <array>
 #include <cstdint>
 #include <vector>
+#include <stdexcept>
 
 namespace th04::portable::stage {
 using Bytes = std::vector<std::uint8_t>;
@@ -12,6 +13,11 @@ public:
     explicit TileImages(const Bytes& bytes);
     unsigned count() const { return count_; }
     std::uint8_t pixel(unsigned image, unsigned x, unsigned y) const;
+    // A decoded scanline lets the renderer check the tile once per 16 pixels.
+    const std::uint8_t* row(unsigned image, unsigned y) const {
+        if(image>=count_ || y>=16)throw std::out_of_range("MPN tile row");
+        return pixels_.data()+image*256+y*16;
+    }
 private:
     unsigned count_ = 0;
     Bytes pixels_;

@@ -44,6 +44,20 @@
     }
   },
   "license": "BSD-3-Clause",
-  "local_changes": [],
+  "local_changes": [
+    {
+      "description": "Opt-in key-state commit API for IRQ-compacted ordered PMD writes; default upstream scheduling and FM arithmetic unchanged. See docs/reconstruction/product/TH04_PORTABLE_AUDIO_FIDELITY.md.",
+      "files": {
+        "src/ymfm_fm.h": {
+          "size": 18092,
+          "sha256": "1bf1557ce3909e9986eb011e1c26ed34e80bf974d5f543331a45b419f6ce87f4"
+        },
+        "src/ymfm_opn.h": {
+          "size": 28707,
+          "sha256": "3fd20d2e751fa2d38be9c1bcda6725a6db38e64b6a28ab6b7ceb5f974454a3be"
+        }
+      }
+    }
+  ],
   "scope": "Only required Yamaha OPN/OPNA source; no chip ROM, game assets or GPL LLE source is included."
 }

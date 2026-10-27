@@ -378,6 +378,16 @@ public:
 	// write to the OPN registers
 	void write(uint16_t regnum, uint8_t data);
 
+	// TH04 adapter extension: IRQ-level traces may put a key-off and a
+	// key-on at the same timestamp. Consume each edge without advancing
+	// oscillator/envelope time; otherwise the deferred live bit loses it.
+	// Ordinary upstream clients retain the original deferred behavior.
+	void flush_key_state(uint32_t channel)
+	{
+		if (channel < CHANNELS)
+			m_channel[channel]->prepare();
+	}
+
 	// return the current status
 	uint8_t status() const;
 

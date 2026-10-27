@@ -187,4 +187,18 @@ bool Font::ank_pixel(std::uint8_t character,unsigned x,unsigned y) const {
     const auto byte=bytes_[offset_+(2047-y)*256+character];
     return (byte&(0x80u>>x))==0;
 }
+std::uint16_t Font::row(std::uint16_t sjis,unsigned y) const {
+    if(bytes_.empty() || y>=16)return 0;
+    const unsigned lead=sjis>>8,trail=sjis&255;
+    if(!((lead>=0x81 && lead<=0x9f) || (lead>=0xe0 && lead<=0xef)) ||
+       trail<0x40 || trail==0x7f || trail>0xfc)return 0;
+    unsigned row=(lead-(lead<0xa0 ? 0x81 : 0xc1))*2+0x21;
+    const unsigned cell=trail>=0x9f ? (++row,trail-0x7e) : trail-(trail>0x7e ? 0x20 : 0x1f);
+    const auto at=offset_+(2047-(cell*16+y))*256+(row-0x20)*2;
+    return std::uint16_t(~((unsigned(bytes_[at])<<8)|bytes_[at+1]));
+}
+std::uint8_t Font::ank_row(std::uint8_t character,unsigned y) const {
+    if(bytes_.empty() || y>=16)return 0;
+    return std::uint8_t(~bytes_[offset_+(2047-y)*256+character]);
+}
 } // namespace th04::portable::dialog

@@ -1,4 +1,5 @@
 #include "pmd_pcm.hpp"
+#include "pcm_filter.hpp"
 #include "vendor/ymfm/src/ymfm_opn.h"
 #include <algorithm>
 #include <limits>
@@ -15,13 +16,15 @@ struct OpnPcm::Impl:ymfm::ymfm_interface {
     ChipLevels raw{},averaged{};
     std::array<std::int64_t,3> area{};
     std::array<std::int64_t,2> previous{},filtered{};
+    PcmFilter filter;
+    std::uint64_t last_chip=0;
     Impl(Board b,std::uint32_t frequency,Bytes data,PcmSink action)
-        :board(b),hz(frequency),step(b==Board::fm26 ? 4 : 8),quantum(18*step),rom(std::move(data)),sink(std::move(action)),next_chip(quantum) {
+        :board(b),hz(frequency),step(b==Board::fm26 ? 12 : 24),quantum(b==Board::fm26 ? 72 : 144),rom(std::move(data)),sink(std::move(action)),next_chip(quantum),filter(frequency,step) {
         if(b!=Board::fm26 && b!=Board::fm86 && b!=Board::speakboard)throw std::invalid_argument("PCM board");
         if(hz<48000 || hz>1000000000)throw std::invalid_argument("PCM master frequency");
         if((b!=Board::fm26 && rom.size()!=8192) || (!rom.empty() && rom.size()!=8192))throw std::invalid_argument("OPNA rhythm ROM size");
-        if(b==Board::fm26) {opn=std::make_unique<ymfm::ym2203>(*this);opn->reset();}
-        else {opna=std::make_unique<ymfm::ym2608>(*this);opna->reset();}
+        if(b==Board::fm26) {opn=std::make_unique<ymfm::ym2203>(*this);opn->set_fidelity(ymfm::OPN_FIDELITY_MED);opn->reset();}
+        else {opna=std::make_unique<ymfm::ym2608>(*this);opna->set_fidelity(ymfm::OPN_FIDELITY_MED);opna->reset();}
         schedule_pcm();
     }
     void ymfm_set_timer(std::uint32_t t,std::int32_t clocks) override {timers.at(t)=clocks<0 ? 0 : now+std::uint32_t(clocks);}
@@ -39,19 +42,27 @@ struct OpnPcm::Impl:ymfm::ymfm_interface {
     void generate() {
         if(opn) {ymfm::ym2203::output_data value;opn->generate(&value);raw={value.data[0],value.data[0],value.data[1]+value.data[2]+value.data[3]};}
         else {ymfm::ym2608::output_data value;opna->generate(&value);raw={value.data[0],value.data[1],value.data[2]};}
+        // Normalize the different FM DAC widths and ymfm's 2/3 OPNA SSG sum.
+        // Calibrated with independent OPNA FM/SSG tone controls, not song gain.
+        const auto ssg=board==Board::fm26 ? std::int64_t(raw.ssg)*5/36 : std::int64_t(raw.ssg)*5/24;
+        filter.push(std::int32_t((board==Board::fm26 ? raw.left/2 : raw.left)+ssg),
+                    std::int32_t((board==Board::fm26 ? raw.right/2 : raw.right)+ssg));
+        last_chip=now;
     }
     std::int16_t mix(unsigned channel,std::int64_t value) {
-        // Explicit portable output adapter: half gain, then a fixed 48 kHz
-        // DC blocker. This is not a measured PC-98 analogue transfer function.
-        value/=2;
-        const auto result=value-previous[channel]+filtered[channel]*32700/32768;
+        // Retain fractional feedback at a ~5 Hz DC-blocking corner. Integer
+        // sample feedback previously distorted quiet signals and cut more bass.
+        value*=65536;
+        const auto result=value-previous[channel]+filtered[channel]*65493/65536;
         previous[channel]=value;filtered[channel]=result;
-        return std::int16_t(std::max<std::int64_t>(-32768,std::min<std::int64_t>(32767,result)));
+        const auto sample=result/65536;
+        return std::int16_t(std::max<std::int64_t>(-32768,std::min<std::int64_t>(32767,sample)));
     }
     void emit() {
         const auto width=now-last_pcm;
         averaged={std::int32_t(area[0]/std::int64_t(width)),std::int32_t(area[1]/std::int64_t(width)),std::int32_t(area[2]/std::int64_t(width))};
-        StereoSample value{mix(0,std::int64_t(averaged.left)+averaged.ssg),mix(1,std::int64_t(averaged.right)+averaged.ssg)};
+        const auto phase=last_chip ? unsigned(now-last_chip) : 0u;
+        StereoSample value{mix(0,filter.sample(0,phase)),mix(1,filter.sample(1,phase))};
         area={};last_pcm=now;++count;schedule_pcm();if(sink)sink(value);
     }
     void advance(std::uint64_t end) {
@@ -79,6 +90,14 @@ struct OpnPcm::Impl:ymfm::ymfm_interface {
         if(!value.bank && value.address>=0x2d && value.address<=0x2f)throw std::invalid_argument("PCM prescaler not default");
         if(opn) {opn->write_address(value.address);opn->write_data(value.value);}
         else {opna->write(value.bank*2,value.address);opna->write(value.bank*2+1,value.value);}
+        // PMD IRQ callbacks preserve write order but share one timestamp.
+        // Commit key edges now so off/on pairs cannot collapse before the
+        // next generated FM sample. Time, phase stepping and timers stay put.
+        if(!value.bank && value.address==0x28 && (value.value&3)!=3) {
+            const unsigned channel=value.value&3;
+            if(opn)opn->flush_key_state(channel);
+            else opna->flush_key_state(channel+((value.value&4)?3:0));
+        }
     }
 };
 OpnPcm::OpnPcm(Board board,std::uint32_t hz,Bytes rom,PcmSink sink):impl_(std::make_unique<Impl>(board,hz,std::move(rom),std::move(sink))) {}

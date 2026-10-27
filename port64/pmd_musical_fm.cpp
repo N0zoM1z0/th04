@@ -39,6 +39,7 @@ void MusicalFm::start(){
     // The deferred FM26 mode survives song restart in the original resident.
     fm3_detune_={};fm3_mode_=63;fm3_flags_=0;
     for(unsigned p=6;p<9;++p){auto& e=parts_[p];e.slots=e.voice_mask=e.pan=e.key_flags=0;for(auto& l:e.lfo)l.depth_count=l.initial_depth_count=0;}
+    if(board_==Board::speakboard){write(1,0x10,0x80);write(1,0x10,0x18);write(0,0x29,0x83);}
     sequence_.start();ssg_.start();attenuation_=initial_attenuation_;
     if(board_==Board::fm26)for(unsigned p=3;p<6;++p){part(p).slots=0;part(p).voice_mask=0;}
     // Original stereo initialization visits the primary bank first.

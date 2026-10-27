@@ -10,7 +10,7 @@ static_assert(sizeof(pmd::StereoSample)==4,"host PCM requires two signed16 chann
 #ifdef _WIN32
 namespace {
 class WaveDevice final:public Device {
-    static constexpr std::size_t block_frames=2048,block_count=8;
+    static constexpr std::size_t block_frames=1024,block_count=16;
     struct Block {
         WAVEHDR header{};std::array<pmd::StereoSample,block_frames> samples{};
         std::atomic<bool> available{true};std::size_t frames=0;bool prepared=false;
@@ -20,6 +20,7 @@ class WaveDevice final:public Device {
         std::atomic<std::size_t> queued{0};
     };
     Api api_;HWAVEOUT handle_=nullptr;std::unique_ptr<Storage> storage_=std::make_unique<Storage>();
+    std::array<pmd::StereoSample,block_frames> staging_{};std::size_t staged_=0;
     static void CALLBACK callback(HWAVEOUT,UINT message,DWORD_PTR instance,DWORD_PTR first,DWORD_PTR) {
         if(message!=WOM_DONE)return;
         auto& self=*reinterpret_cast<Storage*>(instance);
@@ -61,17 +62,25 @@ public:
         } catch(...) {close();throw;}
     }
     ~WaveDevice() override {close();}
-    std::size_t queued_frames() const override {return storage_->queued.load(std::memory_order_relaxed);}
+    std::size_t queued_frames() const override {return storage_->queued.load(std::memory_order_relaxed)+staged_;}
     Push push(const pmd::StereoSample* samples,std::size_t frames) override {
-        const auto needed=(frames+block_frames-1)/block_frames;
+        if(frames>block_frames*block_count)return Push::busy;
+        // Resource/work admissions can produce only a few PCM frames. Packing
+        // them preserves driver slots and keeps the 200 ms Output budget usable.
+        // At 48 kHz the pending tail adds at most one 21.3 ms block of latency.
+        const auto needed=(staged_+frames)/block_frames;
         std::size_t free=0;
         for(const auto& block:storage_->blocks)free+=block.available.load(std::memory_order_acquire);
         if(free<needed)return Push::busy;
-        for(auto& block:storage_->blocks) {
-            if(!frames)break;
-            if(!block.available.load(std::memory_order_acquire))continue;
-            block.frames=std::min(frames,block_frames);
-            std::copy_n(samples,block.frames,block.samples.begin());
+        while(frames) {
+            const auto take=std::min(frames,block_frames-staged_);
+            std::copy_n(samples,take,staging_.begin()+staged_);
+            staged_+=take;samples+=take;frames-=take;
+            if(staged_<block_frames)break;
+            auto& block=*std::find_if(storage_->blocks.begin(),storage_->blocks.end(),
+                [](const Block& b){return b.available.load(std::memory_order_acquire);});
+            block.frames=block_frames;
+            std::copy(staging_.begin(),staging_.end(),block.samples.begin());
             block.header.dwBufferLength=DWORD(block.frames*sizeof(pmd::StereoSample));
             block.available.store(false,std::memory_order_relaxed);
             storage_->queued.fetch_add(block.frames,std::memory_order_relaxed);
@@ -79,9 +88,10 @@ public:
             if(result!=MMSYSERR_NOERROR) {
                 storage_->queued.fetch_sub(block.frames,std::memory_order_relaxed);
                 block.available.store(true,std::memory_order_release);
+                staged_=0;
                 check(result,"waveOutWrite");
             }
-            samples+=block.frames;frames-=block.frames;
+            staged_=0;
         }
         return Push::queued;
     }

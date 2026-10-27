@@ -1,5 +1,20 @@
 # Resume TH04 reconstruction
 
+Current audio: [repeated FM attacks, mix and bandlimited conversion](reconstruction/product/TH04_PORTABLE_AUDIO_FIDELITY.md). Preserve the new executable hash/RVAs and opt-in ymfm edge-commit extension; previous shared-ymfm PCM equality is not a chip-fidelity Oracle.
+
+Latest Windows UI/no-death batch: [current evidence](reconstruction/product/TH04_PORTABLE_UI_AND_INVINCIBILITY.md). Use the sole final th04-port64.exe, preserve user saves, and guard both hit latches; earlier prefix-only and BSS-reset hypotheses remain rejected.
+
+Current rendering/Extra update: see [performance and delay reset](reconstruction/product/TH04_PORTABLE_RENDER_PERFORMANCE.md). Gengetsu no longer inherits Mugetsu defeat delay2; full rendered Extra and actual Windows transition/input controls pass. Both D-drive BAT launchers enable audio. Further UBSan remains deferred.
+
+Current priority (2026-10-27): Windows x64 functional playability. The user
+permits process-local input hooks, replay and a temporary no-life-loss runtime
+patch; original DOS pixel/timing parity is supporting work and UBSan is deferred.
+Nine scoped functional cases pass; ordinary and no-life-loss manual launchers
+are prepared in `D:\Entertainment\Game\Touhou\th04-reconstruct`.
+See [current handoff](RE_HANDOFF.md) and
+[functional smoke](reconstruction/product/TH04_WINDOWS_FUNCTIONAL_SMOKE.md).
+Historical v1497 instructions below retain their original scope.
+
 Prepared at the user's request on 2026-10-18. The prior goal was cleared; this
 session is handed off. Complete DOS/native product objectives remain unfinished.
 Read actual Git heads and DOS-root host-joystick-v1497/finish.json. No background

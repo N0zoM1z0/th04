@@ -61,6 +61,14 @@ std::uint64_t Scene::advance_elapsed(std::uint64_t ns,const maine::KeySource& ke
 }
 void Canvas::rect_copy(unsigned source,unsigned dest,int left,int top,unsigned w,unsigned h,unsigned mask) {
     if(source>1 || dest>1) throw std::invalid_argument("invalid MAINE page copy");
+    if(mask==0xffff && left>=0 && top>=0 && unsigned(left)<=width && unsigned(top)<=height &&
+       w<=width-unsigned(left) && h<=height-unsigned(top)) {
+        if(source!=dest)for(unsigned y=0;y<h;++y) {
+            const auto at=(unsigned(top)+y)*width+unsigned(left);
+            std::copy_n(pages_[source].begin()+at,w,pages_[dest].begin()+at);
+        }
+        return;
+    }
     for(unsigned y=0;y<h;++y) for(unsigned x=0;x<w;++x) {
         const int px=left+int(x),py=top+int(y);
         if(px<0 || px>=int(width) || py<0 || py>=int(height)) continue;
@@ -79,6 +87,15 @@ void Canvas::draw_picture(int left,int top,int quarter,unsigned mask,bool full) 
     const unsigned sx=!full && (quarter==1 || quarter==3) ? 320 : 0;
     const unsigned sy=!full && (quarter==2 || quarter==3) ? 200 : 0;
     left=(left/8)*8;
+    if(full && mask==0xffff && left>=0 && unsigned(left)<=width && w<=width-unsigned(left) && !(w&1)) {
+        for(unsigned y=0;y<h;++y) {
+            const auto py=unsigned(((top+int(y))%int(height)+int(height))%int(height));
+            const auto* source=loaded_->pixels.data()+(sy+y)*(loaded_->width/2)+sx/2;
+            auto* target=pages_[accessed_].data()+py*width+unsigned(left);
+            for(unsigned x=0;x<w/2;++x) {target[x*2]=source[x]>>4;target[x*2+1]=source[x]&15;}
+        }
+        return;
+    }
     for(unsigned y=0;y<h;++y) for(unsigned x=0;x<w;++x) {
         const int px=left+int(x),py=((top+int(y))%int(height)+int(height))%int(height);
         if(px<0 || px>=int(width) || !selected(mask,x)) continue;
@@ -145,12 +162,7 @@ void Canvas::draw_text(int left,int top,const std::string& text,unsigned color,u
         origin=std::uint16_t(origin+(cursor>>3));
         const auto shift=unsigned(cursor&7u);
         for(unsigned y=0;y<16;++y) {
-            std::uint16_t row=0;
-            const unsigned dots=full ? 16 : 8;
-            for(unsigned x=0;x<dots;++x) {
-                const bool set=full ? font_.pixel(sjis,x,y) : font_.ank_pixel(static_cast<std::uint8_t>(first),x,y);
-                if(set) row|=static_cast<std::uint16_t>(1u<<(dots-1-x));
-            }
+            std::uint16_t row=full ? font_.row(sjis,y) : font_.ank_row(static_cast<std::uint8_t>(first),y);
             row=weight(row,y);
             const auto address=std::uint16_t(origin+y*80u);
             if(full) {

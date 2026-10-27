@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <functional>
 #include <vector>
+#include <stdexcept>
 
 namespace th04::portable::sprite {
 class Sheet {
@@ -12,6 +13,10 @@ public:
     unsigned height() const { return height_; }
     unsigned count() const { return count_; }
     std::uint8_t pixel(unsigned image, unsigned x, unsigned y) const;
+    const std::uint8_t* packed_row(unsigned image,unsigned y) const {
+        if(image>=count_ || y>=height_)throw std::out_of_range("BFNT sprite row");
+        return packed_.data()+(std::size_t(image)*height_+y)*width_/2;
+    }
     const std::array<std::uint8_t, 48>& palette() const { return palette_; }
     bool has_palette() const { return has_palette_; }
 

@@ -1,5 +1,34 @@
 # 東方幻想郷 ～ Lotus Land Story
 
+## Portable 64-bit: download, build and play
+
+The native **Windows x64 preview** is available on [Releases](https://github.com/N0zoM1z0/th04/releases).
+Source builds use the **[port/modern-64 branch](https://github.com/N0zoM1z0/th04/tree/port/modern-64)**;
+`main` retains the DOS reconstruction. Read the [portable setup/build guide](docs/PORTABLE.md).
+
+1. Extract the release ZIP and supply your own `th04.hdi`, `FREECG98.BMP` and
+   `ym2608_adpcm_rom.bin` beside the executable.
+2. Run `Play.bat` for ordinary play with sound, or `Play-no-life-loss.bat` for
+   seamless invincibility. Saves are kept in separate local directories.
+3. To compile, clone `port/modern-64`; configure CMake from `port64/` and build
+   **only the `th04-port64` target**. Windows uses MinGW-w64/Win32; Linux uses SDL2.
+   The guide includes exact commands, controls, input identities and limitations.
+
+Windows source build (64-bit MinGW-w64 GCC, CMake and Ninja on `PATH`):
+
+```bat
+git clone --branch port/modern-64 https://github.com/N0zoM1z0/th04.git th04-portable
+cd th04-portable
+port64\build-windows.bat
+```
+
+The ZIP contains one final executable, launchers and licenses. Original game
+images/assets, fonts, chip ROMs and user saves are supplied separately.
+Normal/Extra flows, Ending/name/save and Music Room/audio have functional
+checks; complete original DOS pixel/timing or physical sound identity is not claimed.
+
+Current Windows audio: [independent synthesis validation](docs/reconstruction/product/TH04_PORTABLE_AUDIO_FIDELITY.md) restores repeated FM attacks, balances musical parts and bandlimits output. One final EXE, existing saves preserved.
+
 <p align="center">
   <img
     src="resources/title-screen.png"

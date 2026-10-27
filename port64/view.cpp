@@ -40,6 +40,7 @@
 #include <windows.h>
 #include <fcntl.h>
 #include <io.h>
+#include "win32_frame_timer.hpp"
 #else
 #include <SDL.h>
 #endif
@@ -131,6 +132,8 @@ struct Frame {
     // Kept for partial-plane sprite writes; RGB cannot recover duplicate colors.
     Bytes indices;
     std::optional<std::array<std::uint8_t,48>> graphics_palette;
+    std::array<std::uint32_t,16> colors{};
+    bool colors_ready=false;
     Frame()=default;
     Frame(unsigned w,unsigned h,std::vector<uint32_t> p):width(w),height(h),pixels(std::move(p)) {}
 };
@@ -143,6 +146,12 @@ uint32_t palette_color(const PiImage& image, unsigned index) {
     };
     return 0xff000000u | (component(0) << 16) | (component(1) << 8) |
         component(2);
+}
+
+std::array<std::uint32_t,16> palette_colors(const PiImage& image) {
+    std::array<std::uint32_t,16> colors{};
+    for(unsigned i=0;i<colors.size();++i)colors[i]=palette_color(image,i);
+    return colors;
 }
 
 std::array<std::uint8_t,48> mpn_palette(const Bytes& bytes) {
@@ -164,13 +173,13 @@ Frame background_frame(const PiImage& image) {
     Frame frame{image.width, image.height,
                 std::vector<uint32_t>(size_t(image.width) * image.height)};
     frame.indices.resize(frame.pixels.size());
-    for (size_t y = 0; y < image.height; ++y) {
-        for (size_t x = 0; x < image.width; ++x) {
-            const uint8_t packed = image.pixels[y * image.width / 2 + x / 2];
-            const unsigned index = (x & 1) ? (packed & 15) : (packed >> 4);
-            frame.pixels[y * image.width + x] = palette_color(image, index);
-            frame.indices[y * image.width + x] = std::uint8_t(index);
-        }
+    const auto colors=palette_colors(image);
+    for(size_t at=0;at<image.pixels.size();++at) {
+        const auto packed=image.pixels[at];
+        frame.indices[at*2]=packed>>4;
+        frame.indices[at*2+1]=packed&15;
+        frame.pixels[at*2]=colors[packed>>4];
+        frame.pixels[at*2+1]=colors[packed&15];
     }
     return frame;
 }
@@ -186,7 +195,8 @@ void put_indexed_pixel(
         screen_x < int(frame.width) && screen_y < int(frame.height)
     ) {
         const auto at=size_t(screen_y)*frame.width+screen_x;
-        frame.pixels[at]=palette_color(palette,color);
+        require_view(color<16,"palette index outside image");
+        frame.pixels[at]=frame.colors_ready ? frame.colors[color] : palette_color(palette,color);
         if(!frame.indices.empty()) frame.indices[at]=static_cast<std::uint8_t>(color);
     }
 }
@@ -252,10 +262,17 @@ void fill_rect(
     Frame& frame, const PiImage& palette, int left, int top,
     int width, int height, unsigned color
 ) {
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            put_indexed_pixel(frame, palette, left, top, unsigned(x), unsigned(y), color);
-        }
+    if(width<=0 || height<=0)return;
+    const auto x0=std::max<std::int64_t>(0,left), y0=std::max<std::int64_t>(0,top);
+    const auto x1=std::min<std::int64_t>(frame.width,std::int64_t(left)+width);
+    const auto y1=std::min<std::int64_t>(frame.height,std::int64_t(top)+height);
+    if(x0>=x1 || y0>=y1)return;
+    require_view(color<16,"palette index outside image");
+    const auto rgb=frame.colors_ready ? frame.colors[color] : palette_color(palette,color);
+    for(auto y=y0;y<y1;++y) {
+        const auto at=size_t(y)*frame.width+size_t(x0);
+        std::fill_n(frame.pixels.begin()+at,x1-x0,rgb);
+        if(!frame.indices.empty())std::fill_n(frame.indices.begin()+at,x1-x0,std::uint8_t(color));
     }
 }
 
@@ -730,6 +747,28 @@ struct MainSprites {
 
 void put_sprite(Frame& frame, const PiImage& palette, const sprite::Sheet& sheet,
                 unsigned image, int left, int top, bool white = false,unsigned scale=1) {
+    if(scale==1) {
+        require_view(image<sheet.count(),"BFNT sprite image outside sheet");
+        const int x0=int(std::max<std::int64_t>(0,-std::int64_t(left)));
+        const int y0=int(std::max<std::int64_t>(0,-std::int64_t(top)));
+        const int x1=int(std::min<std::int64_t>(sheet.width(),std::int64_t(frame.width)-left));
+        const int y1=int(std::min<std::int64_t>(sheet.height(),std::int64_t(frame.height)-top));
+        if(x0>=x1 || y0>=y1)return;
+        const auto colors=frame.colors_ready ? frame.colors : palette_colors(palette);
+        for(int y=y0;y<y1;++y) {
+            const auto* source=sheet.packed_row(image,unsigned(y));
+            const auto at=size_t(top+y)*frame.width+unsigned(left+x0);
+            for(int x=x0;x<x1;++x) {
+                const auto packed=source[unsigned(x)/2];
+                unsigned color=(x&1) ? packed&15 : packed>>4;
+                if(!color)continue;
+                if(white)color=15;
+                frame.pixels[at+unsigned(x-x0)]=colors[color];
+                if(!frame.indices.empty())frame.indices[at+unsigned(x-x0)]=std::uint8_t(color);
+            }
+        }
+        return;
+    }
     for (unsigned y = 0; y < sheet.height(); ++y) {
         for (unsigned x = 0; x < sheet.width(); ++x) {
             const auto color = sheet.pixel(image, x, y);
@@ -768,7 +807,9 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     palette.palette=th04::portable::pc98_palette::shown_palette(palette.palette,
         displayed_tone.value_or(state.life().palette_tone));
     frame.graphics_palette=palette.palette;
-    std::fill(frame.pixels.begin(),frame.pixels.end(),palette_color(palette,background_index));
+    frame.colors=palette_colors(palette);
+    frame.colors_ready=true;
+    std::fill(frame.pixels.begin(),frame.pixels.end(),frame.colors[background_index]);
     const auto& bomb_frame=state.bomb_frame();
     const unsigned display_line=sprites.background.display_line();
     const unsigned bomb_page=state.frames()%2;
@@ -779,7 +820,7 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     if(bomb_frame.active && bomb_frame.retain_background) {
         require_view(sprites.bomb_base.size()==640*400,"Bomb retained page has not been rendered");
         frame.indices=visible_page(sprites.bomb_base,display_line);
-        for(unsigned at=0;at<frame.indices.size();++at)frame.pixels[at]=palette_color(palette,frame.indices[at]);
+        for(unsigned at=0;at<frame.indices.size();++at)frame.pixels[at]=frame.colors[frame.indices[at]];
     }
     if(!bomb_frame.active || !bomb_frame.retain_background) {
     const auto background_phase=state.orange_background_phase();
@@ -827,29 +868,34 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
     // Boss transition masks address only the 23 visible tile rows.
     const unsigned tile_top=backdrop ? 16 : 0;
     const unsigned tile_bottom=backdrop ? 384 : 400;
-    for (unsigned y=tile_top; y<tile_bottom; ++y) {
-        for (unsigned x=0; x<384; ++x) {
-            if(state.yuuka6_active() || (extra_battle && !extra_tiles)) continue;
-            if (backdrop) {
-                if(npc_active || state.yuuka5_active()) continue;
-                if (background_phase!=(state.elly_active() ? 2 : 1)) continue;
-                const int cel=state.orange_background_frame()/2;
-                require_view(cel>=0 && cel<16,"Orange BB cel outside resource");
-                const unsigned column=x/16,row=(y-16)/16;
-                // The actual invalidator redraws stage tiles for ZERO bits.
-                // A BB cel is32x32 tiles (four bytes/row); only24x23 show.
-                if (((state.kurumi_active() || state.elly_active()) ? sprites.second->assets.transition : sprites.transition)[unsigned(cel)*128+row*4+column/8]&(0x80u>>(column&7))) continue;
+    const bool draw_tiles=!state.yuuka6_active() && (!extra_battle || extra_tiles) &&
+        (!backdrop || (!npc_active && !state.yuuka5_active() &&
+            background_phase==(state.elly_active() ? 2 : 1)));
+    const int mask_cel=state.orange_background_frame()/2;
+    if(draw_tiles && backdrop)require_view(mask_cel>=0 && mask_cel<16,"Orange BB cel outside resource");
+    if(draw_tiles)for(unsigned y=tile_top;y<tile_bottom;++y) {
+        // Ring lookup, scroll wrapping and transition masks are invariant
+        // across each 16-pixel scanline. Decoded tiles contain indices 0..15.
+        const unsigned physical_y=(y+display_line)%400;
+        const bool carpet_copy=sprites.second &&
+            (physical_y+400-sprites.second->carpet_copy_top)%400<sprites.second->carpet_copy_height;
+        for(unsigned column=0;column<24;++column) {
+            if(backdrop) {
+                const auto& mask=(state.kurumi_active() || state.elly_active())
+                    ? sprites.second->assets.transition : sprites.transition;
+                if(mask[unsigned(mask_cel)*128+((y-16)/16)*4+column/8] &
+                    (0x80u>>(column&7)))continue;
             }
-            // MAIN draws ordinary tiles before stage4_render changes the ring.
-            // Retain that draw's inputs across the later callback/scroll tail.
-            const unsigned physical_y=(y+display_line)%400;
-            const bool carpet_copy=sprites.second &&
-                (physical_y+400-sprites.second->carpet_copy_top)%400<sprites.second->carpet_copy_height;
-            const auto image = sprites.second && sprites.second->carpet_draw_ring && !carpet_copy
-                ? (*sprites.second->carpet_draw_ring)[physical_y/16][x/16]
-                : sprites.background.draw_image_at(x,y);
-            put_indexed_pixel(frame,palette,32,0,x,y,
-                tiles.pixel(image,x%16,sprites.background.row_pixel(y)));
+            // Preserve the prefix ring before actor callbacks and scroll tail.
+            const auto image=sprites.second && sprites.second->carpet_draw_ring && !carpet_copy
+                ? (*sprites.second->carpet_draw_ring)[physical_y/16][column]
+                : sprites.background.draw_image_at(column*16,y);
+            const auto* source=tiles.row(image,physical_y%16);
+            const auto at=size_t(y)*frame.width+32+column*16;
+            for(unsigned x=0;x<16;++x) {
+                frame.indices[at+x]=source[x];
+                frame.pixels[at+x]=frame.colors[source[x]];
+            }
         }
     }
     if(npc_active && (npc_background.kind==th04::portable::reimu::BackdropKind::tiles_and_mask || npc_background.kind==th04::portable::reimu::BackdropKind::picture_and_mask)) {
@@ -917,7 +963,7 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
         require_view(retained_background->size()==640*400,"retained dialogue graphics extent");
         for(unsigned at=0;at<frame.indices.size();++at)if((*retained_background)[at]!=255) {
             frame.indices[at]=(*retained_background)[at];
-            frame.pixels[at]=palette_color(palette,frame.indices[at]);
+            frame.pixels[at]=frame.colors[frame.indices[at]];
         }
     }
     if(bomb_frame.active) {
@@ -936,7 +982,7 @@ Frame render_main(const MainSprites& sprites, const gameplay::State& state,
             graphics.apply(state.bomb_effect().draws(),physical);
         if(sprites.capture_bomb)sprites.bomb_capture.after=physical;
         frame.indices=visible_page(physical,display_line);
-        for(unsigned at=0;at<frame.indices.size();++at)frame.pixels[at]=palette_color(palette,frame.indices[at]);
+        for(unsigned at=0;at<frame.indices.size();++at)frame.pixels[at]=frame.colors[frame.indices[at]];
     }
     const auto& shots = state.shots().snapshot();
     const auto pixels = [](std::int16_t coordinate) {
@@ -1259,7 +1305,8 @@ public:
         Frame frame{640,400,std::vector<std::uint32_t>(640*400,0xff000000u)};
         PiImage palette=sprites_.palette;
         palette.palette=th04::portable::pc98_palette::shown_palette(palette.palette,script_.tone());
-        for(unsigned i=0;i<indices_.size();++i) if(indices_[i]!=255) frame.pixels[i]=palette_color(palette,indices_[i]);
+        const auto colors=palette_colors(palette);
+        for(unsigned i=0;i<indices_.size();++i) if(indices_[i]!=255) frame.pixels[i]=colors[indices_[i]];
         // PC-98 TRAM text is a separate layer and does not follow the analog
         // graphics palette fade. All script text/gaiji uses TX_WHITE.
         for(const auto& glyph:glyphs_) for(unsigned y=0;y<16;++y) for(unsigned x=0;x<16;++x) {
@@ -1438,6 +1485,30 @@ public:
         application_.finish_main(statistics,rank==4 ? application::EndSequence::extra : application::EndSequence::good);
         begin_registration(0,2);
         frame_=render();
+    }
+    // Explicit muted, traced inspection entry; normal launches never seed a run.
+    void seed_ui_window(const std::string& scene) {
+        require_view(assets_ && assets_->muted && !assets_->window_trace.empty(),
+                     "UI inspection requires a muted traced window");
+        startup_.reset();startup_renderer_.reset();setup_.reset();setup_renderer_.reset();
+        score_store_=std::make_unique<score_file::HostStore>(assets_->save_directory);pending_op_scores_=false;
+        if(scene=="registration")seed_registration_fixture(0,1,0);
+        else {
+            require_view(scene=="ending","unknown UI inspection scene");
+            menu::Options options;options.rank=1;application_.apply_options(options);
+            for(unsigned i=0;i<318;++i)application_.advance_op_menu_frame();
+            application_.start_normal(application::Playchar::reimu,application::ShotType::a);
+            for(unsigned i=0;i<5;++i)application_.advance_main_stage();
+            application::RunStatistics statistics;statistics.score_digits[6]=1;
+            ending_=std::make_unique<maine::Ending>(application_,statistics,application::EndSequence::good,
+                assets_->ending,[] {},false,sound_timeline_.get(),&startup_clock_);
+            // The fixture starts at MAINE; MAIN graphics were deliberately not
+            // constructed. Complete its existing fade clock without presenting.
+            for(unsigned i=0;i<300 && ending_->phase()==maine::Phase::main_fade;++i)
+                ending_->advance_elapsed(std::uint64_t(frame_period.count()),[]{return std::uint16_t(0);});
+            require_view(ending_->phase()==maine::Phase::cutscene,"UI fixture did not enter Ending");
+            screen_=Screen::maine;frame_=render();
+        }
     }
     // Retained test adapter supplies Extra unlock/availability. Resident seeds,
     // resource installation and MAIN initialization use the ordinary path.
@@ -1620,6 +1691,10 @@ public:
                 const auto advice=th04::portable::route_advice::observe(*main_);
                 s.advice_held=advice.held;s.advice_shift=advice.shift;
             }
+        }
+        if(const auto* registration=registration_scene()) {
+            s.frame=registration->menu().ticks();
+            s.x=registration->menu().alphabet_column();s.y=registration->menu().alphabet_row();
         }
         if(audio_output_) {const auto& a=audio_output_->statistics();s.audio_frames=a.generated;
             s.audio_opens=a.open_attempts;s.audio_failed=a.failed;}
@@ -2538,8 +2613,9 @@ private:
                     palette.palette=th04::portable::pc98_palette::shown_palette(palette.palette,
                         congratulations ? congratulations->animation().tone() : verdict->tone());
                     const auto& page=canvas->page(canvas->shown_page());
+                    const auto colors=palette_colors(palette);
                     for(unsigned y=0;y<400;++y)for(unsigned x=0;x<640;++x)
-                        frame.pixels[y*640+x]=palette_color(palette,page[((y+unsigned(canvas->scroll()))%400)*640+x]);
+                        frame.pixels[y*640+x]=colors[page[((y+unsigned(canvas->scroll()))%400)*640+x]];
                 }
                 return frame;
             }
@@ -2553,8 +2629,9 @@ private:
                     const auto& canvas=verdict->canvas();PiImage palette;palette.palette=canvas.palette();
                     palette.palette=th04::portable::pc98_palette::shown_palette(palette.palette,verdict->tone());
                     const auto& page=canvas.page(canvas.shown_page());
+                    const auto colors=palette_colors(palette);
                     for(unsigned y=0;y<400;++y)for(unsigned x=0;x<640;++x)
-                        frame.pixels[y*640+x]=palette_color(palette,page[((y+unsigned(canvas.scroll()))%400)*640+x]);
+                        frame.pixels[y*640+x]=colors[page[((y+unsigned(canvas.scroll()))%400)*640+x]];
                 }
                 return frame;
             }
@@ -2581,8 +2658,9 @@ private:
                     staff ? staff->tone() : congratulations ? congratulations->animation().tone() : verdict ? verdict->tone() : scene->script().tone());
                 const auto& page=staff ? staff->page(staff->shown_page()) : canvas->page(canvas->shown_page());
                 const unsigned scroll=staff ? 0 : (unsigned(canvas->scroll())%400);
+                const auto colors=palette_colors(palette);
                 for(unsigned y=0;y<400;++y) for(unsigned x=0;x<640;++x)
-                    frame.pixels[y*640+x]=palette_color(palette,page[((y+scroll)%400)*640+x]);
+                    frame.pixels[y*640+x]=colors[page[((y+scroll)%400)*640+x]];
                 return frame;
             }
         case Screen::main_handoff:
@@ -2755,7 +2833,9 @@ struct Win32Title {
         const PiImage& selection_background_, const CdgSheet& portraits_,
         const MainAssets& main_assets
     ) : trace(main_assets.window_trace,main_assets.muted),front_end(background_, numerals_, labels_, cursors_,
-                  selection_background_, portraits_, &main_assets) { front_end.enable_audio_output();front_end.enable_configuration();front_end.enable_registration();front_end.enable_host_timing(); }
+                  selection_background_, portraits_, &main_assets) { front_end.enable_audio_output();front_end.enable_configuration();front_end.enable_registration();front_end.enable_host_timing();
+        if(const auto scene=std::getenv("TH04_UI_TEST_SCENE"))front_end.seed_ui_window(scene);
+    }
 
     bool input(menu::Input pressed) {
         if(pressed==menu::Input::cancel && front_end.live_main())return false;
@@ -2937,11 +3017,36 @@ void show_window(
         nullptr, nullptr, instance, &title
     );
     require_view(window != nullptr, "cannot create Win32 title window");
-    require_view(SetTimer(window, 1, 4, nullptr) != 0, "cannot create MAIN frame timer");
+    host_window::FrameTimer frame_timer;
+    bool precise=frame_timer.arm(title.schedule.next());
+    if(!precise)require_view(SetTimer(window,1,4,nullptr)!=0,"cannot create MAIN frame timer");
     MSG message{};
-    while (GetMessageW(&message, nullptr, 0, 0) > 0) {
-        TranslateMessage(&message);
-        DispatchMessageW(&message);
+    bool running=true;
+    while(running) {
+        if(!precise) {
+            const int result=GetMessageW(&message,nullptr,0,0);
+            require_view(result>=0,"Win32 message retrieval failed");
+            if(!result)break;
+            TranslateMessage(&message);DispatchMessageW(&message);
+            continue;
+        }
+        const HANDLE timer=frame_timer.handle();
+        const auto wake=MsgWaitForMultipleObjectsEx(1,&timer,INFINITE,
+                                                   QS_ALLINPUT,MWMO_INPUTAVAILABLE);
+        require_view(wake!=WAIT_FAILED,"Win32 frame wait failed");
+        if(wake==WAIT_OBJECT_0) {
+            SendMessageW(window,WM_TIMER,1,0);
+            if(!frame_timer.arm(title.schedule.next())) {
+                precise=false;
+                require_view(SetTimer(window,1,4,nullptr)!=0,"cannot restore MAIN frame timer");
+            }
+        } else {
+            // Bound input draining so a busy queue cannot starve rendering.
+            for(unsigned count=0;count<64 && PeekMessageW(&message,nullptr,0,0,PM_REMOVE);++count) {
+                if(message.message==WM_QUIT) {running=false;break;}
+                TranslateMessage(&message);DispatchMessageW(&message);
+            }
+        }
     }
     title.front_end.close_window();
     title.trace.finish(title.front_end.window_snapshot());

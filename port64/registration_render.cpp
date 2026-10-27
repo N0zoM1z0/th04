@@ -177,9 +177,10 @@ void paint_text(const std::array<std::uint16_t,2000>& codes_,
                     const unsigned jis_row=column+0x20;
                     const unsigned lead=(jis_row-0x21)/2+(jis_row<0x5f ? 0x81 : 0xc1);
                     const unsigned trail=jis_row&1u ? jis_cell+0x1f+(jis_cell>=0x60 ? 1 : 0) : jis_cell+0x7e;
-                    for(unsigned x=0;x<8;++x)if(font.pixel(std::uint16_t((lead<<8)|trail),x+(right ? 8 : 0),y))mask|=128u>>x;
+                    const auto dots=font.row(std::uint16_t((lead<<8)|trail),y);
+                    mask=right ? dots&255u : dots>>8;
                 }
-                else for(unsigned x=0;x<8;++x)if(font.ank_pixel(Byte(code),x,y))mask|=128u>>x;
+                else mask=font.ank_row(Byte(code),y);
             }
             if((attribute&2u) && !blink_visible)mask=0;
             if(attribute&4u)mask^=255u; // Blink blanks the font before reverse.
@@ -328,9 +329,12 @@ void Renderer::apply(const Event& e) {
 }
 score_file::Bytes Renderer::rgb(unsigned page,int tone) const {
     const auto dac=pc98_palette::show(canvas_.palette(),tone);
+    std::array<std::array<Byte,3>,16> colors{};
+    for(unsigned color=0;color<16;++color)for(unsigned channel=0;channel<3;++channel)
+        colors[color][channel]=pc98_palette::analog_rgb8(dac[color*3+channel]);
     score_file::Bytes rgb(640*400*3);const auto& indices=canvas_.page(page);
     for(unsigned at=0;at<indices.size();++at)for(unsigned channel=0;channel<3;++channel) {
-        rgb[at*3+channel]=pc98_palette::analog_rgb8(dac[unsigned(indices[at])*3+channel]);
+        rgb[at*3+channel]=colors[indices[at]][channel];
     }
     text_.overlay(rgb,assets_->graphics.gaiji,font_);return rgb;
 }

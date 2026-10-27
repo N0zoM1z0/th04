@@ -451,6 +451,8 @@ public:
 	}
 	uint32_t ssg_effective_clock(uint32_t input_clock) const { uint32_t scale = m_fm.clock_prescale() * 2 / 3; return input_clock * 2 / scale; }
 	void invalidate_caches() { m_fm.invalidate_caches(); }
+	// TH04 opt-in for compacted IRQ register traces; no chip clock step.
+	void flush_key_state(uint32_t channel) { m_fm.flush_key_state(channel); }
 
 	// read access
 	uint8_t read_status();
@@ -528,6 +530,8 @@ public:
 	}
 	uint32_t ssg_effective_clock(uint32_t input_clock) const { uint32_t scale = m_fm.clock_prescale() * 2 / 3; return input_clock / scale; }
 	void invalidate_caches() { m_fm.invalidate_caches(); }
+	// TH04 opt-in for compacted IRQ register traces; no chip clock step.
+	void flush_key_state(uint32_t channel) { m_fm.flush_key_state(channel); }
 
 	// read access
 	uint8_t read_status();

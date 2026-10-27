@@ -28,11 +28,11 @@ MMRESULT WINAPI open(LPHWAVEOUT h,UINT id,LPCWAVEFORMATEX f,DWORD_PTR cb,DWORD_P
     *h=reinterpret_cast<HWAVEOUT>(1);s.callback=cb;s.instance=context;return 0;
 }
 MMRESULT WINAPI prepare(HWAVEOUT,WAVEHDR* h,UINT size){
-    require(size==sizeof(WAVEHDR) && h->lpData && h->dwBufferLength==8192 && h->dwFlags==0,"stable prepared buffer");
+    require(size==sizeof(WAVEHDR) && h->lpData && h->dwBufferLength==4096 && h->dwFlags==0,"stable prepared buffer");
     ++s.prepared;if(s.fail_prepare==s.prepared)return MMSYSERR_ERROR;return 0;
 }
 MMRESULT WINAPI write(HWAVEOUT,WAVEHDR* h,UINT size){
-    require(size==sizeof(WAVEHDR) && h->dwBufferLength%4==0 && h->dwBufferLength<=8192,"WinMM frame bytes");
+    require(size==sizeof(WAVEHDR) && h->dwBufferLength%4==0 && h->dwBufferLength<=4096,"WinMM frame bytes");
     ++s.writes;if(s.fail_write)return MMSYSERR_ERROR;
     require(std::find(s.pending.begin(),s.pending.end(),h)==s.pending.end(),"reused driver-owned buffer");
     s.pending.push_back(h);auto p=reinterpret_cast<pmd::StereoSample*>(h->lpData);
@@ -44,15 +44,24 @@ MMRESULT WINAPI unprepare(HWAVEOUT,WAVEHDR*,UINT){++s.unprepared;return s.refuse
 MMRESULT WINAPI close(HWAVEOUT){++s.closed;return s.refuse_cleanup ? WAVERR_STILLPLAYING : 0;}
 Api fake(){return {&open,&prepare,&write,&reset,&unprepare,&close};}
 void tests(){
-    {auto d=platform_device(fake());require(s.prepared==8,"WinMM slot count");
-     require(d->push(input.data(),input.size())==Push::queued && d->queued_frames()==5000,"WinMM multi-block accounting");
+    {auto d=platform_device(fake());require(s.prepared==16,"WinMM slot count");
+     require(d->push(input.data(),input.size())==Push::queued && d->queued_frames()==5000,"WinMM multi-block plus pending accounting");
      auto first=s.pending.front();s.pending.erase(s.pending.begin());done(first);
-     require(d->queued_frames()==2952,"WinMM completed frames");
-     require(d->push(input.data(),7)==Push::queued && s.pending.back()==first,"WinMM completed slot reuse");
-     for(unsigned i=0;i<5;++i)require(d->push(input.data(),1)==Push::queued,"WinMM remaining slots");
-     const auto before=s.writes;require(d->push(input.data(),1)==Push::busy && s.writes==before,"WinMM busy overwrote slot");
-     require(s.copied.size()==5012 && s.copied[0].left==-32768 && s.copied[0].right==32767,"WinMM immutable PCM copy");}
-    require(s.resets==1 && s.unprepared==8 && s.closed==1 && s.pending.empty(),"WinMM close ownership");
+     require(d->queued_frames()==3976,"WinMM completed frames retain pending tail");
+     require(d->push(input.data(),120)==Push::queued && s.pending.back()==first,"WinMM tail packing and completed slot reuse");
+     require(s.copied.size()==5120 && s.copied[0].left==-32768 && s.copied[0].right==32767,"WinMM immutable PCM copy");}
+    require(s.resets==1 && s.unprepared==16 && s.closed==1 && s.pending.empty(),"WinMM close ownership");
+    // A resource burst must not spend one driver slot per one-frame admission.
+    // Compare the complete emitted stream, including both sides of chunk joins.
+    s=State{};{auto d=platform_device(fake());
+     std::vector<pmd::StereoSample> varied(5000);for(unsigned i=0;i<varied.size();++i)varied[i]={std::int16_t(int(i)-2500),std::int16_t(2500-int(i))};
+     for(const auto& v:varied)require(d->push(&v,1)==Push::queued,"WinMM fragmented resource burst lost PCM");
+     require(d->queued_frames()==5000,"WinMM fragmented accounting");
+     require(d->push(input.data(),120)==Push::queued,"WinMM fragmented tail flush");
+     require(s.copied.size()==5120 && std::equal(varied.begin(),varied.end(),s.copied.begin(),[](auto a,auto b){return a.left==b.left && a.right==b.right;}),"WinMM fragmented stream differs from original PCM");}
+    s=State{};{auto d=platform_device(fake());std::vector<pmd::StereoSample> full(16384);
+     require(d->push(full.data(),full.size())==Push::queued,"WinMM fill slots");const auto writes=s.writes;
+     require(d->push(input.data(),1024)==Push::busy && s.writes==writes && d->queued_frames()==16384,"WinMM busy must be atomic");}
     s=State{};s.fail_prepare=3;bool failed=false;
     try{platform_device(fake());}catch(const std::runtime_error&){failed=true;}
     require(failed && s.unprepared==2 && s.closed==1,"WinMM partial prepare cleanup");
@@ -60,9 +69,9 @@ void tests(){
     try{platform_device(fake());}catch(const std::runtime_error&){failed=true;}
     require(failed && s.prepared==0 && s.closed==0,"WinMM failed open cleanup");
     s=State{};{auto d=platform_device(fake());s.fail_write=true;
-     bool failed=false;try{d->push(input.data(),1);}catch(const std::runtime_error&){failed=true;}
+     bool failed=false;try{d->push(input.data(),1024);}catch(const std::runtime_error&){failed=true;}
      require(failed && d->queued_frames()==0,"WinMM failed write ownership");}
-    s=State{};{auto d=platform_device(fake());d->push(input.data(),1);s.refuse_cleanup=true;}
+    s=State{};{auto d=platform_device(fake());d->push(input.data(),1024);s.refuse_cleanup=true;}
     require(s.pending.size()==1,"WinMM refused cleanup context");
     // The quarantined header and callback context remain alive after d dies.
     done(s.pending.front());s.pending.clear();

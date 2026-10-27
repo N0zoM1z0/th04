@@ -21,6 +21,7 @@ public:
     void update(const Context&,bullet::System&,gather::System&,randring::SharedRandomRing&,const orange::Sink& sink={});
     void prepare_render();
     const std::vector<orange::Draw>& draws() const { return draws_; }
+    void reset_frame_delay() { state_.boss.slowdown=1; }
     void set_invincibility(std::uint8_t value) { state_.boss.invincibility=value; }
     void set_graphics(std::uint16_t tone,std::uint8_t color) { state_.boss.palette_tone=motion::wrap(tone);state_.boss.circle_color=color; }
 private:

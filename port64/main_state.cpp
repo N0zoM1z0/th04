@@ -1,4 +1,8 @@
 #include "main_state.hpp"
+// Native preview control: bit0 suppresses hits; the initialized marker makes
+// the memory-only launcher check explicit. Both prefix and suffix hit latches
+// use the same gate. Ordinary startup leaves bit0 clear.
+extern "C" { volatile std::uint8_t th04_suppress_player_hits=0xa4; }
 #include "stage_session.hpp"
 #include <stdexcept>
 #include <algorithm>
@@ -421,6 +425,7 @@ void State::update(std::uint16_t held_input, bool shift, bool pull_items,motion:
 }
 void State::update(pc98_input::Snapshot input, bool pull_items,motion::Subpixel scroll_delta,stage::Background* background) {
     const auto collision_hit=[this] {
+        if(th04_suppress_player_hits&1u)return false;
         return bullets_.snapshot().player_hit || enemies_.snapshot().player_hit ||
             thick_lasers_.snapshot().player_hit || (gengetsu_ && gengetsu_->snapshot().lasers.player_hit) ||
             (reimu_active_ && reimu_->snapshot().player_hit) || (marisa_active_ && marisa_->snapshot().player_hit) ||
@@ -460,6 +465,19 @@ void State::update(pc98_input::Snapshot input, bool pull_items,motion::Subpixel 
         context=suspended_context_;bullet_context=suspended_bullets_;pull_items=suspended_pull_items_;
     } else {
         enemy_events_.clear();bullet_events_.clear();midboss_events_.clear();orange_events_.clear();life_events_.clear();
+        // slowdown_frame_delay clears the global request after each completed
+        // game frame. Boss snapshots retain other metadata across dialogues;
+        // the previous defeat's delay must not leak into departure or Gengetsu.
+        // A resumed dialogue/player suffix still belongs to the current frame.
+        if(gengetsu_)gengetsu_->reset_frame_delay();
+        else if(mugetsu_)mugetsu_->reset_frame_delay();
+        else if(yuuka6_active_)yuuka6_->reset_frame_delay();
+        else if(yuuka5_active_)yuuka5_->reset_frame_delay();
+        else if(marisa_active_)marisa_->reset_frame_delay();
+        else if(reimu_active_)reimu_->reset_frame_delay();
+        else if(elly_active_)elly_->reset_frame_delay();
+        else if(kurumi_active_)kurumi_->reset_frame_delay();
+        else if(orange_active_)orange_.reset_frame_delay();
         bomb_frame_={};
         bomb_frame_.retain_background=life_.state().bombing && life_.state().background==2;
         if(boss_active()) {

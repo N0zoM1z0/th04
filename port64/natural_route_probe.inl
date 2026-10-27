@@ -19,6 +19,13 @@ void run_natural_route_checks(const PiImage& background,const CdgSheet& numerals
     const fs::path out(output);require_view(!fs::exists(out),"fresh route output required");fs::create_directories(out);
     std::ofstream inputs(out/"inputs.txt",std::ios::binary),trace(out/"state.txt",std::ios::binary);
     std::ofstream startup_inputs(out/"startup-inputs.txt",std::ios::binary),menu_inputs(out/"menu-inputs.txt",std::ios::binary);
+    // Only the explicitly rendered diagnostic records cost. The interactive
+    // path and ordinary logical replay have no extra output or clock sampling.
+    std::ofstream costs;
+    if(render_every) {
+        costs.open(out/"render-cost.tsv",std::ios::binary);
+        costs<<"tick stage frame scene bullets turbo before after advance_ns repaint_ns\n";
+    }
     th04::portable::configuration::HostStore config(assets.save_directory);
     if(config.setup_required()) {
         config.complete_setup(2,1);auto options=config.options();options.rank=std::uint8_t(rank);
@@ -87,7 +94,19 @@ void run_natural_route_checks(const PiImage& background,const CdgSheet& numerals
             }
         }
         inputs<<ticks<<' '<<keys<<' '<<unsigned(shift)<<'\n';
-        scene.advance(keys,shift,render_every!=0);
+        if(render_every) {
+            const auto before=scene.slowdown();const auto begin=host_window::now_ns();
+            scene.advance(keys,shift,true);
+            const auto end=host_window::now_ns();
+            const auto snapshot=scene.window_snapshot();
+            // A second, warm repaint isolates drawing from simulation/audio.
+            // It must not mutate logical state (also covered by route replay).
+            const auto paint_begin=host_window::now_ns();scene.repaint();
+            const auto paint_end=host_window::now_ns();
+            costs<<ticks<<' '<<snapshot.stage<<' '<<snapshot.frame<<' '<<snapshot.scene<<' '
+                <<snapshot.bullets<<' '<<(scene.live_main() ? scene.main_state().turbo() : false)<<' '
+                <<before<<' '<<scene.slowdown()<<' '<<end-begin<<' '<<paint_end-paint_begin<<'\n';
+        } else scene.advance(keys,shift,false);
         if(ticks%4096==0)std::cout<<"NATURAL exploration tick "<<ticks<<" stage "<<unsigned(scene.resident().stage)<<" generation "<<scene.generation()<<std::endl;
     }
     std::ofstream result(out/"result.txt",std::ios::binary);result<<"ticks "<<ticks<<" fresh_op "<<fresh_op<<" gameover_visits "<<continue_visits<<" ending_visits "<<ending_visits<<" registration_visits "<<registration_visits<<" extra_visits "<<extra_visits<<" render_every "<<render_every<<'\n';

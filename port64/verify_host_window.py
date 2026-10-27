@@ -13,6 +13,7 @@ from pathlib import Path
 import subprocess
 import time
 from verify import source_manifest, require_elf_x86_64
+from private_x11 import require_private_xvfb, request_window_close
 
 FIELDS = 'seq begin end deadline held shift focused before after scene program generation frame stage rank character shot x y bullets shots lives bombs misses invincibility audio_frames audio_opens audio_failed'.split()
 EXTRA_FIELDS = "score_units credits power bombing respawn slow_frames run_frames score_digits_units score_delta".split()
@@ -145,7 +146,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     for key in ('exe','hdi','font','output'):
         parser.add_argument('--'+key,type=Path,required=True)
-    args=parser.parse_args();root=Path(__file__).resolve().parents[1]
+    args=parser.parse_args();private_display=require_private_xvfb();root=Path(__file__).resolve().parents[1]
     mf,source=source_manifest(root);out=args.output.resolve();out.mkdir(parents=True,exist_ok=False)
     exe,hdi,font=[p.resolve() for p in (args.exe,args.hdi,args.font)]
     require_elf_x86_64(exe)
@@ -173,6 +174,24 @@ def main():
         start=sequence()
         for key in keys:x('keydown',key);held.append(key)
         time.sleep(duration)
+        # A throttled host can take longer than a short key pulse
+        # to admit three refreshes. Hold real OS keys until the trace witnesses
+        # enough samples; retain the same movement/firing assertions below.
+        masks={'enter':0x1000,'keypad-enter':0x1000,'right':8,'shift-left':4,'shot':32}
+        if name in masks or name in ('release','background'):
+            def witnessed(_):
+                with trace.open('rb') as stream:
+                    stream.seek(max(0,trace.stat().st_size-65536))
+                    lines=stream.read().decode('ascii').splitlines()
+                samples=[row(line) for line in lines if line.startswith('R ') and len(line.split())==40]
+                def matches(r):
+                    if r['seq']<=start:return False
+                    if name=='background':return not r['focused'] and not r['held'] and not r['shift']
+                    if r['scene']!='main':return False
+                    if name=='release':return not r['held'] and not r['shots']
+                    return bool(r['held']&masks[name]) and (name!='shift-left' or r['shift'])
+                return sum(matches(r) for r in samples)>=5
+            wait(witnessed,timeout=90)
         end=sequence()
         for key in reversed(keys):x('keyup',key);held.remove(key)
         actions.append(dict(name=name,keys=keys,begin=start,end=end));time.sleep(.06)
@@ -199,13 +218,13 @@ def main():
         assert sink_window is not None;x('windowfocus','--sync',sink_window)
         wait(lambda r:not r['focused']);action('background',['Shift_L','Right'],.15)
         x('windowfocus','--sync',window);wait(lambda r:r['focused'])
-        x('key','Escape');process.wait(timeout=15);assert process.returncode==0
+        request_window_close(window);process.wait(timeout=15);assert process.returncode==0
         report=assess(trace,actions)
         assert (saves/'MIKO.CFG').read_bytes()==cfg
         for path,digest in inputs.items():assert sha(path)==digest
         assert source_manifest(root)[0]==mf
         receipt=dict(passed=True,source_manifest=mf,source_files=len(source),inputs=inputs,command=command,
-                     display=os.environ.get('DISPLAY'),actions=actions,assessment=report,
+                     display=os.environ.get('DISPLAY'),private_display=private_display,actions=actions,assessment=report,
                      trace_sha256=sha(trace),saves={p.name:sha(p) for p in saves.iterdir() if p.is_file()})
         (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(report),flush=True)
     finally:

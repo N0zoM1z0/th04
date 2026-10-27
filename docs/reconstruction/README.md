@@ -1,5 +1,14 @@
 # Reconstruction evidence notes
 
+[Portable audio synthesis fidelity](product/TH04_PORTABLE_AUDIO_FIDELITY.md) records the repeated-attack defect, independent FM/SSG calibration, alias suppression and current Windows acceptance.
+
+[Portable audio profile and Stage 3 quiet passages](product/TH04_PORTABLE_AUDIO_PROFILE.md) records complete sound-profile launch wiring, loop/flow controls and physical-audio limits.
+- [Windows x64 background functional smoke and runtime patches](product/TH04_WINDOWS_FUNCTIONAL_SMOKE.md) — functional scope, replay and manual preview.
+
+[Portable MAINE UI and seamless invincibility](product/TH04_PORTABLE_UI_AND_INVINCIBILITY.md) routes Ending/name-entry performance, exact component comparisons, saved scores and the fully guarded hit gate.
+
+[Portable rendering and Extra frame delay](product/TH04_PORTABLE_RENDER_PERFORMANCE.md) records the 2026-10-27 row/color optimizations, Windows timer A/B, original delay-reset Oracle and corrected full rendered Extra.
+
 These notes explain bounded target observations, compiler experiments, replay
 receipts, and unresolved producer questions. They support the ledgers; they do
 not define current progress or exactness by themselves.

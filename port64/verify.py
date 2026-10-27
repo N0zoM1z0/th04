@@ -14,6 +14,18 @@ import sys
 
 
 PORT_FILES = (
+    "port64/build-windows.bat",
+    "port64/package_release.py",
+    "port64/ui_performance_probe.cpp",
+    "port64/verify_ui_performance.py",
+    "port64/Play.bat",
+    "port64/Play-no-life-loss.bat",
+    "port64/verify_frame_pacing.py",
+    "port64/win32_frame_timer.hpp",
+    "port64/windows_background_controller.cs",
+    "port64/verify_windows_background.ps1",
+    "port64/verify_background_results.py",
+    "port64/run_no_life_loss.ps1",
     "port64/hud_titles.hpp",
     "port64/hud_titles.cpp",
     "port64/titles_contracts.cpp",
@@ -127,6 +139,7 @@ PORT_FILES = (
     "port64/pmd_resident_checks.cpp",
     "port64/pmd_pcm.hpp",
     "port64/pmd_pcm.cpp",
+    "port64/pcm_filter.hpp",
     "port64/pmd_pcm_checks.cpp",
     "port64/verify_pmd_pcm.py",
     "port64/vendor/ymfm/LICENSE",
