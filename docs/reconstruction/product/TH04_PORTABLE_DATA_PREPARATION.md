@@ -64,6 +64,14 @@ the binary build evidence; this batch exercises its data-container boundary.
 Font glyph coverage beyond these scenes is separate from the container-byte
 comparison.
 
+An additional `--render-components` probe with PMD86 reached the controller's
+600-second wall-time bound under the 35% CPU job limit. It captured readable
+Japanese dialogue with the fetched font, but its full component corpus is
+**inconclusive** and is not counted in the 65-file resident comparison above.
+Use focused text scenes for font checks; a broad component/audio run needs a
+separately budgeted scenario. The timeout is a harness limit, not a measured
+interactive frame-rate result.
+
 Private replay inputs/receipts live under `.analysis/readme-20261028/` and
 `C:\Users\21992\AppData\Local\Temp\TH04-readme-20261028`. Retain hashes and
 receipts; duplicate images/component captures are regenerable. No original
