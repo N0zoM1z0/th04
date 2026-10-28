@@ -132,6 +132,25 @@ python3 port64/prepare_assets.py --game-dir /path/to/TH04-original --output-dir 
 
 [Build details and Linux-to-Windows cross-compilation](docs/PORTABLE.md#build-from-source).
 
+## Contribute
+
+This reconstruction was built with AI coding agents. There is still room to
+improve its behavior, recovered semantics and readability. Contributions and
+feedback are welcome.
+
+- **Testing and bug reports.** We haven't tested every route or configuration.
+  Try different characters, shot types, difficulties, endings and save flows.
+  [Report bugs](https://github.com/N0zoM1z0/th04/issues/new) with your release or
+  commit, OS, reproduction steps, and expected versus actual behavior.
+  Screenshots or replays help.
+- **Ports.** Help bring the portable version to more platforms and architectures,
+  or improve its rendering, audio and input backends.
+- **Semantics and readable code.** Review reconstructed behavior, improve names
+  and types, simplify control flow, and fill gaps in comments or documentation.
+  Focused fixes with a reproducible example or regression check are welcome.
+
+Send portable PRs to `port/modern-64` and DOS reconstruction PRs to `main`.
+
 ## Development
 
 - [DOS setup and build](docs/DOS_BUILD.md)
