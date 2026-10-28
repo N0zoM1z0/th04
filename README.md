@@ -13,6 +13,10 @@ a C++17 port for Windows and Linux. The portable version runs without a DOS emul
 
 [▶ Watch on YouTube](https://www.youtube.com/watch?v=ryCOOMZ5PBI) · Stages 1–3 · Lunatic · Invincibility enabled
 
+<p align="center">
+  <img src="resources/progress.svg" alt="TH04 four-artifact boundary and function acceptance progress">
+</p>
+
 ## Play on Windows
 
 ### 1. Download the portable release and preparation script
