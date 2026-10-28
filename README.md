@@ -134,4 +134,36 @@ python3 port64/prepare_assets.py --game-dir /path/to/TH04-original --output-dir 
 - [Current work and progress](docs/RE_HANDOFF.md)
 - [Documentation index](docs/README.md)
 
-[MIT License](LICENSE). The portable release includes the ymfm BSD-3-Clause notice.
+## Credits
+
+**ZUN** ([上海アリス幻樂団 / Team Shanghai Alice](https://www16.big.or.jp/~zun/))
+created Touhou Project and the original TH04 game, characters, artwork and music.
+
+Thanks to the authors and contributors of:
+
+- **[ReC98](https://github.com/nmlgc/ReC98)** — **nmlgc and contributors**, for
+  PC-98 reverse engineering, recovered source, hardware definitions and DOS
+  build infrastructure used throughout this reconstruction.
+- **[master.lib](https://github.com/nmlgc/ReC98/tree/master/libs/master.lib)** —
+  the PC-98 graphics and system library used by TH04 and the DOS reconstruction.
+- **KAJA / PMD** — the original PC-98 music driver and formats reconstructed
+  by the portable audio layer.
+- **[ymfm](https://github.com/aaronsgiles/ymfm)** — **Aaron Giles and contributors**,
+  for the Yamaha FM, SSG and ADPCM synthesis used by the portable version.
+- **[SDL2](https://wiki.libsdl.org/SDL2/FrontPage)** — Linux windowing, input and audio.
+- **[DOSBox-X](https://github.com/joncampbell123/dosbox-x)** and the **FREECG98 contributors** — PC-98 execution tests and the external font bitmap used by
+  setup, including [font corrections by hdk1983](https://github.com/joncampbell123/dosbox-x/issues/4123).
+- **[libOPNMIDI](https://github.com/Wohlstand/libOPNMIDI)**,
+  **[MAME](https://github.com/mamedev/mame)** and
+  **[98fmplayer/libopna](https://github.com/myon98/98fmplayer/tree/master/libopna)** —
+  rhythm-data preparation and audio reference implementations used for validation.
+- **[Unicorn](https://www.unicorn-engine.org/)**,
+  **[Capstone](https://www.capstone-engine.org/)** and
+  **[Ghidra](https://github.com/NationalSecurityAgency/ghidra)** — original-code
+  execution, disassembly and reconstruction checks.
+- **[Wine](https://www.winehq.org/)** and **[mtools](https://www.gnu.org/software/mtools/)** —
+  DOS-toolchain execution and disk-image preparation.
+
+Project-authored code and documentation use the [MIT License](LICENSE).
+ymfm retains its [BSD-3-Clause license](https://github.com/N0zoM1z0/th04/blob/port/modern-64/port64/vendor/ymfm/LICENSE);
+SDL2 uses the [zlib license](https://www.libsdl.org/license.php).
