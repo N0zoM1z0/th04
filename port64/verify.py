@@ -16,6 +16,7 @@ import sys
 PORT_FILES = (
     "port64/build-windows.bat",
     "port64/package_release.py",
+    "port64/prepare_assets.py",
     "port64/ui_performance_probe.cpp",
     "port64/verify_ui_performance.py",
     "port64/Play.bat",

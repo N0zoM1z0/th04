@@ -8,6 +8,21 @@ Keep English code/docs and gpt-6.1-sol: commits.
 
 ## Portable64 Windows release (2026-10-27)
 
+The repository README now opens with a release notice and the public
+[gameplay video](https://www.youtube.com/watch?v=ryCOOMZ5PBI).
+The README includes numbered data/setup and Windows/Linux build steps.
+[PREPARE_DATA.md](PREPARE_DATA.md) documents original two-floppy installation,
+installed-file hashes and the portable preparation script; [PORTABLE.md](PORTABLE.md)
+covers runtime/build options. The previous landing page is preserved in
+[README_HISTORY.md](README_HISTORY.md).
+
+The new native `port64/prepare_assets.py` prepares the supported installed
+Japanese full-version files into a portable-only FAT12 container and prepares
+pinned font/rhythm resources. Published EXE resident checks retain all65outputs
+against the old image, including27BMPs/9PCMfiles; five synthetic importer tests
+pass. [Data preparation evidence](reconstruction/product/TH04_PORTABLE_DATA_PREPARATION.md)
+records geometry, identities, independent mtools readback and scope.
+
 The public-source cold Windows x64 product is
 `8257fbf8e952690ab8963844ba92f810399f9f67ca74db463ca006aaf3fbe750`.
 Only the game and two audio checks are cold built (128steps), without private

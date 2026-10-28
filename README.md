@@ -1,220 +1,137 @@
 # 東方幻想郷 ～ Lotus Land Story
 
-## Portable 64-bit: download, build and play
+> [!NOTE]
+> The [Windows x64 portable preview](https://github.com/N0zoM1z0/th04/releases) supports Normal, Extra, Music Room, endings and saves, with sound.
+> Portable source is on [`port/modern-64`](https://github.com/N0zoM1z0/th04/tree/port/modern-64); the PC-98 DOS reconstruction is on [`main`](https://github.com/N0zoM1z0/th04/tree/main).
 
-The native **Windows x64 preview** is available on [Releases](https://github.com/N0zoM1z0/th04/releases).
-Source builds use the **[port/modern-64 branch](https://github.com/N0zoM1z0/th04/tree/port/modern-64)**;
-`main` retains the DOS reconstruction. Read the [portable setup/build guide](docs/PORTABLE.md).
+A reconstruction of the Japanese PC-98 **Touhou 4: Lotus Land Story**, with
+a C++17 port for Windows and Linux. The portable version runs without a DOS emulator.
 
-1. Extract the release ZIP and supply your own `th04.hdi`, `FREECG98.BMP` and
-   `ym2608_adpcm_rom.bin` beside the executable.
-2. Run `Play.bat` for ordinary play with sound, or `Play-no-life-loss.bat` for
-   seamless invincibility. Saves are kept in separate local directories.
-3. To compile, clone `port/modern-64`; configure CMake from `port64/` and build
-   **only the `th04-port64` target**. Windows uses MinGW-w64/Win32; Linux uses SDL2.
-   The guide includes exact commands, controls, input identities and limitations.
+<a href="https://www.youtube.com/watch?v=ryCOOMZ5PBI">
+  <img src="https://i.ytimg.com/vi/ryCOOMZ5PBI/maxresdefault.jpg" width="640" alt="Watch TH04 portable gameplay on YouTube">
+</a>
 
-Windows source build (64-bit MinGW-w64 GCC, CMake and Ninja on `PATH`):
+[▶ Watch on YouTube](https://www.youtube.com/watch?v=ryCOOMZ5PBI) · Stages 1–3 · Lunatic · Invincibility enabled
+
+## Play on Windows
+
+### 1. Download the portable release and preparation script
+
+Extract the Windows x64 ZIP from [Releases](https://github.com/N0zoM1z0/th04/releases)
+into a writable folder, such as `C:\Games\th04-portable`.
+Install [Python 3.9 or newer](https://www.python.org/downloads/windows/) for the
+one-time data preparation. Open CMD in that folder and download the script:
 
 ```bat
+curl.exe --fail -L -o prepare_assets.py https://raw.githubusercontent.com/N0zoM1z0/th04/refs/heads/port/modern-64/port64/prepare_assets.py
+```
+
+If you already cloned `port/modern-64`, the script is in `port64\prepare_assets.py`.
+
+### 2. Extract your Japanese full-version game files
+
+The original game used two installation floppies. Its installer writes loose
+game files to a hard disk; `th04.hdi` is the portable program's container name.
+The original [installation manual, transcribed at THBWiki](https://thwiki.cc/附带文档:东方幻想乡/1st),
+describes running `INSTALL A:` under PC-98 DOS or running both disks' self-extractors.
+
+Use your installed game folder, or extract both original installer archives
+into one folder, for example `C:\Games\TH04-original`. It must contain:
+
+| File | Size in bytes |
+| --- | ---: |
+| `MAIN.EXE` | 156,258 |
+| `幻想郷ED.DAT` | 1,120,284 |
+| `東方幻想.郷` | 1,053,177 |
+
+The script finds these files by content even if an extractor garbled their
+Japanese names. It checks the supported Japanese full-version hashes; trial
+or translated files need a separate compatibility path.
+See [original media and extraction](docs/PREPARE_DATA.md#original-media-and-extraction)
+for installer archives and existing disk images.
+
+### 3. Prepare the HDI, font and sound data
+
+From the portable release folder:
+
+```bat
+py -3 prepare_assets.py --game-dir "C:\Games\TH04-original" --output-dir . --fetch-support
+```
+
+This creates `th04.hdi`, `FREECG98.BMP` and `ym2608_adpcm_rom.bin` beside the EXE.
+The HDI contains your three game files unchanged. `--fetch-support` downloads a
+pinned DOSBox-X font bitmap and extracts the rhythm data from a pinned
+libOPNMIDI header. It does not download the game.
+[Offline preparation, supported inputs and checksums](docs/PREPARE_DATA.md)
+are documented separately. The script uses Python's standard library; no pip
+packages are needed. If `py` is unavailable, use your Python 3 executable instead.
+
+### 4. Start the game
+
+Run **Play.bat** for normal play, or **Play-no-life-loss.bat** for invincibility
+without the death animation. Both enable sound. Use the arrow keys to move,
+Z to shoot/confirm, X to bomb/cancel, Shift to move slowly and Esc to pause/back.
+
+The launchers keep scores/settings in `save-normal` and `save-no-life-loss`.
+Keep those folders when updating. The [portable guide](docs/PORTABLE.md)
+covers gamepads, audio options and troubleshooting.
+
+## Build the portable version
+
+Compiling requires CMake 3.16+, a 64-bit C++17 compiler and a build tool.
+Game data is needed when running the game. Install [Git](https://git-scm.com/),
+then get the portable branch explicitly:
+
+```sh
 git clone --branch port/modern-64 https://github.com/N0zoM1z0/th04.git th04-portable
 cd th04-portable
+```
+
+### Windows x64
+
+Install MinGW-w64 GCC, CMake and Ninja. One setup is [MSYS2](https://www.msys2.org/):
+run this in its **UCRT64** terminal:
+
+```sh
+pacman -S --needed mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-ninja
+```
+
+Then open **CMD**, enter your checkout and run the following. Adjust the MSYS2
+path if you installed it elsewhere:
+
+```bat
+set "PATH=C:\msys64\ucrt64\bin;%PATH%"
 port64\build-windows.bat
+mkdir run
+copy build\portable-win64\th04-port64.exe run\
+copy port64\Play.bat run\
+py -3 port64\prepare_assets.py --game-dir "C:\Games\TH04-original" --output-dir run --fetch-support
+run\Play.bat
 ```
 
-The ZIP contains one final executable, launchers and licenses. Original game
-images/assets, fonts, chip ROMs and user saves are supplied separately.
-Normal/Extra flows, Ending/name/save and Music Room/audio have functional
-checks; complete original DOS pixel/timing or physical sound identity is not claimed.
+The invincibility launcher supports the published executable; self-built
+executables use `Play.bat` until their patch offsets are registered.
 
-Current Windows audio: [independent synthesis validation](docs/reconstruction/product/TH04_PORTABLE_AUDIO_FIDELITY.md) restores repeated FM attacks, balances musical parts and bandlimits output. One final EXE, existing saves preserved.
+### Linux x86-64
 
-<p align="center">
-  <img
-    src="resources/title-screen.png"
-    width="640"
-    alt="Original Japanese TH04 title screen">
-</p>
-
-<p align="center">
-  <img src="resources/progress.svg" alt="TH04 four-artifact boundary and function acceptance progress">
-</p>
-
-This repository reconstructs the original Japanese PC-98 **Touhou 4:
-Lotus Land Story**. The active goal is to build `MAIN.EXE`, `OP.EXE`,
-`MAINE.EXE` and `ZUN.COM` from maintained TH04 source and run the full game.
-Native builds need not reproduce the original executable bytes. MAIN's two
-remaining historical exactness cases are deferred.
-
-[Current state and remaining work](docs/RE_HANDOFF.md) is the working entrypoint.
-Historical function acceptance is reported by `python3 scripts/status.py` and
-[PROGRESS.md](docs/PROGRESS.md); it is separate from gameplay completion.
-
-The v1475 actual source MAIN defeats Elly at 12792 and reaches Stage4 init/score1
-with original OP/MAINE/ZUN/assets. All 13378 pool/state snapshots,13377 actual
-words and 33609 raw/resident/RNG rows match the original. All 23 full live-font
-RGB/TRAM/palette samples pass. Source strict aggregate retains 19 postactor keys
-and 23 raw GDC differences. Native 12889 still differs by 407 blinking pixels;
-1805 native keys remain separate. No emulator is live. See the current handoff.
-
-The v1481 sampler witness andpinned original request boundary support a real
-private Stage3 replay:13378 pool/state snapshots, four literal player inputs and
-22 full RGB samples pass. Strict fidelity retains40 tail words and one further
-head/player difference. Stock host-adapter failures remain separate. See
-[current handoff](docs/RE_HANDOFF.md) and[storage/recovery](docs/ANALYSIS_RETENTION.md).
-
-The prior v1473 repair propagates and consumes Elly's scythe hit through MAIN's player
-latch. Cold GNU/UBSan reproduce original hit8046 and GameOver8085 with8082 complete
-nine-pool/state snapshots and8086 raw score/state/resident/RNG-count rows. All79
-old8000 outputs remain unchanged. Stage4 and campaigns stay open; see the
-[current handoff](docs/RE_HANDOFF.md). Current closure is566/a7606e66.
-
-The retained v1467 records a complete original 8000-update Stage3 route. Native
-566/4787233c replays its literal inputs: both cold GNU/optimized UBSan programs
-agree on all 79 files, 8001 nine-pool snapshots, 8010 stable-state records and
-nine complete RGB/TRAM/DAC samples. Palette-bearing dialogue loads refresh the
-player palette; enemy opcode8F tile writes preserve background-prefix order.
-Fresh GNU 83 CTests and UBSan/session checks pass. One requested/readback input
-mismatch and 712 volatile post-actor keys remain separate. Original/source-DOS
-paired MAIN was then at completed Stage3 4000; current source 13377/Stage4 is documented
-in the handoff. Continuous display, physical timing,
-full campaigns and artifact exactness remain open. Completed products retire
-after recovery checks; see the [current handoff](docs/RE_HANDOFF.md).
-
-Native development is active. Historical frozen554/31e6b3d7 GNU and optimized
-UBSan passed four strict natural headless routes: Easy ReimuA, Normal ReimuA,
-Normal MarisaA and Extra ReimuA earned by the same-run Normal save. All four
-complete captures/saves agree across compilers, with real clear mask1 and no
-Continue. The new554/a79f199f reader rejects sentinel/high masks, wrong
-partitions, Bad Ending, incomplete stages and full-checksum failures. Previous
-failed window Normal acceptance stays revoked. Original full-game parity,
-complete pictures, physical timing and Windows remain open; see the
-[handoff](docs/RE_HANDOFF.md) for scope and recovery.
-
-
-## Build and run
-
-The retained v1463 repair covers a carried clear-bonus palette tone at stage-session
-completion. Both cold programs match 14 complete original WORD/DAC samples;
-all eight state wires, legacy routes and 177 prior display observations remain
-unchanged. The later 14 sampled full RGB/TRAM comparisons above pass; raw graphics
-indices and every-frame display remain open. See [current handoff](docs/RE_HANDOFF.md) for evidence and recovery.
-
-
-Current v1462 completes actual original/source4000-update Stage3 routes after
-real Stage1/Stage2 clears. Across43193 boundaries, configured fields/RNG,
-nine pools,22 states,private3 and38 video regions agree. DOS aggregate remains
-false for682 post-reset keys/31563 raw-GDC records plus12 auxiliary GDC records.
-Current566/1ad0ea4c GNU/UBSan match28793 selected scalars/14396 nine-pool
-snapshots and9836 current Stage1 pool snapshots. All8 wires and physical saves
-agree;510 native volatile keys remain separate. Both roles68 full memories and
-43193 full resident256 windows pass;12 UI full windows were not captured.
-Frozen recovery executes both actual programs and the full GNU paired reader,
-reproduces all vectors and retires21 restored aliases. The prior extent follows.
-
-The prior v1461 original/reconstructed DOS comparison completes 10394 Stage2
-updates, Kurumi defeat/clear, Stage3 initialization and its first update. Nine
-full pools, 22 states, 11636 ordered RNG calls and 38 configured video regions
-agree over 31196 boundaries. The DOS aggregate retains
-544 post-reset key/31196 raw-GDC differences and
-12 additional UI raw-GDC differences. Older vectors remain separate.
-
-This runtime pair replaces MAIN only; OP, MAINE, ZUN and game assets remain
-the pinned originals. It does not establish a complete four-source campaign.
-
-Closed 566/4c3c50cb cold GNU and optimized UBSan match 20795 selected scalar
-records and 10397 full nine-pool snapshots, actual consumed inputs, homing and
-Boss/Midboss/RNG. Physical CFG/SCR files and the legacy 3500/8000 plus 59 RGB/TRAM
-fixtures pass. Native Stage2 pictures, natural clocks, complete campaigns, NP2,
-Windows, pristine provenance and historical exactness remain open. Both full
-goals stay active; see the [current handoff](docs/RE_HANDOFF.md).
-
-With local inputs and the toolchain installed:
+On Debian/Ubuntu, install `build-essential cmake ninja-build pkg-config libsdl2-dev python3`.
+From the checkout:
 
 ```sh
-python3 scripts/preflight.py
-python3 scripts/build.py
-# Outputs: .analysis/build/th04/{MAIN.EXE,OP.EXE,MAINE.EXE,ZUN.COM}
-python3 scripts/prepare_product_hdi.py \
-  --output-dir .analysis/runtime/candidates/NEW-game
-xvfb-run -a python3 scripts/probes/run_th04_maine_diagnostic_hdi.py \
-  --prepared-dir .analysis/runtime/candidates/NEW-game \
-  --output-dir .analysis/runtime/candidates/NEW-game/run \
-  --frame-second 60 --time-limit 75
+cmake -S port64 -B build/linux-x64 -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build/linux-x64 --target th04-port64 --parallel 1
+python3 port64/prepare_assets.py --game-dir /path/to/TH04-original --output-dir run --fetch-support
+./build/linux-x64/th04-port64 --hdi run/th04.hdi --font-bmp run/FREECG98.BMP \
+  --save-dir run/save-normal --title --audio --pmd-driver pmd86 \
+  --opna-rom run/ym2608_adpcm_rom.bin
 ```
 
-Run one Borland/Wine build at a time. `--only main` selects one product;
-`--main-cpp-cache PATH` reuses objects only when their inputs match a prior MAIN
-build. A fresh build is the final source-migration check. The build rejects
-compiler/linker failures and publishes outputs after all requested products
-succeed. Runtime validation remains separate.
+[Build details and Linux-to-Windows cross-compilation](docs/PORTABLE.md#build-from-source).
 
-Image preparation modifies a disposable copy of your supplied original-data
-image. Original executables and game assets are never committed.
+## Development
 
-## Setup
+- [DOS setup and build](https://github.com/N0zoM1z0/th04/blob/main/docs/DOS_BUILD.md)
+- [Current work and progress](docs/RE_HANDOFF.md)
+- [Documentation index](docs/README.md)
 
-The build uses pinned Turbo C++ 4.0J, TASM and TLINK under Wine. ReC98 supplies
-the pinned MS-DOS Player and local sprite conversion inputs; product source
-and headers live in this repository and do not use `masters.lib`.
-
-```sh
-mkdir -p _reference
-git clone https://github.com/nmlgc/ReC98.git _reference/ReC98
-git -C _reference/ReC98 checkout --detach b6ba5b0a529edbb31efdf8c0e939263804f8ee47
-python3 scripts/import_targets.py /path/to/your/legal-copy.rar \
-  --retain-runtime-image
-bash scripts/bootstrap_toolchain.sh
-python3 scripts/preflight.py
-```
-
-Host tools include Python 3, Wine, archive utilities and, for runtime checks,
-the pinned DOSBox-X build plus Xvfb, xdotool and ImageMagick. See
-[RUNTIME.md](docs/RUNTIME.md) for emulator setup. Analysis/database work also
-uses `bootstrap_analysis_toolchain.sh` and `scripts/ghidra.py`.
-
-## Local inputs
-
-Supply your own legal copy.  The importer selects the Japanese `zun.hdi` and
-requires these artifacts:
-
-| Artifact | Size | SHA-256 |
-| --- | ---: | --- |
-| `OP.EXE` | 42,290 | `8fc3b67fa8470de15b4f2844d5623d0a93d7922fac16d82a25a90a378b516b0f` |
-| `MAIN.EXE` | 156,258 | `077440a3c4e9ab52e72e9bae411276c47edc11995b5c2b83dfc83fbc039dc58b` |
-| `MAINE.EXE` | 38,035 | `670de6ba907a2edbc1592de810acd92e5b89541d3dc35b70210171166d1713f8` |
-| `ZUN.COM` | 7,754 | `0a12e9a489d3b704a77cf04ca3062ee48f298a9df6d237dc7dad46986e2d116e` |
-
-These hashes currently have `candidate-local-attested` provenance: they
-identify the supplied Japanese image exactly, while independent pristine-dump
-confirmation remains open.  That qualification is kept separate from whether
-a candidate build exactly matches the pinned bytes.
-
-## Source and validation
-
-Source belongs under `src/main/`, `src/op/`, `src/maine/`, `src/zun/` and
-`src/shared/`, organized by subsystem. See [SOURCE_LAYOUT.md](docs/SOURCE_LAYOUT.md)
-and [ARCHITECTURE.md](docs/ARCHITECTURE.md). ReC98 implementations are migration
-inputs; their progress and exactness claims do not transfer automatically.
-
-Use [RE_WORKFLOW.md](docs/RE_WORKFLOW.md) for implementation work. Install public
-validation dependencies with `python3 -m pip install -r requirements-ci.txt`;
-CI also checks out the pinned ReC98 source-routing reference used by the manifest
-audit; this is a validation input, not a product include dependency. Private
-CPU/runtime Oracles additionally require their documented local tools. Finish with:
-
-```sh
-python3 scripts/ci.py
-git diff --check
-```
-
-Historical evidence is routed through [the reconstruction index](docs/reconstruction/README.md),
-`config/units.csv` and `config/evidence.csv`. [ORACLES.md](docs/ORACLES.md)
-defines the separate byte-exact acceptance contract. Local tools, targets,
-images, builds and reports remain in ignored directories.
-
-## License
-
-Repository-authored code and documentation are provided under the MIT License.
-This does not grant rights to the original game, its assets, or referenced
-third-party work.
+[MIT License](LICENSE). The portable release includes the ymfm BSD-3-Clause notice.

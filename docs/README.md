@@ -4,6 +4,12 @@ Start with the smallest document that answers the current question. For a new
 work session, read the handoff and only the focused note it links for that task.
 The CSV ledgers remain authoritative when prose and generated reports disagree.
 
+## Play and build
+
+- [Portable data preparation](PREPARE_DATA.md) — original media, HDI creation, font and rhythm data.
+- [Portable 64-bit](PORTABLE.md) — download, setup, controls and Windows/Linux builds.
+- [PC-98 DOS build](https://github.com/N0zoM1z0/th04/blob/main/docs/DOS_BUILD.md) — DOS setup and launchers.
+
 ## Continue reconstruction
 
 - [Current handoff](RE_HANDOFF.md) — present state, blockers, and next action.
@@ -32,6 +38,7 @@ The CSV ledgers remain authoritative when prose and generated reports disagree.
 
 ## Background
 
+- [Earlier README](README_HISTORY.md) — build notes and reconstruction milestones moved out of the landing page.
 - [Reference analysis](REFERENCE_ANALYSIS.md) — lessons from adjacent
   reconstruction projects and the pinned ReC98 control.
 
