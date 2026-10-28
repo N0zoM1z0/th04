@@ -4,6 +4,7 @@
 /.tools/
 /ghidra-project/
 /build/
+/run/
 /dist/
 /out/
 /.cache/
