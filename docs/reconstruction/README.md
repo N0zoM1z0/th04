@@ -1,5 +1,7 @@
 # Reconstruction evidence notes
 
+[Portable data preparation](product/TH04_PORTABLE_DATA_PREPARATION.md) records the installed-file importer, generated HDI geometry and published-EXE runtime comparison.
+
 [Portable audio synthesis fidelity](product/TH04_PORTABLE_AUDIO_FIDELITY.md) records the repeated-attack defect, independent FM/SSG calibration, alias suppression and current Windows acceptance.
 
 [Portable audio profile and Stage 3 quiet passages](product/TH04_PORTABLE_AUDIO_PROFILE.md) records complete sound-profile launch wiring, loop/flow controls and physical-audio limits.

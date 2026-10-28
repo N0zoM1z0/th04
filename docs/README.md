@@ -6,6 +6,8 @@ The CSV ledgers remain authoritative when prose and generated reports disagree.
 
 ## Current operation and reuse
 
+- [Portable data preparation](PREPARE_DATA.md) — original media, HDI creation, font and rhythm data.
+- [Portable 64-bit](PORTABLE.md) — download, setup, controls and Windows/Linux builds.
 - [PC-98 hardware reuse](PC98_HARDWARE_REUSE.md) — fixes, measured performance, replay tools and claim limits.
 - [DOS build/testing](DOS_BUILD.md) — Windows fast builds and ordinary/invincible launchers.
 - [Semantic/native status and TODO](PORTING_STATUS.md) — current native work, components versus published GUI.
@@ -40,6 +42,7 @@ The CSV ledgers remain authoritative when prose and generated reports disagree.
 
 ## Background
 
+- [Earlier README](README_HISTORY.md) — build notes and reconstruction milestones moved out of the landing page.
 - [Reference analysis](REFERENCE_ANALYSIS.md) — lessons from adjacent
   reconstruction projects and the pinned ReC98 control.
 
