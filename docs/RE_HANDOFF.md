@@ -1,5 +1,11 @@
 # TH04 current handoff
 
+> Current workflow: follow the **Highest priority** section in `AGENTS.md`.
+> Prefer affected exact comparisons and useful Markdown knowledge. Ordinary
+> notes do not require full CI, native replay or document-hash/pin refreshes.
+> Older broad validation instructions apply only when their impact is relevant.
+
+
 Current priority (2026-10-27): native Windows x64 functional playability.
 The user authorizes muted background Windows testing with process-local input
 hooks and temporary no-life-loss patches. Overall flow takes priority over

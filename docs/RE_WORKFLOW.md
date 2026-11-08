@@ -1,5 +1,11 @@
 # Working on TH04
 
+> Current workflow: follow the **Highest priority** section in `AGENTS.md`.
+> Prefer affected exact comparisons and useful Markdown knowledge. Ordinary
+> notes do not require full CI, native replay or document-hash/pin refreshes.
+> Older broad validation instructions apply only when their impact is relevant.
+
+
 Prioritize function recovery and migration with focused compiler or component
 checks. Defer long game campaigns until the remaining source work is ready.
 Original Japanese DOS versus reconstructed DOS, then native x64 state/effect

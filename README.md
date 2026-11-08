@@ -1,5 +1,7 @@
 # 東方幻想郷 ～ Lotus Land Story
 
+Agent workflow: follow the highest-priority requirements in [AGENTS.md](AGENTS.md). Use affected exact checks and searchable Markdown knowledge; ordinary notes do not require full CI or replay.
+
 > [!NOTE]
 > The [Windows x64 portable preview](https://github.com/N0zoM1z0/th04/releases) supports Normal, Extra, Music Room, endings and saves, with sound.
 > Portable source is on [`port/modern-64`](https://github.com/N0zoM1z0/th04/tree/port/modern-64); the PC-98 DOS reconstruction is on [`main`](https://github.com/N0zoM1z0/th04/tree/main).

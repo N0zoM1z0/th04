@@ -1,132 +1,52 @@
 #!/usr/bin/env python3
-"""Run public control-plane tests and private target checks when available."""
-
-from __future__ import annotations
-
-import os
+"""Check changed machine inputs; exact comparisons are selected by affected scope."""
 from pathlib import Path
+import ast
+import json
+import os
 import subprocess
 import sys
 import tomllib
 
-
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def run(label: str, command: list[str]) -> None:
-    print(f"\n[{label}]", flush=True)
-    subprocess.run(command, cwd=ROOT, check=True)
-
-
-def main() -> int:
-    python = sys.executable
-    try:
-        run("Python unit tests", [python, "-m", "unittest", "discover", "-s", "tests", "-v"])
-        run("Tracking ledgers", [python, "scripts/validate_tracking.py"])
-        run("Native MAINE source manifest", [
-            python, "scripts/probes/probe_th04_native_maine_link.py", "--check-manifest",
-        ])
-        run("Native OP source manifest", [
-            python, "scripts/probes/probe_th04_native_op_link.py", "--check-manifest",
-        ])
-        run("Native MAIN link frontier manifest", [
-            python, "scripts/probes/probe_th04_native_main_manifest.py", "--check",
-        ])
-        run(
-            "Compatibility dependency audit",
-            [python, "scripts/audit_compat_dependencies.py", "--check"],
-        )
-        run(
-            "Function boundary ledger",
-            [python, "scripts/boundary_review/validate_function_boundary_ledger.py"],
-        )
-        run("Decoded function acceptance", [python, "scripts/decoded_function_acceptance.py"])
-        run("Python syntax", [python, "-m", "compileall", "-q", "scripts", "tests"])
-        run("Script catalog coverage", [python, "scripts/catalog/index.py", "--check"])
-        run("Regenerate progress artifacts", [python, "scripts/progress.py"])
-        run("Check generated progress", [python, "scripts/progress.py", "--check"])
-        run(
-            "Regenerate boundary review",
-            [python, "scripts/boundary_review/report_function_boundaries.py"],
-        )
-        run(
-            "Check generated boundary review",
-            [python, "scripts/boundary_review/report_function_boundaries.py", "--check"],
-        )
-        if os.environ.get("CI"):
-            run(
-                "Check generated progress is committed",
-                [
-                    "git",
-                    "diff",
-                    "--exit-code",
-                    "--",
-                    "docs/PROGRESS.md",
-                    "docs/BOUNDARY_REVIEW.md",
-                    "resources/progress.svg",
-                ],
-            )
-        manifest = tomllib.loads(
-            (ROOT / "config" / "targets.toml").read_text(encoding="utf-8")
-        )
-        required = [
-            ROOT / item["private_path"]
-            for item in manifest["artifacts"]
-            if item["game"] == "th04" and item["required"]
-        ]
-        if all(path.is_file() for path in required):
-            run("Private TH04 targets", [python, "scripts/verify_targets.py", "--game", "th04"])
-        else:
-            print("\n[Private TH04 targets]\nSKIP (targets are not public CI inputs)")
-        calibration = [ROOT / item["private_path"] for item in manifest["artifacts"]]
-        if all(path.is_file() for path in calibration):
-            run("Private cross-game Oracle calibration", [python, "scripts/smoke_oracles.py"])
-        else:
-            print(
-                "\n[Private cross-game Oracle calibration]\n"
-                "SKIP (TH01-TH05 targets are not public CI inputs)"
-            )
-        analyzer = ROOT / ".tools" / "ghidra" / "support" / "analyzeHeadless"
-        if analyzer.is_file():
-            run(
-                "Private Ghidra/JDK identity",
-                [python, "scripts/attest_analysis_toolchain.py"],
-            )
-        else:
-            print("\n[Private Ghidra/JDK identity]\nSKIP (.tools is not a public CI input)")
-        private_main = ROOT / ".analysis" / "targets" / "th04" / "main.exe"
-        project_file = ROOT / "ghidra-project" / "TH04-th04-main.gpr"
-        project_store = ROOT / "ghidra-project" / "TH04-th04-main.rep"
-        if (
-            analyzer.is_file()
-            and private_main.is_file()
-            and project_file.is_file()
-            and project_store.is_dir()
-        ):
-            run(
-                "Private live Ghidra database replay",
-                [
-                    python,
-                    "scripts/ghidra.py",
-                    "th04-main",
-                    "check",
-                ],
-            )
-            run(
-                "Private Ghidra Oracle mutations",
-                [python, "scripts/smoke_ghidra_oracle.py", "th04-main"],
-            )
-        else:
-            print(
-                "\n[Private live Ghidra database replay]\n"
-                "SKIP (target, analyzer, or private project is absent)"
-            )
-        print("\nCI: PASS")
+def main():
+    if sys.argv[1:] in (["--help"], ["-h"]):
+        print("usage: ci.py [--full | existing explicit check options]\nDefault: changed machine-input syntax and diff checks. Run affected exact/tool commands for the task.")
         return 0
-    except (OSError, subprocess.CalledProcessError, tomllib.TOMLDecodeError) as error:
-        print(f"\nCI: FAIL: {error}", file=sys.stderr)
-        return 1
+    if len(sys.argv) > 1:
+        arguments = sys.argv[1:]
+        if not any(flag in arguments for flag in ('--full',)):
+            print("Unknown CI option; use no arguments for scoped checks or --full for the broad suite.", file=sys.stderr)
+            return 2
+        arguments = [arg for arg in arguments if arg != "--full"]
+        return subprocess.call([sys.executable, str(ROOT / "scripts/ci-full.py"), *arguments], cwd=ROOT)
+    names = set()
+    for command in (["git", "diff", "HEAD", "--name-only", "-z"],
+                    ["git", "ls-files", "--others", "--exclude-standard", "-z"]):
+        names.update(n for n in subprocess.check_output(command, cwd=ROOT).decode().split("\0") if n)
+    if os.environ.get("CI"):
+        # Clean CI checkouts have no worktree diff. Inspect the commit being checked.
+        names.update(n for n in subprocess.check_output(
+            ["git", "show", "--format=", "--first-parent", "--name-only", "-z", "HEAD"],
+            cwd=ROOT).decode().split("\0") if n)
+    for name in sorted(names):
+        path = ROOT / name
+        if not path.is_file() or path.is_symlink():
+            continue
+        if path.suffix == ".py":
+            ast.parse(path.read_text(), filename=name)
+        elif path.suffix == ".json":
+            json.loads(path.read_text())
+        elif path.suffix == ".toml":
+            tomllib.loads(path.read_text())
+        elif path.suffix == ".sh":
+            subprocess.run(["bash", "-n", str(path)], check=True)
+    subprocess.run(["git", "diff", "--check"], cwd=ROOT, check=True)
+    print("Changed machine inputs checked. Use affected exact/tool checks; --full explicitly selects the broad suite.")
+    return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit(main())
