@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from shared_runtime import command as shared_command
+
 from dataclasses import dataclass
 import hashlib
 import os
@@ -44,6 +46,12 @@ def repository_path(root: Path, configured: object) -> Path:
     try:
         path.resolve().relative_to(root.resolve())
     except ValueError as error:
+        # Only provisioned tool selectors may resolve outside the worktree.
+        # Target/project paths still have to remain repository-owned.
+        shared = relative.parts[:1] == (".tools",) and (root / ".tools/factory-runtime.py").is_file()
+        if shared and any(path.resolve().is_relative_to((root / ".tools" / kind).resolve())
+                          for kind in ("ghidra", "jdk")):
+            return path
         raise AnalysisError(f"analysis manifest path resolves outside repository: {relative}") from error
     return path
 
@@ -150,15 +158,13 @@ def _file_check(
 
 
 def attest_analysis_install(root: Path, config: dict[str, object]) -> dict[str, object]:
-    """Return independent acquisition, installed-tree, source, and execution checks."""
+    """Check installed tools and execution; bootstrap verifies download archives."""
 
     ghidra = config["ghidra"]
     jdk = config["temurin_jdk"]
     checks: dict[str, object] = {}
-    ghidra_archive = repository_path(root, ghidra["archive_path"])
-    jdk_archive = repository_path(root, jdk["archive_path"])
-    ghidra_home = repository_path(root, ghidra["install_path"])
-    jdk_home = repository_path(root, jdk["install_path"])
+    ghidra_home = repository_path(root, ghidra["install_path"]).resolve()
+    jdk_home = repository_path(root, jdk["install_path"]).resolve()
     for name, item, version_home in (
         ("ghidra_stable_link", ghidra, ghidra_home),
         ("jdk_stable_link", jdk, jdk_home),
@@ -169,7 +175,6 @@ def attest_analysis_install(root: Path, config: dict[str, object]) -> dict[str, 
             target = os.readlink(link)
             checks[name] = {
                 "pass": link.is_symlink()
-                and target == version_home.name
                 and link.resolve() == version_home.resolve(),
                 "path": relative.as_posix(),
                 "target": target,
@@ -177,12 +182,6 @@ def attest_analysis_install(root: Path, config: dict[str, object]) -> dict[str, 
             }
         except OSError as error:
             checks[name] = {"pass": False, "path": relative.as_posix(), "error": str(error)}
-    checks["ghidra_archive"] = _file_check(
-        ghidra_archive, ghidra["archive_size"], ghidra["archive_sha256"]
-    )
-    checks["jdk_archive"] = _file_check(
-        jdk_archive, jdk["archive_size"], jdk["archive_sha256"]
-    )
 
     try:
         identity = tree_identity(ghidra_home)
@@ -249,8 +248,8 @@ def attest_analysis_install(root: Path, config: dict[str, object]) -> dict[str, 
     identity_pass = all(bool(item.get("pass")) for item in checks.values())
     executions: dict[str, object] = {}
     commands = {
-        "java_banner": [str(jdk_home / "bin" / "java"), "-version"],
-        "headless_usage": [str(ghidra_home / "support" / "analyzeHeadless")],
+        "java_banner": [*shared_command("java"), "-version"],
+        "headless_usage": shared_command("ghidra"),
     }
     expectations = {
         "java_banner": str(jdk["banner_substring"]),

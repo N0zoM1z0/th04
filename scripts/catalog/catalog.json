@@ -4179,6 +4179,13 @@
     "purpose_source": "maintained-description"
   },
   {
+    "path": "scripts/shared_runtime.py",
+    "category": "runtime",
+    "role": "command",
+    "purpose": "Repository-local forwarding entrypoint; Factory MCP is not required.",
+    "purpose_source": "source-docstring"
+  },
+  {
     "path": "scripts/smoke_ghidra_oracle.py",
     "category": "boundaries",
     "role": "command",

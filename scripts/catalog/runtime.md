@@ -136,5 +136,6 @@ Historical paths are retained. Read the source/subject note and use fresh output
 | [runtime/verify_op_startup_clock.py](../runtime/verify_op_startup_clock.py) | command | Verify original FM86 OP startup, cold PMD installation and complete GDC clocks with rejecting mutations. |
 | [runtime/verify_op_vsync_lifecycle.py](../runtime/verify_op_vsync_lifecycle.py) | command | Execute original installed VSYNC START and IRQ instructions under typed BIOS responses; preserve nonzero cadence phase across load/mode controls. |
 | [runtime/verify_op_wait_clock.py](../runtime/verify_op_wait_clock.py) | command | Verify original OP busy-measure, reset and inherited IRQ-counter waits across CPU and BGM-off controls. |
+| [shared_runtime.py](../shared_runtime.py) | command | Repository-local forwarding entrypoint; Factory MCP is not required. |
 | [smoke_oracles.py](../smoke_oracles.py) | command | Exercise Oracle dimensions with private TH01-TH05 positive/negative controls. |
 | [smoke_runtime.py](../smoke_runtime.py) | command | Attest and smoke-test the pinned headless DOSBox-X PC-98 baseline. |

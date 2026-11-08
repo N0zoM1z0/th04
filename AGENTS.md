@@ -156,3 +156,13 @@ global layouts change, invalidate and cold-replay every affected accepted unit.
 - After an experiment, remove superseded binaries, regenerable caches and
   redundant exploration captures. Retain concise commands, identities, results
   and the minimal independent evidence needed for the retained claim.
+
+## Shared Factory runtime
+
+Follow [the shared tools instructions](docs/SHARED_TOOLS.md). Ghidra/JDK and
+Wine executables are shared through Factory; repository scripts also work
+without MCP. Use `scripts/shared_runtime.py` and the existing compiler/analysis
+frontends. Keep this game's prefix, analyzer project, Java home/cache, target
+and compiler profile isolated. Do not install duplicate tools or inherit
+another game's `WINEPREFIX`. This shared-runtime procedure supersedes older
+per-repository installation instructions; pinned versions/hashes still apply.
