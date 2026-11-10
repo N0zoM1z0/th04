@@ -48,17 +48,6 @@ Two v723 cold rounds reproduce the complete 134-byte rectangle body, the
 0xB30 SCORE_TEXT producer, full linked program image, and all 559 ordered
 relocations.
 
-Focused receipt:
-.analysis/reconstruction/receipt-archive/v723-maine-score-rect-natural-focused-receipt.json
-
-Focused receipt SHA-256:
-c0bfabec13b4009cf77409427f69f13d4ad34c6905c4e07fa2c62cdb72a06515
 
 After the acceptance ledger was reduced to the strict-source set, v724 replayed
 the checked-in ledger and passed 57/57 MAINE slices raw-zero.
-
-Canonical receipt:
-.analysis/reconstruction/receipt-archive/v724-maine-score-rect-canonical-receipt.json
-
-Canonical receipt SHA-256:
-6c5da132bf829cdb3207d987066381a3c82afb8b3fbdb06588c7a9f56972c995

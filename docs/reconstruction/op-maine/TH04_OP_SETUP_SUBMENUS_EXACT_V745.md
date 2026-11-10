@@ -24,21 +24,11 @@ translation unit. Two independent TC86/TLINK rounds reproduce both complete
 285-byte bodies, the complete 0x5A6 producer, the full linked OP program image,
 and all 804 ordered MZ relocation entries.
 
-Focused receipt:
-.analysis/reconstruction/receipt-archive/v745-op-setup-submenus-focused-receipt.json
-
-Focused receipt SHA-256:
-5724e2310acbc03fbc111f0c546cea658493e97c82d91dbaee5f7aae113c7a10
 
 The in-memory v746 pre-acceptance aggregate passed 79/79 OP decoded slices.
 After both rows were written into the checked-in acceptance ledger, canonical
 v747 again passed 79/79.
 
-Canonical aggregate receipt:
-.analysis/reconstruction/receipt-archive/v747-op-setup-submenus-canonical-receipt.json
-
-Canonical aggregate receipt SHA-256:
-30294667ce38d0a1aef1871ffd0b36128dfcea4858fbe5553e5b399e022ec910
 
 This establishes decoded-function exactness for the two setup submenus. It does
 not claim packed-file or whole-OP exactness.

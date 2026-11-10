@@ -24,16 +24,6 @@ failures and Demo results retain their original producer identities. The
 combined wait is still a 49-byte compiled consumer of the original 38-byte
 contract; historical authored exact remains 661/663.
 
-Private replay index from the root repository:
-`.analysis/worktrees/dos-text-vsync-join-v1411/.analysis/reconstruction/probes/dos-text-vsync-join-v1411/`.
-`commands.json` retains the eleven comparison commands. `controls.json` binds
-the current source archive, products/MAPs, three wait OMFs, original inputs,
-oracle sources and complete transcripts. `verify_closure.py` checks those
-identities, all memory/write streams, wait/lifecycle rows and both frozen
-source archives. Archived compiler inputs can be restored with
-`verify_retention.py --restore --prefix <owned path>`. Retirement reclaims
-33.45 MiB net from 8,721 owned cache paths; original proof identities
-and the three selected wait OMFs remain live.
 
 ## Frozen DOS mutable text segment (v1410)
 
@@ -140,12 +130,6 @@ The compiled predecessor rejects edge, kana, bad-trail and 4,097-character
 inputs, differing in 4/4/8/8,386 physical bytes. The last rejected input has
 equal partial visible banks, so the proof retains full memory and exit status.
 
-Producer 526/3e7d5e33, ten selected programs, full compressed transcripts,
-source archives and the closure reader remain in the native worktree:
-`.analysis/worktrees/port-motion-v1402/.analysis/port64/native-sjis-text-v1409/`.
-The reader replays every original write and checks current outputs plus the
-780 protected frozen v1408 files. Verified retirement reclaims 14.50 MiB net
-from 250 compiler-cache paths and 515 source-backed Python caches.
 
 ```sh
 python3 .analysis/worktrees/port-motion-v1402/.analysis/port64/native-sjis-text-v1409/verify_closure.py
@@ -179,11 +163,3 @@ complete startup, four demos and fresh OP. Each retains all 129 prior output
 hashes and passes 15,988 original selected-state boundaries. GNU/UBSan output
 sets agree. This remains scoped runtime agreement, with no exact, complete
 picture, physical CPU/IRQ timing or Windows acceptance claim.
-
-Private replay: `.analysis/reconstruction/probes/native-wait-text-v1412/`;
-producer: `.analysis/worktrees/native-wait-text-v1412/.analysis/port64/native-wait-text-v1412/`.
-`focused.json` records commands. `verify_retention.py --restore --prefix`
-restores owned archived paths; retirement reclaims 508.31 MiB net.
-Source, selected programs, full comparison streams, receipts and the real
-predecessor remain. Continue bounded native scene wait/hardware recovery;
-broader Boss/death/process routes, complete pictures and Windows remain open.

@@ -81,7 +81,6 @@ Both A/B cold replays produce:
 Target relocation indices `152..194` are now fully exact. Ordered MAINE
 residual drops from **140 to 98** (`461 / 559` same-index).
 
-Private receipt SHA-256:
 `c55765670daba54b6a3d006f67fbd9116651f21177fc7a25e8497f07e0dd9cd4`.
 
 ## Next work
@@ -120,7 +119,6 @@ TC86's three FIXUPP records naturally make target indices `195..250` exact.
 Ordered MAINE residual drops **98 -> 42** (`517 / 559` same-index), fully closing
 MAINE_01 internal relocation order.
 
-Private receipt SHA-256:
 `2b9c51d7497ee2b443a563151c39a61087900e77b29c7d30d43a50066bffead1`.
 
 Remaining MAINE relocation work is now only SCORE_TEXT internal direction (34)
@@ -148,21 +146,11 @@ on every body boundary. Two independent TC86/TLINK cold rounds reproduce every
 function body, the complete 0x8B7 staffall.cpp MAINE_01_TEXT producer, the full
 linked MAINE program image, and all 559 ordered relocations.
 
-Focused receipt:
-.analysis/reconstruction/receipt-archive/v725-maine-staff-dissolves-focused-receipt.json
-
-Focused receipt SHA-256:
-3b6f0966363143e80ce8d7290349883710305455af3aa1ab7ffcd8f91d9c357a
 
 The v726 in-memory pre-acceptance aggregate passed 63/63. After all six rows
 were written into the checked-in acceptance ledger, canonical v727 again passed
 63/63 raw-zero.
 
-Canonical receipt:
-.analysis/reconstruction/receipt-archive/v727-maine-staff-dissolves-canonical-receipt.json
-
-Canonical receipt SHA-256:
-d86732f3c46baf5c8b9fe79d65abf4476cdd870353c1de96483bc48b5a632287
 
 This closes all remaining MAINE physical-boundary and old target-derived-ASM
 ownership rows. All 72 authored MAINE candidates now have reviewed boundaries;

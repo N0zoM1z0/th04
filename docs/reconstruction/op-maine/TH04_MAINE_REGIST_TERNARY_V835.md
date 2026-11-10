@@ -23,12 +23,6 @@ Two cold builds reproduce the complete `0xB30` SCORE CODE and all 924
 `regist_menu` bytes. Final MAINE EXE/MAP state and all 559 ordered relocations
 remain stable under the already accepted v834 SCORE-object policy.
 
-Focused receipt:
-`.analysis/reconstruction/receipt-archive/v835-maine-regist-focused-receipt.json`
-
-Canonical receipt:
-`.analysis/reconstruction/receipt-archive/v835-maine-regist-canonical-receipt.json`
-
 Canonical replay checks all 72 MAINE accepted slices raw-zero. This establishes
 decoded-function exactness without claiming literal original-source spelling
 or packed-file exactness.

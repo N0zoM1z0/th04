@@ -267,7 +267,10 @@ def main() -> int:
     selected = (
         [surface_config[surface_id] for surface_id in args.surface]
         if args.surface
-        else list(config["surfaces"])
+        # Installation media is checked explicitly by bootstrap before use.
+        # Running the installed compiler does not require retaining that media.
+        else [item for item in config["surfaces"]
+              if item["id"] not in {"tc40j-media", "tasm50-archive"}]
     )
     surfaces = [attest_surface(ROOT, item) for item in selected]
     identity_pass = all(item["pass"] or not item["required"] for item in surfaces)

@@ -185,23 +185,34 @@ global layouts change, invalidate and cold-replay every affected accepted unit.
   for a distinct ownership decision, reusable negative result, or replay
   surface.
 
-## Bounded retention and build scope
+## Minimal retention and checks
 
-- The user authorized permanent retirement of unnecessary historical experiments
-  on 2026-10-19. Keep the current handoff dependencies and selected independent
-  baselines/counterexamples. Historical instructions to keep every inherited
-  provider or replay every earlier phase are superseded by this scoped policy.
-- Keep canonical targets/assets, user saves, active toolchains/databases, current
-  maintained source and necessary build/replay inputs. Record retired payloads
-  explicitly; historical receipts remain historical observations, not a promise
-  that every old experiment is still replayable. See docs/ANALYSIS_RETENTION.md.
-- Build only affected translation units/programs and run relevant comparisons.
-  Do not automatically rebuild/relink all native test programs, replay every old
-  phase, or create another whole-history archive. Broaden checks for actual
-  shared ABI/layout dependencies; exact promotion still requires its full gates.
-- After an experiment, remove superseded binaries, regenerable caches and
-  redundant exploration captures. Retain concise commands, identities, results
-  and the minimal independent evidence needed for the retained claim.
+Keep necessary original inputs, active analyzer projects, current source,
+exact-match ledgers and complete rebuild/comparison scripts. Keep locked tool
+binaries and the headers, libraries and runtime dependencies actually in use.
+Retain useful conclusions, current blockers and failed ideas briefly. Keep an
+unresolved compiler context only if recreating it would be genuinely difficult.
+A file's age, historical reference or old successful test is no retention reason.
+
+Delete superseded builds, duplicate evidence, historical archives, unused
+prefixes and cleanup reports. Remove obsolete document references too. Do not
+add a cleanup framework, permanent inventory, audit report or another archive.
+Do not overwrite canonical objects or existing receipts while experimenting.
+
+Share matching Factory tools, isolate writable state, and distinguish host
+from target architecture. Temporarily move uncertain components aside, test
+only the affected compile/link/runtime/resource paths, and delete the temporary
+copy after success. Restore on failure and compare against the original
+environment. Moving the only installation does not free disk space.
+
+Default CI must be fast and work in a clean checkout without private programs,
+toolchains or reference checkouts. Check machine syntax, ledger consistency,
+build source paths and accidental private files over the complete current tree.
+Use the full PR/push range for whitespace checks. Select comparator and other
+specialist tests by the change. Never regenerate prose or progress in CI.
+Exact source changes still require complete owned bytes and relocations and
+all affected consumers; cleanup and prose do not require a whole-history replay.
+See docs/ANALYSIS_RETENTION.md for the concise policy.
 
 ## Shared Factory runtime
 

@@ -13,14 +13,8 @@ The sole symbolic primitive reuses the accepted v394 TH04/TH05
 `dialog_face_unput_8` register-direction precedent. OP exactness is not
 borrowed.
 
-Focused receipt:
-`.analysis/reconstruction/receipt-archive/v829-maine-snd-load-hybrid-focused-receipt.json`
-
 Focused SHA-256:
 `673dd33c725a40d9857c4c4bb4975079dd8905b12068b75f761a8530620419af`
-
-Canonical receipt:
-`.analysis/reconstruction/receipt-archive/v829-maine-snd-load-canonical-receipt.json`
 
 Canonical SHA-256:
 `1acb6e013468f46742ec8bc3c12f3fae5c6893ab0044683beb5d69c08d9ce62b`

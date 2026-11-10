@@ -113,9 +113,8 @@ The new frontier is narrower than v766/v820:
 - ordered relocation topology: unchanged;
 - independent authored-source provenance: open.
 
-Archived receipt:
+Archived
 
-.analysis/reconstruction/receipt-archive/v823-op-snd-load-provenance-receipt.json
 
 SHA-256:
 

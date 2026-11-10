@@ -109,10 +109,6 @@ runtime call under the pinned flags, and direct __rotr__ is a 16-bit intrinsic
 that emits ROR AX,3. The known memcpy pragma-intrinsic control form is accepted,
 but the compiler rejects _crotr and _rotr as pragma-intrinsic targets. No tested
 compiler surface emits the target ROR byte ptr [BP-1],3.
-
-Receipt:
-.analysis/reconstruction/receipt-archive/v760-tc4-score-rotate-intrinsics-receipt.json
-
 SHA-256:
 e80a367d760da8dffd0a7118490ddcaf7da31d371c2a2fee4e8510e52b2bb9ec
 

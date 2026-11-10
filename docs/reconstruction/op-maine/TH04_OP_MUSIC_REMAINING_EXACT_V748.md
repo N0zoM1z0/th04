@@ -33,11 +33,6 @@ Room translation unit. Two independent TC86/TLINK rounds reproduce both
 complete function bodies, the complete 0x6A5 OP_MUSIC_TEXT producer, the full
 linked OP program image, and all 804 ordered MZ relocation entries.
 
-Focused receipt:
-.analysis/reconstruction/receipt-archive/v748-op-music-remaining-focused-receipt.json
-
-Focused receipt SHA-256:
-d995791398bb93f6d6779311fc8086d7d393c70912b3a3cb55906b150c80e6c0
 
 The in-memory v749 pre-acceptance aggregate passed 81/81 OP decoded slices.
 An initial v750 canonical attempt stopped when an older shared-VRAM backend's
@@ -45,11 +40,6 @@ internal preflight returned nonzero during a transient dirty-state window; it
 produced no canonical receipt. Top-level preflight then passed, and v751
 replayed the current checked-in acceptance ledger successfully at 81/81.
 
-Canonical aggregate receipt:
-.analysis/reconstruction/receipt-archive/v751-op-music-remaining-canonical-receipt.json
-
-Canonical aggregate receipt SHA-256:
-47cd2eb24d5318e826f65ed2ad971c257bf4935f160e4fb89417a659f1bda448
 
 This establishes decoded-function exactness for both Music Room functions. It
 does not claim packed-file or whole-OP exactness.

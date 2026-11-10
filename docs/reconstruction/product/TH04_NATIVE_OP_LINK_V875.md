@@ -153,7 +153,7 @@ The shim is a valid 29,186-byte MZ with 218 relocations (SHA-256
 `0d9e186532ebf2687625c9399be0ddeef19f2268da0cce5fc0490954545efdc2`).
 Native OP, pinned resources, and the normal `GAME.BAT` route are unchanged.
 The 100-second DOSBox-X receipt
-`.analysis/runtime/candidates/native-op-cdg-es-mainhit-v894-run100-20260928/receipt.json`
+
 has `mainhit_marker_hex = 48` and `diagnostic_marker_hex` decoding to
 `START` followed by `EXIT`. This is direct runtime evidence that native OP
 passed control to `MAIN.EXE` and that the shim returned to the batch. It does

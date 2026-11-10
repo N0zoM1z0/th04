@@ -70,7 +70,7 @@ the ZUN Soft fireworks at 30 seconds (`frame.png` SHA-256
 `325fead5e24d9508531a2b1e1483e538169025e193e0ed2e9620938d27c52c48`);
 the changed build reached the title menu (`7c1babb62b297a462173ed7428416af138059fa1d5e3d25bf84f10c3de029356`).
 Private receipts are under
-`.analysis/runtime/candidates/super-perf-{before,after}-20261002/run-logo/receipt.json`.
+.
 This is a bounded wall-clock observation under one emulator configuration,
 not a full-game timing or Windows-host acceptance claim.
 
@@ -101,7 +101,7 @@ Linux DOSBox-X binary (SHA-256 `30a5fdf8…`), disk-data source, and
 renderer still displays the moving title text, while the final variant has
 already reached the following blank transition; all variants display the same
 title menu at 30 seconds. Receipts are under
-`.analysis/runtime/candidates/super-{dstbyte-before,dstbyte-after,opaque-after,clipped-after}-20261003/run-logo/receipt.json`.
+.
 This is a bounded timing observation; Windows-host frame pacing, boss defeat
 and stage-5 Yuuka combat still need replay.
 
@@ -152,7 +152,7 @@ The independent historical-library BFNT reference retains pattern hash
 screen hash `0BE615EA` for unaligned, negative and lower-right placements.
 Trailing cancellation, free/reload, malformed/missing files and PAR/loose-file
 controls pass. The probe audits 260 MZ relocations at load segments 0x2000
-and 0x6000. Receipt:
+and 0x6000.
 `.analysis/reconstruction/probes/semantic-super-runtime-20261003/receipt.json`.
 
 ```text
@@ -231,10 +231,6 @@ nine encoded sections are unchanged. The fixture bypasses gameplay/OP and
 uses zero resident sound; its final black frame does not accept return to OP.
 Runtime receipts:
 
-```text
-.analysis/runtime/candidates/planar-v1233-normal/run/{receipt,corner-control}.json
-.analysis/runtime/candidates/planar-v1233-ending/run/{receipt,score-save-control}.json
-```
 
 The batch preserves game update logic, Shift movement and configured slowdown
 policy. The user's actual late-attack Turbo/Shift/frame-time state and Windows
@@ -287,13 +283,5 @@ return boundary. Failed source/programs/trace remain distinct. CPU timing,
 physical GRCG/scanout, unowned malformed-score RAM, other waits, broader gameplay
 and Windows remain open. Historical exact stays661/663; the full goal is active.
 
-Replay: `.analysis/reconstruction/probes/native-super-kernel-v1430/`;
-producer: `.analysis/worktrees/native-super-kernel-v1430/.analysis/port64/native-super-kernel-v1430-v2/`.
-`verify_super_kernel.py` owns original streams; `pixels.py` owns full drawings.
-Archive/content/CRC/mode/nsmtime/temp-restore retirement saves
-835.30 MiB net. Source/all programs/fixtures/receipts remain
-live; cache, captures and original/native aliases recover with
-`verify_retention.py --restore --prefix`. Continue actual RAM-provider ownership
-and remaining source recovery/migration.
 
 Published native head: `58383ea13fc6d5b942777c9a4cbbc01097e2d571`.

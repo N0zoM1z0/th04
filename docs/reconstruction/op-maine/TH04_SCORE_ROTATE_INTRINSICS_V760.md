@@ -27,12 +27,6 @@ Two isolated TC4.02 -S rounds produce the same structural observations:
   intrinsic _rotr each produce an Ill-formed pragma warning and leave the RTL
   calls unchanged.
 
-Receipt:
-.analysis/reconstruction/receipt-archive/v760-tc4-score-rotate-intrinsics-receipt.json
-
-Receipt SHA-256:
-e80a367d760da8dffd0a7118490ddcaf7da31d371c2a2fee4e8510e52b2bb9ec
-
 This is negative compiler-mechanism evidence, not exactness evidence. It closes
 the rotate-intrinsic route for OP scoredat_decode / scoredat_encode and the
 corresponding MAINE codec blockers. Further progress on these functions now

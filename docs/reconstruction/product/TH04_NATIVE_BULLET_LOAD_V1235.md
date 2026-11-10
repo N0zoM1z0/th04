@@ -82,16 +82,11 @@ or general audio/timing equivalence.
 
 With only the after-fixture CPU budget raised to 36,000, all six phases
 average one logical refresh period per frame, including the full cloud pool.
-The cloud phase consumes 32 render IRQ ticks over 32 frames. Receipt:
-`.analysis/runtime/candidates/bullet-load-after-v1235/run-36000/`.
+The cloud phase consumes 32 render IRQ ticks over 32 frames.
+.
 
 Receipts and independent reducers:
 
-```text
-.analysis/runtime/candidates/bullet-load-before-v1235-verified/run-24000/
-.analysis/runtime/candidates/bullet-load-after-v1235/run-24000/
-python3 scripts/probes/inspect_th04_bullet_load_trace.py --run-dir RUN
-```
 
 An early private baseline accidentally used the current pellet body because
 the body wrapper reread the checkout instead of its copied source. That run
@@ -135,7 +130,7 @@ The independent original/native slowdown replay again passes 96 cases.
 The final uninstrumented normal build reaches visible Lunatic combat at
 125 seconds in the same pinned Linux emulator, with all four executed image
 products and configuration checks verified. This smoke checkpoint does not
-clear a route or establish its frame rate. Receipt:
+clear a route or establish its frame rate.
 `.analysis/bullet-v1235/normal-smoke-attestation.json`.
 
 Both final variants are exported to

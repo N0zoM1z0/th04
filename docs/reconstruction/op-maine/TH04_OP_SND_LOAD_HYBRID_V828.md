@@ -86,9 +86,8 @@ Two isolated TC4.02/TLINK rounds reproduce:
 Relative to the natural OP baseline, the linked program differs only at
 `0xDE8B` and `0xDE8C`.
 
-Archived focused receipt:
+Archived focused
 
-`.analysis/reconstruction/receipt-archive/v828-op-snd-load-hybrid-focused-receipt.json`
 
 SHA-256:
 
@@ -99,9 +98,8 @@ SHA-256:
 The current decoded-function ledger replay checks **93 unique OP authored
 function slices**, all with `raw_difference_count = 0`.
 
-Archived canonical receipt:
+Archived canonical
 
-`.analysis/reconstruction/receipt-archive/v828-op-snd-load-canonical-receipt.json`
 
 SHA-256:
 

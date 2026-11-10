@@ -98,9 +98,8 @@ Checked-in probe:
 
 `scripts/probes/probe_th04_op_snd_se_shared.py`
 
-Archived diagnostic receipt:
+Archived diagnostic
 
-`.analysis/reconstruction/receipt-archive/v822-op-snd-se-shared-diagnostic-receipt.json`
 
 SHA-256:
 

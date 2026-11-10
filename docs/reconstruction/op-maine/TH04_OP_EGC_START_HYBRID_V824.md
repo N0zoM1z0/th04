@@ -120,10 +120,6 @@ Two isolated TC4.02/TLINK rounds reproduce:
   `c32633e0b679e8d8bd97f55b9280bb1a9beae82a4530fd33f4cbcc9d1f421274`;
 - all 804 ordered MZ relocations.
 
-Focused receipt:
-
-`.analysis/reconstruction/receipt-archive/v824-op-egc-start-hybrid-focused-receipt.json`
-
 SHA-256:
 
 `d1c675b3741b734e1e24780495b6cc8b99f929c80b2f3fed1bfce23a15d0680c`
@@ -133,10 +129,6 @@ SHA-256:
 The current decoded-function ledger now contains 88 accepted OP functions.
 The canonical replay rebuilds every backend and checks all 88 complete slices.
 All 88 have `raw_difference_count = 0`.
-
-Canonical receipt:
-
-`.analysis/reconstruction/receipt-archive/v824-op-egc-start-canonical-receipt.json`
 
 SHA-256:
 

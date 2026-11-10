@@ -170,7 +170,7 @@ The linked `cfg_init` slice at component `0x267..0x2FE` / payload
 
 v818 preacceptance and canonical v819 acceptance both compare the complete
 152-byte function at zero differences. The canonical receipt is
-`.analysis/reconstruction/receipt-archive/v819-zun-resident-canonical-receipt.json`,
+,
 SHA-256
 `fe59d4624229bdc111a427d41144b6b6ca93973d729f570831c28805bba03508`.
 

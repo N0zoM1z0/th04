@@ -35,21 +35,11 @@ v489 OP translation units. Two independent TC86/TLINK rounds reproduce:
 - the complete linked OP program image;
 - all 804 ordered MZ relocation entries.
 
-Focused receipt:
-.analysis/reconstruction/receipt-archive/v735-op-big-menu-title-focused-receipt.json
-
-Focused receipt SHA-256:
-9889a3dcf50731aecadeae05c7b4af209d851d993b598518b69092e1ea34d54e
 
 The in-memory v736 pre-acceptance aggregate passed 66/66 OP decoded slices.
 After both rows were written to the checked-in acceptance ledger, canonical
 v737 replayed that ledger and again passed 66/66.
 
-Canonical aggregate receipt:
-.analysis/reconstruction/receipt-archive/v737-op-big-menu-title-canonical-receipt.json
-
-Canonical aggregate receipt SHA-256:
-ad310c10e6eea4bd68b232010e83b2100181f5674eb17ad4e8f2fc1293c1ac37
 
 The known two-byte shared SND_LOAD mismatch lies outside both producers and is
 unchanged. This establishes decoded-function exactness for these two functions;

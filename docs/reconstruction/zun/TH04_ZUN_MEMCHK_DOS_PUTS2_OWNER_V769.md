@@ -23,12 +23,6 @@ maintained body SHA-256 is exactly the target body SHA-256:
 
 90259993539788eb6cc440e98400c1551f6502aa42c64d1fe8d5860539b9c981
 
-Receipt:
-.analysis/reconstruction/receipt-archive/v769-zun-memchk-dos-puts2-receipt.json
-
-Receipt SHA-256:
-b2a26f0a595bfa5410c43809ea0971003cff163767bd8b65d318f39b65b7ab8f
-
 Ledger consequence:
 
 - MEMCHK 0x26CE is reclassified from authored/target-derived-asm to

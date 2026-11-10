@@ -18,10 +18,6 @@ two bombs, identical timed inputs, built-in DOS, and the pinned Linux DOSBox-X
 SDL2 binary at 24,000 cycles. Complete preparation, input, emulator, font and
 frame identities live under:
 
-```text
-.analysis/runtime/candidates/top-corner-{native,original}-20261003/{prepared,run}/receipt.json
-.analysis/render-corner-20261003/visual-comparison.json
-```
 
 Read-only hardware watchpoints identify the native write chain at load segment
 1100h (DGROUP 337Fh):
@@ -45,11 +41,6 @@ helper; effects on other entities need separate runtime controls.
 
 Private watch receipts and snapshots:
 
-```text
-.analysis/runtime/candidates/top-corner-native-20261003/run-watch/
-.analysis/runtime/candidates/top-corner-native-20261003/run-state-clear-ready/
-.analysis/render-corner-20261003/writer-evidence.json
-```
 
 The first interrupt-conditioned debugger attempt never reached usable MAIN
 state and is rejected. The first state watch failed to decode a DWARF array
@@ -81,11 +72,6 @@ The repaired ordinary Normal replay has no old corner mark at any of the seven
 70..140-second checkpoints. Four installed executable identities, input success
 and absence of early exit are checked separately from the screenshots. Receipts:
 
-```text
-.analysis/reconstruction/probes/clear-dwords-v1233-final/receipt.json
-.analysis/reconstruction/probes/clear-dwords-default-v1232/target-raw-control.json
-.analysis/runtime/candidates/planar-v1233-normal/run/corner-control.json
-```
 
 ## Yuuka follow-up
 

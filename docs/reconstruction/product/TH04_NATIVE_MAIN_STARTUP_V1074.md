@@ -30,12 +30,6 @@ The candidate was inserted into a disposable copy of the pinned runtime image
 with `prepare_th04_main_diagnostic_hdi.py --startup game-bat` and booted through
 the normal `GAME.BAT` route under the pinned DOSBox-X profile:
 
-```text
-xvfb-run -a python3 scripts/probes/run_th04_maine_diagnostic_hdi.py \
-  --prepared-dir .analysis/runtime/candidates/native-main-v1074-20260930 \
-  --output-dir .analysis/runtime/candidates/native-main-v1074-20260930/run-game-bat-60 \
-  --frame-second 60 --time-limit 70
-```
 
 The run receipt SHA-256 is
 `23f92a1266f5a4324b99b20c2a28979e4c84dcba51d0091f574631f1307a56b6`.

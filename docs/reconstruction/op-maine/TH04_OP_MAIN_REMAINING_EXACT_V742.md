@@ -45,21 +45,11 @@ reviewed function body, every adjacent compiler table extent, the complete
 relocations. The OMF OP_MAIN_TEXT CODE stream is also identical to the pinned
 current producer in both rounds.
 
-Focused receipt:
-.analysis/reconstruction/receipt-archive/v742-op-main-remaining-focused-receipt.json
-
-Focused receipt SHA-256:
-e1954c39f61ddad9c1cda94d10dc18b7721f5e84d01877a81a3acdd842a6558a
 
 The in-memory v743 pre-acceptance aggregate passed 77/77 OP decoded slices.
 After the six rows were written into the checked-in ledger, canonical v744
 again passed 77/77.
 
-Canonical aggregate receipt:
-.analysis/reconstruction/receipt-archive/v744-op-main-remaining-canonical-receipt.json
-
-Canonical aggregate receipt SHA-256:
-e24181d3572c50ff6948e7db0fd761b867ff4a8251ae299d3ae0c204f16a3b7f
 
 This establishes decoded-function exactness for the six bodies and physical
 ownership of their adjacent compiler switch tables. It does not claim

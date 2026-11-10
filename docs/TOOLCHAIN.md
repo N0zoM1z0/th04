@@ -7,6 +7,16 @@ You are responsible for obtaining and using every third-party component under
 rights that apply to you.  A URL here records provenance and reproducibility;
 it is not a legal endorsement or a claim that the host is authoritative.
 
+## Minimal installed environment
+
+Normal attestation checks the installed compiler, assembler, linker, headers,
+libraries, configuration and runner. Installation media is not a runtime
+requirement. The bootstrapper explicitly checks its locked media hashes before
+extracting or executing it; `--identity-only --surface tc40j-media` and
+`--surface tasm50-archive` still enforce those identities when requested.
+Discard installer downloads and staging copies after a successful installation.
+Keep the active game-specific Wine prefix and the installed locked inputs.
+
 ## What is pinned
 
 `config/toolchain.toml` is the machine-readable authority. It includes 16

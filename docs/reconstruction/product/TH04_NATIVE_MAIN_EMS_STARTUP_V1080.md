@@ -17,7 +17,7 @@ SHA-256
 `5c7c5a3bebd96c41ea4b73693c871b1984c5f2c3dbe45ac7f3d2884811448029`.
 The private MAIN trace writes marker `02` after `game_init_main()`; the
 normal `GAME.BAT` run receipt
-`.analysis/runtime/candidates/native-main-v1077-20260930/run-game-bat-60/receipt.json`
+
 (SHA-256
 `0929a56aaff3d831b35f24bf37b0d8692bae456786e16a4468498dc1b3bf0cc0`)
 has `main_trace_hex = "02"`, no input trace, and frame SHA-256
@@ -36,7 +36,7 @@ The selective relink receipt
 links 191,653 bytes with 1,175 relocations and candidate SHA-256
 `0ee8d429345944074a4b292062865c945659e97d0045a57671f7ae824afb9ed5`.
 The run receipt
-`.analysis/runtime/candidates/native-main-v1079-20260930/run-game-bat-60/receipt.json`
+
 (SHA-256
 `7dfed96e195ed822af84d5c713c0ed2206da353e65ec9e157fe3f69e071cf73d`)
 records `main_trace_hex = "02"` and `ems_trace_hex = "12"`. Marker `12` is
@@ -64,7 +64,7 @@ function after marker `10`. The selective relink receipt
 links 191,269 bytes with 1,168 relocations and candidate SHA-256
 `4e874d1ffe508ba4cbb4f8367fec398a7a47d802b01b2f555827e5ee97e1b681`.
 The run receipt
-`.analysis/runtime/candidates/native-main-v1080-20260930/run-game-bat-60/receipt.json`
+
 (SHA-256
 `87f8c9a4b55379389a6cd91ef301caaad777270dffc7d886a6c3b4fc153daa0e`)
 records `main_trace_hex = "06"`, `ems_trace_hex = "10"`, and diagnostic

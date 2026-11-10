@@ -46,11 +46,6 @@ to the retained target MEMCHK component:
 
 2531795670b5cafb65bf261f499d5d77b71aeaf26015f8481000cdbb96272dfc
 
-Focused receipt:
-.analysis/reconstruction/receipt-archive/v773-zun-memchk-natural-focused-receipt.json
-
-Focused receipt SHA-256:
-a75c33a06d6e87976a8a3d79a1d350c3a8e796c61d3ab1cb435f0eab14094306
 
 ## Canonical decoded acceptance
 
@@ -63,11 +58,6 @@ resident _main remain source-present diagnostics with their known linked
 differences, while MEMCHK _main is decoded-exact with zero raw differences.
 Only decoded-exact rows are raw-zero acceptance gates.
 
-Canonical receipt:
-.analysis/reconstruction/receipt-archive/v776-zun-memchk-canonical-receipt.json
-
-Canonical receipt SHA-256:
-809e567a3b1822b9865522e9d8e89e3f016d62036f29c339c073bdafd83dd1b7
 
 ## Ledger consequence
 

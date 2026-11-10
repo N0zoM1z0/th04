@@ -52,10 +52,6 @@ Two isolated TC4.02/TLINK MAINE rounds reproduce:
 - retained MAINE EXE/MAP identity;
 - all **559 ordered MZ relocations**.
 
-Focused receipt:
-
-`.analysis/reconstruction/receipt-archive/v832-maine-score-codecs-focused-receipt.json`
-
 SHA-256:
 
 `fc753dc4e4dd6f00588968a9c59c42a8caed42db1cfb53954d61020787609341`
@@ -69,11 +65,6 @@ other ScoreFunction users keep the previous default behavior.
 
 Canonical replay checks **68 unique current MAINE accepted function slices**,
 all with `raw_difference_count = 0`.
-
-Receipt:
-
-`.analysis/reconstruction/receipt-archive/v832-maine-score-codecs-canonical-receipt.json`
-
 SHA-256:
 
 `b468c5305eebbd2378d86a876cabfc999b0eb12e1133f41f51cf6ba21bbdbcf5`

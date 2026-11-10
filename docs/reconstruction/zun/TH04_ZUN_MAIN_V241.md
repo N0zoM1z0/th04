@@ -118,8 +118,6 @@ a local message pointer and a const local return value each emit 251 bytes;
 a mutable local return value emits 257 bytes. All fail the size gate, so none
 can be a raw-exact producer. The last form does retain a separate bad-option
 print call, but adds a stack store and reload absent from the target.
-
-Receipt SHA-256:
 `5f0ae65c3a52c92d50ce517c844de58c70c4fecc5825c40cec4fe93de79452c3`.
 This eliminates those source-shape hypotheses only. The maintained `_main`
 remains 246 bytes, source-present, and nonexact; no ZUN exact state changes.
@@ -245,7 +243,7 @@ state changes.
 
 Run `taskset -c 0,1 nice -n 10 python3
 scripts/probes/probe_th04_zun_main_pragma_speed_scope.py --output-dir
-.analysis/reconstruction/probes/NEW-UNIQUE-NAME`. Focused receipt:
+.analysis/reconstruction/probes/NEW-UNIQUE-NAME`. Focused
 `.analysis/reconstruction/probes/v792-zun-main-pragma-speed-001/receipt.json`,
 SHA-256 `2c2f79c0a38e3a245f01ce402342b2f067fc7bd27bd7a37144401bac6a80c7a3`.
 
@@ -271,8 +269,6 @@ Replay:
 taskset -c 0,1 nice -n 10 python3 scripts/probes/probe_th04_zun_main_inline_error_helper.py \
   --output-dir .analysis/reconstruction/probes/NEW-ZUN-INLINE-HELPER
 ```
-
-Receipt:
 `.analysis/reconstruction/probes/v816-zun-inline-error-helper-001/receipt.json`
 (SHA-256 `e828665da116375a217376b2b6c66450ed36a90662d8f45a85d6b9a39f6a5cc3`).
 The maintained source and accepted states are unchanged.
@@ -318,7 +314,7 @@ The deterministic MAP SHA-256 is
 v818 then injected the two resident rows as exact only in memory and replayed
 all three ZUN authored functions; every slice was raw-zero. v819 repeated the
 same check from the checked-in acceptance ledger. Its canonical receipt is
-`.analysis/reconstruction/receipt-archive/v819-zun-resident-canonical-receipt.json`,
+,
 SHA-256
 `fe59d4624229bdc111a427d41144b6b6ca93973d729f570831c28805bba03508`.
 

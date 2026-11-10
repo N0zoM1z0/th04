@@ -161,9 +161,3 @@ hash-unchanged; no user process is stopped. Immutable delivery identities are
 in `deployment.json` and `bat-readback.json`. Physical speakers and the user's
 recalled gradual reduction still require manual confirmation; the verified
 buffer loss and launch limitation have concrete fixes and rejecting controls.
-
-Both root and native `python3 scripts/ci.py`, tracking validation and
-`git diff --check` pass. `checks.json` records the two serial CI results;
-`finish.json` indexes the accepted receipts after scoped retention/readback.
-Superseded initial/duplicate/fourth-stage PCM is retired explicitly in
-`retention.json`; selected Stage3 music/effect controls remain independent.

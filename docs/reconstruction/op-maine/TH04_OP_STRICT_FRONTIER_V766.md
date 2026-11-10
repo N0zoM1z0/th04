@@ -68,7 +68,6 @@ raw-matching decoded source modules. The OP authored-function queue is closed.
 v760 closes the previously untested TC4.02 rotate-intrinsic route. Its retained
 receipt is:
 
-.analysis/reconstruction/receipt-archive/v760-tc4-score-rotate-intrinsics-receipt.json
 
 SHA-256:
 e80a367d760da8dffd0a7118490ddcaf7da31d371c2a2fee4e8510e52b2bb9ec
@@ -76,7 +75,6 @@ e80a367d760da8dffd0a7118490ddcaf7da31d371c2a2fee4e8510e52b2bb9ec
 v766 consolidates the additional nopoly __memcpy__ and SE-update register-local
 surface experiments together with the existing blocker evidence:
 
-.analysis/reconstruction/receipt-archive/v766-op-strict-frontier-receipt.json
 
 SHA-256:
 b56646240cd6946cda850686aae0d029b38924b0e4fbc8d33aa05c3dc807aac3
@@ -107,9 +105,8 @@ not change the segment-order, byte-rotate, BP-frame/index, or BL/BH lowering
 that blocks these five OP functions. This is a bounded negative, not a general
 claim about all TC4J source.
 
-Retained receipt:
+Retained
 
-.analysis/reconstruction/receipt-archive/v820-op-assembly-backend-frontier-receipt.json
 
 SHA-256:
 a3ecaa4e360d384d219ce853ca2ba198e7a34e5c95e1ac60c1a4776e005208e1
@@ -159,10 +156,8 @@ the accepted EXE/MAP, and all 804 relocations raw-zero. Canonical v827 passes
 92/92 accepted OP slices. Literal original-source spelling and packed-file
 exactness remain unclaimed.
 
-Focused receipt SHA-256:
 `33962357744f6b3e3983c37622de9f474bc283f67710a9dd0fa77549f898c002`.
 
-Canonical receipt SHA-256:
 `c0d1684341c87dcf156907e2b8304a4d1918ce8c2b69da6f3f4827471aa2aa98`.
 
 ### v823 SND_LOAD complete-producer provenance bound
@@ -207,12 +202,9 @@ identical.
 
 Canonical v828 passes all 93 accepted OP slices raw-zero.
 
-Focused receipt SHA-256:
 `0346f3f2d2e89121b1b89aaf7cab25f87cc3bc64540ff4de0e24d62bfe2c5dad`.
 
-Canonical receipt SHA-256:
 `50928bc1bcef1ea614574e94ccb9538f1e7167e7eb7ec92cafc6cbe806f22cc5`.
-
 
 
 ### v824 EGC-start hybrid closure
@@ -261,8 +253,6 @@ Two cold TC4.02/TLINK rounds reproduce the complete 0x6A5 OP_MUSIC_TEXT
 producer, OP EXE/MAP, the 30-byte body, and all 804 ordered relocations.
 Canonical replay checks 90/90 accepted OP slices raw-zero.
 
-Focused receipt SHA-256:
 26405281b33c09142e3eec074fe62791614717bd25ef12e27178c4a5232102ca.
 
-Canonical receipt SHA-256:
 cab1b089612158f70a983e9f277e3c9146b9b937c6d5c515785257fcd70adcde.

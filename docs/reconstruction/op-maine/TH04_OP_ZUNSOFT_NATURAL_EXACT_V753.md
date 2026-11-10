@@ -42,21 +42,11 @@ reproduce every reviewed body, the 0x31 compiler auxiliary extent, the complete
 ordered MZ relocations. The rebuilt OMF OP_MUSIC_TEXT CODE stream also equals
 the pinned current C++ object in both rounds.
 
-Focused receipt:
-.analysis/reconstruction/receipt-archive/v753-op-zunsoft-natural-focused-receipt.json
-
-Focused receipt SHA-256:
-f9aa22cf08ebc19da42631526e79043ec30185a21b8b6323aecb6455460299e2
 
 The in-memory v754 pre-acceptance aggregate passed 85/85 OP decoded slices.
 After all four rows were written into the checked-in acceptance ledger,
 canonical v755 again passed 85/85.
 
-Canonical aggregate receipt:
-.analysis/reconstruction/receipt-archive/v755-op-zunsoft-natural-canonical-receipt.json
-
-Canonical aggregate receipt SHA-256:
-14a85e9330db6b1728bf7264ab5e8eebf608deb54a5d9dc427d6c17fd2a146f2
 
 This supersedes the live-ledger source attribution of these four entries to
 target-derived th04_op.asm. Historical TASM evidence is retained only as

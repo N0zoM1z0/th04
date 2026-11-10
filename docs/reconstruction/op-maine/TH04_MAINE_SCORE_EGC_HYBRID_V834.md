@@ -12,11 +12,5 @@ The only object-format delta removes the decomp-only `keep_0(0)` `_address_0`
 linker-zero fixup. Final MAINE bytes and all 559 ordered MZ relocations remain
 identical.
 
-Focused receipt:
-`.analysis/reconstruction/receipt-archive/v834-maine-score-egc-focused-receipt.json`
-
-Canonical receipt:
-`.analysis/reconstruction/receipt-archive/v834-maine-score-egc-canonical-receipt.json`
-
 Canonical replay checks 71/71 current MAINE accepted slices raw-zero.
 Packed-file and literal original-source claims remain separate.

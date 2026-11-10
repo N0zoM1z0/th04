@@ -51,7 +51,7 @@ behavior require the separate emulator replay.
 Four cold before/after TASM builds without `TH04_LARGE_PRODUCT` preserve
 all link-relevant OMF records after normalizing only source timestamps:
 shared CDG color renderer, MAINE CDG plane renderer, MAIN scroll state and
-MAIN stage-resource state. Receipt:
+MAIN stage-resource state.
 `.analysis/reconstruction/probes/ending-scroll-default-omf-replay-20261003/receipt.json`.
 The raw objects differ in source timestamps. This source-to-source control
 does not promote original-target exactness.
@@ -80,7 +80,7 @@ section checksums pass, every changed-section score digit is valid, and the
 other nine sections stay byte-identical. The starting user-derived disk has
 an unchanged blank Reimu Easy section; do not misreport that existing blank
 as a newly corrupted score. Receipts:
-`.analysis/runtime/candidates/ending-cdg-fixed-20261003/{reimu-lunatic,marisa-normal}/run-clear/{receipt,score-save-control}.json`.
+.
 Both final frames at 340 seconds are black, so they do not accept return to
 OP. The user independently confirms death registration/save in the new
 normal Windows package; that scenario skips the Ending/Staff Roll path.

@@ -43,8 +43,8 @@ python3 scripts/probes/probe_th04_maine_regist_frontier_v831.py \
   --output-dir .analysis/reconstruction/probes/v831-maine-regist-frontier-001
 ```
 
-Archived receipt:
-`.analysis/reconstruction/receipt-archive/v831-maine-regist-frontier-receipt.json`
+Archived
+
 
 SHA-256:
 `123633de7f6a3a9f6d222ca9bb739fa55e66cf3e8397733c065b94ae9045ae66`
