@@ -3,7 +3,7 @@
 The Windows invincible build was reported to show only background or remnants
 on the score-registration page after a Lunatic Good Ending; Esc then left a
 black screen. The copied user HDI is preserved under
-`.analysis/runtime/candidates/lunatic-ending-user-20261003/` (SHA-256
+ (SHA-256
 `91cafe8a9e6c4aa19ce7fdeb93b2a665da42b22a71f390c2e34ffe162e7aa0f2`).
 This is a user runtime observation, not an independently captured MAINE frame.
 

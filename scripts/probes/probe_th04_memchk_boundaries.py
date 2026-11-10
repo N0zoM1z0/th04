@@ -16,7 +16,6 @@ import re
 import shutil
 import subprocess
 import sys
-import tomllib
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -119,12 +118,6 @@ def main() -> int:
         [sys.executable, "scripts/preflight.py"], cwd=ROOT,
         check=True, capture_output=True, text=True,
     )
-    retention = tomllib.loads(
-        (ROOT / "config/analysis_retention.toml").read_text(encoding="utf-8")
-    )
-    if "v489-bgimage-hybrid-replay-003" not in retention["full_keep_dirs"]:
-        raise RuntimeError("retained v489 source snapshot is no longer pinned")
-
     payload = PAYLOAD.read_bytes()
     if sha(payload) != PAYLOAD_SHA256:
         raise RuntimeError("decoded ZUN payload identity drift")

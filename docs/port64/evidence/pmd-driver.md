@@ -96,12 +96,6 @@ Keep completed references immutable after hardlink sharing; replay into a fresh
 directory. The previous v1328 scene/frontend and PCM producer receipts retain
 their own identities and bounded scope.
 
-Terminal cleanup shares 72 identical driver trace files after full byte/hash
-comparison, reclaiming 7,667,712 allocated bytes with 4,252 protected hashes
-unchanged. After CI, 1,012 source-backed Python caches reclaim 16,986,112 bytes.
-The earlier scratch FM-SE output is retired only after all 102 output streams
-compare with the accepted controls; its digest remains in the cleanup receipt.
-All current programs, source, inputs and independent references remain.
 
 Next implement the native PMD sequencer and OPN/SSG/FM synthesis against these
 references, including actual tempo changes, bar length, resource lifetime and

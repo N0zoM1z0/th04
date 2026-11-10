@@ -318,8 +318,8 @@ Both final repository CIs and `git diff --check` pass. Subsequent source-backed
 CPython cache retirement uses a persisted pre-deletion journal:1,013 caches,
 17,059,840 allocated bytes,1,131 unchanged Python source hashes. Together with
 the two interim receipts, measured reclamation is289,648,640 bytes (276.2MiB);
-unrecorded terminal allocation is excluded. Root cache receipt:
-`.analysis/cleanup/pmd-musical-source-backed-caches-20261009.json`.
+unrecorded terminal allocation is excluded. Root cache
+.
 
 The bounded running music/effects join is now verified separately in
 [FM player evidence](pmd-fm-player.md). Earlier receipts and historical open
@@ -410,14 +410,6 @@ python3 port64/verify_pmd_musical_fm.py \
   --output .analysis/port64/FRESH-OPERATOR-CONSUMERS
 ```
 
-Repeat the consumer against `original-corners-v2` with a fresh destination.
-`stream-regression.py` records streaming raw comparisons with immediate gzip
-round-trip retirement; its old fixed output roots require fresh replay paths.
-Actual Windows uses maintained typed `verify_windows_current.ps1`, generated
-by private `windows.py`/`windows/plan.json`. Closed stage/capture archives and
-restore commands are indexed by `retention.json`; restore each member under
-its recorded `directory` before historical readback. Current executables and
-independent references remain, while CMake rebuilds retired intermediates.
 
 Next recover C6 extra FM3 subtracks, C7/C8 detune, CF partial operator ownership
 and special pitch/LFO-slot interaction. PPS/external ADPCM, original complete

@@ -99,11 +99,6 @@ the current manifest separately. Dependency profiles verify the same Unicorn
 controls, source/product profiles, cleanup and complete pending-source recovery
 are in native `.analysis/port64/pmd-v1331/`.
 
-Terminal cleanup reclaims 204,918,784 allocated bytes (about 195 MiB) from
-217 verified duplicate captures, 259 retired scratch outputs and 512 source-backed
-Python caches. All 1,046 protected hashes are unchanged at that boundary.
-Sources, current programs, pinned targets, HDI and independent references remain;
-shared captures are immutable and future replay uses fresh directories.
 
 Next implement external FM effects and musical gate/pitch/LFO/envelope/OPN
 control, then FM/SSG synthesis and physical timer scheduling. Only after those

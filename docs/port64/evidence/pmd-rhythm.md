@@ -160,15 +160,9 @@ product hashes. Source-only variants, compile commands, failed streams and
 complete source archives remain recoverable. Historical writers reject or
 must avoid existing immutable capture paths.
 
-Full archive/trace readback checks 3915 protected hashes. Persisted journals
-measure **850,616,320 allocated bytes** reclaimed (about 811 MiB), including
-terminal raw copies, counterfactual executables, two owned Windows stages and
-557 CMake objects/static archives. All 177 products, independent original
-references, sources and failed/inconclusive observations remain. Raw successors
-are losslessly compressed and verified; CMake recreates absent intermediates.
 
 After both final CIs pass, a source-backed cache journal retires 1015
 generated Python caches, reclaims another 17,125,376 allocated bytes,
 and verifies 1015 unchanged Python source hashes. Measured batch
-total is 867,741,696 bytes (827.5 MiB). Receipt:
-root `.analysis/cleanup/pmd-rhythm-post-ci-caches-20261010.json`.
+total is 867,741,696 bytes (827.5 MiB).
+root .

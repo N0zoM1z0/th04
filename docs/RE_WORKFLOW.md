@@ -56,18 +56,19 @@ when an exact claim is explicitly in scope; preserve deferred nonexact states.
 
 ## Finish
 
-Clean up unused build products and completed probe outputs after each bounded
-batch, including intermediate checkpoints during long sessions. Delete disposable
-files; deduplicate or compress replay inputs that evidence still requires, verify
-their recovery before removing the originals, and report net space released.
-Keep files needed by active jobs and retained replay dependencies until their
-consumers finish. Use a fresh build directory after retiring cached objects.
+Run the affected comparison or component checks. Documentation needs a diff
+review; tool changes need relevant positive and negative cases and a small real
+smoke. Exact source changes require complete owned bytes and relocations.
 
 ```sh
 python3 scripts/ci.py
 git diff --check
 ```
 
-Update the concise handoff when the verified runtime frontier changes. Reusable
-findings belong in the evidence/knowledge ledgers; chronological detail is in
-Git and private receipts. Commit messages use `gpt-6.1-sol: ...`.
+Delete disposable output after the checks. Keep current inputs, source, useful
+conclusions and any genuinely difficult unresolved compiler context. Do not
+archive old output just because a document mentions it. Follow
+[the retention policy](ANALYSIS_RETENTION.md).
+
+Update the concise handoff when facts, blockers or next steps change. Use
+natural Markdown for useful knowledge. Commit messages use `gpt-6.1-sol: ...`.

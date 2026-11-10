@@ -102,10 +102,3 @@ waits, complete logo/startup, or accept complete natural Linux/Windows routes.
 The Linux GUI hash remains unchanged from v1339; Windows relinks are current
 bounded CPU products. No GUI launch/publication occurs. Target provenance
 remains `candidate-local-attested` and historical DOS acceptance is unchanged.
-
-Full cleanup readback checks 2426 protected hashes and reclaims
-646,873,088 net allocated bytes (616.9 MiB), with all 180 current
-products preserved. Terminal raw/probe outputs have verified lossless
-successors; native objects/static archives regenerate from source.
-`cleanup-before.json` records every identity, successor and Windows-stage
-restore command. Current source and independent references remain live.

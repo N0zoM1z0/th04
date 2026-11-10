@@ -630,4 +630,4 @@ Every member SHA reads back before/after retirement (net4,526,080 allocated B);
 restore under a fresh private directory for failed-trace replay. The failed
 verdict remains failed. Both final CIs/diff checks pass; root includes live
 Ghidra replay/mutations. Post-CI caches retire only with source/hash readback;
-root `.analysis/cleanup/window-extra-final-caches-readback-v1357.json`.
+root .

@@ -20,12 +20,6 @@ v757 performs two cold diagnostic rebuilds. Both reproduce the complete 0xB0
 linked producer, the current OP program image and MAP, and all 804 ordered MZ
 relocations.
 
-Receipt:
-.analysis/reconstruction/receipt-archive/v757-op-egcrect-boundaries-receipt.json
-
-Receipt SHA-256:
-b4a66e90d66cdb0a8d4da9eff384b342cbe4462ae103711053733fe531ac613d
-
 No decoded-function exactness is granted. The current TH04 implementation
 explicitly uses inline ASM, Borland pseudo-registers, and codestring NOPs to
 force target code shape. The receipt therefore labels its source credit

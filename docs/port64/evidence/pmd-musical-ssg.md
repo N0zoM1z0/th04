@@ -129,7 +129,3 @@ physical clocks, frontend capability and complete startup remain. No audible
 sample, physical timing, complete natural ordinary/Extra route or dense Lunatic
 performance acceptance follows from this component result. Continue with those
 owners while keeping the complete original task active.
-
-Final readback verifies1855protected hashes. Pre-mutation cleanup journals
-measure1,311,682,560allocated bytes reclaimed; all168current products
-remain. Both repository final CIs and `git diff --check` pass.

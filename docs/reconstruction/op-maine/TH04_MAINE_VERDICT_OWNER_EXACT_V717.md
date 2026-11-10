@@ -34,21 +34,11 @@ th04/vb.cpp translation unit. Two independent TC86/TLINK cold rounds reproduce:
 - the full linked MAINE program image;
 - all 559 ordered MZ relocation entries.
 
-Focused receipt:
-.analysis/reconstruction/receipt-archive/v717-maine-verdict-owner-focused-receipt.json
-
-Focused receipt SHA-256:
-ce644a7687132c35a61ff0c3d2eef8adfd67b047f0f3a0e7cec4b9c053e625a0
 
 The in-memory v718 pre-acceptance aggregate passed 56/56 raw-zero slices.
 After both functions were entered into the checked-in acceptance ledger, v719
 replayed the canonical ledger and again passed 56/56.
 
-Canonical aggregate receipt:
-.analysis/reconstruction/receipt-archive/v719-maine-verdict-owner-canonical-receipt.json
-
-Canonical aggregate receipt SHA-256:
-6b877fd1b1512b12f0bfe72ea2d0a5d8dc193443fdb20ef6e933f67d355414f7
 
 This establishes decoded-function exactness for both functions and compiler
 auxiliary ownership for the 0x17 bytes between them. It does not claim

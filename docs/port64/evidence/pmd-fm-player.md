@@ -135,7 +135,3 @@ identities afterward. Shared captures are immutable; use fresh replay paths.
 Next finish the remaining musical chip owners and synthesis while muted,
 then physical clocks/frontend capability/startup and complete ordinary/Extra
 Linux/Windows routes, saves/restarts and dense Lunatic timing/performance.
-
-Final whole-output readback verifies1569protected hashes; persisted interim/
-terminal cleanup journals measure1,401,487,360allocated bytes reclaimed (1336.6MiB).
-Both repository final CIs and `git diff --check` pass.

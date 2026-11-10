@@ -129,25 +129,6 @@ port polling; recover its installed-owner branch in a separate cold replay.
 Other native scene wait adapters, CPU/loading/ISR costs, complete pictures,
 Boss/death/process, second-emulator and Windows acceptance remain open.
 
-Review branch: review/native-gdc-poll-v1407. Replay index:
-.analysis/reconstruction/probes/native-gdc-poll-v1407/; native receipts:
-.analysis/port64/native-gdc-poll-v1407-v2/. Original extent SHA-256:
-989ba1d57373892c48f460097161f08d5391388535059d007327fda0f4e45b20.
-Focused commands are in validate.py/focused.json; original/native reader:
-port64/verify_gdc_poll.py. Recovery reader: verify_retention.py
-(--restore/--prefix for owned archived paths). Frozen v1404's736-file closure
-and3179-path/1489-blob archive pass without modifying old receipts.
-
-Verified archive retirement reclaims502.05 MiB net from this batch's
-successful/failed build intermediates, nonselected programs and duplicate
-capture outputs. Full path/hash/size/mode/nsmtime, CRC, every blob and protected
-proof are checked before deletion. Source freezes, selected programs, complete
-original controls/native vectors and failure evidence remain live.
-Both isolated full CI gates pass (root451/native345), with ledgers and diff checks.
-Pinned private targets/calibration pass; isolated private Ghidra/JDK checks skip,
-while original OP database was actually attested in root before recovery.
-Source-backed owned post-CI caches reclaim another16.35 MiB; this batch
-reclaims518.40 MiB net, disjoint from prior frozen cleanup.
 
 Goal active; CPU1/nice19 serial and muted; no Windows GUI/focus/keys/audio.
 
@@ -174,13 +155,6 @@ hashes and passes 15,988 original selected-state boundaries. GNU/UBSan output
 sets agree. This remains scoped runtime agreement, with no exact, complete
 picture, physical CPU/IRQ timing or Windows acceptance claim.
 
-Private replay: `.analysis/reconstruction/probes/native-wait-text-v1412/`;
-producer: `.analysis/worktrees/native-wait-text-v1412/.analysis/port64/native-wait-text-v1412/`.
-`focused.json` records commands. `verify_retention.py --restore --prefix`
-restores owned archived paths; retirement reclaims 508.31 MiB net.
-Source, selected programs, full comparison streams, receipts and the real
-predecessor remain. Continue bounded native scene wait/hardware recovery;
-broader Boss/death/process routes, complete pictures and Windows remain open.
 
 ## Native MAINE delay and black-fade boundaries (v1413)
 
@@ -289,14 +263,6 @@ signed-threshold cases. Existing wait consumers retain 32 original controls,
 startup/four-Demo/fresh-OP routes retain all 129 prior hashes per profile and
 15,988 original selected-state boundaries each; GNU/UBSan outputs agree.
 
-Replay: `.analysis/reconstruction/probes/native-counter-delay-v1417/`;
-producer: `.analysis/worktrees/native-counter-delay-v1417/.analysis/port64/native-counter-delay-v1417/`.
-`focused.json`, build receipts and `verify_counter_delay.py` record the gates.
-`verify_retention.py --restore --prefix` restores owned archived paths.
-Verified retirement reclaims 506.12 MiB net. Source freeze, full original/
-integer projections, selected programs and compiled mutations remain.
-Historical exact remains 661/663; actual elapsed consumers, complete pictures,
-broader Boss/death/process, native LCD mapping and Windows remain open.
 
 ## Native elapsed MAINE consumers (v1423)
 
@@ -397,14 +363,6 @@ one-ms input. The first development build had that same API misuse; its
 program, source, failed partial trace and corrected replay remain separately
 identified. until_count requires the absolute threshold2. Native CI345 passes.
 
-Replay: `.analysis/reconstruction/probes/native-staff-elapsed-v1424/`;
-producer: `.analysis/worktrees/native-staff-elapsed-v1424/.analysis/port64/native-staff-elapsed-v1424/`.
-`verify_staff_elapsed.py` supplies original controls and full time/counter/
-request comparisons; `focused.py` records actual route/page commands.
-Verified content/SHA/CRC/metadata/temp-restore retirement releases908.95 MiB
-net. Sourcefreeze, all programs, full control transcripts and failures remain.
-`verify_retention.py --restore --prefix` restores owned archived paths. The
-source target remains candidate-local-attested; this is scoped runtime agreement.
 
 ## Native elapsed Cutscene/Ending script (v1425)
 
@@ -444,17 +402,6 @@ each subject. Unmodified compiled control passes. Native CI345 and tracking
 pass. The initial malformed vector schema/configuration attempts are retained;
 they were setup failures, not source/runtime acceptance.
 
-Remaining MAIN fade, registration and other wait owners, real active-PMD
-paired scene timing, physical CPU/I/O/scanout, broader gameplay and Windows
-remain open. Historical exact stays661/663; targets are candidate-local-attested.
-Replay: `.analysis/reconstruction/probes/native-cutscene-elapsed-v1425/`;
-producer: `.analysis/worktrees/native-cutscene-elapsed-v1425/.analysis/port64/native-cutscene-elapsed-v1425/`.
-`verify_cutscene_elapsed.py` records full original/native time/request/key/
-counter streams; `focused.py` records actual routes and image comparisons.
-Verified path/hash/size/mode/nsmtime/content/CRC/temp-restore retirement saves
-1619.52 MiB net. Full transcript aliases and captures are recoverable via
-`verify_retention.py --restore --prefix`; source, programs, vectors and summaries
-remain live. The goal stays active.
 
 ## Native elapsed MAIN good/bad/Extra exit fade (v1426)
 
@@ -553,14 +500,6 @@ completed IRQ/verdict waits; elapsed handoff behavior remains retained. Original
 requires identical Original AST, edge helper, targets, vectors and full trace
 hashes; it never converts a failed native result into acceptance.
 
-Replay: `.analysis/reconstruction/probes/native-gameover-elapsed-v1427/`;
-producer: `.analysis/worktrees/native-gameover-elapsed-v1427/.analysis/port64/native-gameover-elapsed-v1427-v2/`.
-`verify_gameover_elapsed.py` records complete original/native E/K/counter/time;
-`verify_gameover_join.py` checks actual suspension/host writes and full displays.
-Verified journal/SHA/CRC/content/mode/nsmtime/temp-restore retirement releases
-1768.58 MiB net. Source/all programs/fixtures/receipts/failures remain retained;
-raw transcript aliases and owned captures restore via `verify_retention.py
---restore --prefix`. Large display streams are already gzip with full hashes.
 
 Registration proper and other wait owners, real active-PMD paired timing,
 physical CPU/I/O/scanout, broader gameplay and Windows remain open. Continue
@@ -616,15 +555,6 @@ Second development passed272 controls but the failed Score owner threw on its
 next elapsed admission; the new frozen failure matches the retained native
 no-retry policy. All failed source/program/trace/journals remain distinct.
 
-Replay: `.analysis/reconstruction/probes/native-registration-elapsed-v1428/`;
-producer: `.analysis/worktrees/native-registration-elapsed-v1428/.analysis/port64/native-registration-elapsed-v1428/`.
-`verify_registration_elapsed.py` owns full original/candidate streams;
-`focused.py` owns actual parent routes and image commands. Verified journal/
-SHA/CRC/content/mode/nsmtime/temp-restore retirement saves2435.09 MiB net,
-plus42.04 MiB from three preliminary caches. Source/all programs/
-fixtures/receipts/failures remain live; archived raw aliases/captures restore
-with `verify_retention.py --restore --prefix`. Stage reader is under
-`native-registration-stage-retention-v1428`. Only owned intermediates retired.
 
 Other wait owners, malformed-score unsafe graphics, real active-PMD paired
 timing, physical CPU/I/O/scanout, broader gameplay and Windows remain open.
@@ -658,16 +588,3 @@ Initial producer548/e1668317 passed the first load but its callback compared
 Unicorn memory-hook linear EIP as segment IP at load3333 and rejected its own
 control. Failed source/programs/logs remain distinct; current Oracle normalizes
 EIP against the recorded load segment and traps callback errors explicitly.
-
-Replay: `.analysis/reconstruction/probes/native-numeral-slot-v1429/`;
-producer: `.analysis/worktrees/native-numeral-slot-v1429/.analysis/port64/native-numeral-slot-v1429-v2/`.
-`verify_numeral_slots.py` executes original row/SUPER lookups; `pixels.py`
-owns the new actual Renderer image controls. Verified archive/content/CRC/
-mode/nsmtime/temp-restore retirement saves525.26 MiB net;
-all source/programs/receipts/fixtures remain live, retired cache/captures and
-stream aliases restore with `verify_retention.py --restore --prefix`.
-The reader also verifies/restores `supplement-retention` registration captures
-against their original protected hashes.
-Continue source recovery and migration. Unsafe unowned score RAM, other waits,
-active-PMD paired timing, physical scanout, broader gameplay and Windows remain
-open. The full goal stays active.

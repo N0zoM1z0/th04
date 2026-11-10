@@ -114,10 +114,6 @@ under `.analysis/port64/beeper-v1326/`.
 
 ## Retention
 
-The v1326 terminal-output cleanup shares44 duplicates after full bytes/hashes,
-retires one source-only mutant executable and reclaims88,682,496 allocated
-bytes (about84.6MiB).4,197 protected hashes remain unchanged at that boundary;
-sources, inputs, independent references and all144 current programs remain.
 
 Completed original/native streams and PCM references share immutable hardlinks.
 Use fresh output paths; do not overwrite either alias. The source-only mutant

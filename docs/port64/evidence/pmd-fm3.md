@@ -162,8 +162,3 @@ outputs before retirement. Terminal storage cleanup retains necessary inputs,
 receipts and recovery archives; archive member paths restore into the roots
 recorded by retention journals. Current sources/programs/compiler/cache/link
 identities are protected. No original target or user DOS package is deleted.
-
-Final verified retention retires3,189 files across15 archive groups and
-regenerable intermediates.1,391 protected hashes remain unchanged; net
-764,350,464 allocated bytes (728.94 MiB) are reclaimed. `retention.json` and
-`retention-journal.json` bind members, roots, costs and recovery.

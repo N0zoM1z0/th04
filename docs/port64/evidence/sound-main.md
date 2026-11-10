@@ -89,13 +89,3 @@ control histories, mutant, source/product profiles and readback/recovery.
 per Linux host. Relative to v1326, 44 GNU and 40 UBSan programs retain their
 bytes; four/eight affected programs change. All 48 previous MinGW products
 relink; build/AMD64 checks do not establish actual Windows execution.
-
-Owned terminal cleanup shares 27 full-byte/hash-equal PCM duplicates and
-retires six failed-fixture PCM files plus one rejected mutant executable.
-It reclaims 38,944,768 allocated bytes (about 37.1 MiB); 4232 protected hashes
-are unchanged at that boundary. Source, original references, inputs and all
-current products remain. Earlier cleanup numbers are separate observations.
-Windows interop still fails before PowerShell with WSL vsock; Git staging
-fails on the read-only shared worktree index. Complete pending public-source
-recovery is retained; no commit/push, current Windows run or DOS exact
-promotion is claimed.

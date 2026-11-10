@@ -1,5 +1,51 @@
 # TH04 reconstruction agent rules
 
+## Highest priority: lightweight exact reconstruction and useful knowledge
+
+These are the user's current workflow requirements. They override older
+instructions that mandate broad CI, repeated preflights, document/source-pin
+refreshes, per-checkpoint audits or extra workflow machinery. Preserve the
+actual exactness, target identity, natural-source and state-isolation rules.
+
+- Prioritize exact reconstruction and reusable knowledge. Use the shortest
+  useful loop: inspect relevant state, analyze/edit, compile and compare the
+  affected scope, retain useful learning, and create a coherent checkpoint.
+- Use existing repository scripts and composable Bash. Add only the smallest
+  change needed for an observed problem. Do not introduce a framework, schema,
+  registry, state machine, generalized validator, test family or reporting
+  process merely to make a local reconstruction task look more engineered.
+- Documentation, knowledge and handoff edits require no compiler, analyzer,
+  full CI, cold replay or receipt refresh. Inspect the diff. Check syntax only
+  for machine-readable inputs actually changed.
+- Source changes need the complete affected exact comparison, including its
+  owned extents and relocations. Recheck known consumers of changed shared
+  inputs. Tool changes need relevant positive/negative cases and a bounded
+  real smoke. Run a broad suite only for an explicit request or a demonstrated
+  impact that cannot be narrowed; state that reason first.
+- Do not add tests or live freshness gates for prose hashes, prompt wording,
+  progress totals, handoff source-SHA tables or ordinary source spelling.
+  Bind exact evidence to executable inputs and relevant verification settings.
+  Keep Git metadata as provenance. A document genuinely consumed by a build
+  remains a build input. Never edit historical receipts to manufacture a pass.
+- Plain Markdown is sufficient for knowledge: record the finding, applicable
+  target/compiler/scope, evidence links, useful failed attempts and open
+  questions. No mandatory JSON conversion, promotion workflow or test per note.
+  Search relevant sections; do not read an entire large knowledge journal.
+- Write documentation and knowledge in natural, fluent English. Lead with the
+  concrete finding and connect the evidence and next action clearly. Remove
+  filler, circular restatements, repeated conclusions and unnecessary jargon.
+  Do not add defensive-claim boilerplate. State a real uncertainty or scope
+  limit once when it changes a decision; do not repeat disclaimers about what
+  a note does not prove, certify or authorize. Prefer a small useful note over
+  an exhaustive report that is difficult to read.
+- Keep handoff focused on current work, evidence references, blockers and the
+  next useful action. Generate progress from canonical ledgers; avoid manual
+  duplicate counts, recurring full reports and unrelated documentation chores.
+- Preserve dirty/untracked work, targets, useful evidence, game-specific Wine
+  prefixes and analyzer projects. Exactness still requires a complete strict
+  comparison; knowledge and successful commands alone confer no exact credit.
+
+
 This repository targets the original Japanese PC-98 TH04 executables described
 in `config/targets.toml`.  Local files from a translation, modified disk image,
 different press, or emulator bundle must not silently replace them.
@@ -139,20 +185,41 @@ global layouts change, invalidate and cold-replay every affected accepted unit.
   for a distinct ownership decision, reusable negative result, or replay
   surface.
 
-## Bounded retention and build scope
+## Minimal retention and checks
 
-- The user authorized permanent retirement of unnecessary historical experiments
-  on 2026-10-19. Keep the current handoff dependencies and selected independent
-  baselines/counterexamples. Historical instructions to keep every inherited
-  provider or replay every earlier phase are superseded by this scoped policy.
-- Keep canonical targets/assets, user saves, active toolchains/databases, current
-  maintained source and necessary build/replay inputs. Record retired payloads
-  explicitly; historical receipts remain historical observations, not a promise
-  that every old experiment is still replayable. See docs/ANALYSIS_RETENTION.md.
-- Build only affected translation units/programs and run relevant comparisons.
-  Do not automatically rebuild/relink all native test programs, replay every old
-  phase, or create another whole-history archive. Broaden checks for actual
-  shared ABI/layout dependencies; exact promotion still requires its full gates.
-- After an experiment, remove superseded binaries, regenerable caches and
-  redundant exploration captures. Retain concise commands, identities, results
-  and the minimal independent evidence needed for the retained claim.
+Keep necessary original inputs, active analyzer projects, current source,
+exact-match ledgers and complete rebuild/comparison scripts. Keep locked tool
+binaries and the headers, libraries and runtime dependencies actually in use.
+Retain useful conclusions, current blockers and failed ideas briefly. Keep an
+unresolved compiler context only if recreating it would be genuinely difficult.
+A file's age, historical reference or old successful test is no retention reason.
+
+Delete superseded builds, duplicate evidence, historical archives, unused
+prefixes and cleanup reports. Remove obsolete document references too. Do not
+add a cleanup framework, permanent inventory, audit report or another archive.
+Do not overwrite canonical objects or existing receipts while experimenting.
+
+Share matching Factory tools, isolate writable state, and distinguish host
+from target architecture. Temporarily move uncertain components aside, test
+only the affected compile/link/runtime/resource paths, and delete the temporary
+copy after success. Restore on failure and compare against the original
+environment. Moving the only installation does not free disk space.
+
+Default CI must be fast and work in a clean checkout without private programs,
+toolchains or reference checkouts. Check machine syntax, ledger consistency,
+build source paths and accidental private files over the complete current tree.
+Use the full PR/push range for whitespace checks. Select comparator and other
+specialist tests by the change. Never regenerate prose or progress in CI.
+Exact source changes still require complete owned bytes and relocations and
+all affected consumers; cleanup and prose do not require a whole-history replay.
+See docs/ANALYSIS_RETENTION.md for the concise policy.
+
+## Shared Factory runtime
+
+Follow [the shared tools instructions](docs/SHARED_TOOLS.md). Ghidra/JDK and
+Wine executables are shared through Factory; repository scripts also work
+without MCP. Use `scripts/shared_runtime.py` and the existing compiler/analysis
+frontends. Keep this game's prefix, analyzer project, Java home/cache, target
+and compiler profile isolated. Do not install duplicate tools or inherit
+another game's `WINEPREFIX`. This shared-runtime procedure supersedes older
+per-repository installation instructions; pinned versions/hashes still apply.

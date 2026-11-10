@@ -69,9 +69,8 @@ Both rounds reproduce:
 - the accepted OP EXE/MAP;
 - all 804 ordered MZ relocations.
 
-Archived focused receipt:
+Archived focused
 
-.analysis/reconstruction/receipt-archive/v826-op-nopoly-hybrid-focused-receipt.json
 
 SHA-256:
 
@@ -83,9 +82,8 @@ The canonical current-ledger replay contains 90 OP accepted functions. All 90
 have raw_difference_count = 0, including nopoly_B_put, the v825 EGC outer
 copier, and the v824 EGC helper.
 
-Archived canonical receipt:
+Archived canonical
 
-.analysis/reconstruction/receipt-archive/v826-op-nopoly-canonical-receipt.json
 
 SHA-256:
 

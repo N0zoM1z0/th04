@@ -106,21 +106,12 @@ and after. It does not enable an audio backend. Prior v1332's nine muted
 frontend/physical-save controls retain their own source/product identities;
 v1333 does not claim those launches were rerun on its relinked Windows GUI.
 
-Private `.analysis/port64/pmd-fm-v1333/` retains distinct original producer
-and terminal consumer source archives, compiler/cache/link/input/product
-profiles, unchanged-reference comparisons, negatives and actual Windows
-receipts. Terminal duplicate outputs share immutable files only after full
-byte/hash comparison. Failed traces are compressed with exact decompressed
-readback; mutant programs and the owned NTFS stage are retired. Replaying
-requires fresh output directories. Readback shares235 identical files and
-reclaims325,083,136 allocated bytes (about310MiB); all730 protected hashes
-remain unchanged. DOS exactness acceptance is unchanged.
 
 Both final repository CIs and `git diff --check` pass. Afterwards, retiring
 1,015 source-backed CPython caches in root/native public script/test/port64
 trees reclaims another17,125,376 bytes without changing1,130 Python source
 hashes. The root cleanup receipt is
-`.analysis/cleanup/pmd-fm-source-backed-caches-20261009.json`; combined terminal
+; combined terminal
 reclamation is342,208,512 bytes (about326MiB). Current CMake caches and programs
 remain live.
 

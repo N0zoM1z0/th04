@@ -33,21 +33,11 @@ Focused v714 performs two independent TC86/TLINK cold rounds. Both reproduce:
 - the full linked MAINE program image;
 - all 559 ordered MZ relocation entries.
 
-Focused receipt:
-.analysis/reconstruction/receipt-archive/v714-maine-sub-b9f2-focused-receipt.json
-
-Focused receipt SHA-256:
-0ab85b35d5b53c64021b0d99473ef337e720ebf8512b418bb3e39ca98d5628c2
 
 The in-memory v715 pre-acceptance aggregate passed 54/54 raw-zero slices.
 After the B9F2 row was written into the checked-in acceptance ledger, v716
 replayed the canonical ledger from disk and again passed 54/54.
 
-Canonical aggregate receipt:
-.analysis/reconstruction/receipt-archive/v716-maine-sub-b9f2-canonical-receipt.json
-
-Canonical aggregate receipt SHA-256:
-e0ae500e71e305cd0d5b2fa902d09c884cf59afdc81dd3ce75874cb21a9bada3
 
 This establishes decoded-function exactness and compiler auxiliary ownership. It
 does not claim packed-file exactness, whole-MAINE exactness, or literal

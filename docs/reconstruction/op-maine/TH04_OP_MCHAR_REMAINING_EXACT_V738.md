@@ -25,21 +25,11 @@ Two independent v738 TC86/TLINK cold rounds reproduce:
 - the full linked OP program image;
 - all 804 ordered MZ relocation entries.
 
-Focused receipt:
-.analysis/reconstruction/receipt-archive/v738-op-mchar-remaining-focused-receipt.json
-
-Focused receipt SHA-256:
-9c9aa2898dd34851158e363fbd1f68e5c466b1b96a8a930e4416e10d1ec38ddd
 
 The in-memory v739 pre-acceptance aggregate passed 71/71 OP decoded slices.
 After the five rows were written to the checked-in acceptance ledger, canonical
 v740 replayed that ledger and again passed 71/71.
 
-Canonical aggregate receipt:
-.analysis/reconstruction/receipt-archive/v740-op-mchar-remaining-canonical-receipt.json
-
-Canonical aggregate receipt SHA-256:
-61f06b7a708ad3f205d844a50effc3c3d4d0fbc8b9378453b3aaf7735afdb05b
 
 This establishes decoded-function exactness for these five functions. It does
 not claim packed-file or whole-OP exactness.

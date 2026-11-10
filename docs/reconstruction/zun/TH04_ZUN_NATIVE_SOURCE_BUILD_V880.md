@@ -39,8 +39,8 @@ reaches the demo gameplay screen with the original OP/MAIN/MAINE files still
 on the image. Boot markers pass and the candidate ZUN MZ has no relocations.
 This is runtime observation for the launcher path (including GAME.BAT's
 `-M/-I/-S/-O` calls), not byte equality or proof of every launcher option.
-Run receipt:
-`.analysis/runtime/candidates/native-zun-v881-a-run45-20260928/receipt.json`,
+Run
+,
 SHA-256 `64c156693a274efe1f706e9d179ada1c9ccec5fb495007d36f99d6c0de48f42b`.
 
 To replay the resident alone:

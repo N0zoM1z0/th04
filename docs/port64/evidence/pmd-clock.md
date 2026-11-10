@@ -130,11 +130,6 @@ terminal-stage archive/readback journal subsequently reclaims 195,694,592
 allocated bytes. Total 608,976,896 bytes (580.8 MiB) across disjoint journals;
 the stage restores from `windows-first/stage.tar.gz`.
 
-`final-retention.json` checks all current products/inputs and original outputs
-after all disjoint cleanup journals. Final total: **1,018,875,904 allocated bytes
-(971.7 MiB)**, including terminal probes, both Windows stages and mapped
-post-CI caches. Probe gzip successors preserve executable restore permissions;
-all prior receipts keep their original identities.
 
 PCM FM/SSG/rhythm synthesis, other required driver owners, actual resident
 frontend lifetime, startup/measure waits and complete natural Linux/Windows

@@ -17,17 +17,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Check out pinned source-routing reference
-        uses: actions/checkout@v4
-        with:
-          repository: nmlgc/ReC98
-          ref: b6ba5b0a529edbb31efdf8c0e939263804f8ee47
-          path: _reference/ReC98
-          persist-credentials: false
-      - name: Install public validation dependencies
-        run: python -m pip install --disable-pip-version-check -r requirements-ci.txt
-      - name: Run public target-independent validation
+      - name: Check repository
+        env:
+          CI_BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: python3 scripts/ci.py

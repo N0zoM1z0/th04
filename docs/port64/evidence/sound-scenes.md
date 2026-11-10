@@ -94,12 +94,6 @@ Windows execution fails before PowerShell with WSL `UtilBindVsockAnyPort`.
 Shared Git metadata rejects staging with a read-only index; complete pending
 public-source recovery is retained, with planned English commits.
 
-Both checkouts finish with preflight, `scripts/ci.py` and `git diff --check`
-passing. The terminal output cleanup shares 6,357 identical files after full
-byte/hash checks and retires the rejected mutant program: 1,508,634,624
-allocated bytes reclaimed, 13,175 protected hashes unchanged at that boundary.
-After CI, 1,013 source-backed Python caches reclaim another 17,068,032 bytes.
-Current caches/products and unique replay evidence remain.
 
 From the native checkout, use fresh output directories:
 

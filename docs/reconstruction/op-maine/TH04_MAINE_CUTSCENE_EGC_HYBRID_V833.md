@@ -63,9 +63,6 @@ Two isolated TC4.02/TLINK MAINE rounds reproduce:
 - retained MAINE EXE/MAP identity;
 - all 559 ordered MZ relocations.
 
-Focused receipt:
-`.analysis/reconstruction/receipt-archive/v833-maine-cutscene-egc-focused-receipt.json`
-
 SHA-256:
 `c9caccae1a5ab038796bbf42b8bd55e5cebcaae3270def2a0ede05560ab3965a`
 
@@ -73,9 +70,6 @@ SHA-256:
 
 Canonical replay checks **70 unique current MAINE accepted slices**, all with
 `raw_difference_count = 0`.
-
-Canonical receipt:
-`.analysis/reconstruction/receipt-archive/v833-maine-cutscene-egc-canonical-receipt.json`
 
 SHA-256:
 `f182faddf025dfee948ffde86c9c742715182127de4ae06401c1e37c6458e6b9`

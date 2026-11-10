@@ -73,8 +73,8 @@ The standalone decoder has 18 legal OMF fixups and the encoder 12. After
 masking only those relocation words, both have zero non-fixup differences.
 Both linked function slices are raw-zero in both cold rounds.
 
-Archived focused receipt:
-`.analysis/reconstruction/receipt-archive/v821-op-score-codecs-focused-receipt.json`
+Archived focused
+
 
 SHA-256:
 `d2d1c802a0d5393c04266714049532182251d3dd88044561d4a549ab83a25fba`
@@ -84,8 +84,8 @@ SHA-256:
 The current-ledger canonical replay checks all 87 accepted OP decoded functions,
 not just the SCORE producer. All 87 are raw-zero, including both v821 codecs.
 
-Archived canonical receipt:
-`.analysis/reconstruction/receipt-archive/v821-op-score-codecs-canonical-receipt.json`
+Archived canonical
+
 
 SHA-256:
 `99e8403129f6ba3b13c6801523bd344bcb745d84b55daeea679b024e64096dfd`

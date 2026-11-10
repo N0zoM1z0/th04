@@ -68,10 +68,6 @@ starting fixture, TH08 read-only workflow and fail-closed comparator work.
 All dated live snapshots below remain historical observations; their owned
 jobs have finished. No Windows host GUI/key/focus or physical audio launch.
 
-Final root/native handoff CIs pass; root live Ghidra replay/mutations pass.
-Public-source cache cleanup verifies1,019 absent caches and516 protected hashes
-in two complete readbacks, net16,543,744 allocated B reclaimed. No build/game
-launch or user save/package change; root retention journal indexes recovery.
 
 ## Clear-mask correction and natural Lunatic preparation (v1358)
 
@@ -131,7 +127,7 @@ Both CIs pass (root includes live Ghidra replay/mutations), as does diff check.
 No new build/program is generated; all 489 consumer inputs are fully archived
 and read back, with compiled inputs equal the old producer. Source-backed
 post-CI caches retire with full source/hash readback under root
-`.analysis/cleanup/lunatic-source-caches-readback-v1358.json`; live outputs are excluded.
+; live outputs are excluded.
 
 ## Complete native Normal window routes and trace controls (v1357; narrowed by v1358)
 
@@ -347,16 +343,6 @@ xvfb-run -a -s '-screen 0 1400x900x24' python3 port64/verify_window_continue.py 
   --output .analysis/port64/window-continue-NEW
 ```
 
-v1355 scoped cleanup keeps all 204 programs, producer/consumer source archives,
-compiler/CMake metadata, traces, physical files, captures and failed attempts.
-It retires 1190 regenerable build files / 70 completed contract-stage files after
-two full recovery archives / 144 members read back, net 596836352 allocated bytes.
-An independent replay verifies 2847 protected hashes and all 1260 absent files.
-The three earlier desktop stages retire 20 files, net 35110912 bytes; the terminal
-GUI stage and archived failed consumer materialization retire 494 files,
-net 22450176 bytes. Immutable capture sharing keeps 324 complete BMP/PCM paths
-and hashes, net 210509824 bytes. Counts subtract their journals/archives but
-exclude final receipt size. No original input, accepted program or save deleted.
 
 ## Previous scheduling frontier (v1354)
 
@@ -472,7 +458,7 @@ Every member SHA reads back before/after retirement (net4,526,080 allocated B);
 restore under a fresh private directory for failed-trace replay. The failed
 verdict remains failed. Both final CIs/diff checks pass; root includes live
 Ghidra replay/mutations. Post-CI caches retire only with source/hash readback;
-root `.analysis/cleanup/window-extra-final-caches-readback-v1357.json`.
+root .
 
 ## Completed natural Lunatic and density observations (v1359)
 
@@ -555,7 +541,7 @@ launch/CLI controls/active-job/source vectors are under
 Both final CIs pass; root includes live Ghidra and mutation replay. Source/CLI/
 immutable-prefix independent readbacks pass. Source-backed public caches retire
 955 files/net15,478,784 allocated B; active port64 helpers/outputs stay excluded.
-See root `.analysis/cleanup/slowdown-source-caches-readback-v1360.json`.
+See root .
 
 ## Independent natural outcome/slowdown reader (v1361)
 
@@ -663,10 +649,6 @@ Every complete clear/physical-file/nine-partition/restart/deadline/density gate
 remains required; this live prefix is inconclusive. Keep pinned helpers unchanged.
 All launches muted, zero audio opens; no Windows GUI/host keys.
 
-Both CIs pass (root live Ghidra/mutations); ledger and diff checks pass. Root
-`.analysis/cleanup/bomb-input-source-caches-readback-v1362.json` verifies955
-public caches/net15,478,784 allocated B retired; source/protected hashes and
-live /proc identities retained, active port64 helpers/outputs excluded.
 
 The v1363 same-job immutable live snapshot has49,189R/stages0..3 reached;
 every MAIN rank3/character0/shot0/program1/generation2/credit0 passes, noGameOver

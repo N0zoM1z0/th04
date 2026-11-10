@@ -44,12 +44,3 @@ SDL Esc requeue failure remain distinct. Compiler namespace failures and all
 source/program/trace evidence are retained. Prior UBSan Normal-clear acceptance
 stays revoked:0x19 is an unplayed sentinel after a failed survival route; this
 batch does not retry or promote that full-route claim.
-
-Replay: `.analysis/reconstruction/probes/native-main-pause-v1431/`;
-producer: `.analysis/worktrees/native-main-pause-v1431/.analysis/port64/native-main-pause-v1431-v5/`.
-`verify_main_pause.py` owns original controls; `window.py` owns private SDL keys.
-Content/CRC/mode/nsmtime/temp-restore retirement saves256.67 MiB net.
-Source/all programs/fixtures/receipts/failures remain live or losslessly recover
-with `verify_retention.py --restore --prefix`. Full goal stays active; broader
-Boss/death/process parity, unowned score RAM, other waits, physical scanout and
-Windows remain open. Historical exact stays661/663.

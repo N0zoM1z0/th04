@@ -42,8 +42,8 @@ so the 0/6 play-character resource branch—and therefore the new conversion
 call—was not exercised. The clean v1136 run has the same bounded result
 (`MAIN.BIN=08`, `EMS.BIN=1D`) and a 45-second frame receipt. The comparison
 receipts are retained under
-`.analysis/runtime/candidates/native-main-v1130-manual-20260930/` and
-`.analysis/runtime/candidates/native-main-v1136-20260930/`.
+ and
+.
 
 This leaves two separate blockers: establish the correct segment/order owner
 for the far conversion routine without perturbing the surrounding runtime,

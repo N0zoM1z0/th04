@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import hashlib
+import io
+import json
+from contextlib import redirect_stdout
 import sys
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -12,9 +15,39 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from lib.toolchain import ToolchainError, file_set_identity, tree_identity
 from attest_toolchain import gated_execution, probe_workspace_name, write_probe_inputs
+import attest_toolchain
 
 
 class ToolchainIdentityTests(unittest.TestCase):
+    def test_installed_identity_does_not_require_installer_but_explicit_acquisition_does(self):
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "compiler").write_bytes(b"locked test compiler")
+            digest = hashlib.sha256((root / "compiler").read_bytes()).hexdigest()
+            manifest = root / "toolchain.toml"
+            manifest.write_text(
+                '[[surfaces]]\nid = "active-tcc"\nkind = "file"\n'
+                f'path = "compiler"\nsha256 = "{digest}"\nrequired = true\n'
+                '[[surfaces]]\nid = "tc40j-media"\nkind = "file"\n'
+                f'path = "absent-installer"\nsha256 = "{digest}"\nrequired = true\n'
+            )
+            for extra, expected in [([], 0), (["--surface", "tc40j-media"], 1)]:
+                with self.subTest(extra=extra), patch.object(attest_toolchain, "ROOT", root), \
+                     patch.object(attest_toolchain, "CONFIG", manifest), \
+                     patch.object(sys, "argv", ["attest_toolchain.py", "--identity-only",
+                                               "--output", str(root / "result.json"), *extra]), \
+                     redirect_stdout(io.StringIO()):
+                    self.assertEqual(attest_toolchain.main(), expected)
+            (root / "compiler").write_bytes(b"wrong compiler")
+            with patch.object(attest_toolchain, "ROOT", root), \
+                 patch.object(attest_toolchain, "CONFIG", manifest), \
+                 patch.object(sys, "argv", ["attest_toolchain.py", "--identity-only",
+                                           "--output", str(root / "result.json")]), \
+                 redirect_stdout(io.StringIO()):
+                self.assertEqual(attest_toolchain.main(), 1)
+            report = json.loads((root / "result.json").read_text())
+            self.assertFalse(report["identity_pass"])
+
     def test_failed_identity_prevents_execution_probes(self) -> None:
         with patch("attest_toolchain.run_execution_probes") as probes:
             execution, passed = gated_execution(

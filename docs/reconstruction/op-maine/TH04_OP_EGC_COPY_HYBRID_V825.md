@@ -132,10 +132,6 @@ Two isolated TC4.02/TLINK rounds reproduce:
   `65d5d2768ac6c7d36dc9462b6e03487281f007af2350378d14d7d37f157580ee`;
 - all 804 ordered MZ relocations.
 
-Focused receipt:
-
-`.analysis/reconstruction/receipt-archive/v825-op-egc-copy-hybrid-focused-receipt.json`
-
 SHA-256:
 
 `984291bce653fe242c33003e85eedd1572c71e062f7e0cec02c3840a52ec649d`
@@ -144,10 +140,6 @@ SHA-256:
 
 The v825 canonical decoded-function replay contains 89 accepted OP functions.
 All 89 have `raw_difference_count = 0`, including both EGC functions.
-
-Canonical receipt:
-
-`.analysis/reconstruction/receipt-archive/v825-op-egc-copy-canonical-receipt.json`
 
 SHA-256:
 

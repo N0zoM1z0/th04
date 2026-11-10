@@ -88,5 +88,3 @@ request consumer, then FM/SSG synthesis and hardware-clock scheduling. Only
 then enable resident capability and real measure waits across startup,
 Ending/Staff and process transitions. Complete natural Linux/Windows routes,
 save/config restart and dense Lunatic timing/performance remain required.
-
-Terminal cleanup reclaims 135467008 allocated bytes from 165 shared captures, 60 retired scratch outputs and 1012 source-backed Python caches. 956 protected hashes are unchanged at that boundary; current sources/programs/targets/HDI/references remain. Shared paths are immutable; future replay uses fresh outputs.

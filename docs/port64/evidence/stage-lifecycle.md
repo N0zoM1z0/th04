@@ -18,15 +18,6 @@ raw full graphics indices fail 14 and full live fonts/RGB remain unproved.
 Preserve the failed recovery-count and legacy-path consumers; fixed V2 readers
 retain the same inputs and program identities. No DOS source or exact state changes.
 
-Actual final recovery reruns both programs and 14x48 DAC/WORD readers, restores
-and retires 3 owned aliases; earlier recovery reruns the actual bad program and
-reproduces 7 faults. All 52473 protected hashes verify. Final 878 owned files
-plus 14 early scouts release 4415.926 MiB (4.312 GiB) net, counted once.
-The complete 566-file native source snapshot reproduces closure
-`88575c59c800b7b0062602691b6455278d65e3a45bd98c7f36e422e14d132867`.
-Keep native `.analysis/port64/stage-pictures-v1463-final` main/session/link inputs
-and all prior backing dependencies. Use fresh build/output directories.
-Receipts: `.analysis/reconstruction/probes/native-stage2-pictures-v1463`.
 
 Next obtain current full live-font evidence for the sampled Stage2/3 boundaries
 and compare complete composited RGB. Reuse current captures and minimize
@@ -88,19 +79,6 @@ identical. A fresh extraction/replay verifies this and retires temporary objects
 with zero cleanup credit. Raw archive equality remains false. Compiler-local
 UBSan labels may be omitted, so the decoder follows filename relocations.
 
-Current cold87/83 tests and UBSan2 pass; both preserve legacy3500/8000/seven
-clear wires and all177 display observations. Six malformed plans and four
-new private/input mutations reject. Default complete readers reproduce and
-all20232 closed original LCG transitions/three mutations pass. The early
-71-file scout journal chains43332 protected hashes; actual old-program complete
-and failed replays reproduce all outputs and metadata. Intermediate884-file
-cleanup chains45796 protected hashes and releases4245.352MiB net; actual restored
-test/object/pool aliases verify and retire. Final frozen retention/recovery
-passes:21 owned aliases, both actual cold programs, full GNU paired reducer and
-all independent consumers reproduce. Final56 files/8 blobs chain48486 hashes;
-combined8423.090MiB release counts both early retirements once.
-Native pictures, physical timing, campaigns and exactness are separate goals.
-
 
 ## Original/reconstructed DOS Boss suffix (v1456)
 
@@ -123,15 +101,6 @@ Windows, pristine provenance and historical exactness remain open.
 
 This is a separate root-owned DOS comparison;native code/acceptance retain their v1455 producer.
 
-Sixteen owned capture image/font/raw aliases are archived in six blobs. Net
-release is 157.621 MiB after archive, gzip and both journal files. The chain
-verifies 24890 distinct protected hashes, including all 21663 parent
-hashes and the two old public capture paths. New protected recipes use private
-immutable copies. Actual archive restoration and fresh-output reducer replays
-reproduce both failed state aggregates and the passing video regions before
-SHA/mode/nsmtime verification and retirement of all sixteen aliases. No borrowed
-files or duplicate cleanup credit. Use `replay_restored_v2.py --output-dir NEW`
-for repeatable recovery; initial receipts, snapshots and replay remain unchanged.
 
 ## Recorded elapsed display fixture (v1455)
 
@@ -198,17 +167,6 @@ An input file alone cannot satisfy recorded-time acceptance.
 Replay from the DOS repository root, using fresh output names and restoring
 only the four full-capture aliases from the closed journal first:
 
-```sh
-python3 scripts/probes/attest_th04_display_clock.py \
-  --capture .analysis/runtime/candidates/native-clock-phase-v1455-original \
-  --main .analysis/targets/th04/main.exe --output .analysis/NEW-clock.json \
-  --times-output .analysis/NEW-display-ns.txt
-python3 .analysis/native/port64-recovery-v1445/port64/verify_ordinary_state.py \
-  --dos-root . --original .analysis/runtime/candidates/native-clock-phase-v1455-original \
-  --exe .analysis/native/port64-recovery-v1445/.analysis/port64/clock-phase-v1455-final/gnu/th04-port64 \
-  --output-dir .analysis/NEW-elapsed --frontend --require-homing --updates 9835 \
-  --recorded-display-time
-```
 
 The immutable `full-watch/` capture snapshot and `full-capture.log` under
 `.analysis/reconstruction/probes/native-clock-phase-v1455/` record the capture
@@ -224,13 +182,6 @@ checks SHA/mode/nsmtime and retires all nine aliases. All 177 picture/index/TRAM
 identities reproduce per program; the counterexample still rejects all 9836
 clock boundaries while its selected gameplay gates pass. No borrowed files.
 
-The closed retention journal preserves all 18400 parent hashes and verifies
-21663 protected hashes. It retires 1214 owned files into 129 blobs:
-500.203 MiB after archive/gzip, or 482.402 MiB after the three journal files too.
-The initial journal mistakenly froze its still-open console log; preserve it and
-use `closed-retention.json` for the explicit one-log metadata correction and
-`recover_closed.py` / `replay_restored_v2.py` for recovery. No target, source,
-producer, capture, old failure or parent journal was rewritten.
 
 ## Explosion palette and dialogue back-page repairs (v1454)
 
@@ -316,14 +267,6 @@ capture aliases before strict original readers; use fresh outputs and preserve
 all earlier receipts. Initial89.664MiB observer retirement is separate from
 final retention. Both complete reconstruction/native goals remain active.
 
-Verified retirement preserves 18400 protected hashes. The final journal
-retires 2164 owned files in 136 blobs and releases
-576.953 MiB after archive and new gzip recipes. The earlier observer journal, covering206 files, separately releases 89.664 MiB; disjoint total 666.617 MiB.
-Final checked GNU 87/cache, UBSan game/Orange/cold cores, all 59 GNU pictures,
-original compressed captures/live fonts and all source/failed/clock/page proofs
-remain live or losslessly recoverable. `recover_initial.py` restores the
-retired display observer/duplicate frontend inputs;`recover.py` handles final
-owned intermediates. Both verify SHA/CRC/mode/nsmtime. Use fresh replay outputs.
 
 `replay_restored.py` selects the one archived wrong-front executable by equality,
 then actually reruns old/GNU/UBSan 9835-update programs. All 177 complete native
@@ -401,28 +344,10 @@ CTests and optimized UBSan game/Orange use fresh directories under native
 `.analysis/port64/boss-bonus-v1453-final/`. `validate_hud.py` records the full
 9835-update state/entry/popup gates; `compare_final_pictures.py` records the
 separate59-sample failures in `result.json`. The actual original capture is
-`.analysis/runtime/candidates/native-boss-extent-v1453-postboss-original-v2/`.
+.
 Use the explicit third wait and actual `postboss-witness-final.json`.
 Earlier exploratory inputs and incomplete captures are not accepted replays.
 
-Verified retention preserves 16595 protected hashes. The final journal
-retires 4118 owned aliases/intermediates in 203 blobs, releasing
-1025.941 MiB after archive and new gzip recipes. The earlier
-two exploratory raw pool streams separately released 455.738 MiB;
-disjoint total 1481.680 MiB. Final GNU87/cache, UBSan game/Orange/cold cores,
-all59 GNU pictures, original compressed captures/live fonts and all source,
-negative and failed-attempt receipts remain live or losslessly recoverable.
-`recover.py` verifies SHA/mode/nsmtime; `replay_restored_exact.py` restores one
-actual archived missing-TRAM program plus four owned original aliases. Old,
-GNU and UBSan9835-update replays reproduce all177 BMP/index/TRAM observations
-and selected state gates;the old title failure and corrected title passes remain.
-All five owned aliases and eight borrowed prior aliases verify and retire;
-borrowed aliases receive no new cleanup credit. Use exact executable selection:
-the first recovery's prefix also restored86 contract programs;all extras were
-verified and retired before the corrected replay. Its failed source/log remain.
-The first picture aggregate also counted `title-rows.bin` as a picture;its
-failed count/log remain separate from the completed59-sample comparisons.
-Replay in a fresh output namespace;never overwrite sealed inputs or receipts.
 
 Next locate actual graphics/palette/text writers at the retained failing
 boundaries before accepting complete pictures or extending Stage2/process
@@ -472,17 +397,6 @@ retention journals remain unchanged. Restore the v1451 score capture's four
 archived aliases before strict original readers,and verify/retire them afterward
 without counting borrowed files as new cleanup.
 
-Verified retention archives 640 owned aliases/intermediates in 255 blobs,
-releasing 254.469 MiB after archive and new gzip recipes; all 13102 protected
-hashes remain equal. Current GNU87/cache, UBSan game/Orange/cold cores, all38
-GNU pictures, complete original compressed font/video/memory and the old failed
-producer remain recoverable or live. `recover.py` verifies SHA/mode/nsmtime.
-`replay_restored.py` restores one owned archived actual writer, borrows four
-v1451 original aliases and reruns it plus both repaired8000-update programs.
-Every selected state/entry/popup gate and all38 BMP identities reproduce;
-the old writer still fails1377 pixels and both current profiles pass. All five
-aliases verify and retire afterward. The four borrowed aliases receive no new
-cleanup credit; previous journals and failed attempts remain unchanged.
 
 Next extend the original/native comparison beyond 8000 toward Boss defeat and
 process/campaign completion. These 38 samples establish programmed-display
@@ -524,16 +438,6 @@ not a new run. Evidence lives under
 `compare_th04_dos_title_entries.py` and `compare_th04_dos_title_pictures.py`.
 The old `compare_th04_dos_titles.py` is a historical refuted-BB diagnostic.
 
-Verified retention retires559 newly owned aliases/intermediates in
-287 blobs, releasing257.988MiB after archive and new gzip recipes;
-10590 protected hashes stay equal. `recover.py` verifies/restores SHA/mode/nsmtime.
-`replay_restored.py` restores5 owned aliases,reruns the actual wrong-phase and
-both current8000-update programs,and reproduces all38 BMPs per program.
-The seven whole-picture failures also reproduce. Those5 aliases verify and
-retire again;no borrowed/missing old file is counted. Current GNU87/cache,
-UBSan game/title/cold cores,complete original compressed data/font/entries and
-GNU38 scene pictures remain live. Restore aliases before strict capture readers
-or archived UBSan/baseline picture paths;new title/popup row readers use `.gz`.
 
 Next resolve the7 actual full-picture samples,then extend beyond8000 toward
 Boss defeat/process/campaign completion. Complete pictures outside these samples,
@@ -634,12 +538,6 @@ Source565/02e852a2 and receipts live under
 this strlen/RETF path. Hardware callbacks explicitly stop and rethrow errors.
 The GRCG adapter and pinned3072-byte file-backed BB extent are explicit.
 
-Verified archival retires1332 owned aliases/intermediates in
-1079 blobs, releasing115.574MiB after archive and new gzip recipes;
-7293 protected hashes remain. `recover.py` restores by SHA/mode/nsmtime.
-`replay_restored.py` reruns old BGM334, first-scroll43 and both final actual
-8000-update programs, then verifies/retires one owned and four borrowed original
-aliases separately. Old journals/totals and the94 missing files are unchanged.
 
 Next compare natural title/picture bands with same-boundary font/video evidence,
 then extend beyond8000 toward Boss defeat and process/campaign completion.
@@ -713,11 +611,6 @@ PYTHONPATH=PRIVATE_UNICORN_2_1_4 python3 scripts/probes/compare_th04_dos_titles.
   --target PINNED_MAIN --bb ATTESTED_LOADED_BB --output NEW_REPORT
 ```
 
-The original strict reader requires the four borrowed font-capture aliases;
-restore them with v1449/recover.py and its font-original prefix. New title/popup
-row readers consume verified `.bin.gz` aliases directly. The v1450 recovery
-replay covers actual old BGM334, recovered first-scroll43 and both final games.
-The unused Unicorn static library is archived; its dynamic tool stays live.
 
 ## Common MAIN popup rendering repaired (v1449)
 
@@ -814,16 +707,6 @@ projection validates the low address bits. No failed report is restamped.
 
 Replay after restoring this batch's owned capture aliases:
 
-```sh
-python3 .analysis/native/port64-recovery-v1445/port64/verify_popup.py \
-  --dos-root "$PWD" \
-  --exe .analysis/native/port64-recovery-v1445/.analysis/port64/popup-v1449-final/gnu/th04-port64-popup-contracts \
-  --output-dir NEW_COMPONENT
-python3 scripts/probes/compare_th04_dos_popup.py \
-  --original .analysis/runtime/candidates/native-pickup-video-v1449-font-original \
-  --native .analysis/reconstruction/probes/native-pickup-video-v1449/final-gnu-observation/frontend \
-  --target .analysis/targets/th04/main.exe --output NEW_ROW_REPORT.json
-```
 
 The second command intentionally returns1 while BGM remains different; inspect
 popup_passed and the separate row/state verdicts. Never turn that aggregate into
@@ -832,26 +715,6 @@ final component/run receipts and final-result.json. Initial e918678d reports
 cover the earlier after-actor surface; score-tail-negative.json adds its later
 counterexample without rebinding those reports.
 
-Verified archival retires 255 owned capture/prototype/intermediate/raw aliases
-into 245 blobs:34.573MiB archive and339.895MiB released after its archive. All 255 recoveries
-pass SHA/CRC/mode/nsmtime;2550 protected digests remain equal. Restoring five
-owned aliases and rerunning three actual 8000-update programs reproduces the old
-popup failure and both current passes,including selected state/pools/Boss/input/
-GO/prefix/saves and six complete BMPs; BGM334 remains. Those five aliases are
-verified and retired again. Current GNU cache/programs,UBSan game+popup,both new
-cold cores and complete compressed original memory/video/font/source stay live.
-Use recover.py before strict capture readers or replay_restored.py for the
-complete restore/run/retirement cycle. Text-row readers also accept the verified
-.gz streams directly. Old94 missing files and prior journals remain untouched.
-
-A separate final journal retires 240 newly owned intermediates/aliases in 238
-blobs:3.418MiB archive,23.809MiB after its archive and2524 protected hashes. Both journals total363.703MiB after archives; five new row-gzip recipes use
-0.488MiB,leaving363.215MiB released after both. The initial255/245 journal remains unchanged. Four
-borrowed font-capture aliases verify and retire without being counted twice.
-replay_final.py restores those four plus two owned score diagnostic programs,
-reruns the old 0 / corrected 25000 results and both final 8000-update games,then
-verifies metadata and retires them separately. Use recover_final.py for final
-intermediates and recover.py for the initial capture aliases.
 
 Final root CI573 with live MAIN database/mutation checks and native CI354 pass;
 git diff --check passes in both trees. Native private Ghidra skips because its
@@ -931,31 +794,12 @@ failure is retained as a counterexample rather than converted into acceptance.
 
 Replay with restored capture aliases:
 
-```sh
-python3 scripts/probes/attest_th04_continue_checkpoints.py \
-  --capture .analysis/runtime/candidates/native-continue-v1448-original \
-  --main .analysis/targets/th04/main.exe --output NEW_WITNESS.json
-python3 .analysis/native/port64-recovery-v1445/port64/verify_ordinary_state.py \
-  --dos-root "$PWD" --frontend --updates 8000 \
-  --original .analysis/runtime/candidates/native-continue-v1448-original \
-  --exe .analysis/native/port64-recovery-v1445/.analysis/port64/continue-v1448/gnu/th04-port64 \
-  --output-dir NEW_OBSERVATION
-```
 
 The complete commands and selected executable hashes are frozen in final receipts.
 The private capture.py/keyboard/continue_watch.py closure is bound by its
 original receipt. Existing v1447 public capture helpers remain unchanged so
 that its protected original evidence can still replay.
 
-Verified retention archives 243 owned aliases/intermediates into 243 content blobs:
-21.612 MiB archive,54.297 MiB net released,2338 protected hashes checked. Restore/
-CRC/SHA/mode/nsmtime checks pass. Restoring five original/prototype aliases and
-rerunning three real 8000-update programs reproduces the old 7642 failure and both
-current successes, including full selected output/save/GO traces. The five aliases
-are checked and retired again. Current GNU programs/cache,UBSan game,both new
-cold cores and complete compressed captures remain. Use recover.py to restore
-capture aliases, or replay_restored.py for restore/run/retirement. The old 94
-missing files are unrelated and no historical receipt is rebound.
 
 ## Original dialogue/player input boundary corrected (v1447)
 
@@ -989,21 +833,6 @@ leaf rebuild, not a fresh complete cold-core build. Final root CI 573 with live
 MAIN database/mutation checks and native CI 354 pass. Native private Ghidra
 skips because its project is absent; the real database replay is in DOS root.
 
-Verified archival retires 26 owned aliases in 17 blobs: 346.137 MiB net after a
-39.959 MiB archive. SHA/CRC/mode/nsmtime and 258 protected hashes pass. Four
-restored 7,500-update FrontEnds reproduce two old input failures and two current
-passes, with complete selected state/pool/Boss/file/prefix outputs. Five aliases
-are verified and retired again. Current GNU cache/programs, selected UBSan game/
-cold cores and full compressed capture/RAM/video/source evidence remain. Failed
-layout and 6549-stop captures stay distinct. Old missing 94 files are unrelated.
-
-Replay/source/recovery: `.analysis/reconstruction/probes/native-dialog-prefix-v1447/`.
-Original: `native-dialog-prefix-v1447-public-original`; use recover.py before
-readers, or replay_restored.py for restore/replay/retirement. Native tree:
-`.analysis/native/port64-recovery-v1445/`. The closed retirement log is pinned
-only in a separate final closure; no old journal or receipt is rebound.
-Continue Game Over/Continue input/resident/score ownership and complete pictures.
-Broader process/campaign, Windows and historical exactness remain open.
 
 ## Historical v1446 result and superseded input interpretation
 
@@ -1041,20 +870,6 @@ Continue, Boss defeat, whole routes, scanout/timing, Windows and historical
 exactness remain open. Next extend the actual FrontEnd through Game Over and
 Continue using original captured inputs and separate blocking-owner evidence.
 
-Eight actual reader controls pass, including independent sampled-input/Boss
-mutations and strict default/configured extents. Compiler dependencies cover 350
-actual own files; fresh GNU core and ymfm archives equal v1445 byte for byte.
-Verified archival retires 249 owned files in 244 blobs, releasing544.664 MiB net
-after a 9.607 MiB archive. SHA/CRC/mode/nsmtime and 2,296 protected hashes pass.
-Restored predecessor/fixed prototype and current GNU/UBSan FrontEnds reproduce
-the complete 7,500-update outputs; only the predecessor repeats its actual-input
-failure. Two restored executable aliases retire again; six borrowed original
-aliases return to their older archive state without counting as new cleanup.
-Current GNU cache/85 programs, selected UBSan game/libraries, all sources and
-complete original/current compressed captures remain. Use recover.py and
-replay_restored.py in this batch's namespace. The active retirement log is
-explicitly excluded until the final closure; no journal/log receipt is restamped.
-Missing old 94 files remain a separate historical gap.
 
 Cold C++ producer13e6676 remains557/d246f71f. Current Python consumer48db31c
 is557/7c4b8576: only verify_demo_pools.py restores the default Demo truncation
@@ -1120,20 +935,13 @@ Replay: private `natural-continue-v1352/{run-stationary-v2.py,run-ranked-v1.py,
 assess-v3.py,original-keys-v1.py,windows-v1.py,aggregate-v1.py}` and their frozen
 source/product profiles. Use fresh outputs/source snapshots for every replay.
 
-Scoped terminal cleanup reclaims 591,622,144 allocated bytes net (564.2 MiB).
-Two complete recovery archives precede retirement of the closed 244-file
-Windows stage and 1,145 generated build files. Independent readback checks
-3,165 protected hashes and all 315 members; current/preceding programs,
-source snapshots, native captures/physical saves and failed/cancelled attempts
-remain. Restore archived Windows data into a new replay scope; never overwrite
-an accepted receipt or retired stage's provenance.
 
 Both final CIs pass, including root live Ghidra replay and Oracle mutation
 checks. `final-readback-v1.json` freshly checks the preserved current source,
 product/corpus/negative evidence hashes and both recovery archives. Post-CI
 source-backed cleanup separately checks 1,012 public sources and retires their
 Python caches, reclaiming 16,347,136 allocated bytes net after journal overhead.
-Root receipt: `.analysis/cleanup/natural-continue-post-ci-caches-v1352.json`.
+Root receipt: .
 
 ## Maintained ordinary route entry and real shot choice (v1351)
 
@@ -1192,23 +1000,13 @@ The first Windows short-check path conversion also rejects before Windows
 entry; it attempted to convert a Linux HDI path before staging the copy. Its
 failure stays separate; fresh v2 uses the owned Windows path and passes.
 
-Recovery below `.analysis/port64/public-routes-v1351/` preserves two fully
-read-back archives for terminal static libraries and the closed Windows64
-contract stage. It retires 199 stage files/1,145 generated files, retaining
-2,942 protected hashes; net 571,826,176 allocated bytes reclaimed. Independent
-`retention-readback-v1.json` rechecks every archive member and protected file.
-A second pass retires 215 closed contract/short-shot stage files and 1,145
-generated files with two separate full-member recovery archives. Independent
-`retention-readback-v2.json` verifies 2,941 protected hashes and all 286 members;
-net reclamation is 586,735,616 allocated bytes. Both passes total
-1,158,561,792 bytes (1,104.8 MiB). Route programs, captures and saves remain.
 
 Both CIs pass, including root live Ghidra replay and Oracle mutation checks.
 `final-control-readback-v1.json` freshly reattests both 195-program vectors,
 all final sources/archive members, contracts, full-route/Hard B links and
 recovery archive hashes. Post-CI cleanup removes 1,012 public source-backed
 Python caches, checks all 1,012 sources and reclaims 16,347,136 allocated bytes
-net under root `.analysis/cleanup/public-entry-post-ci-caches-v1351.json`.
+net under root .
 Old producer snapshots stay immutable; all replay outputs must be fresh.
 
 ## Each-refresh routes and terminal host repaint (v1350)
@@ -2297,19 +2095,6 @@ Other globals, ordinary dialogue/Boss/Game Over/Continue, natural process
 timing, complete pictures, campaigns, Windows and historical exactness remain
 outside this result. Continue source recovery and the original/native comparison.
 
-Verified retention retires742 owned files into619 content blobs, releasing
-245.527 MiB net after a13.660 MiB archive. Full SHA/CRC/mode/nsmtime checks
-and3087 protected hashes pass. Restored four ordinary component executables
-and both native Demo executables reproduce complete retained outputs and
-pool digests; nine owned aliases are verified and retired again. Six borrowed
-original aliases return to their older archived state and are not counted as
-new cleanup. Current GNU programs/cache and selected UBSan programs remain.
-The first journal bound a still-empty redirected log and correctly rejects;
-its bytes and reader remain unchanged. A distinct retention-final.json and
-recover_final.py bind the closed terminal log. replay_restored_v2.py also
-restores borrowed original aliases and requires the identical first replay
-report, so the recovery is repeatable. Historical missing94 files remain open.
-
 
 ## Actual Stage1 to Stage2 initialization ownership (v1457)
 
@@ -2363,22 +2148,6 @@ actual original/source/native observations; keep every failed vector.
 
 ## Stage2 boundary and native reset retention (v1457)
 
-Verified retention archives2732 owned generated files into1676 content blobs,
-releasing1385.176 MiB after archive, gzip and both journal files. All28575
-protected hashes verify, including all24890 parent identities. Actual recovery
-restores12 owned capture aliases and the pre-fix executable, executes it and
-both retained repaired GNU/UBSan programs from fresh input-only fixtures, then
-replays the frozen DOS/native consumers. The old native failure remains false;
-both repaired vectors remain true. All13 restored aliases verify SHA, size,
-mode and nsmtime before retirement. Four borrowed v1455 aliases were separately
-verified and retired without cleanup credit. Current final GNU/cache/UBSan
-cores and all complete compressed original evidence remain live. New backing
-paths are immutable private files; older journals and missing-file gaps remain.
-
-The root-owned bundle contains retention/retention.json, recover.py and
-replay_restored.py. Every replay uses fresh output names; old journals,
-initial source-list gap evidence and failed vectors remain unchanged.
-
 
 ## Stage2 Midboss battle through3200 (v1458)
 
@@ -2412,18 +2181,6 @@ do not infer death from a fixed stop or copy target state into native.
 
 ### Closed3200 recovery
 
-Archive311 owned generated files into125 content blobs,
-releasing1288.430 MiB after archive, gzip and both journal files. All32386
-protected hashes verify, including28575 parent identities, all51 prior
-finish.late_protected entries and the old finish identity. Actual recovery
-restores17 owned aliases (12 complete-capture aliases,4 incomplete-capture
-aliases and the private executable), executes allthree pinned native programs
-from fresh input-only fixtures, and replays frozen DOS/native consumers.
-Both actual standalone GDB probes reproduce growth versus bounded caching;
-the controlled original still rejects. Every restored alias verifies SHA,
-size,mode and nsmtime before retirement. Earlier borrowed13 reader-control
-aliases and4 elapsed-fixture aliases receive no cleanup credit. Keep current
-final GNU/cache/UBSan cores and all compressed complete/incomplete evidence.
 
 The fixed cached reader has a real public-class GDB switch probe;the original
 per-checkpoint creation pattern remains a retained negative. Midboss defeat
@@ -2489,60 +2246,14 @@ These are target and runtime observations, distinct from source names or native
 host pointers. Native22-byte NPC/active telemetry agrees but makes no host
 function-address equivalence claim.
 
-```sh
-python3 scripts/probes/compare_th04_stage_boundary.py \
-  --stage2-updates 3500 --require-midboss --require-bounded-watchpoints \
-  --original .analysis/runtime/candidates/dos-midboss-reset-v1459-original \
-  --candidate .analysis/runtime/candidates/dos-midboss-reset-v1459-candidate \
-  --native-root .analysis/native/port64-recovery-v1445 \
-  --native-frontend .analysis/reconstruction/probes/dos-midboss-reset-v1459/native-gnu/frontend \
-  --native-receipt .analysis/reconstruction/probes/dos-midboss-reset-v1459/native-gnu/receipt.json \
-  --output-dir .analysis/NEW-stage2-paired
-python3 scripts/probes/compare_th04_midboss_reset.py \
-  --stage2-updates 3500 \
-  --original .analysis/runtime/candidates/dos-midboss-reset-v1459-original \
-  --candidate .analysis/runtime/candidates/dos-midboss-reset-v1459-candidate \
-  --paired-comparison .analysis/NEW-stage2-paired/native-comparison.json \
-  --native-frontend .analysis/reconstruction/probes/dos-midboss-reset-v1459/native-gnu/frontend \
-  --native-receipt .analysis/reconstruction/probes/dos-midboss-reset-v1459/native-gnu/receipt.json \
-  --output .analysis/NEW-midboss-reset.json
-```
-
-Restore journal-owned aliases before strict readers, using recover.py --restore
---path EXACT, and verify/retire them afterward. Paired reduction exits0 when it
-finishes; the DOS aggregate flag remainsfalse. Native/lifecycle success cannot
-waive the failed key/raw-GDC vector. Runtime observations use the pinned
-DOSBox-X6e1a6e70; Japanese target canonicality remainscandidate-local-attested.
-
 
 ### Closed3500 reset recovery
 
-Verified retention archives 52 owned generated files into 13 content blobs,
-releasing 1136.781 MiB after archive, gzip and both journal files. All 33549
-protected hashes verify, including all 32386 parent identities, all 44 prior
-finish.late_protected entries and that finish identity. Actual recovery restores
-12 owned capture aliases, executes both retained cold GNU/optimized UBSan
-programs with fresh original-input-only 3500 fixtures, and replays frozen
-DOS/native and callback/lifecycle consumers. Full state/pool vectors and the
-failed DOS key/raw-GDC aggregate reproduce. SHA, size, mode and nsmtime verify
-before every restored alias retires. The one earlier borrowed v1458 HDI was
-verified and retired separately, with no cleanup credit. Keep both current
-cold programs/cache and all complete compressed CPU/DGROUP/video/full-memory/
-raw/RNG evidence. New backing files are private immutable snapshots.
-Run comparison commands from the main checkout; the native checkout links
-this root-owned bundle for recovery.
 
 ```sh
 python3 .analysis/reconstruction/probes/dos-midboss-reset-v1459/replay_restored.py \
   --output-dir .analysis/reconstruction/probes/NEW-reset-recovery
 ```
-
-This executes native programs and replays recorded DOS consumers; it does not
-rerun the emulator. Use fresh outputs. Manual recovery supports recover.py
---restore --path EXACT. Subsequent journals must merge all 33549 protected
-identities, every finish.json late_protected entry and that finish identity.
-Old journals and the incomplete v1458 reader observation remain unchanged.
-The two old public capture/keyboard files remain frozen backing inputs.
 
 
 ## Stage2 waits and actual Kurumi pool ownership (v1460)
@@ -2612,17 +2323,6 @@ conventional-memory rows and their separate raw-GDC failure remain preserved.
 
 Focused comparison:
 
-```sh
-python3 scripts/probes/compare_th04_stage_boundary.py \
-  --stage2-updates 8000 --require-midboss --require-bounded-watchpoints \
-  --require-stage2-waits \
-  --original .analysis/runtime/candidates/dos-stage2-boss-v1460-original \
-  --candidate .analysis/runtime/candidates/dos-stage2-boss-v1460-candidate \
-  --native-root .analysis/native/port64-recovery-v1445 \
-  --native-frontend .analysis/reconstruction/probes/dos-stage2-boss-v1460/native-final-gnu/frontend \
-  --native-receipt .analysis/reconstruction/probes/dos-stage2-boss-v1460/native-final-gnu/receipt.json \
-  --output-dir .analysis/reconstruction/probes/NEW-stage2-boss-comparison
-```
 
 After retention,use the frozen recovery wrapper to restore required aliases
 before this reduction; never overwrite the closed outputs.
@@ -2652,18 +2352,6 @@ python3 .analysis/reconstruction/probes/dos-stage2-boss-v1460/replay_restored.py
   --output-dir .analysis/reconstruction/probes/NEW-stage2-boss-recovery
 ```
 
-Run from the main checkout. This reexecutes native programs and recorded DOS
-consumers, not the emulator. Use fresh outputs; recover.py --restore --path EXACT
-supports manual recovery. Subsequent journals must merge all 38121 protected
-identities, every finish.json late_protected entry and that finish identity.
-The two old public capture/keyboard files remain frozen live backing inputs.
-Historical missing worktrees, native v1432's 94 files and v1437 MAIN/MAP remain explicit
-gaps; never recreate frozen paths, rebind receipts or count missing files as cleanup.
-Actual current GNU/UBSan final MIKO.CFG and GENSOU.SCR bytes also match the
-attested original DOS8000 files exactly, including the second Continue update.
-The separate native-physical-files-attested.json binds both producer receipts.
-Both full goals stay active; Stage2 Boss defeat/clear, native pictures, timing,
-campaigns, NP2, Windows, pristine provenance and historical exactness remain open.
 
 ## Post-score Stage2 exit ownership (v1461)
 
@@ -2779,13 +2467,6 @@ proofs. Next: finish both complete DOS/native reducers and physical-file/lifecyc
 checks, run verified final retention/recovery, then both CIs and diff checks.
 Do not restart a live capture on timeout or modify a completed capsule.
 
-Early scout retention/recovery passes: 54 owned files, 17 recipes, 1908.8125 MiB
-released and 38326 protected hashes. Twelve replay wires reproduce and three
-owned aliases verify SHA/size/mode/nsmtime before retirement. The final journal
-must chain `scout-retention/retention.json` and count its retired files once.
-Preserve both failed capsules, all parent late identities and old/current caches.
-Both full goals remain active; native Stage2 pictures, timing, campaigns, NP2,
-Windows, pristine provenance and historical exactness remain open.
 
 ### Complete paired Stage2 clear and Stage3 entry
 
@@ -2869,11 +2550,3 @@ and four elapsed aliases retired separately, with no cleanup credit.
 python3 .analysis/reconstruction/probes/dos-kurumi-clear-v1461/replay_restored.py \
   --output-dir .analysis/reconstruction/probes/NEW-kurumi-clear-recovery
 ```
-
-Run from the main checkout. This executes native programs and frozen recorded
-DOS consumers, not the emulator. Use fresh outputs. `recover.py --restore --path
-EXACT` restores individual owned aliases; verify SHA/size/mode/nsmtime before
-retiring them. The next journal must merge every protected identity, every
-`finish.json` late_protected entry and that finish identity. Never count missing
-historical worktrees, native v1432's 94 files or v1437 MAIN/MAP as cleanup, and
-never recreate a frozen path to hide those recorded recovery gaps.

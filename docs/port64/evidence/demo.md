@@ -23,16 +23,6 @@ The actual 6307e8d Demo source rejects seven vectors under a bounded clock;
 zero constructor rejection and pending nonpositive/truncated WORD cases are
 recorded without running billions of old refreshes.
 
-Replay: `.analysis/port64/native-demo-fade-word-v1421/`.
-`source-profile.json`, `focused.json` and `verify_closure.py` keep source,
-programs, original waits/publications/stores, old-source inputs and actual
-entry images bound to their producers. Original ideal-refresh controls keep
-their v1413 identity; this does not measure physical IRQ/CPU latency.
-Native CI passes 345 tests. Verified compiler/cache cleanup releases 35.46
-MiB net. Current programs, both core libraries, source and full comparison
-streams plus 7,854 parent pins remain. `verify_retention.py --restore --prefix
-.analysis/port64/native-demo-fade-word-v1421/build-gnu/` restores one cache.
-
 
 ## Indexed entry-fade palette recovery (v1420)
 
@@ -63,18 +53,6 @@ Final source 537/6175165a changes only the reader and probe include. Both
 frontends recompile that include while their original cold core libraries
 retain identical hashes; their prior executables and source archive remain.
 The rendering change is present in the original cold source.
-
-Replay: `.analysis/port64/native-demo-palette-v1420/`.
-`current-source-profile.json` and `current-source.tar.gz` retain the final
-reader/probe source; `source-profile.json` and `producer-source.tar.gz` retain
-the initial cold compiler inputs. `focused.json`, `probe-repair.json` and
-`verify_closure.py` record compilation, full original I/O and full pixel
-readback. The capture is available as `--demo-entry-palette-checks DIR`.
-Native CI passes 345 tests. Verified compiler retirement and source-backed
-cache cleanup release 35.92 MiB net. Both final and initial frontends,
-unchanged core libraries, full compressed images/original I/O and 6,893 parent
-pins remain. `verify_retention.py --restore --prefix
-.analysis/port64/native-demo-palette-v1420/build-gnu/` restores one compiler.
 
 
 v1322, 2026-10-09. Real native OP now starts the four archived demos after idle,
@@ -293,12 +271,6 @@ retain 498 sources/current manifest ff0b3bde…. Five pictures per host match as
 evidence. Complete 699 original midboss controls, 450 tile controls and setup pass
 per host; original load2000/DS8000 adapters remain explicit. All handles terminal.
 
-Lossless retention retires 26 streams and 1041 source-backed caches, reclaiming
-166055936 allocated B (about 158.4 MiB) before journals. Full restoration/readback
-and 8904 protected hashes pass; current source pins and DOS fingerprint agree.
-Sources, failures, current build objects and old Windows/DOS products remain.
-Use native `.analysis/port64/native-demo-v1374/restore_streams.py` with no options
-to verify all recoveries, or `--restore` before unchanged old raw-path readers.
 
 ### v1375 complete native demo actor/effect pools
 
@@ -339,15 +311,6 @@ route producers are retained with their own identities.
 
 From the native worktree, with absolute DOS_ROOT pointing to the main worktree:
 
-```sh
-nice -n 15 taskset -c 0 env PYTHONDONTWRITEBYTECODE=1 \
-  python3 port64/verify_demo_pools.py --dos-root "$DOS_ROOT" \
-  --original "$DOS_ROOT/.analysis/runtime/candidates/dos-demo-v1365-original" \
-  --original-dgroup "$DOS_ROOT/.analysis/runtime/candidates/dos-demo-v1367-original-dgroup-v2" \
-  --original-consumer "$DOS_ROOT/.analysis/reconstruction/probes/demo-dgroup-v1367/consumer-source-v2/scripts/probes" \
-  --exe .analysis/port64/native-pools-v1375/build-gnu/th04-port64-demo-state-trace \
-  --output-dir FRESH
-```
 
 `ubsan-nine/` pins the sanitized program. `initial-pair/` preserves the rejected
 8-pool/v1 reader and its producer; `mutant-pair/` preserves the new9-pool control.
@@ -356,12 +319,6 @@ Every complete native pool stream is compressed and fully restored/read back
 before its expanded copy is removed. Original streams and consumer sources stay
 immutable. All runtime claims remain scenario-specific and locally attested.
 
-Final CI passes main441/live Ghidra and native329/target checks (unavailable
-private native gates skip). Retention reclaims2038489088 allocated B before
-journals, preserving/restoring five full pool streams and ten text streams,
-retiring1042 source-backed caches.8904 prior protected hashes,500 current source
-pins,71 programs and DOS fingerprint pass. Current builds and failures stay;
-verify recovery with native native-pools-v1375/verify_retention.py. All jobs terminal.
 
 ## Actual FrontEnd pictures and DEMO PLAY text (v1376)
 
@@ -413,16 +370,6 @@ existing accepted extents. Target provenance remains candidate-local-attested.
 
 From the native worktree, using absolute DOS_ROOT:
 
-```sh
-nice -n15 taskset -c 0 env PYTHONDONTWRITEBYTECODE=1 \
-  python3 port64/verify_demo_pictures.py --dos-root "$DOS_ROOT" \
-  --original "$DOS_ROOT/.analysis/runtime/candidates/dos-demo-v1365-original" \
-  --original-video "$DOS_ROOT/.analysis/runtime/candidates/dos-demo-v1369-original-video-v2" \
-  --original-consumer "$DOS_ROOT/.analysis/reconstruction/probes/demo-video-v1369/producer-source-v2/scripts/probes" \
-  --hdi "$DOS_ROOT/.analysis/runtime/images/zun.hdi" \
-  --exe .analysis/port64/native-pictures-v1376/build-gnu-v4/th04-port64 \
-  --output-dir FRESH
-```
 
 Use build-ubsan-v4 for the instrumented FrontEnd. v3 cold main/view (and UBSan
 audio) TUs and v4 cold view TUs reuse the unchanged v1375 core/ymfm libraries;
@@ -439,13 +386,6 @@ reproduce2×15988 selected boundaries and2×40 label spans while consuming all
 15984 original records. Main441/live Ghidra and native337/target CI pass; absent
 native private gates skip. No Windows or DOS product launch/build occurs here.
 
-All jobs terminal. Native native-pictures-v1376 retention reclaims291966976
-allocated B before journals, fully preserving671 archived raw display/state/
-intermediate files and retiring1043 source-backed caches. Full restored hashes,
-modes/nsmtimes and gzip CRC/footer/EOF pass;8904 older protected hashes,502 source
-pins and4 new/71 old programs remain equal. Use verify_retention.py for temporary
-restored readback, or --restore before frozen_readback.py/verify_initial_label.py
-and old object reuse. The public reader uses fresh outputs and retained programs.
 
 ## Aligned complete text planes (v1377)
 
@@ -490,14 +430,6 @@ scanout timing before treating any remaining indexed difference as a renderer
 source defect. Native graphics-diagnostic.json retains full hashes, counts,
 80×80 location maps and colour histograms; original/raw native pixels stay pinned.
 
-Final main441/live Ghidra and native345/target CI pass; unavailable native private
-gates skip. Retirement reclaims153010176 allocated B (145.9 MiB) before journals:
-128 complete HDI/raw snapshot copies and1044 source-backed caches. All9692
-protected hashes,505 source pins, unchanged DOS fingerprint and complete archive
-restore/SHA/mode/nsmtime/gzip EOF pass. Recovery is root
-.analysis/reconstruction/probes/native-presentation-v1377/verify_retention.py;
-add --restore before reading retired HDIs/snapshot paths. Complete VP3 streams,
-original references, programs, source snapshots and failures stay pinned.
 
 ## Native Midboss shake consumer (v1378)
 
@@ -576,19 +508,6 @@ different. Frozen/imported consumer identities do not restamp older binaries.
 
 ## v1378 terminal validation and recovery
 
-All v1378 jobs are terminal. Main441/liveGhidra and native345/target CI pass;
-unavailable private native gates skip. Initial unregistered Oracle label and
-cleanup log-lifetime failures stay retained: archive restoration passed before
-retirement; final gate rejected its own writing log, then a distinctv2 journal
-pinned that log after terminal. No archive/program/source bytes were repaired.
-Lossless retirement reclaims324722688 allocated B (309.7MiB) before journal
-cost:1390 full raw/sample/build-intermediate files and1044 source-backed caches.
-Full restored SHA/size/mode/nsmtime/gzip EOF,15620 protected hashes,509 source
-pins and unchanged DOS fingerprint pass. All71GNU/3UBSan/newmutant programs,
-complete frozen sources, original references and failure receipts stay live.
-Recovery from DOS root: python3 .analysis/reconstruction/probes/native-pages-v1378/verify_retention.py --restore before old raw-capture/graphics/frozen-reader paths.
-Use no options for full temporary readback. v1377 restore proof retained its
-then-current505 scope; its live-source check must not be restamped to509.
 
 ## Complete ordinary background ring before shake (v1379)
 
@@ -634,18 +553,6 @@ all launches stay muted/dummySDL. No original/DOS source or target bytes change.
 
 ## v1379 terminal validation and recovery
 
-All v1379 jobs are terminal. Main441/live Ghidra and native345/target CI pass;
-private unavailable native gates skip. Frozen full-reader replay reproduces
-both complete shake receipts, apart from its separately pinned source hash.
-Lossless retirement reclaims153083904 allocated B (146.0MiB) before journalcost:
-342 complete sample/capture/build files and1044 source-backed caches. All16713
-protected hashes,509 source pins, full restoration/SHA/size/mode/nsmtime/gzip
-EOF and unchanged DOS fingerprint pass before and after deletion. The active
-cleanup producer log is explicitly excluded until terminal; old proofs remain
-immutable. Two new FrontEnd programs and all older programs/sources stay live.
-From DOS root, use python3 .analysis/reconstruction/probes/native-ring-v1379/verify_retention.py --restore before reading retired captures, fulltile pixels or relink objects;
-without --restore it performs temporary complete readback. Old v1378 proof
-retains its then-current509/9346e951 scope and cannot attest live8e77830c source.
 
 ## Marisa laser presentation color phase (v1380)
 
@@ -699,17 +606,6 @@ unavailable private native gates skip. Full parent/current sample hashes show
 four complete index pictures equal the actual original CPU beam and original
 pixels on both variants. This further bounds the repair; whole pictures stay open.
 
-Lossless retirement reclaims 156,069,888 allocated bytes (148.8 MiB) before
-journal cost: 354 complete sample/capture/build files and 1,044 source-backed
-caches. Full restoration/SHA/size/mode/nsmtime/gzip EOF, 17,815 protected
-hashes, 509 source pins and unchanged DOS fingerprint pass before and after
-deletion. The cleanup log is excluded while writing. Two new FrontEnd programs,
-all old programs, frozen sources, original references and failures stay live.
-From DOS root, restore retired inputs before CPU/graphics/reader/relink replay:
-
-```sh
-python3 .analysis/reconstruction/probes/native-shot-render-v1380/verify_retention.py --restore
-```
 
 Without --restore, it performs temporary complete readback. Old v1379 proof
 retains its then-current 8e77830c scope and cannot attest live f5791751 sources.
@@ -777,17 +673,6 @@ unavailable private native gates skip. Full parent/current sample hashes show
 two complete index pictures equal the actual original CPU pellet passes and original
 pixels on both variants. This further bounds the repair; whole pictures stay open.
 
-Lossless retirement reclaims 156,139,520 allocated bytes (148.9 MiB) before
-journal cost: 354 complete sample/capture/build files and 1,044 source-backed
-caches. Full restoration/SHA/size/mode/nsmtime/gzip EOF, 18,924 protected
-hashes, 509 source pins and unchanged DOS fingerprint pass before and after
-deletion. The cleanup log is excluded while writing. Two new FrontEnd programs,
-all old programs, frozen sources, original references and failures stay live.
-From DOS root, restore retired inputs before CPU/graphics/reader/relink replay:
-
-```sh
-python3 .analysis/reconstruction/probes/native-circle-v1381/verify_retention.py --restore
-```
 
 Without --restore, it performs temporary complete readback. Old v1380 proof
 retains its then-current f5791751 scope and cannot attest live fb26d509 sources.
@@ -870,22 +755,6 @@ cold3 targets remain pinned; full81-byte splash/nine-pool/scalar/shake/text,
 five malformed-trace rejection and frozen-reader controls pass. No Windows,
 physical scanout, full pictures or historical exact promotion is accepted.
 
-Lossless retirement reclaims 193,658,880 allocated bytes (184.7 MiB) before
-journal cost: 975 complete sample/capture/build files and 1,044 source-backed
-caches. Complete restoration/SHA/size/mode/nsmtime/gzip EOF, 22,622 protected
-hashes, 509 source pins and unchanged DOS fingerprint pass before and after
-deletion. Two complete native-pool streams already reclaimed 774,946,816
-allocated bytes after full gzip restore/SHA/length/EOF verification. Combined
-net allocated recovery is 968,605,696 bytes (923.7 MiB) before journal
-cost. All71 GNU/3 UBSan programs, both component probes, old programs, frozen
-sources, original references, full pool archives and failed attempts stay live.
-The cleanup log is excluded while writing; previous proofs remain immutable.
-
-From DOS root, restore retired samples/build inputs before CPU/graphics/reader
-replay with python3 .analysis/reconstruction/probes/native-white-v1382/verify_retention.py --restore.
-Without --restore it performs temporary complete readback. Old v1381 proof
-retains its fb26d509 source scope and cannot attest current add39f3c inputs.
-Native full pool gzip archives are already complete and require no new capture.
 
 ## Stage4 background publication and tail copies (v1383)
 
@@ -958,21 +827,9 @@ separate extra GNU lighting controls, fixed-page full changed-pixel checks,
 48 actual tail-copy controls and frozen reader replay pass. Only view.cpp
 changes; v1382 whole-cold/69CTest/full-nine-pool producers stay separate.
 
-Lossless retirement reclaims 455,786,496 allocated
-bytes (434.7 MiB) before journal cost:
-1,073 complete sample/capture/build/restored-image files and
-1,044 source-backed caches. Full temporary restoration,
-SHA/size/mode/nsmtime/gzip EOF, 24,916 protected hashes,
-509 source pins and unchanged DOS fingerprint pass before and after deletion.
-All seven new ordinary/diagnostic programs, old programs, frozen sources,
-failures, complete original references and full pools remain retained. The
-snapshot-only intermediate and reader failures are not restamped or promoted.
 
 From DOS root, restore archived sample/build/image inputs before replay:
 
-```sh
-python3 .analysis/reconstruction/probes/native-initial-v1383-v2/verify_retention.py --restore
-```
 
 Without --restore it performs complete temporary readback. Old v1382 proof
 keeps its add39f3c source scope and cannot attest current 50ca49c6 inputs.
@@ -1166,7 +1023,7 @@ DOS product fingerprint6f5898dd, native509 manifesta47f0496 and historical exact
 states are unchanged; candidate-local-attested provenance remains a gap.
 
 Recipes: DOS-root .analysis/reconstruction/probes/native-cg-v1386/;
-new original .analysis/runtime/candidates/dos-demo-v1386-original-cg-v1/;
+new original
 receipts/programs native .analysis/port64/native-cg-v1386/. Replay read_full.py,
 read_prefix.py, verify_font.py, compose.py, attest_raster.py and verify_control.py
 after restoring retired inputs. The new capture and old VP3/adapter/producer
@@ -1566,18 +1423,6 @@ nine generations use rank 1. The independent physical-option reader rejects
 it at the first OP configure event. Physical file equality and demo pixels
 alone cannot prove that the live process loaded configuration.
 
-Private replay: root `.analysis/reconstruction/probes/native-startup-clock-v1391/`
-and native `.analysis/port64/native-startup-clock-v1391/`. Jobs run serially on
-CPU0/nice19. `pipeline.py` stopped at the ROM guard; `pipeline_v2.py` stopped
-at a reference-reader import pointing at a namespace without the collector.
-`pipeline_v3.py` closes the corrected comparisons. The first source-freeze
-parent guard also rejected an incorrect parent before acceptance. All failed
-sources/logs/negative receipts remain preserved; none is acceptance.
-Configuration and clock controls, full comparisons and window receipts must
-be closed before lossless retirement of objects, duplicate captures, expanded
-references and disposable disks. Restore through `verify_retention.py --restore`;
-without that option it checks archive CRC/EOF, member SHA/mode/size/nsmtime,
-inherited protected receipts and all frozen producer pins.
 
 Next identify original startup/loading and resolved PMD clock owners using
 independent event evidence. Default process clocks, physical/cross-emulator

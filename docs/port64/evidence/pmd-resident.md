@@ -126,11 +126,6 @@ Windows uses the maintained typed `verify_windows_current.ps1`; private
 Replay requires fresh output/staging paths. Restore archived outputs before
 reusing paths listed in historical receipts; retention journals give members.
 
-Terminal cleanup verifies 2012 protected hashes and all archived members/modes;
-5141 stage/control/intermediate files retire and 648 equal compressed paths share
-immutable storage. Net allocated reclamation is 1514315776 bytes (1444.2 MiB).
-The initial active-self-log guard failure remains; independent final readback
-passes. `final-retention.json` binds journals and restore commands.
 
 FM3/PPS/external ADPCM, full original logo/startup, complete natural ordinary/
 Extra survival on Linux/Windows, restart/persistence route matrices and host

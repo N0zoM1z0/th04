@@ -102,14 +102,6 @@ PYTHONDONTWRITEBYTECODE=1 python3 port64/verify_pmd_commands.py \
   --output .analysis/port64/FRESH/commands-native
 ```
 
-The actual-Windows typed `pmd-commands` plan supplies separate music/EFC inputs
-and invokes an owned copy of verify_windows_current.ps1 with -NoProfile -File.
-Current receipts, target views, original/native/Windows full traces, separate
-source archives, compiler/cache/link/product identities, failed/inconclusive
-probes, counterfactuals and cleanup journals are under native
-`.analysis/port64/pmd-commands-v1338/`. Full readback precedes retirement of
-owned NTFS staging, raw copies/negative binaries and rebuildable native.o/.a;
-current 174 programs and independent references remain. Use fresh output paths.
 
 Continue FM3 extras, PPS/ADPCM/hardware rhythm, synthesis and clocks while
 muted; join actual driver measures to frontend capability and complete startup.
@@ -118,15 +110,10 @@ Endings/Continue, physical save/restart, refresh/input/slowdown and dense
 Lunatic timing/performance on Linux and Windows. Actor controls disabling hit
 consumption and older GUI packages do not establish those complete routes.
 
-Whole archive/trace readback verifies 2954 protected hashes; the closed
-terminal snapshot verifies 2277. Persisted pre-mutation journals reclaim
-676,278,272 allocated bytes (644.9 MiB), including the Windows
-GNU object/link archives. Current174 products and independent references
-remain. CMake rebuilds missing intermediates; fresh replay paths are required.
 
 Post-CI cleanup retires 1,012 source-backed generated Python cache files,
-reclaiming 16,986,112 additional allocated bytes; receipt:
-root `.analysis/cleanup/pmd-commands-post-ci-caches-20261010.json`.
+reclaiming 16,986,112 additional allocated bytes;
+root .
 
 ## Prior v1337 combined-owner evidence
 
@@ -256,23 +243,9 @@ PYTHONDONTWRITEBYTECODE=1 python3 port64/verify_pmd_combined.py \
   --output .analysis/port64/FRESH/combined-native
 ```
 
-Actual Windows uses the typed `pmd-combined` plan with separate music/EFC
-inputs and an owned NTFS copy of `verify_windows_current.ps1`, invoked with
-`-NoProfile -File`. Private receipts, distinct original/consumer archives,
-complete compressed references/outputs, source/product/cache/link/compiler
-profiles, raw anchored views, negative probes and pre-mutation cleanup journals
-live under `.analysis/port64/pmd-combined-v1337/`. Current executables, sources,
-independent references and necessary failed evidence remain protected.
-Terminal raw copies, Windows staging and rebuildable native objects/archives
-retire after full equality/readback. Future writers use fresh output paths.
 
 Continue with additional SSG command ownership, FM3 extras, ADPCM/hardware
 rhythm and synthesis while muted, then physical clocks/frontend capability/
 complete startup and full Linux/Windows ordinary/Extra routes, physical saves/
 restarts and dense Lunatic timing/performance. Bounded component results and
 actor controls do not establish full natural survival. The full goal stays active.
-
-Whole archive/trace readback verifies 2111 protected hashes; persisted
-pre-mutation journals reclaim 1,112,240,128 allocated bytes (1.04 GiB).
-The original producer and both Linux consumers are terminal and pass; final
-Windows readback covers all 66 cases after the second load completes.

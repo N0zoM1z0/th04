@@ -33,12 +33,3 @@ scope. Current headless GNU/UBSan clear evidence is new and separate. Broader
 shots/ranks/death/Continue, original/reconstructed DOS/native campaign parity,
 full pictures, physical CPU/I/O/scanout, active-PMD timing and Windows remain
 open. Historical exact stays661/663; full reconstruction/migration is active.
-
-Replay: `.analysis/reconstruction/probes/native-natural-clear-v1432/`;
-results: `.analysis/worktrees/native-natural-clear-v1432/.analysis/port64/native-natural-clear-v1432/`.
-The frozen programs remain under `native-main-pause-v1431-v5`. `comparison.py`
-verifies all complete captures and saves; `mutations.py` owns actual-file
-counterexamples. Verified content/CRC/mode/nsmtime/temp-restore retirement
-saves81.78 MiB net; route/state/input captures recover with
-`verify_retention.py --restore --prefix`. All source, programs, saves, plans,
-receipts and archive remain retained. Continue paired ordinary-game behavior.

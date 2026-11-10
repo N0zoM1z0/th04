@@ -1,115 +1,16 @@
 # Resume TH04 reconstruction
 
-Current audio: [repeated FM attacks, mix and bandlimited conversion](reconstruction/product/TH04_PORTABLE_AUDIO_FIDELITY.md). Preserve the new executable hash/RVAs and opt-in ymfm edge-commit extension; previous shared-ymfm PCM equality is not a chip-fidelity Oracle.
+Read [the current handoff](RE_HANDOFF.md), [workflow](RE_WORKFLOW.md), and the
+relevant focused note. Use the current Git heads and canonical ledgers for
+source and exactness state. Keep work scoped to the current blocker.
 
-Latest Windows UI/no-death batch: [current evidence](reconstruction/product/TH04_PORTABLE_UI_AND_INVINCIBILITY.md). Use the sole final th04-port64.exe, preserve user saves, and guard both hit latches; earlier prefix-only and BSS-reset hypotheses remain rejected.
+For target-dependent work, verify the pinned inputs and active database before
+using observations. Preserve the 16-bit ABI, segment ownership and relocation
+rules. A fresh complete byte comparison determines exactness.
 
-Current rendering/Extra update: see [performance and delay reset](reconstruction/product/TH04_PORTABLE_RENDER_PERFORMANCE.md). Gengetsu no longer inherits Mugetsu defeat delay2; full rendered Extra and actual Windows transition/input controls pass. Both D-drive BAT launchers enable audio. Further UBSan remains deferred.
+Use current source to rebuild into temporary output. Historical captures,
+program cohorts and recovery aliases are not required session inputs. Retain
+only useful conclusions and genuinely difficult unresolved contexts.
 
-Current priority (2026-10-27): Windows x64 functional playability. The user
-permits process-local input hooks, replay and a temporary no-life-loss runtime
-patch; original DOS pixel/timing parity is supporting work and UBSan is deferred.
-Nine scoped functional cases pass; ordinary and no-life-loss manual launchers
-are prepared in `D:\Entertainment\Game\Touhou\th04-reconstruct`.
-See [current handoff](RE_HANDOFF.md) and
-[functional smoke](reconstruction/product/TH04_WINDOWS_FUNCTIONAL_SMOKE.md).
-Historical v1497 instructions below retain their original scope.
-
-Prepared at the user's request on 2026-10-18. The prior goal was cleared; this
-session is handed off. Complete DOS/native product objectives remain unfinished.
-Read actual Git heads and DOS-root host-joystick-v1497/finish.json. No background
-build is left running after this handoff.
-
-## Resume instruction
-
-```text
-On the user's instruction, continue the complete TH04 DOS/native objectives.
-Read AGENTS.md, RE_HANDOFF.md, ARCHITECTURE.md, RE_WORKFLOW.md, ORACLES.md and
-reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md. Inspect both Git worktrees,
-run preflight and attest the active database before target-dependent work.
-Pinned provenance remains candidate-local-attested. Keep English code/docs,
-gpt-6.1-sol: commits and frequent pushes to root main/native HEAD:port/modern-64.
-Use one serial heavy job: CPUQuota35%, CPU1/Nice19, MemoryMax768M, no swap,
-TasksMax64/LimitCORE0. Normal MemoryHigh256M; use recorded compiler/TU exceptions.
-Read actual cgroup values. Ghidra384M/one Java processor; muted/headless only.
-Preserve physical requests, firmware ticks, UART arrival, PIC dispatch, CPU
-acceptance, BIOS byte reads, Shift and the game latch as separate owners.
-Next resolve CPU/OPNA service and common boot epoch without fitted input words,
-fixed IRQ delays or another whole-route hunt solely for old75's inferred phase.
-Use correction.json's receipt/program_paths for current products. Keep scoped
-current providers/capsules, including the first failed correction directory.
-Use fresh build directories. Never run retired CMake/CTest, including --show-only.
-Finish affected checks, tracking, both CIs, diff checks and scoped cleanup
-verification; commit/push both branches. Do not declare the complete game achieved from these
-bounded frontend or compile-only Windows checks.
-```
-
-## Host joystick input and handoff (v1497)
-
-Native code ea41be4 connects SDL and WinMM joystick producers to both window
-backends, menu edges, held UI actions and MAIN's live byte sampler. Native host
-policy uses the first two axes/first hat, button 0 Shot/confirm and button 1
-Bomb/cancel, with a half-range analog threshold. A connection or focus regain
-must first be neutral. Missing devices and failed initialization leave keyboard
-input available. Raw SDL axis/button bindings vary by device; this is an explicit
-host policy, not an original PC-98 device or timing observation.
-
-Complete injected APIs execute all 131072 X/Y axis values and 64 hat/button
-combinations in GNU and UBSan without opening devices. Original unchanged MAIN
-instructions reproduce 64 production pin mappings per role and nine actual
-frontend latches per role. Two compiled exit-0 mapping defects each reject 32
-cases. Both real headless frontends enter MAIN through three controller menu
-confirmations, move Right/Down, sample Shot and handle unplug across four frames
-and nine polls. Observer off/on pools/frame/RNG agree. The prior 31-poll keyboard
-and 81-read elapsed controls also pass. These are shared frontend tests, not
-actual SDL/Win32 windows or controller acceptance.
-
-Current source: 577 files,
-51b9f3887346d5b444bbfd07d296b83175be420acda95c9598f250cae6647734.
-The initial cohort cold-builds four affected objects per role and freshly
-relinks 92 GNU/8 UBSan/5 Windows programs. GNU 88 CTests and seven UBSan controls
-pass. A WinMM continuous-POV/query-header correction then cold-builds nine backend
-objects: three GNU objects retain exact bytes; source-location metadata changes
-UBSan objects, so both UBSan and Windows app/joystick programs are relinked.
-Three unchanged View objects retain their initial compiler identities. Current
-105 program paths and all 12 object identities are in correction.json's receipt;
-use program_paths, since the current products span two directories. This is
-not an all-source cold cohort. Windows remains compile/link only.
-
-Source/objects/commands and the rejected equality assumption remain private and
-recoverable. The canonical corrected source capsule is under the first
-host-joystick-v1497-final directory despite that driver's later failure; do not
-delete it. See the focused differential note for API references and scope.
-
-## Remaining acceptance
-
-Original CPU/OPNA service timing, common boot epoch, other IRQ producers,
-actual controllers, continuous display, full source/native campaigns, Windows
-runtime and NP2/hardware remain open. Historical exactness is unchanged.
-Original-versus-original retains 30 tail/23 raw-GDC differences; source-DOS's
-19-key/23-GDC and native physical 40-tail/7837-boundary failures remain separate.
-Old75 is inferred, not a directly captured scalar sample; do not hunt another
-whole route solely for that phase. Earlier complete state/picture agreements
-retain their original source vectors and scenarios. See the differential note.
-
-## Recovery and resources
-
-The user authorized retirement of unnecessary history on 2026-10-19.
-Use DOS-root `.analysis/cleanup/retire-history-20261019/recover.py` and its
-`keep.json`/`aliases.json` for the scoped current handoff. The cumulative
-v1497/storage recovery contract is retired; older full-history commands can
-refer to intentionally deleted payloads. Historical receipts remain unchanged.
-See `ANALYSIS_RETENTION.md` for retained baselines and the deletion receipt.
-
-Current 105 programs, 12 object identities, source capsules and reused link
-inputs stay available. Build only affected targets in fresh directories; do
-not automatically rebuild all programs or replay every historical phase.
-Shared ABI/layout changes and exact promotions still require their proper gates.
-No product compilation or relink is performed for this cleanup.
-
-Heavy jobs remain serial at CPUQuota=35%, CPU1/Nice19, hard 768MiB/no swap,
-64 tasks/LimitCORE0. Ordinary checks use soft 256MiB. View retains GNU/Windows
-O3/GGC5/4096 soft 640MiB or UBSan O0/GGC1/1024 soft 768MiB; UBSan main.cpp uses
-O2/GGC5 soft 320MiB if rebuilt. Initial cohort peak: 683098112 bytes,
-zero OOM kills. Keep Ghidra384MiB/one Java processor and all checks muted/headless.
-Do not launch Windows GUI/input/audio tests or operate physical host devices.
+Run the affected checks and `python3 scripts/ci.py`; update the handoff when
+facts or blockers change. Default CI needs no private tools or game data.

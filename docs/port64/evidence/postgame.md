@@ -213,7 +213,7 @@ The source-binding receipt verifies all executable, verifier and build inputs
 remain identical to the tested manifest. Receipts are below
 `.analysis/port64/verdict-v1295`; generated development media are losslessly
 archived with restoration instructions in the root
-`.analysis/cleanup/development-media-20261005/receipt.json`.
+.
 
 Actual Windows executes the30 contracts,916 calculation/10 clock controls,
 80 graphics cases,8 Staff Roll request streams and268 Staff graphics kernels.
