@@ -77,9 +77,10 @@ dumps against each executable's ZUN data range. The authors resolve
 addresses to symbols and distinguish constants from references. The FAQ
 excludes structure resizing, and the counter disables address counting
 for TH04 `ZUN.COM`. The exactness ledgers and portable play results
-measure other properties. The source observations below were followed
-by two controlled relinks and a Stage 4 DOS replay.
-[Local relink evidence](reconstruction/product/TH04_DOS_POSITION_INDEPENDENCE.md).
+measure other properties. The maintained DOS executables pass a local
+check of the same source criterion after two controlled relinks, a Stage 4
+DOS replay, and review of register-carried literals.
+[Local PI evidence](reconstruction/product/TH04_DOS_POSITION_INDEPENDENCE.md).
 
 [FAQ and scope](https://github.com/nmlgc/rec98.nmlgc.net/blob/master/faq.html#L185),
 [counter configuration](https://github.com/nmlgc/rec98.nmlgc.net/blob/master/rec98repo.go#L179),

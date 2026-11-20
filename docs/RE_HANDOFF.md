@@ -131,8 +131,9 @@ for the useful findings and next experiment.
 ## Working state
 
 OP, MAIN and MAINE passed two DOS PI relinks with moved CODE/DATA/BSS,
-and paired Stage 4 demo traces matched all 3,997 boundaries. Computed
-addresses and unexercised paths still limit the PI claim.
+and paired Stage 4 demo traces matched all 3,997 boundaries. The follow-up
+source and register review cleared all 268 flagged uses. The maintained
+DOS EXEs pass the local ReC98-style source criterion.
 [PI evidence](reconstruction/product/TH04_DOS_POSITION_INDEPENDENCE.md).
 
 Source and Git history replace old source capsules. Historical programs,

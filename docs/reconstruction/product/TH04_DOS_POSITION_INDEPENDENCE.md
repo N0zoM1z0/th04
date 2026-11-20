@@ -48,12 +48,47 @@ that ReC98 resolved to reach its TH04 PI milestone.
 [OP counter check](../../../scripts/probes/th04_product_surface.py),
 [ReC98 change](https://github.com/nmlgc/ReC98/commit/97f0c3b4f53a60caed48ffba1a7fa0817fd1dd0e).
 
-This screen sees direct displacements. Register-carried or computed
-addresses and unexercised paths still need review for a whole-product PI
-claim. Treat the score pair and the random ring plus cursor as contiguous
-owners when moving them. The earlier score experiment demonstrates why
-splitting those owners can change behavior.
-[Source review and score control](../../REFERENCE_ANALYSIS.md#th04-position-independence).
+## Register-carried address review
+
+The source review cleared the absolute-address candidates in the maintained
+DOS code for all three executables. It covered numeric ASM operands and
+inline ASM, pointer construction, and hand-encoded instructions. For example,
+the two emitted far CALL forms use symbolic offset and segment words.
+[Far CALL macro](../../../src/shared/runtime/master_large.inc#L24),
+[BGM interrupt call](../../../src/shared/sound/bgm_timer.asm#L123).
+
+An independent linked screen followed literal values from MOV and PUSH through
+register operations to address uses. It examined 185,558 bytes from maintained
+CODE owners and reported 268 uses whose introducing bytes were stable under
+both relinks. For all 158 table-index cases, the indexed displacement resolves
+to the same MAP owner and owner-relative offset in the baseline and both
+shifted builds.
+
+| Executable | Candidate uses | Indices with relocated bases | Patched immediates | Hardware, OS or stack |
+| --- | ---: | ---: | ---: | ---: |
+| MAIN | 160 | 73 | 19 | 68 |
+| OP | 59 | 46 | 3 | 10 |
+| MAINE | 49 | 39 | 3 | 7 |
+
+The 25 uses of patched immediates refer to 13 instruction fields across the
+three executables. The linked CS writes reach the same instruction fields
+in both shifted builds. For `SUPER_ROLL_PUT`, all four branches replace
+`1234h` with the appropriate local label before the indirect JMP. The four
+linked destinations preserve their offsets within the blitter owner.
+[Blitter dispatch](../../../src/shared/hardware/super_roll_put.asm#L74).
+
+The remaining values select PC-98 video memory, BIOS state, DOS/EMS headers,
+or stack slots. For example, `RESDATA_EXIST` uses `10h` relative to a DOS
+allocation header, and `SELECT_FOR_RANK` adds `0Ah` to a stack-derived index.
+[Resident allocation lookup](../../../src/shared/dos/resdata.asm#L24),
+[Pascal argument indexing](../../../src/main/select_for_rank.asm#L21).
+
+The three maintained executables pass the local ReC98-style source criterion.
+The linked screen follows bounded register flows within an instruction block.
+The source review supplies context for literals passed between blocks or hidden
+by assembler expressions. The score pair and random ring plus cursor retain
+their internal layouts when moved as units.
+[ReC98 criterion and score control](../../REFERENCE_ANALYSIS.md#th04-position-independence).
 
 ## Runtime evidence
 
@@ -78,7 +113,14 @@ python3 scripts/audit_th04_dos_pi.py --baseline .analysis/build/pi-dos-baseline 
   --output-dir .analysis/build/pi-dos-audit-final
 python3 scripts/audit_th04_dos_pi.py --baseline .analysis/build/pi-dos-baseline \
   --output-dir .analysis/build/pi-dos-audit-alt --padding 32 16 64
+python3 scripts/audit_th04_pi_registers.py --baseline .analysis/build/pi-dos-baseline \
+  --shifted .analysis/build/pi-dos-audit-final .analysis/build/pi-dos-audit-alt \
+  --output .analysis/build/pi-register-candidates.json
 ```
+
+Review candidate producers against the source and compare their consumer
+operands in the three EXE/MAP pairs. The private audit retains the classified
+report and patched-field checks under `.analysis/build/pi-address-review/`.
 
 Use each build's own MAIN MAP with `capture_th04_dos_demos.py --demos 1`.
 Compare the two runs with `compare_th04_dos_demos.py --baseline` and
