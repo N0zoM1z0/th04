@@ -78,8 +78,8 @@ addresses to symbols and distinguish constants from references. The FAQ
 excludes structure resizing, and the counter disables address counting
 for TH04 `ZUN.COM`. The exactness ledgers and portable play results
 measure other properties. The maintained DOS executables pass a local
-check of the same source criterion after two controlled relinks, a Stage 4
-DOS replay, and review of register-carried literals.
+check of the same source criterion after three controlled relinks, DOS
+replay, and review of register-carried literals.
 [Local PI evidence](reconstruction/product/TH04_DOS_POSITION_INDEPENDENCE.md).
 
 [FAQ and scope](https://github.com/nmlgc/rec98.nmlgc.net/blob/master/faq.html#L185),
@@ -94,9 +94,10 @@ DOS replay, and review of register-carried literals.
   [local entry](../src/maine/end/main.inl#L4),
   [link audit](../scripts/probes/audit_th04_native_irq_vectors.py).
 - **OP.** The EGC setup write to `0000:0495h` updates PC-98 BIOS state.
-  A scan of direct literal memory operands in maintained source found
-  hardware and DOS accesses of this kind. Register-carried addresses and
-  relative assumptions still need review. [EGC setup](../src/op/hardware/egc_start_copy.inl#L11).
+  The portrait-border offsets carried across menu branches select VRAM.
+  The resident pointer displacement follows its mapped symbol in the
+  relinks. [EGC setup](../src/op/hardware/egc_start_copy.inl#L11),
+  [portrait offsets](../src/op/menu/selection.cpp#L64).
 - **MAIN.** The carpet code looks up its tables through symbols.
   `HUD_SCORE_PUT` resolves `_hiscore` symbolically and reaches `_score` by
   decrementing through the end of the adjacent array. Pinned TASM/TLINK

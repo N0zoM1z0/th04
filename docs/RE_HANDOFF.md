@@ -130,10 +130,13 @@ for the useful findings and next experiment.
 
 ## Working state
 
-OP, MAIN and MAINE passed two DOS PI relinks with moved CODE/DATA/BSS,
-and paired Stage 4 demo traces matched all 3,997 boundaries. The follow-up
-source and register review cleared all 268 flagged uses. The maintained
-DOS EXEs pass the local ReC98-style source criterion.
+OP, MAIN and MAINE passed three DOS PI relinks, including a change in
+alignment within paragraphs. The follow-up checked cross-branch literals,
+CS-relative stores and far pointers in initialized data. The baseline and
+the 32/16/64 layout matched all 15,988 boundaries in the four bundled demos.
+The baseline and 3/7/11 MAINE also saved identical score files in the
+seeded registration replay.
+The maintained DOS EXEs pass the local ReC98-style source criterion.
 [PI evidence](reconstruction/product/TH04_DOS_POSITION_INDEPENDENCE.md).
 
 Source and Git history replace old source capsules. Historical programs,

@@ -26,7 +26,7 @@ source evidence.
 
 - [PC-98 hardware reuse](../PC98_HARDWARE_REUSE.md) — fixes, measured performance, replay tools and claim limits.
 - [DOS build/testing](../DOS_BUILD.md) — Windows fast builds and ordinary/invincible launchers.
-- [DOS position independence](product/TH04_DOS_POSITION_INDEPENDENCE.md) — shifted relinks, reference checks and Stage 4 replay.
+- [DOS position independence](product/TH04_DOS_POSITION_INDEPENDENCE.md) — shifted relinks, reference checks and four DOS demos.
 - [Windows x64 background functional smoke and runtime patches](product/TH04_WINDOWS_FUNCTIONAL_SMOKE.md) — current functional scope, replay plans and manual preview.
 - [Semantic/native status and TODO](../PORTING_STATUS.md) — current products, comparison priorities and scoped host validation.
 - [Original/reconstructed DOS and native differential handoff](product/TH04_REPLAY_DIFFERENTIAL.md) — complete Stage2 clear/Stage3 entry, actual player input owners, full pools/RNG/video gates, retained key/GDC and collector failures, and recovery.
