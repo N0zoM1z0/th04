@@ -76,9 +76,11 @@ in P0244. Its counter screens hexadecimal operands in selected assembly
 dumps against each executable's ZUN data range. The authors resolve
 addresses to symbols and distinguish constants from references. The FAQ
 excludes structure resizing, and the counter disables address counting
-for TH04 `ZUN.COM`. The DOS source at `d21200a` lacks an equivalent
-whole-artifact reference audit. The exactness ledgers and portable play
-results measure other properties.
+for TH04 `ZUN.COM`. The exactness ledgers and portable play results
+measure other properties. The source observations below were followed
+by two controlled relinks and a Stage 4 DOS replay.
+[Local relink evidence](reconstruction/product/TH04_DOS_POSITION_INDEPENDENCE.md).
+
 [FAQ and scope](https://github.com/nmlgc/rec98.nmlgc.net/blob/master/faq.html#L185),
 [counter configuration](https://github.com/nmlgc/rec98.nmlgc.net/blob/master/rec98repo.go#L179),
 [TH04 milestone](https://rec98.nmlgc.net/blog/2023-06-13).
@@ -119,11 +121,7 @@ results measure other properties.
   [header consumer](../src/zun/launcher/customization_stub.asm#L18).
 
 The bounded receipts are indexed as `ev-th04-main-pi-score-adjacency`
-and `ev-th04-zun-pi-selector-length`. To extend coverage, relink the
-three DOS executables after moving code and DGROUP owners, read back
-the linked references against the new MAP, and run their exercised
-paths on the shifted builds. Keep this check independent of the
-original-layout byte comparison.
+and `ev-th04-zun-pi-selector-length`.
 
 ## ReC98 Oracle assessment
 

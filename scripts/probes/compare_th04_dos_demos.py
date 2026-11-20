@@ -6,7 +6,6 @@ import argparse
 from collections import Counter
 import json
 from pathlib import Path
-import sys
 
 from capture_th04_dos_demos import ARCHIVES, FIELDS, Fat12, parse_archive, sha, u16, u32
 
@@ -176,14 +175,18 @@ def validate_trace(raw: bytes, main: bytes, prof: dict, demo_bytes: dict[int, by
     return captures, diagnostics
 
 
-def compare(left: Path, right: Path) -> dict:
+def compare(left: Path, right: Path, *, reconstructed_baseline: bool = False) -> dict:
     try:
         a, ar, ad = load_capture(left)
         b, br, bd = load_capture(right)
         for key in ('demos', 'original_hdi_sha256', 'starting_files', 'demo_sha256', 'archive_sha256',
                     'font_sha256', 'config_sha256', 'emulator_sha256', 'observer_source_sha256'):
             require(a[key] == b[key], f'paired reset/observer mismatch: {key}')
-        require(a['role'] == 'original' and b['role'] in ('original', 'ordinary-reconstructed'), 'comparison roles')
+        if reconstructed_baseline:
+            require(a['role'] == b['role'] == 'ordinary-reconstructed', 'comparison roles')
+        else:
+            require(a['role'] == 'original' and b['role'] in ('original', 'ordinary-reconstructed'),
+                    'comparison roles')
         result = dict(passed=True, scope='complete bundled-demo consumed input, score and RNG at before-update boundary',
                       left=ad, right=bd, demos=a['demos'], gameplay_rows=a['demos']*3996,
                       terminal_rows=a['demos'], first_difference=None, demo_results={})
@@ -208,13 +211,18 @@ def compare(left: Path, right: Path) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--original', required=True, type=Path)
+    baseline = parser.add_mutually_exclusive_group(required=True)
+    baseline.add_argument('--original', type=Path)
+    baseline.add_argument('--baseline', type=Path, help='ordinary reconstructed DOS baseline')
     parser.add_argument('--candidate', required=True, type=Path)
     parser.add_argument('--output', required=True, type=Path)
     args = parser.parse_args()
-    result = compare(args.original.resolve(), args.candidate.resolve())
-    result.update(original_receipt_sha256=sha((args.original / 'receipt.json').read_bytes()),
-                  candidate_receipt_sha256=sha((args.candidate / 'receipt.json').read_bytes()))
+    left = args.baseline or args.original
+    result = compare(left.resolve(), args.candidate.resolve(),
+                     reconstructed_baseline=args.baseline is not None)
+    left_receipt = 'baseline_receipt_sha256' if args.baseline is not None else 'original_receipt_sha256'
+    result[left_receipt] = sha((left / 'receipt.json').read_bytes())
+    result['candidate_receipt_sha256'] = sha((args.candidate / 'receipt.json').read_bytes())
     args.output.write_text(json.dumps(result, indent=2)+'\n')
     print(json.dumps({k:v for k,v in result.items() if k not in ('left', 'right', 'first_difference')}
                      | dict(first_difference=None if result.get('first_difference') is None else
