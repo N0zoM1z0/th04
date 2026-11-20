@@ -130,6 +130,10 @@ for the useful findings and next experiment.
 
 ## Working state
 
+A local DOS PI audit reproduced MAIN's score-array adjacency dependency
+and the ZUN compositor's fixed selector length. Whole-executable reference
+coverage for OP, MAIN and MAINE is open. [PI evidence](REFERENCE_ANALYSIS.md#th04-position-independence).
+
 Source and Git history replace old source capsules. Historical programs,
 captures, cleanup journals and their recovery aliases are disposable; use
 fresh output for the next comparison. Keep original inputs, active tools,

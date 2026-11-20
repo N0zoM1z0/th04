@@ -69,6 +69,62 @@ accepted that broader claim: it rebuilt the pinned commit three times and ran
 all 20 selected TH01-TH05 outputs through the local Oracle vector.  Only three
 flat COM candidates are raw-exact, and none of the four TH04 candidates pass.
 
+## TH04 position independence
+
+ReC98 reached 100% PI for TH04's `OP.EXE`, `MAIN.EXE`, and `MAINE.EXE`
+in P0244. Its counter screens hexadecimal operands in selected assembly
+dumps against each executable's ZUN data range. The authors resolve
+addresses to symbols and distinguish constants from references. The FAQ
+excludes structure resizing, and the counter disables address counting
+for TH04 `ZUN.COM`. The DOS source at `d21200a` lacks an equivalent
+whole-artifact reference audit. The exactness ledgers and portable play
+results measure other properties.
+[FAQ and scope](https://github.com/nmlgc/rec98.nmlgc.net/blob/master/faq.html#L185),
+[counter configuration](https://github.com/nmlgc/rec98.nmlgc.net/blob/master/rec98repo.go#L179),
+[TH04 milestone](https://rec98.nmlgc.net/blog/2023-06-13).
+
+- **MAINE.** ReC98's last TH04 PI patch changed the `CONG00.pi` address
+  from a literal DGROUP offset `00A8h` to `offset _CongFN`. Local C++
+  obtains the pointer directly from the string literal. The current DOS
+  build also checks IRQ-vector and self-modifying renderer destinations
+  in the linked executable. [Upstream patch](https://github.com/nmlgc/ReC98/commit/97f0c3b4f53a60caed48ffba1a7fa0817fd1dd0e),
+  [local entry](../src/maine/end/main.inl#L4),
+  [link audit](../scripts/probes/audit_th04_native_irq_vectors.py).
+- **OP.** The EGC setup write to `0000:0495h` updates PC-98 BIOS state.
+  A scan of direct literal memory operands in maintained source found
+  hardware and DOS accesses of this kind. Register-carried addresses and
+  relative assumptions still need review. [EGC setup](../src/op/hardware/egc_start_copy.inl#L11).
+- **MAIN.** The carpet code looks up its tables through symbols.
+  `HUD_SCORE_PUT` resolves `_hiscore` symbolically and reaches `_score` by
+  decrementing through the end of the adjacent array. Pinned TASM/TLINK
+  and a CPU fixture at load segment `2000h` ran the source routine with a
+  stub that captured both gaiji rows. A 16-byte insertion before the
+  routine and another before the pair moved all three symbols and kept
+  the rows `99999999` and `87654321`. Inserting two bytes containing
+  `02h 03h` between the arrays instead changed the second row to
+  `32876543`. ReC98 preserves the same adjacency in its 100% source.
+  Treat the two arrays as one layout owner when moving them, as with
+  the random ring and cursor.
+  [Carpet lookup](../src/main/stage/carpet_anim_row_level.inl),
+  [score routine](../src/main/score/update.asm#L72),
+  [upstream score routine](https://github.com/nmlgc/ReC98/blob/b6ba5b0a529edbb31efdf8c0e939263804f8ee47/th04/main/scoreupd.asm#L68),
+  [random ring](reconstruction/main/TH04_MAIN_RANDRING_SEMANTICS_V1244.md).
+- **ZUN.** The composite builder adjusts the directory when an embedded
+  COM changes size. An unreachable one-byte insertion before the
+  selector's directory assembled and linked, but the builder rejected
+  the resulting 224-byte stub. The maintained launcher contract pins
+  three stub lengths and reads the COMCSTM header fields at fixed offsets.
+  [Composite builder](../scripts/build_zun_composite.py#L22),
+  [selector](../src/zun/launcher/selector.asm#L127),
+  [header consumer](../src/zun/launcher/customization_stub.asm#L18).
+
+The bounded receipts are indexed as `ev-th04-main-pi-score-adjacency`
+and `ev-th04-zun-pi-selector-length`. To extend coverage, relink the
+three DOS executables after moving code and DGROUP owners, read back
+the linked references against the new MAP, and run their exercised
+paths on the shifted builds. Keep this check independent of the
+original-layout byte comparison.
+
 ## ReC98 Oracle assessment
 
 ReC98's reported strongest Oracle is the final linked artifact under its
