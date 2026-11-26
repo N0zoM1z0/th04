@@ -18,6 +18,12 @@ Do not create another archive, permanent inventory or cleanup report.
 Historical ledger observations remain provenance; regenerate comparison
 outputs when a new exact claim needs them.
 
+Completed comparisons do not require their old EXE/OBJ/MAP files, disk copies,
+captures, reports or analyzer exports to remain on disk. Keep a unique reusable
+probe's source when useful, and regenerate its inputs for the next experiment.
+An emulator source archive read by an active capture or build script is a
+build input; unrelated platform packaging in its expanded tree is disposable.
+
 ## Tools and verification
 
 Prefer matching Factory installations. Share executable tools while keeping

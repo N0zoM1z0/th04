@@ -12,7 +12,7 @@ append batch diaries or duplicate the current work queue here.
 - [Semantic/native status and TODO](PORTING_STATUS.md) — current products, comparison priorities and scoped host validation.
 - [Original/reconstructed DOS differential handoff](reconstruction/product/TH04_REPLAY_DIFFERENTIAL.md) — demo/input/RNG boundaries and next-agent capture work.
 - [Script catalog](../scripts/README.md) — all tools grouped by task.
-- [Private artifact retention](ANALYSIS_RETENTION.md) — protected tools/cache/input and archive recovery.
+- [Private artifact retention](ANALYSIS_RETENTION.md) — necessary inputs, active environments and disposable output.
 
 ## Authority and routing
 
