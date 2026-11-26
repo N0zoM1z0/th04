@@ -166,16 +166,16 @@ python3 scripts/audit_th04_pi_registers.py --baseline .analysis/build/pi-dos-bas
 ```
 
 Review candidate producers against the source and compare their consumer
-operands in the three EXE/MAP pairs. The private audit retains the classified
-report and patched-field checks under `.analysis/build/pi-address-review/`.
-The follow-up paths, mapped-base checks, CS store comparison, and far
-data pointer checks are under `.analysis/build/pi-recheck/`.
-The MAINE score-only seed and disk comparison are also there as
-`prepare-score.py` and `ending-score.py`.
+operands in fresh EXE/MAP pairs. The private source-only helpers remain under
+`.analysis/build/pi-address-review/` and `.analysis/build/pi-recheck/`, including
+the path, CS-store and far-pointer checks and the MAINE score-only seed.
+Completed builds, reports and runtime disk copies have been removed. Recreate
+their inputs before using these helpers; the conclusions above remain useful
+without retaining the generated files.
 
 Use each build's own MAIN MAP with `capture_th04_dos_demos.py --demos 4`.
 Compare the two runs with `compare_th04_dos_demos.py --baseline` and
 `--candidate`. Run `probe_th04_native_cdg_cs.py` against both builds.
-The `ev-th04-*-dos-pi-*` evidence rows identify the receipts and input
+The `ev-th04-*-dos-pi-*` evidence rows record the historical input and output
 digests. These results describe the standalone DOS product; the historical
 exact-match ledger has a separate scope.
