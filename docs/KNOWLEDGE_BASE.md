@@ -5,6 +5,9 @@ short: individual discoveries live in `config/knowledge.csv`, observations in
 `config/evidence.csv`, and current reconstruction state in the ledgers. Do not
 append batch diaries or duplicate the current work queue here.
 
+See [private artifact retention](ANALYSIS_RETENTION.md) for necessary inputs,
+active environments and disposable output.
+
 ## Authority and routing
 
 Use these sources in order:
